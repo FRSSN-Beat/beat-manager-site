@@ -22,7 +22,10 @@
 
     * { box-sizing: border-box; }
 
-    html { color-scheme: dark; }
+    html {
+      color-scheme: dark;
+      scroll-behavior: smooth;
+    }
 
     body {
       min-height: 100svh;
@@ -36,6 +39,7 @@
       background-size: 48px 48px, 48px 48px, auto, auto;
       font-family: "Arial Narrow", "Roboto Condensed", Arial, sans-serif;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
 
     body::before {
