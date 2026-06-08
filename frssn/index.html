@@ -42,12 +42,7 @@
       inset: 0;
       z-index: 20;
       pointer-events: none;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent 0,
-        transparent 3px,
-        rgba(255,255,255,0.012) 4px
-      );
+      background: repeating-linear-gradient(0deg, transparent 0, transparent 3px, rgba(255,255,255,0.012) 4px);
       opacity: 0.6;
     }
 
@@ -103,9 +98,7 @@
       animation: pulse 1.8s ease-in-out infinite;
     }
 
-    .topbar__status.is-lost {
-      color: var(--accent);
-    }
+    .topbar__status.is-lost { color: var(--accent); }
 
     .main {
       padding: 48px 0;
@@ -135,9 +128,7 @@
       font-weight: 800;
       line-height: 0.82;
       letter-spacing: 0.07em;
-      text-shadow:
-        3px 0 0 rgba(255,255,255,0.04),
-        -2px 0 0 rgba(214,255,40,0.08);
+      text-shadow: 3px 0 0 rgba(255,255,255,0.04), -2px 0 0 rgba(214,255,40,0.08);
     }
 
     .hero h1::after {
@@ -194,9 +185,7 @@
       box-shadow: 0 0 18px rgba(214,255,40,1);
     }
 
-    .wave.is-lost {
-      cursor: default;
-    }
+    .wave.is-lost { cursor: default; }
 
     .wave.is-lost span {
       opacity: 0.22;
@@ -238,9 +227,7 @@
       justify-content: center;
       color: var(--text);
       border: 1px solid var(--border);
-      background:
-        linear-gradient(135deg, rgba(255,255,255,0.04), transparent 42%),
-        var(--panel);
+      background: linear-gradient(135deg, rgba(255,255,255,0.04), transparent 42%), var(--panel);
       text-align: center;
       text-decoration: none;
       clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
@@ -251,14 +238,10 @@
       transform: translateY(-5px);
       border-color: var(--accent-line);
       background: var(--panel-hover);
-      box-shadow:
-        inset 0 0 30px rgba(214,255,40,0.035),
-        0 15px 40px rgba(0,0,0,0.35);
+      box-shadow: inset 0 0 30px rgba(214,255,40,0.035), 0 15px 40px rgba(0,0,0,0.35);
     }
 
-    .platform--primary {
-      border-color: var(--accent);
-    }
+    .platform--primary { border-color: var(--accent); }
 
     .node-label {
       position: absolute;
@@ -302,8 +285,7 @@
 
     .icon-instagram {
       border-radius: 20px;
-      background:
-        radial-gradient(circle at 30% 105%, #ffd600 0 15%, #ff7a00 30%, #ff0169 52%, #d300c5 70%, #7638fa 100%);
+      background: radial-gradient(circle at 30% 105%, #ffd600 0 15%, #ff7a00 30%, #ff0169 52%, #d300c5 70%, #7638fa 100%);
     }
 
     .platform strong {
@@ -368,9 +350,7 @@
     }
 
     @media (max-width: 1050px) {
-      .page {
-        width: min(760px, calc(100% - 40px));
-      }
+      .page { width: min(760px, calc(100% - 40px)); }
 
       .main {
         padding: 64px 0;
@@ -378,9 +358,7 @@
         gap: 56px;
       }
 
-      .hero h1 {
-        font-size: clamp(94px, 18vw, 150px);
-      }
+      .hero h1 { font-size: clamp(94px, 18vw, 150px); }
     }
 
     @media (max-width: 640px) {
@@ -401,13 +379,9 @@
         gap: 42px;
       }
 
-      .signal-label {
-        font-size: 9px;
-      }
+      .signal-label { font-size: 9px; }
 
-      .hero h1 {
-        font-size: clamp(70px, 23vw, 104px);
-      }
+      .hero h1 { font-size: clamp(70px, 23vw, 104px); }
 
       .hero__signal {
         margin-top: 20px;
@@ -455,9 +429,7 @@
         font-size: 25px;
       }
 
-      .platform strong {
-        font-size: 16px;
-      }
+      .platform strong { font-size: 16px; }
 
       .platform p {
         margin-top: 7px;
@@ -479,23 +451,11 @@
         text-align: center;
       }
     }
-
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        scroll-behavior: auto !important;
-        animation: none !important;
-        transition: none !important;
-      }
-    }
-
   </style>
 </head>
 
 <body>
   <div class="page">
-
     <header class="topbar">
       <span class="topbar__brand">FRSSN SIGNAL // NODE 001</span>
 
@@ -506,7 +466,6 @@
     </header>
 
     <main class="main">
-
       <section class="hero" aria-labelledby="page-title">
         <p class="signal-label">Connection stable · Signal detected</p>
 
@@ -523,7 +482,6 @@
       </section>
 
       <section class="platforms" aria-label="Посилання на платформи">
-
         <a class="platform platform--primary" href="https://www.beatstars.com/ibrobeats" target="_blank" rel="noopener noreferrer">
           <span class="node-label">Primary node</span>
           <span class="platform__icon icon-beatstars" aria-hidden="true">B★</span>
@@ -563,7 +521,6 @@
           </div>
           <span class="arrow" aria-hidden="true">↗</span>
         </a>
-
       </section>
     </main>
 
@@ -592,80 +549,43 @@
     }
 
     const signalCycle = [
-      {
-        src: "./signal-01-main.mp3",
-        mode: "single",
-        endStatus: "Signal lost"
-      },
-      {
-        src: "./signal-02-noise.mp3",
-        mode: "repeatable",
-        endStatus: "Signal unavailable"
-      },
-      {
-        src: "./signal-02-noise.mp3",
-        mode: "repeatable",
-        endStatus: "Signal unavailable"
-      },
-      {
-        src: "./signal-02-noise.mp3",
-        mode: "repeatable",
-        endStatus: "Signal unavailable"
-      },
-      {
-        src: "./signal-02-noise.mp3",
-        mode: "repeatable",
-        endStatus: "Signal unavailable"
-      },
-      {
-        src: "./signal-03-phone.mp3",
-        mode: "single",
-        endStatus: "Signal lost"
-      },
-      {
-        src: "./signal-02-noise.mp3",
-        mode: "repeatable",
-        endStatus: "Signal unavailable"
-      },
-      {
-        src: "./signal-02-noise.mp3",
-        mode: "repeatable",
-        endStatus: "Signal unavailable"
-      },
-      {
-        src: "./signal-02-noise.mp3",
-        mode: "repeatable",
-        endStatus: "Signal unavailable"
-      },
-      {
-        src: "./signal-02-noise.mp3",
-        mode: "repeatable",
-        endStatus: "Signal unavailable"
-      },
-      {
-        src: "./signal-02-noise.mp3",
-        mode: "repeatable",
-        endStatus: "Signal unavailable"
-      }
+      { src: "./signal-01-main.mp3", mode: "single", endStatus: "Signal lost" },
+
+      { src: "./signal-02-noise.mp3", mode: "repeatable", endStatus: "Signal unavailable" },
+      { src: "./signal-02-noise.mp3", mode: "repeatable", endStatus: "Signal unavailable" },
+      { src: "./signal-02-noise.mp3", mode: "repeatable", endStatus: "Signal unavailable" },
+      { src: "./signal-02-noise.mp3", mode: "repeatable", endStatus: "Signal unavailable" },
+
+      { src: "./signal-03-phone.mp3", mode: "single", endStatus: "Signal lost" },
+
+      { src: "./signal-02-noise.mp3", mode: "repeatable", endStatus: "Signal unavailable" },
+      { src: "./signal-02-noise.mp3", mode: "repeatable", endStatus: "Signal unavailable" },
+      { src: "./signal-02-noise.mp3", mode: "repeatable", endStatus: "Signal unavailable" },
+      { src: "./signal-02-noise.mp3", mode: "repeatable", endStatus: "Signal unavailable" },
+
+      { src: "./signal-04-beat.mp3", mode: "single", endStatus: "Signal lost" },
+      { src: "./signal-04-beat.mp3", mode: "single", endStatus: "Signal lost" },
+
+      { src: "./signal-02-noise.mp3", mode: "repeatable", endStatus: "Signal unavailable" },
+      { src: "./signal-02-noise.mp3", mode: "repeatable", endStatus: "Signal unavailable" },
+      { src: "./signal-02-noise.mp3", mode: "repeatable", endStatus: "Signal unavailable" },
+      { src: "./signal-02-noise.mp3", mode: "repeatable", endStatus: "Signal unavailable" }
     ];
 
-    let visitCount = Number(localStorage.getItem("frssnSignalVisit") || "0");
+    const visitCount = Number(localStorage.getItem("frssnSignalVisit") || "0");
     const cycleIndex = visitCount % signalCycle.length;
     const currentSignal = signalCycle[cycleIndex];
-    let signalUsed = false;
 
     localStorage.setItem("frssnSignalVisit", String(visitCount + 1));
 
-    function setStatus(text) {
-      if (!signalStatus || !signalStatusText) return;
+    let signalUsed = false;
 
+    function setStatus(text) {
       signalStatus.classList.add("is-lost");
       signalStatusText.textContent = text;
     }
 
     function setSignalEnded() {
-      if (!signalButton) return;
-
       signalButton.classList.remove("is-playing");
 
       if (currentSignal.mode === "single") {
@@ -698,7 +618,7 @@
           }
 
           console.warn("FRSSN audio error:", error);
-          alert("Аудіо не знайдено. Перевір файли signal-01-main.mp3, signal-02-noise.mp3, signal-03-phone.mp3 поруч з index.html");
+          alert("Аудіо не знайдено. Перевір файли signal-01-main.mp3, signal-02-noise.mp3, signal-03-phone.mp3, signal-04-beat.mp3 поруч з index.html");
         }
       });
 
