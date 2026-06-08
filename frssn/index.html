@@ -576,9 +576,7 @@
     </footer>
   </div>
 
-  <audio id="signalAudio" preload="auto">
-    <source src="./frssn-node-001.mp3" type="audio/mpeg">
-  </audio>
+  <audio id="signalAudio" preload="auto"></audio>
 
   <script>
     "use strict";
@@ -589,47 +587,136 @@
     const signalStatus = document.getElementById("signalStatus");
     const signalStatusText = document.getElementById("signalStatusText");
 
-    let signalUsed = false;
-
     if (yearElement) {
       yearElement.textContent = new Date().getFullYear();
     }
 
-    function setSignalLost() {
-      signalButton.classList.remove("is-playing");
-      signalButton.classList.add("is-lost");
-      signalButton.setAttribute("aria-label", "FRSSN signal lost");
+    const signalCycle = [
+      {
+        src: "./signal-01-main.mp3",
+        mode: "single",
+        endStatus: "Signal lost"
+      },
+      {
+        src: "./signal-02-noise.mp3",
+        mode: "repeatable",
+        endStatus: "Signal unavailable"
+      },
+      {
+        src: "./signal-02-noise.mp3",
+        mode: "repeatable",
+        endStatus: "Signal unavailable"
+      },
+      {
+        src: "./signal-02-noise.mp3",
+        mode: "repeatable",
+        endStatus: "Signal unavailable"
+      },
+      {
+        src: "./signal-02-noise.mp3",
+        mode: "repeatable",
+        endStatus: "Signal unavailable"
+      },
+      {
+        src: "./signal-03-phone.mp3",
+        mode: "single",
+        endStatus: "Signal lost"
+      },
+      {
+        src: "./signal-02-noise.mp3",
+        mode: "repeatable",
+        endStatus: "Signal unavailable"
+      },
+      {
+        src: "./signal-02-noise.mp3",
+        mode: "repeatable",
+        endStatus: "Signal unavailable"
+      },
+      {
+        src: "./signal-02-noise.mp3",
+        mode: "repeatable",
+        endStatus: "Signal unavailable"
+      },
+      {
+        src: "./signal-02-noise.mp3",
+        mode: "repeatable",
+        endStatus: "Signal unavailable"
+      },
+      {
+        src: "./signal-02-noise.mp3",
+        mode: "repeatable",
+        endStatus: "Signal unavailable"
+      }
+    ];
+
+    let visitCount = Number(localStorage.getItem("frssnSignalVisit") || "0");
+    const cycleIndex = visitCount % signalCycle.length;
+    const currentSignal = signalCycle[cycleIndex];
+    let signalUsed = false;
+
+    localStorage.setItem("frssnSignalVisit", String(visitCount + 1));
+
+    function setStatus(text) {
+      if (!signalStatus || !signalStatusText) return;
 
       signalStatus.classList.add("is-lost");
-      signalStatusText.textContent = "Signal lost";
+      signalStatusText.textContent = text;
+    }
+
+    function setSignalEnded() {
+      if (!signalButton) return;
+
+      signalButton.classList.remove("is-playing");
+
+      if (currentSignal.mode === "single") {
+        signalButton.classList.add("is-lost");
+        signalButton.setAttribute("aria-label", "FRSSN signal lost");
+      }
+
+      setStatus(currentSignal.endStatus);
     }
 
     if (signalButton && signalAudio) {
+      signalAudio.src = currentSignal.src;
       signalAudio.load();
 
       signalButton.addEventListener("click", async () => {
-        if (signalUsed) return;
+        if (currentSignal.mode === "single" && signalUsed) return;
+        if (!signalAudio.paused) return;
 
-        signalUsed = true;
+        if (currentSignal.mode === "single") {
+          signalUsed = true;
+        }
 
         try {
           signalAudio.currentTime = 0;
           await signalAudio.play();
           signalButton.classList.add("is-playing");
         } catch (error) {
-          signalUsed = false;
+          if (currentSignal.mode === "single") {
+            signalUsed = false;
+          }
+
           console.warn("FRSSN audio error:", error);
-          alert("Аудіо не знайдено. Перевір файл frssn-node-001.mp3 поруч з index.html");
+          alert("Аудіо не знайдено. Перевір файли signal-01-main.mp3, signal-02-noise.mp3, signal-03-phone.mp3 поруч з index.html");
         }
       });
 
       signalAudio.addEventListener("ended", () => {
         signalAudio.currentTime = 0;
-        setSignalLost();
+        signalButton.classList.remove("is-playing");
+
+        if (currentSignal.mode === "repeatable") {
+          signalUsed = false;
+          setStatus("Signal unavailable");
+          return;
+        }
+
+        setSignalEnded();
       });
 
       signalAudio.addEventListener("error", () => {
-        console.warn("Audio file failed to load: ./frssn-node-001.mp3");
+        console.warn("Audio file failed to load:", currentSignal.src);
       });
     }
   </script>
