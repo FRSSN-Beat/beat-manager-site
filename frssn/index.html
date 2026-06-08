@@ -109,6 +109,15 @@
       animation: pulse 1.8s ease-in-out infinite;
     }
 
+    .topbar__status.is-lost {
+      color: var(--accent);
+    }
+
+    .topbar__status.is-lost .status-dot {
+      opacity: 0.5;
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+
     .main {
       padding: 48px 0;
       display: grid;
@@ -194,6 +203,16 @@
     .wave.is-playing span {
       animation-duration: 0.55s;
       box-shadow: 0 0 18px rgba(214,255,40,1);
+    }
+
+    .wave.is-lost {
+      cursor: default;
+    }
+
+    .wave.is-lost span {
+      opacity: 0.22;
+      animation-duration: 2.2s;
+      box-shadow: 0 0 5px rgba(214,255,40,0.25);
     }
 
     .wave:focus-visible {
@@ -486,9 +505,9 @@
     <header class="topbar">
       <span class="topbar__brand">FRSSN SIGNAL // NODE 001</span>
 
-      <span class="topbar__status">
+      <span class="topbar__status" id="signalStatus">
         <span class="status-dot" aria-hidden="true"></span>
-        Online
+        <span id="signalStatusText">Online</span>
       </span>
     </header>
 
@@ -505,7 +524,7 @@
           class="wave"
           id="signalButton"
           type="button"
-          aria-label="Увімкнути або вимкнути FRSSN signal"
+          aria-label="Увімкнути FRSSN signal"
         >
           <span></span><span></span><span></span><span></span>
           <span></span><span></span><span></span>
@@ -593,24 +612,40 @@
     const yearElement = document.getElementById("year");
     const signalButton = document.getElementById("signalButton");
     const signalAudio = document.getElementById("signalAudio");
+    const signalStatus = document.getElementById("signalStatus");
+    const signalStatusText = document.getElementById("signalStatusText");
+
+    let signalUsed = false;
 
     if (yearElement) {
       yearElement.textContent = new Date().getFullYear();
+    }
+
+    function setSignalLost() {
+      signalUsed = true;
+
+      if (signalButton) {
+        signalButton.classList.remove("is-playing");
+        signalButton.classList.add("is-lost");
+        signalButton.setAttribute("aria-label", "FRSSN signal lost");
+      }
+
+      if (signalStatus && signalStatusText) {
+        signalStatus.classList.add("is-lost");
+        signalStatusText.textContent = "Signal lost";
+      }
     }
 
     if (signalButton && signalAudio) {
       signalAudio.load();
 
       signalButton.addEventListener("click", async () => {
+        if (signalUsed) return;
+
         try {
-          if (signalAudio.paused) {
-            signalAudio.currentTime = 0;
-            await signalAudio.play();
-            signalButton.classList.add("is-playing");
-          } else {
-            signalAudio.pause();
-            signalButton.classList.remove("is-playing");
-          }
+          signalAudio.currentTime = 0;
+          await signalAudio.play();
+          signalButton.classList.add("is-playing");
         } catch (error) {
           console.warn("FRSSN audio error:", error);
           alert("Аудіо не знайдено. Перевір файл frssn-node-001.mp3 поруч з index.html");
@@ -618,8 +653,8 @@
       });
 
       signalAudio.addEventListener("ended", () => {
-        signalButton.classList.remove("is-playing");
         signalAudio.currentTime = 0;
+        setSignalLost();
       });
 
       signalAudio.addEventListener("error", () => {
