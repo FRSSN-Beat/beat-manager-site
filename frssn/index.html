@@ -563,8 +563,7 @@
       { src: "./signal-02-noise.mp3", mode: "repeatable", endStatus: "Signal unavailable" },
       { src: "./signal-02-noise.mp3", mode: "repeatable", endStatus: "Signal unavailable" },
 
-      { src: "./signal-04-beat.mp3", mode: "single", endStatus: "Signal lost" },
-      { src: "./signal-04-beat.mp3", mode: "single", endStatus: "Signal lost" },
+      { src: "./signal-04-beat.mp3", mode: "repeatable", endStatus: "Signal detected" },
 
       { src: "./signal-02-noise.mp3", mode: "repeatable", endStatus: "Signal unavailable" },
       { src: "./signal-02-noise.mp3", mode: "repeatable", endStatus: "Signal unavailable" },
@@ -628,7 +627,7 @@
 
         if (currentSignal.mode === "repeatable") {
           signalUsed = false;
-          setStatus("Signal unavailable");
+          setStatus(currentSignal.endStatus);
           return;
         }
 
