@@ -563,7 +563,12 @@
       { src: "./signal-02-noise.mp3", mode: "repeatable", endStatus: "Signal unavailable" },
       { src: "./signal-02-noise.mp3", mode: "repeatable", endStatus: "Signal unavailable" },
 
-      { src: "./signal-04-beat.mp3", mode: "repeatable", endStatus: "Signal detected" },
+      {
+        src: "./signal-04-beat.mp3",
+        intro: "./signal-02-noise.mp3",
+        mode: "repeatable",
+        endStatus: "Signal detected"
+      },
 
       { src: "./signal-02-noise.mp3", mode: "repeatable", endStatus: "Signal unavailable" },
       { src: "./signal-02-noise.mp3", mode: "repeatable", endStatus: "Signal unavailable" },
@@ -596,7 +601,10 @@
     }
 
     if (signalButton && signalAudio) {
-      signalAudio.src = currentSignal.src;
+      let beatIntroPlayed = false;
+      let playingIntro = false;
+
+      signalAudio.src = currentSignal.intro || currentSignal.src;
       signalAudio.load();
 
       signalButton.addEventListener("click", async () => {
@@ -608,20 +616,46 @@
         }
 
         try {
+          signalButton.classList.add("is-playing");
+
+          if (currentSignal.intro && !beatIntroPlayed) {
+            playingIntro = true;
+            beatIntroPlayed = true;
+            signalAudio.src = currentSignal.intro;
+          } else {
+            playingIntro = false;
+            signalAudio.src = currentSignal.src;
+          }
+
           signalAudio.currentTime = 0;
           await signalAudio.play();
-          signalButton.classList.add("is-playing");
         } catch (error) {
           if (currentSignal.mode === "single") {
             signalUsed = false;
           }
 
+          playingIntro = false;
           console.warn("FRSSN audio error:", error);
           alert("Аудіо не знайдено. Перевір файли signal-01-main.mp3, signal-02-noise.mp3, signal-03-phone.mp3, signal-04-beat.mp3 поруч з index.html");
         }
       });
 
-      signalAudio.addEventListener("ended", () => {
+      signalAudio.addEventListener("ended", async () => {
+        if (playingIntro && currentSignal.intro) {
+          try {
+            playingIntro = false;
+            signalAudio.src = currentSignal.src;
+            signalAudio.currentTime = 0;
+            await signalAudio.play();
+            return;
+          } catch (error) {
+            console.warn("FRSSN beat audio error:", error);
+            signalButton.classList.remove("is-playing");
+            setStatus("Signal unavailable");
+            return;
+          }
+        }
+
         signalAudio.currentTime = 0;
         signalButton.classList.remove("is-playing");
 
@@ -635,7 +669,7 @@
       });
 
       signalAudio.addEventListener("error", () => {
-        console.warn("Audio file failed to load:", currentSignal.src);
+        console.warn("Audio file failed to load:", signalAudio.currentSrc || currentSignal.src);
       });
     }
   </script>
