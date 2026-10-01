@@ -339,6 +339,86 @@
 
     .footer a:hover { color: var(--accent); }
 
+
+
+    .code-panel {
+      width: min(420px, 100%);
+      margin: 28px auto 0;
+      padding: 14px;
+      border: 1px solid rgba(214,255,40,0.24);
+      background: rgba(7, 9, 7, 0.72);
+      box-shadow: inset 0 0 24px rgba(214,255,40,0.025);
+      text-align: left;
+    }
+
+    .code-panel__label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-family: monospace;
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .code-panel__row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+    }
+
+    .code-panel__input {
+      min-width: 0;
+      height: 42px;
+      padding: 0 12px;
+      color: var(--accent);
+      border: 1px solid rgba(255,255,255,0.16);
+      outline: none;
+      background: #070907;
+      font-family: monospace;
+      font-size: 15px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      caret-color: var(--accent);
+    }
+
+    .code-panel__input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(214,255,40,0.14), 0 0 18px rgba(214,255,40,0.06);
+    }
+
+    .code-panel__button {
+      height: 42px;
+      padding: 0 14px;
+      color: #0a0c08;
+      border: 1px solid var(--accent);
+      background: var(--accent);
+      font-family: monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .code-panel__button:hover {
+      filter: brightness(1.08);
+      box-shadow: 0 0 16px rgba(214,255,40,0.18);
+    }
+
+    .code-panel__status {
+      min-height: 18px;
+      margin: 9px 0 0;
+      color: var(--muted);
+      font-family: monospace;
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .code-panel__status.is-valid { color: var(--accent); }
+    .code-panel__status.is-invalid { color: #b9bdaf; }
+
     @keyframes pulse {
       0%, 100% { opacity: 0.45; transform: scale(0.9); }
       50% { opacity: 1; transform: scale(1.15); }
@@ -479,6 +559,24 @@
         </button>
 
         <p class="hero__description">Beats · Instrumentals · Sound</p>
+
+        <form class="code-panel" id="signalCodeForm" autocomplete="off">
+          <label class="code-panel__label" for="signalCodeInput">Signal input</label>
+          <div class="code-panel__row">
+            <input
+              class="code-panel__input"
+              id="signalCodeInput"
+              name="signalCode"
+              type="text"
+              maxlength="24"
+              placeholder="//"
+              spellcheck="false"
+              aria-describedby="signalCodeStatus"
+            >
+            <button class="code-panel__button" type="submit">Transmit</button>
+          </div>
+          <p class="code-panel__status" id="signalCodeStatus" aria-live="polite"></p>
+        </form>
       </section>
 
       <section class="platforms" aria-label="Посилання на платформи">
@@ -543,9 +641,49 @@
     const signalAudio = document.getElementById("signalAudio");
     const signalStatus = document.getElementById("signalStatus");
     const signalStatusText = document.getElementById("signalStatusText");
+    const signalCodeForm = document.getElementById("signalCodeForm");
+    const signalCodeInput = document.getElementById("signalCodeInput");
+    const signalCodeStatus = document.getElementById("signalCodeStatus");
 
     if (yearElement) {
       yearElement.textContent = new Date().getFullYear();
+    }
+
+
+
+    const ARG_CODES = {
+      "∴∆Ξ": {
+        message: "SIGNAL ACCEPTED // NODE UNLOCKED"
+      }
+    };
+
+    function normalizeSignalCode(value) {
+      return value.trim().replace(/\s+/g, "");
+    }
+
+    if (signalCodeForm && signalCodeInput && signalCodeStatus) {
+      signalCodeForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const code = normalizeSignalCode(signalCodeInput.value);
+        signalCodeStatus.classList.remove("is-valid", "is-invalid");
+
+        if (!code) {
+          signalCodeStatus.textContent = "WAITING FOR INPUT";
+          return;
+        }
+
+        if (ARG_CODES[code]) {
+          signalCodeStatus.textContent = ARG_CODES[code].message;
+          signalCodeStatus.classList.add("is-valid");
+          signalStatusText.textContent = "Signal accepted";
+          signalStatus.classList.remove("is-lost");
+          localStorage.setItem("frssnArgCode", code);
+        } else {
+          signalCodeStatus.textContent = "UNKNOWN SIGNAL";
+          signalCodeStatus.classList.add("is-invalid");
+        }
+      });
     }
 
     const signalCycle = [
