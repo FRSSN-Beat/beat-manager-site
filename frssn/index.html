@@ -2,6 +2,7 @@
 <html lang="uk">
 <head>
   <meta charset="UTF-8">
+
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1, viewport-fit=cover"
@@ -117,7 +118,6 @@
     }
 
 
-
     /* =========================================================
        PAGE
        ========================================================= */
@@ -137,12 +137,12 @@
       z-index: 2;
 
       display: grid;
+
       grid-template-rows:
         auto
         1fr
         auto;
     }
-
 
 
     /* =========================================================
@@ -198,7 +198,6 @@
     }
 
 
-
     /* =========================================================
        MAIN
        ========================================================= */
@@ -221,7 +220,6 @@
           120px
         );
     }
-
 
 
     /* =========================================================
@@ -312,7 +310,6 @@
       letter-spacing: 0.7em;
       text-indent: 0.7em;
     }
-
 
 
     /* =========================================================
@@ -439,7 +436,6 @@
     }
 
 
-
     /* =========================================================
        PLATFORM GRID
        ========================================================= */
@@ -560,7 +556,6 @@
     }
 
 
-
     /* =========================================================
        PLATFORM ICONS
        ========================================================= */
@@ -575,6 +570,8 @@
 
       place-items: center;
 
+      position: relative;
+
       border:
         1px
         solid
@@ -584,6 +581,9 @@
       font-weight: 900;
     }
 
+
+    /* BEATSTORE */
+
     .icon-store {
       color: #101308;
 
@@ -591,13 +591,8 @@
         var(--accent);
     }
 
-    .icon-tiktok {
-      color: white;
 
-      text-shadow:
-        -3px 0 #25f4ee,
-        3px 0 #fe2c55;
-    }
+    /* YOUTUBE */
 
     .icon-youtube {
       color: white;
@@ -608,20 +603,87 @@
         #f32020;
     }
 
-    .icon-instagram {
-      border-radius: 20px;
+
+    /* =========================================================
+       SEALED LOCK ICON
+       Pure CSS — no image
+       ========================================================= */
+
+    .icon-lock {
+      border-color:
+        rgba(214,255,40,0.18);
 
       background:
-        radial-gradient(
-          circle at 30% 105%,
-          #ffd600 0 15%,
-          #ff7a00 30%,
-          #ff0169 52%,
-          #d300c5 70%,
-          #7638fa 100%
-        );
+        rgba(214,255,40,0.025);
+
+      box-shadow:
+        inset
+        0
+        0
+        28px
+        rgba(214,255,40,0.025);
     }
 
+    /* BODY */
+
+    .icon-lock::before {
+      content: "";
+
+      position: absolute;
+
+      width: 28px;
+      height: 21px;
+
+      left: 50%;
+      top: 34px;
+
+      transform:
+        translateX(-50%);
+
+      border:
+        2px
+        solid
+        rgba(214,255,40,0.72);
+
+      border-radius: 3px;
+
+      background:
+        rgba(214,255,40,0.035);
+
+      box-shadow:
+        0 0 11px rgba(214,255,40,0.06),
+        inset 0 0 9px rgba(214,255,40,0.04);
+    }
+
+    /* SHACKLE */
+
+    .icon-lock::after {
+      content: "";
+
+      position: absolute;
+
+      width: 18px;
+      height: 17px;
+
+      left: 50%;
+      top: 18px;
+
+      transform:
+        translateX(-50%);
+
+      border:
+        2px
+        solid
+        rgba(214,255,40,0.72);
+
+      border-bottom: 0;
+
+      border-radius:
+        14px
+        14px
+        0
+        0;
+    }
 
 
     /* =========================================================
@@ -667,7 +729,6 @@
     }
 
 
-
     /* =========================================================
        LOCKED NODES
        ========================================================= */
@@ -689,11 +750,11 @@
     }
 
     .platform--locked:hover {
-      opacity: 0.82;
+      opacity: 0.84;
 
       filter:
-        grayscale(0.2)
-        saturate(0.52);
+        grayscale(0.18)
+        saturate(0.55);
 
       transform:
         translateY(-3px);
@@ -731,7 +792,7 @@
     }
 
     .platform--locked .platform__icon {
-      opacity: 0.55;
+      opacity: 0.7;
     }
 
     .platform--locked strong {
@@ -750,6 +811,29 @@
 
     .platform--locked:hover .arrow {
       opacity: 0.72;
+    }
+
+    .platform--locked:hover .icon-lock {
+      border-color:
+        rgba(214,255,40,0.32);
+
+      box-shadow:
+        inset
+        0
+        0
+        30px
+        rgba(214,255,40,0.045),
+
+        0
+        0
+        18px
+        rgba(214,255,40,0.035);
+    }
+
+    .platform--locked:hover .icon-lock::before,
+    .platform--locked:hover .icon-lock::after {
+      border-color:
+        rgba(214,255,40,0.95);
     }
 
     .platform--locked.is-hit {
@@ -788,6 +872,15 @@
         3px 0 rgba(255,255,255,0.15);
     }
 
+    .platform--locked.is-hit .icon-lock {
+      border-color:
+        rgba(214,255,40,0.7);
+
+      box-shadow:
+        0 0 24px
+        rgba(214,255,40,0.09);
+    }
+
     .locked-status {
       font-family: monospace;
 
@@ -795,7 +888,6 @@
 
       text-transform: uppercase;
     }
-
 
 
     /* =========================================================
@@ -845,7 +937,6 @@
     .footer a:hover {
       color: var(--accent);
     }
-
 
 
     /* =========================================================
@@ -1030,7 +1121,6 @@
     }
 
 
-
     /* =========================================================
        ANIMATIONS
        ========================================================= */
@@ -1119,7 +1209,6 @@
     }
 
 
-
     /* =========================================================
        TABLET
        ========================================================= */
@@ -1155,7 +1244,6 @@
     }
 
 
-
     /* =========================================================
        MOBILE
        ========================================================= */
@@ -1164,7 +1252,7 @@
       .page {
         width:
           min(
-            100% - 28px,
+            calc(100% - 28px),
             440px
           );
 
@@ -1293,6 +1381,20 @@
         font-size: 25px;
       }
 
+      .icon-lock::before {
+        width: 25px;
+        height: 19px;
+
+        top: 30px;
+      }
+
+      .icon-lock::after {
+        width: 16px;
+        height: 15px;
+
+        top: 15px;
+      }
+
       .platform strong {
         font-size: 16px;
       }
@@ -1329,10 +1431,10 @@
 </head>
 
 
-
 <body>
 
   <div class="page">
+
 
     <!-- =====================================================
          TOPBAR
@@ -1363,15 +1465,15 @@
     </header>
 
 
-
     <!-- =====================================================
          MAIN
          ===================================================== -->
 
     <main class="main">
 
+
       <!-- ===================================================
-           HERO / SIGNAL
+           HERO
            =================================================== -->
 
       <section
@@ -1390,7 +1492,6 @@
         <p class="hero__signal">
           SIGNAL
         </p>
-
 
 
         <!-- SIGNAL AUDIO BUTTON -->
@@ -1413,11 +1514,9 @@
         </button>
 
 
-
         <p class="hero__description">
           Beats · Instrumentals · Sound
         </p>
-
 
 
         <!-- ARG CODE INPUT -->
@@ -1466,7 +1565,6 @@
         </form>
 
       </section>
-
 
 
       <!-- ===================================================
@@ -1521,16 +1619,15 @@
         </a>
 
 
-
         <!-- =================================================
-             NODE 02 — TIKTOK / SEALED
+             NODE 02 — SEALED
              ================================================= -->
 
         <button
           class="platform platform--locked"
           type="button"
-          data-locked-node="TIKTOK"
-          aria-label="TikTok node sealed"
+          data-locked-node="NODE-02"
+          aria-label="Node 02 sealed"
         >
 
           <span class="node-label">
@@ -1538,11 +1635,9 @@
           </span>
 
           <span
-            class="platform__icon icon-tiktok"
+            class="platform__icon icon-lock"
             aria-hidden="true"
-          >
-            ♪
-          </span>
+          ></span>
 
           <div>
 
@@ -1566,9 +1661,8 @@
         </button>
 
 
-
         <!-- =================================================
-             NODE 03 — YOUTUBE / ACTIVE
+             NODE 03 — YOUTUBE
              ================================================= -->
 
         <a
@@ -1611,16 +1705,15 @@
         </a>
 
 
-
         <!-- =================================================
-             NODE 04 — INSTAGRAM / SEALED
+             NODE 04 — SEALED
              ================================================= -->
 
         <button
           class="platform platform--locked"
           type="button"
-          data-locked-node="INSTAGRAM"
-          aria-label="Instagram node sealed"
+          data-locked-node="NODE-04"
+          aria-label="Node 04 sealed"
         >
 
           <span class="node-label">
@@ -1628,11 +1721,9 @@
           </span>
 
           <span
-            class="platform__icon icon-instagram"
+            class="platform__icon icon-lock"
             aria-hidden="true"
-          >
-            ◎
-          </span>
+          ></span>
 
           <div>
 
@@ -1658,7 +1749,6 @@
       </section>
 
     </main>
-
 
 
     <!-- =====================================================
@@ -1693,7 +1783,6 @@
   </div>
 
 
-
   <!-- =======================================================
        MAIN SIGNAL AUDIO
        ======================================================= -->
@@ -1704,14 +1793,12 @@
   ></audio>
 
 
-
   <!-- =======================================================
        JAVASCRIPT
        ======================================================= -->
 
   <script>
     "use strict";
-
 
 
     /* =======================================================
@@ -1743,7 +1830,6 @@
       document.getElementById("signalCodeStatus");
 
 
-
     /* =======================================================
        YEAR
        ======================================================= */
@@ -1752,7 +1838,6 @@
       yearElement.textContent =
         new Date().getFullYear();
     }
-
 
 
     /* =======================================================
@@ -1769,7 +1854,6 @@
     };
 
 
-
     function normalizeSignalCode(value) {
 
       return value
@@ -1777,7 +1861,6 @@
         .replace(/\s+/g, "");
 
     }
-
 
 
     if (
@@ -1805,7 +1888,6 @@
             );
 
 
-
           if (!code) {
 
             signalCodeStatus.textContent =
@@ -1814,7 +1896,6 @@
             return;
 
           }
-
 
 
           if (ARG_CODES[code]) {
@@ -1853,7 +1934,6 @@
       );
 
     }
-
 
 
     /* =======================================================
@@ -1956,7 +2036,6 @@
     ];
 
 
-
     const visitCount =
       Number(
         localStorage.getItem(
@@ -1965,16 +2044,13 @@
       );
 
 
-
     const cycleIndex =
       visitCount %
       signalCycle.length;
 
 
-
     const currentSignal =
       signalCycle[cycleIndex];
-
 
 
     localStorage.setItem(
@@ -1985,14 +2061,15 @@
     );
 
 
-
     let signalUsed = false;
-
 
 
     function setStatus(text) {
 
-      if (!signalStatus || !signalStatusText) {
+      if (
+        !signalStatus ||
+        !signalStatusText
+      ) {
         return;
       }
 
@@ -2006,7 +2083,6 @@
     }
 
 
-
     function setSignalEnded() {
 
       if (!signalButton) {
@@ -2016,7 +2092,6 @@
       signalButton
         .classList
         .remove("is-playing");
-
 
 
       if (
@@ -2036,13 +2111,11 @@
       }
 
 
-
       setStatus(
         currentSignal.endStatus
       );
 
     }
-
 
 
     /* =======================================================
@@ -2058,13 +2131,11 @@
       let playingIntro = false;
 
 
-
       signalAudio.src =
         currentSignal.intro ||
         currentSignal.src;
 
       signalAudio.load();
-
 
 
       signalButton.addEventListener(
@@ -2076,30 +2147,21 @@
               "single" &&
             signalUsed
           ) {
-
             return;
-
           }
-
 
 
           if (!signalAudio.paused) {
-
             return;
-
           }
-
 
 
           if (
             currentSignal.mode ===
             "single"
           ) {
-
             signalUsed = true;
-
           }
-
 
 
           try {
@@ -2107,7 +2169,6 @@
             signalButton
               .classList
               .add("is-playing");
-
 
 
             if (
@@ -2131,11 +2192,9 @@
             }
 
 
-
             signalAudio.currentTime = 0;
 
             await signalAudio.play();
-
 
 
           } catch (error) {
@@ -2144,22 +2203,17 @@
               currentSignal.mode ===
               "single"
             ) {
-
               signalUsed = false;
-
             }
 
 
-
             playingIntro = false;
-
 
 
             console.warn(
               "FRSSN audio error:",
               error
             );
-
 
 
             alert(
@@ -2170,7 +2224,6 @@
 
         }
       );
-
 
 
       signalAudio.addEventListener(
@@ -2197,7 +2250,6 @@
               return;
 
 
-
             } catch (error) {
 
               console.warn(
@@ -2220,13 +2272,11 @@
           }
 
 
-
           signalAudio.currentTime = 0;
 
           signalButton
             .classList
             .remove("is-playing");
-
 
 
           if (
@@ -2245,12 +2295,10 @@
           }
 
 
-
           setSignalEnded();
 
         }
       );
-
 
 
       signalAudio.addEventListener(
@@ -2269,15 +2317,12 @@
     }
 
 
-
     /* =======================================================
-       LOCKED NODE AUDIO
-       Synthesized locally in browser.
-       No separate audio file is needed.
+       SEALED NODE AUDIO
+       Synthesized directly in browser
        ======================================================= */
 
     let lockedAudioContext = null;
-
 
 
     function playLockedNodeSound() {
@@ -2287,11 +2332,9 @@
         window.webkitAudioContext;
 
 
-
       if (!AudioCtx) {
         return;
       }
-
 
 
       if (!lockedAudioContext) {
@@ -2302,36 +2345,27 @@
       }
 
 
-
       const ctx =
         lockedAudioContext;
-
 
 
       if (
         ctx.state ===
         "suspended"
       ) {
-
         ctx.resume();
-
       }
-
 
 
       const now =
         ctx.currentTime;
 
 
-
       const duration =
         0.24;
 
 
-
-      /* -----------------------------------------------
-         STATIC / RADIO NOISE
-         ----------------------------------------------- */
+      /* STATIC */
 
       const noiseBuffer =
         ctx.createBuffer(
@@ -2344,11 +2378,9 @@
         );
 
 
-
       const noiseData =
         noiseBuffer
           .getChannelData(0);
-
 
 
       for (
@@ -2373,13 +2405,11 @@
       }
 
 
-
       const noise =
         ctx.createBufferSource();
 
       noise.buffer =
         noiseBuffer;
-
 
 
       const filter =
@@ -2395,10 +2425,8 @@
         1.4;
 
 
-
       const noiseGain =
         ctx.createGain();
-
 
 
       noiseGain.gain.setValueAtTime(
@@ -2407,19 +2435,16 @@
       );
 
 
-
       noiseGain.gain.exponentialRampToValueAtTime(
         0.14,
         now + 0.012
       );
 
 
-
       noiseGain.gain.exponentialRampToValueAtTime(
         0.0001,
         now + duration
       );
-
 
 
       noise.connect(filter);
@@ -2431,10 +2456,7 @@
       );
 
 
-
-      /* -----------------------------------------------
-         LOW ELECTRONIC LOCK HIT
-         ----------------------------------------------- */
+      /* LOW LOCK HIT */
 
       const osc =
         ctx.createOscillator();
@@ -2443,10 +2465,8 @@
         ctx.createGain();
 
 
-
       osc.type =
         "square";
-
 
 
       osc.frequency.setValueAtTime(
@@ -2455,12 +2475,10 @@
       );
 
 
-
       osc.frequency.exponentialRampToValueAtTime(
         47,
         now + 0.13
       );
-
 
 
       oscGain.gain.setValueAtTime(
@@ -2469,12 +2487,10 @@
       );
 
 
-
       oscGain.gain.exponentialRampToValueAtTime(
         0.0001,
         now + 0.15
       );
-
 
 
       osc.connect(
@@ -2482,16 +2498,12 @@
       );
 
 
-
       oscGain.connect(
         ctx.destination
       );
 
 
-
-      /* -----------------------------------------------
-         SHORT HIGH DIGITAL CLICK
-         ----------------------------------------------- */
+      /* HIGH DIGITAL CLICK */
 
       const click =
         ctx.createOscillator();
@@ -2500,15 +2512,14 @@
         ctx.createGain();
 
 
-
       click.type =
         "square";
+
 
       click.frequency.setValueAtTime(
         1700,
         now
       );
-
 
 
       clickGain.gain.setValueAtTime(
@@ -2517,36 +2528,25 @@
       );
 
 
-
       clickGain.gain.exponentialRampToValueAtTime(
         0.0001,
         now + 0.035
       );
 
 
-
       click.connect(
         clickGain
       );
+
 
       clickGain.connect(
         ctx.destination
       );
 
 
-
-      noise.start(
-        now
-      );
-
-      osc.start(
-        now
-      );
-
-      click.start(
-        now
-      );
-
+      noise.start(now);
+      osc.start(now);
+      click.start(now);
 
 
       noise.stop(
@@ -2564,16 +2564,14 @@
     }
 
 
-
     /* =======================================================
-       LOCKED NODE INTERACTION
+       SEALED NODE INTERACTION
        ======================================================= */
 
     const lockedNodes =
       document.querySelectorAll(
         "[data-locked-node]"
       );
-
 
 
     lockedNodes.forEach(
@@ -2586,10 +2584,7 @@
             playLockedNodeSound();
 
 
-
-            /*
-             * Restart glitch animation
-             */
+            /* Restart glitch */
 
             button
               .classList
@@ -2602,12 +2597,10 @@
               .add("is-hit");
 
 
-
             const status =
               button.querySelector(
                 ".locked-status"
               );
-
 
 
             if (!status) {
@@ -2615,15 +2608,12 @@
             }
 
 
-
             const originalText =
               status.textContent;
 
 
-
             status.textContent =
               "NO ROUTE // SIGNAL CLOSED";
-
 
 
             window.setTimeout(
