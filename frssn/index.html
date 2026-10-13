@@ -606,7 +606,6 @@
 
     /* =========================================================
        SEALED LOCK ICON
-       Pure CSS — no image
        ========================================================= */
 
     .icon-lock {
@@ -623,8 +622,6 @@
         28px
         rgba(214,255,40,0.025);
     }
-
-    /* BODY */
 
     .icon-lock::before {
       content: "";
@@ -654,8 +651,6 @@
         0 0 11px rgba(214,255,40,0.06),
         inset 0 0 9px rgba(214,255,40,0.04);
     }
-
-    /* SHACKLE */
 
     .icon-lock::after {
       content: "";
@@ -1627,7 +1622,7 @@
           class="platform platform--locked"
           type="button"
           data-locked-node="NODE-02"
-          aria-label="Node 02 sealed"
+          aria-label="Sealed node"
         >
 
           <span class="node-label">
@@ -1642,7 +1637,7 @@
           <div>
 
             <strong>
-              TikTok
+              UNIDENTIFIED
             </strong>
 
             <p class="locked-status">
@@ -1713,7 +1708,7 @@
           class="platform platform--locked"
           type="button"
           data-locked-node="NODE-04"
-          aria-label="Node 04 sealed"
+          aria-label="Sealed node"
         >
 
           <span class="node-label">
@@ -1728,7 +1723,7 @@
           <div>
 
             <strong>
-              Instagram
+              UNIDENTIFIED
             </strong>
 
             <p class="locked-status">
@@ -1801,10 +1796,6 @@
     "use strict";
 
 
-    /* =======================================================
-       ELEMENTS
-       ======================================================= */
-
     const yearElement =
       document.getElementById("year");
 
@@ -1830,10 +1821,6 @@
       document.getElementById("signalCodeStatus");
 
 
-    /* =======================================================
-       YEAR
-       ======================================================= */
-
     if (yearElement) {
       yearElement.textContent =
         new Date().getFullYear();
@@ -1841,7 +1828,7 @@
 
 
     /* =======================================================
-       ARG CODES
+       ARG
        ======================================================= */
 
     const ARG_CODES = {
@@ -1937,7 +1924,7 @@
 
 
     /* =======================================================
-       SIGNAL RANDOM CYCLE
+       SIGNAL CYCLE
        ======================================================= */
 
     const signalCycle = [
@@ -2119,7 +2106,7 @@
 
 
     /* =======================================================
-       SIGNAL AUDIO PLAYER
+       SIGNAL AUDIO
        ======================================================= */
 
     if (
@@ -2217,7 +2204,7 @@
 
 
             alert(
-              "Аудіо не знайдено. Перевір файли signal-01-main.mp3, signal-02-noise.mp3, signal-03-phone.mp3, signal-04-beat.mp3 поруч з index.html"
+              "Аудіо не знайдено. Перевір signal-файли поруч з index.html"
             );
 
           }
@@ -2300,26 +2287,11 @@
         }
       );
 
-
-      signalAudio.addEventListener(
-        "error",
-        () => {
-
-          console.warn(
-            "Audio file failed to load:",
-            signalAudio.currentSrc ||
-            currentSignal.src
-          );
-
-        }
-      );
-
     }
 
 
     /* =======================================================
-       SEALED NODE AUDIO
-       Synthesized directly in browser
+       SEALED NODE SOUND
        ======================================================= */
 
     let lockedAudioContext = null;
@@ -2364,8 +2336,6 @@
       const duration =
         0.24;
 
-
-      /* STATIC */
 
       const noiseBuffer =
         ctx.createBuffer(
@@ -2456,8 +2426,6 @@
       );
 
 
-      /* LOW LOCK HIT */
-
       const osc =
         ctx.createOscillator();
 
@@ -2502,8 +2470,6 @@
         ctx.destination
       );
 
-
-      /* HIGH DIGITAL CLICK */
 
       const click =
         ctx.createOscillator();
@@ -2583,8 +2549,6 @@
 
             playLockedNodeSound();
 
-
-            /* Restart glitch */
 
             button
               .classList
