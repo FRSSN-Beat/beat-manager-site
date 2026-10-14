@@ -9,14 +9,9 @@
     content="width=device-width, initial-scale=1, viewport-fit=cover"
   >
 
-  <meta
-    name="theme-color"
-    content="#050605"
-  >
+  <meta name="theme-color" content="#050605">
 
-  <title>
-    FRSSN // Tracks
-  </title>
+  <title>FRSSN // Tracks</title>
 
   <style>
 
@@ -26,21 +21,15 @@
       --panel2:rgba(7,9,7,.88);
 
       --accent:#d6ff28;
-
-      --accent-soft:
-        rgba(214,255,40,.12);
-
-      --accent-line:
-        rgba(214,255,40,.38);
+      --accent-soft:rgba(214,255,40,.12);
+      --accent-line:rgba(214,255,40,.38);
 
       --text:#f3f4ef;
       --muted:#90948a;
 
-      --border:
-        rgba(255,255,255,.16);
+      --border:rgba(255,255,255,.16);
 
-      --content-width:
-        1180px;
+      --content-width:1180px;
     }
 
 
@@ -61,8 +50,7 @@
 
       min-height:100svh;
 
-      color:
-        var(--text);
+      color:var(--text);
 
       background:
 
@@ -80,7 +68,6 @@
         var(--bg);
 
       background-size:
-
         48px 48px,
         48px 48px,
         auto;
@@ -129,8 +116,7 @@
           transparent 30%
         );
 
-      filter:
-        blur(18px);
+      filter:blur(18px);
 
       transform:
         translate3d(-18%,0,0)
@@ -142,8 +128,6 @@
         ease-in-out
         infinite
         alternate;
-
-      opacity:1;
     }
 
 
@@ -181,29 +165,21 @@
     @keyframes ambientSweep {
 
       0% {
-
         transform:
           translate3d(-18%,0,0)
           scale(1.02);
-
       }
 
-
       50% {
-
         transform:
           translate3d(0,2%,0)
           scale(1.06);
-
       }
 
-
       100% {
-
         transform:
           translate3d(18%,0,0)
           scale(1.02);
-
       }
 
     }
@@ -235,8 +211,7 @@
           calc(100% - 56px)
         );
 
-      margin:
-        0 auto;
+      margin:0 auto;
 
       position:relative;
 
@@ -261,32 +236,25 @@
 
       align-items:center;
 
-      justify-content:
-        space-between;
+      justify-content:space-between;
 
       gap:24px;
 
-      color:
-        var(--muted);
+      color:var(--muted);
 
-      font-family:
-        monospace;
+      font-family:monospace;
 
-      font-size:
-        11px;
+      font-size:11px;
 
-      letter-spacing:
-        .18em;
+      letter-spacing:.18em;
 
-      text-transform:
-        uppercase;
+      text-transform:uppercase;
     }
 
 
     .brand {
 
-      color:
-        var(--accent);
+      color:var(--accent);
 
       text-decoration:none;
     }
@@ -309,16 +277,13 @@
 
       border-radius:50%;
 
-      background:
-        var(--accent);
+      background:var(--accent);
 
       box-shadow:
-
         0 0 12px
         var(--accent);
 
       animation:
-
         pulse
         1.8s
         ease-in-out
@@ -334,11 +299,9 @@
 
     .profile {
 
-      margin-top:
-        34px;
+      margin-top:34px;
 
       border:
-
         1px solid
         var(--border);
 
@@ -369,8 +332,7 @@
 
     .profileHead {
 
-      min-height:
-        188px;
+      min-height:188px;
 
       padding:
         30px 34px;
@@ -378,13 +340,9 @@
       display:grid;
 
       grid-template-columns:
+        auto 1fr auto;
 
-        auto
-        1fr
-        auto;
-
-      gap:
-        26px;
+      gap:26px;
 
       align-items:center;
 
@@ -409,30 +367,24 @@
       font:
         10px/1 monospace;
 
-      letter-spacing:
-        .26em;
+      letter-spacing:.26em;
     }
 
 
     .avatar {
 
       width:116px;
-
       height:116px;
 
-      border-radius:
-        50%;
+      border-radius:50%;
 
-      object-fit:
-        cover;
+      object-fit:cover;
 
       border:
-
         1px solid
         var(--accent-line);
 
       box-shadow:
-
         0 0 34px
         rgba(214,255,40,.08);
     }
@@ -442,11 +394,9 @@
 
       margin:0;
 
-      font-size:
-        46px;
+      font-size:46px;
 
-      letter-spacing:
-        .08em;
+      letter-spacing:.08em;
 
       line-height:1;
     }
@@ -454,57 +404,47 @@
 
     .handle {
 
-      margin-top:
-        10px;
+      margin-top:10px;
 
-      color:
-        var(--muted);
+      color:var(--muted);
 
       font:
         10px/1.5 monospace;
 
-      letter-spacing:
-        .2em;
+      letter-spacing:.2em;
 
-      text-transform:
-        uppercase;
+      text-transform:uppercase;
     }
 
 
     .microstatus {
 
-      margin-top:
-        18px;
+      margin-top:18px;
 
-      color:
-        var(--accent);
+      color:var(--accent);
 
       font:
         10px/1.5 monospace;
 
-      letter-spacing:
-        .14em;
+      letter-spacing:.14em;
 
-      text-transform:
-        uppercase;
+      text-transform:uppercase;
+
+      min-height:15px;
     }
 
 
     .back {
 
-      min-height:
-        42px;
+      min-height:42px;
 
-      padding:
-        0 16px;
+      padding:0 16px;
 
       border:
-
         1px solid
         var(--accent-line);
 
-      display:
-        inline-flex;
+      display:inline-flex;
 
       align-items:center;
 
@@ -512,27 +452,22 @@
 
       text-decoration:none;
 
-      color:
-        var(--accent);
+      color:var(--accent);
 
       font:
         700 10px/1 monospace;
 
-      letter-spacing:
-        .14em;
+      letter-spacing:.14em;
 
-      text-transform:
-        uppercase;
+      text-transform:uppercase;
     }
 
 
     .back:hover {
 
-      background:
-        var(--accent);
+      background:var(--accent);
 
-      color:
-        #090b07;
+      color:#090b07;
     }
 
 
@@ -547,7 +482,6 @@
       height:54px;
 
       border-top:
-
         1px solid
         var(--border);
 
@@ -555,30 +489,25 @@
 
       align-items:center;
 
-      gap:
-        28px;
+      gap:28px;
 
       padding:
         0 34px;
 
-      color:
-        var(--muted);
+      color:var(--muted);
 
       font:
         700 10px/1 monospace;
 
-      letter-spacing:
-        .15em;
+      letter-spacing:.15em;
 
-      text-transform:
-        uppercase;
+      text-transform:uppercase;
     }
 
 
     .tab {
 
-      height:
-        54px;
+      height:54px;
 
       display:flex;
 
@@ -590,8 +519,7 @@
 
     .tab.active {
 
-      color:
-        var(--text);
+      color:var(--text);
     }
 
 
@@ -605,11 +533,9 @@
       right:0;
       bottom:0;
 
-      height:
-        2px;
+      height:2px;
 
-      background:
-        var(--accent);
+      background:var(--accent);
     }
 
 
@@ -632,14 +558,11 @@
 
       align-items:end;
 
-      justify-content:
-        space-between;
+      justify-content:space-between;
 
-      gap:
-        20px;
+      gap:20px;
 
-      margin-bottom:
-        18px;
+      margin-bottom:18px;
     }
 
 
@@ -647,30 +570,24 @@
 
       margin:0;
 
-      font-size:
-        16px;
+      font-size:16px;
 
-      letter-spacing:
-        .15em;
+      letter-spacing:.15em;
 
-      text-transform:
-        uppercase;
+      text-transform:uppercase;
     }
 
 
     .sectionTitle span {
 
-      color:
-        var(--muted);
+      color:var(--muted);
 
       font:
         9px/1.5 monospace;
 
-      letter-spacing:
-        .14em;
+      letter-spacing:.14em;
 
-      text-transform:
-        uppercase;
+      text-transform:uppercase;
     }
 
 
@@ -683,33 +600,32 @@
     .track {
 
       border:
-
         1px solid
         var(--border);
 
       background:
-
         rgba(7,9,7,.74);
 
       display:grid;
 
       grid-template-columns:
-
         178px
         minmax(0,1fr)
         auto;
 
-      gap:
-        22px;
+      gap:22px;
 
-      padding:
-        18px;
+      padding:18px;
 
       align-items:center;
 
       position:relative;
 
       overflow:hidden;
+
+      transition:
+        border-color .25s ease,
+        box-shadow .25s ease;
     }
 
 
@@ -723,8 +639,7 @@
       top:0;
       bottom:0;
 
-      width:
-        2px;
+      width:2px;
 
       background:
 
@@ -737,22 +652,30 @@
     }
 
 
+    .track.is-seeking {
+
+      border-color:
+        rgba(214,255,40,.32);
+
+      box-shadow:
+        inset 0 0 28px
+        rgba(214,255,40,.025);
+    }
+
+
 
     /* ==================================================
-       VINYL OBJECT
+       VINYL
     ================================================== */
 
 
     .vinylUnit {
 
-      width:
-        178px;
+      width:178px;
 
-      height:
-        132px;
+      height:132px;
 
-      position:
-        relative;
+      position:relative;
 
       display:flex;
 
@@ -761,59 +684,39 @@
 
 
 
-    /* ==================================================
-       RECORD CARRIER
-    ================================================== */
-
-
     .recordCarrier {
 
       position:absolute;
 
-      left:
-        7px;
+      left:7px;
 
-      top:
-        50%;
+      top:50%;
 
-      width:
-        118px;
+      width:118px;
 
-      height:
-        118px;
+      height:118px;
 
       transform:
-
-        translate(
-          0,
-          -50%
-        );
+        translate(0,-50%);
 
       z-index:1;
 
       pointer-events:none;
+
+      will-change:transform;
     }
 
 
 
-    /* ==================================================
-       RECORD
-    ================================================== */
-
-
     .recordDisc {
 
-      width:
-        118px;
+      width:118px;
 
-      height:
-        118px;
+      height:118px;
 
-      border-radius:
-        50%;
+      border-radius:50%;
 
-      position:
-        relative;
+      position:relative;
 
       background:
 
@@ -831,7 +734,6 @@
         );
 
       border:
-
         1px solid
         rgba(255,255,255,.06);
 
@@ -840,28 +742,19 @@
         0 4px 24px
         rgba(0,0,0,.45),
 
-        inset
-        0 0 0 1px
+        inset 0 0 0 1px
         rgba(255,255,255,.04),
 
-        inset
-        0 0 24px
+        inset 0 0 24px
         rgba(255,255,255,.03);
 
-
-      animation:
-
-        recordSpin
-        3.8s
-        linear
-        infinite;
-
-      animation-play-state:
-        paused;
+      transform:
+        rotate(0deg);
 
       will-change:
         transform;
     }
+
 
 
     .recordDisc::before {
@@ -870,14 +763,11 @@
 
       position:absolute;
 
-      inset:
-        6px;
+      inset:6px;
 
-      border-radius:
-        50%;
+      border-radius:50%;
 
       border:
-
         1px solid
         rgba(255,255,255,.03);
 
@@ -886,29 +776,21 @@
 
 
 
-    /* ==================================================
-       RECORD SHINE
-    ================================================== */
-
-
     .recordDisc::after {
 
       content:"";
 
       position:absolute;
 
-      inset:
-        1px;
+      inset:1px;
 
-      border-radius:
-        50%;
+      border-radius:50%;
 
       pointer-events:none;
 
       background:
 
         conic-gradient(
-
           from 10deg,
 
           transparent 0deg,
@@ -924,57 +806,39 @@
           transparent 250deg,
 
           transparent 360deg
-
         );
     }
 
-
-
-    /* ==================================================
-       SINGLE LABEL
-    ================================================== */
 
 
     .recordLabel {
 
       position:absolute;
 
-      left:
-        50%;
+      left:50%;
 
-      top:
-        50%;
+      top:50%;
 
-      width:
-        54px;
+      width:54px;
 
-      height:
-        54px;
+      height:54px;
 
       transform:
+        translate(-50%,-50%);
 
-        translate(
-          -50%,
-          -50%
-        );
-
-      border-radius:
-        50%;
+      border-radius:50%;
 
       overflow:hidden;
 
       border:
-
         1px solid
         rgba(255,255,255,.10);
 
       box-shadow:
-
         0 0 0 6px
         rgba(214,255,40,.045);
 
-      background:
-        #111;
+      background:#111;
 
       z-index:2;
     }
@@ -986,44 +850,33 @@
 
       height:100%;
 
-      object-fit:
-        cover;
+      object-fit:cover;
 
       display:block;
     }
+
 
 
     .recordHole {
 
       position:absolute;
 
-      left:
-        50%;
+      left:50%;
 
-      top:
-        50%;
+      top:50%;
 
-      width:
-        7px;
+      width:7px;
 
-      height:
-        7px;
+      height:7px;
 
       transform:
+        translate(-50%,-50%);
 
-        translate(
-          -50%,
-          -50%
-        );
+      border-radius:50%;
 
-      border-radius:
-        50%;
-
-      background:
-        #ddd;
+      background:#ddd;
 
       box-shadow:
-
         0 0 0 2px
         rgba(0,0,0,.45);
 
@@ -1039,34 +892,28 @@
 
     .sleeve {
 
-      width:
-        132px;
+      width:132px;
 
-      height:
-        132px;
+      height:132px;
 
-      position:
-        relative;
+      position:relative;
 
       z-index:2;
 
       overflow:hidden;
 
       border:
-
         1px solid
         rgba(255,255,255,.08);
 
-      background:
-        #090a09;
+      background:#090a09;
 
       box-shadow:
 
         0 8px 22px
         rgba(0,0,0,.28),
 
-        inset
-        0 0 0 1px
+        inset 0 0 0 1px
         rgba(255,255,255,.02);
 
       will-change:
@@ -1094,21 +941,17 @@
           rgba(0,0,0,.08) 100%
         );
 
-      mix-blend-mode:
-        screen;
+      mix-blend-mode:screen;
     }
 
 
     .cover {
 
-      width:
-        100%;
+      width:100%;
 
-      height:
-        100%;
+      height:100%;
 
-      object-fit:
-        cover;
+      object-fit:cover;
 
       display:block;
     }
@@ -1116,14 +959,13 @@
 
 
     /* ==================================================
-       VINYL OPENING SEQUENCE
+       VINYL OPENING
     ================================================== */
 
 
     .track.is-open .recordCarrier {
 
       animation:
-
         recordReveal
         1.45s
         cubic-bezier(.22,.8,.22,1)
@@ -1134,7 +976,6 @@
     .track.is-open .sleeve {
 
       animation:
-
         sleeveExit
         1.45s
         cubic-bezier(.22,.8,.22,1)
@@ -1143,129 +984,46 @@
 
 
 
-    /* ==================================================
-       RECORD FINAL ACTIVE LOOK
-    ================================================== */
-
-
-    .track.is-open .recordDisc {
-
-      box-shadow:
-
-        0 0 20px
-        rgba(214,255,40,.08),
-
-        0 4px 24px
-        rgba(0,0,0,.46),
-
-        inset
-        0 0 0 1px
-        rgba(255,255,255,.04),
-
-        inset
-        0 0 24px
-        rgba(255,255,255,.03);
-    }
-
-
-
-    /* ==================================================
-       PLAY STATE
-    ================================================== */
-
-
-    .track.is-playing .recordDisc {
-
-      animation-play-state:
-        running;
-    }
-
-
-
-    /* ==================================================
-       RECORD REVEAL
-    ================================================== */
-
-
     @keyframes recordReveal {
 
       0% {
 
         transform:
-
-          translate(
-            0,
-            -50%
-          );
-
+          translate(0,-50%);
       }
-
 
       36% {
 
         transform:
-
-          translate(
-            44px,
-            -50%
-          );
-
+          translate(44px,-50%);
       }
-
 
       55% {
 
         transform:
-
-          translate(
-            44px,
-            -50%
-          );
-
+          translate(44px,-50%);
       }
-
 
       100% {
 
         transform:
-
-          translate(
-            0,
-            -50%
-          );
-
+          translate(0,-50%);
       }
 
     }
 
 
 
-    /* ==================================================
-       SLEEVE EXIT
-    ================================================== */
-
-
     @keyframes sleeveExit {
 
-      0% {
-
-        transform:
-          translateX(0);
-
-        opacity:1;
-
-      }
-
-
+      0%,
       34% {
 
         transform:
           translateX(0);
 
         opacity:1;
-
       }
-
 
       52% {
 
@@ -1273,9 +1031,7 @@
           translateX(-12px);
 
         opacity:1;
-
       }
-
 
       100% {
 
@@ -1283,7 +1039,6 @@
           translateX(-190px);
 
         opacity:0;
-
       }
 
     }
@@ -1291,27 +1046,25 @@
 
 
     /* ==================================================
-       RECORD ROTATION
+       SEEK GLOW
     ================================================== */
 
 
-    @keyframes recordSpin {
+    .track.is-seeking .recordDisc {
 
-      from {
+      box-shadow:
 
-        transform:
-          rotate(0deg);
+        0 0 14px
+        rgba(214,255,40,.24),
 
-      }
+        0 0 40px
+        rgba(214,255,40,.09),
 
+        0 4px 24px
+        rgba(0,0,0,.46),
 
-      to {
-
-        transform:
-          rotate(360deg);
-
-      }
-
+        inset 0 0 0 1px
+        rgba(255,255,255,.04);
     }
 
 
@@ -1333,14 +1086,11 @@
 
       align-items:flex-start;
 
-      justify-content:
-        space-between;
+      justify-content:space-between;
 
-      gap:
-        16px;
+      gap:16px;
 
-      margin-bottom:
-        18px;
+      margin-bottom:18px;
     }
 
 
@@ -1348,43 +1098,34 @@
 
       margin:0;
 
-      font-size:
-        23px;
+      font-size:23px;
 
-      letter-spacing:
-        .12em;
+      letter-spacing:.12em;
 
-      text-transform:
-        uppercase;
+      text-transform:uppercase;
     }
 
 
     .artist {
 
-      margin-top:
-        5px;
+      margin-top:5px;
 
-      color:
-        var(--muted);
+      color:var(--muted);
 
       font:
         10px/1.4 monospace;
 
-      letter-spacing:
-        .14em;
+      letter-spacing:.14em;
 
-      text-transform:
-        uppercase;
+      text-transform:uppercase;
     }
 
 
     .badge {
 
-      color:
-        var(--accent);
+      color:var(--accent);
 
       border:
-
         1px solid
         var(--accent-line);
 
@@ -1394,11 +1135,9 @@
       font:
         9px/1 monospace;
 
-      letter-spacing:
-        .12em;
+      letter-spacing:.12em;
 
-      white-space:
-        nowrap;
+      white-space:nowrap;
     }
 
 
@@ -1413,13 +1152,11 @@
       display:grid;
 
       grid-template-columns:
-
         auto
         minmax(0,1fr)
         auto;
 
-      gap:
-        12px;
+      gap:12px;
 
       align-items:center;
     }
@@ -1427,37 +1164,29 @@
 
     .iconBtn {
 
-      width:
-        36px;
+      width:36px;
 
-      height:
-        36px;
+      height:36px;
 
-      border-radius:
-        50%;
+      border-radius:50%;
 
       border:
-
         1px solid
         var(--border);
 
-      background:
-        #070907;
+      background:#070907;
 
       display:grid;
 
       place-items:center;
 
-      color:
-        var(--accent);
+      color:var(--accent);
 
       cursor:pointer;
 
       transition:
-
         border-color .2s ease,
-        box-shadow .2s ease,
-        background .2s ease;
+        box-shadow .2s ease;
     }
 
 
@@ -1467,7 +1196,6 @@
         var(--accent-line);
 
       box-shadow:
-
         0 0 14px
         rgba(214,255,40,.10);
     }
@@ -1475,45 +1203,40 @@
 
     .iconBtn svg {
 
-      width:
-        13px;
+      width:13px;
 
-      height:
-        13px;
+      height:13px;
 
-      fill:
-        currentColor;
+      fill:currentColor;
     }
+
 
 
     .waveBox {
 
-      height:
-        56px;
+      height:56px;
 
-      position:
-        relative;
+      position:relative;
 
       cursor:pointer;
 
       overflow:hidden;
+
+      touch-action:none;
     }
 
 
     .wave {
 
-      height:
-        100%;
+      height:100%;
 
       display:flex;
 
       align-items:center;
 
-      gap:
-        2px;
+      gap:2px;
 
-      position:
-        relative;
+      position:relative;
 
       z-index:1;
     }
@@ -1523,17 +1246,13 @@
 
       flex:1;
 
-      min-width:
-        1px;
+      min-width:1px;
 
-      background:
-        #565a52;
+      background:#565a52;
 
-      border-radius:
-        1px;
+      border-radius:1px;
 
-      opacity:
-        .76;
+      opacity:.76;
     }
 
 
@@ -1567,21 +1286,17 @@
 
       bottom:0;
 
-      width:
-        100%;
+      width:100%;
 
-      min-width:
-        100%;
+      min-width:100%;
     }
 
 
     .waveProgress .bar {
 
-      background:
-        var(--accent);
+      background:var(--accent);
 
       box-shadow:
-
         0 0 7px
         rgba(214,255,40,.22);
     }
@@ -1589,41 +1304,33 @@
 
     .time {
 
-      color:
-        var(--muted);
+      color:var(--muted);
 
       font:
         600 10px/1 monospace;
 
-      white-space:
-        nowrap;
+      white-space:nowrap;
     }
 
 
     .meta {
 
-      margin-top:
-        12px;
+      margin-top:12px;
 
       display:flex;
 
-      gap:
-        15px;
+      gap:15px;
 
-      flex-wrap:
-        wrap;
+      flex-wrap:wrap;
 
-      color:
-        var(--muted);
+      color:var(--muted);
 
       font:
         9px/1 monospace;
 
-      letter-spacing:
-        .12em;
+      letter-spacing:.12em;
 
-      text-transform:
-        uppercase;
+      text-transform:uppercase;
     }
 
 
@@ -1637,35 +1344,27 @@
 
       display:flex;
 
-      flex-direction:
-        column;
+      flex-direction:column;
 
-      gap:
-        8px;
+      gap:8px;
 
-      min-width:
-        170px;
+      min-width:170px;
     }
 
 
     .license {
 
-      min-height:
-        50px;
+      min-height:50px;
 
-      padding:
-        0 18px;
+      padding:0 18px;
 
       border:
-
         1px solid
         var(--accent);
 
-      background:
-        var(--accent);
+      background:var(--accent);
 
-      color:
-        #080a06;
+      color:#080a06;
 
       text-decoration:none;
 
@@ -1675,30 +1374,23 @@
 
       justify-content:center;
 
-      gap:
-        9px;
+      gap:9px;
 
-      font-size:
-        11px;
+      font-size:11px;
 
-      font-weight:
-        800;
+      font-weight:800;
 
-      letter-spacing:
-        .12em;
+      letter-spacing:.12em;
 
-      text-transform:
-        uppercase;
+      text-transform:uppercase;
     }
 
 
     .license:hover {
 
-      filter:
-        brightness(1.07);
+      filter:brightness(1.07);
 
       box-shadow:
-
         0 0 22px
         rgba(214,255,40,.15);
     }
@@ -1709,18 +1401,15 @@
       font:
         500 9px/1 monospace;
 
-      color:
-        #313a13;
+      color:#313a13;
     }
 
 
     .secondary {
 
-      min-height:
-        37px;
+      min-height:37px;
 
       border:
-
         1px solid
         var(--border);
 
@@ -1732,24 +1421,20 @@
 
       justify-content:center;
 
-      color:
-        var(--muted);
+      color:var(--muted);
 
       font:
         700 9px/1 monospace;
 
-      letter-spacing:
-        .12em;
+      letter-spacing:.12em;
 
-      text-transform:
-        uppercase;
+      text-transform:uppercase;
     }
 
 
     .secondary:hover {
 
-      color:
-        var(--accent);
+      color:var(--accent);
 
       border-color:
         var(--accent-line);
@@ -1764,16 +1449,13 @@
 
     .receiver {
 
-      margin-top:
-        18px;
+      margin-top:18px;
 
       border:
-
         1px solid
         var(--accent-line);
 
-      background:
-        var(--panel2);
+      background:var(--panel2);
 
       padding:
         18px 20px;
@@ -1781,12 +1463,9 @@
       display:grid;
 
       grid-template-columns:
+        1fr auto;
 
-        1fr
-        auto;
-
-      gap:
-        18px;
+      gap:18px;
 
       align-items:center;
     }
@@ -1794,36 +1473,29 @@
 
     .receiverTitle {
 
-      color:
-        var(--accent);
+      color:var(--accent);
 
       font:
         700 10px/1 monospace;
 
-      letter-spacing:
-        .17em;
+      letter-spacing:.17em;
 
-      text-transform:
-        uppercase;
+      text-transform:uppercase;
     }
 
 
     .receiverText {
 
-      margin-top:
-        7px;
+      margin-top:7px;
 
-      color:
-        var(--muted);
+      color:var(--muted);
 
       font:
         9px/1.6 monospace;
 
-      letter-spacing:
-        .09em;
+      letter-spacing:.09em;
 
-      text-transform:
-        uppercase;
+      text-transform:uppercase;
     }
 
 
@@ -1831,29 +1503,23 @@
 
       display:flex;
 
-      gap:
-        8px;
+      gap:8px;
     }
 
 
     .codeInput {
 
-      width:
-        180px;
+      width:180px;
 
-      height:
-        40px;
+      height:40px;
 
       border:
-
         1px solid
         var(--border);
 
-      background:
-        #050705;
+      background:#050705;
 
-      color:
-        var(--accent);
+      color:var(--accent);
 
       padding:
         0 11px;
@@ -1863,36 +1529,29 @@
       font:
         600 11px/1 monospace;
 
-      letter-spacing:
-        .15em;
+      letter-spacing:.15em;
 
-      text-transform:
-        uppercase;
+      text-transform:uppercase;
     }
 
 
     .codeInput:focus {
 
-      border-color:
-        var(--accent);
+      border-color:var(--accent);
     }
 
 
     .codeBtn {
 
-      height:
-        40px;
+      height:40px;
 
       border:
-
         1px solid
         var(--accent);
 
-      background:
-        transparent;
+      background:transparent;
 
-      color:
-        var(--accent);
+      color:var(--accent);
 
       padding:
         0 14px;
@@ -1902,47 +1561,38 @@
       font:
         700 9px/1 monospace;
 
-      letter-spacing:
-        .12em;
+      letter-spacing:.12em;
 
-      text-transform:
-        uppercase;
+      text-transform:uppercase;
     }
 
 
     .codeBtn:hover {
 
-      background:
-        var(--accent);
+      background:var(--accent);
 
-      color:
-        #090b07;
+      color:#090b07;
     }
 
 
     .codeResult {
 
-      grid-column:
-        1 / -1;
+      grid-column:1/-1;
 
       display:none;
 
       border-top:
-
         1px solid
         rgba(214,255,40,.13);
 
-      padding-top:
-        12px;
+      padding-top:12px;
 
-      color:
-        var(--accent);
+      color:var(--accent);
 
       font:
         600 10px/1.5 monospace;
 
-      letter-spacing:
-        .1em;
+      letter-spacing:.1em;
     }
 
 
@@ -1954,14 +1604,11 @@
 
     .footer {
 
-      margin-top:
-        20px;
+      margin-top:20px;
 
-      min-height:
-        48px;
+      min-height:48px;
 
       border-top:
-
         1px solid
         rgba(214,255,40,.16);
 
@@ -1969,23 +1616,18 @@
 
       align-items:center;
 
-      justify-content:
-        space-between;
+      justify-content:space-between;
 
-      gap:
-        20px;
+      gap:20px;
 
-      color:
-        var(--muted);
+      color:var(--muted);
 
       font:
         9px/1.5 monospace;
 
-      letter-spacing:
-        .14em;
+      letter-spacing:.14em;
 
-      text-transform:
-        uppercase;
+      text-transform:uppercase;
     }
 
 
@@ -1999,9 +1641,7 @@
 
         transform:
           scale(.9);
-
       }
-
 
       50% {
 
@@ -2009,7 +1649,6 @@
 
         transform:
           scale(1.15);
-
       }
 
     }
@@ -2027,14 +1666,12 @@
       .page {
 
         width:
-
           min(
             100% - 28px,
             560px
           );
 
         padding-top:
-
           max(
             20px,
             env(safe-area-inset-top)
@@ -2045,17 +1682,12 @@
       .profileHead {
 
         grid-template-columns:
-
-          auto
-          1fr;
+          auto 1fr;
 
         padding:
+          24px 20px;
 
-          24px
-          20px;
-
-        gap:
-          18px;
+        gap:18px;
       }
 
 
@@ -2067,28 +1699,23 @@
 
       .avatar {
 
-        width:
-          88px;
+        width:88px;
 
-        height:
-          88px;
+        height:88px;
       }
 
 
       .identity h1 {
 
-        font-size:
-          34px;
+        font-size:34px;
       }
 
 
       .back {
 
-        grid-column:
-          1 / -1;
+        grid-column:1/-1;
 
-        width:
-          100%;
+        width:100%;
       }
 
 
@@ -2102,88 +1729,69 @@
       .content {
 
         padding:
-
-          22px
-          18px
-          30px;
+          22px 18px 30px;
       }
 
 
       .track {
 
         grid-template-columns:
-
           112px
           minmax(0,1fr);
 
-        gap:
-          14px;
+        gap:14px;
 
-        padding:
-          13px;
+        padding:13px;
       }
 
 
       .vinylUnit {
 
-        width:
-          112px;
+        width:112px;
 
-        height:
-          86px;
+        height:86px;
       }
 
 
       .recordCarrier {
 
-        width:
-          76px;
+        width:76px;
 
-        height:
-          76px;
+        height:76px;
 
-        left:
-          4px;
+        left:4px;
       }
 
 
       .recordDisc {
 
-        width:
-          76px;
+        width:76px;
 
-        height:
-          76px;
+        height:76px;
       }
 
 
       .recordLabel {
 
-        width:
-          36px;
+        width:36px;
 
-        height:
-          36px;
+        height:36px;
       }
 
 
       .recordHole {
 
-        width:
-          5px;
+        width:5px;
 
-        height:
-          5px;
+        height:5px;
       }
 
 
       .sleeve {
 
-        width:
-          86px;
+        width:86px;
 
-        height:
-          86px;
+        height:86px;
       }
 
 
@@ -2192,48 +1800,25 @@
         0% {
 
           transform:
-
-            translate(
-              0,
-              -50%
-            );
-
+            translate(0,-50%);
         }
-
 
         36% {
 
           transform:
-
-            translate(
-              26px,
-              -50%
-            );
-
+            translate(26px,-50%);
         }
-
 
         55% {
 
           transform:
-
-            translate(
-              26px,
-              -50%
-            );
-
+            translate(26px,-50%);
         }
-
 
         100% {
 
           transform:
-
-            translate(
-              0,
-              -50%
-            );
-
+            translate(0,-50%);
         }
 
       }
@@ -2248,9 +1833,7 @@
             translateX(0);
 
           opacity:1;
-
         }
-
 
         52% {
 
@@ -2258,9 +1841,7 @@
             translateX(-8px);
 
           opacity:1;
-
         }
-
 
         100% {
 
@@ -2268,7 +1849,6 @@
             translateX(-120px);
 
           opacity:0;
-
         }
 
       }
@@ -2276,22 +1856,18 @@
 
       .buyCol {
 
-        grid-column:
-          1 / -1;
+        grid-column:1/-1;
 
         display:grid;
 
         grid-template-columns:
-
-          1fr
-          1fr;
+          1fr 1fr;
       }
 
 
       .waveRow {
 
         grid-template-columns:
-
           auto
           minmax(0,1fr);
       }
@@ -2305,15 +1881,13 @@
 
       .receiver {
 
-        grid-template-columns:
-          1fr;
+        grid-template-columns:1fr;
       }
 
 
       .codeForm {
 
-        width:
-          100%;
+        width:100%;
       }
 
 
@@ -2327,14 +1901,11 @@
 
       .footer {
 
-        flex-direction:
-          column;
+        flex-direction:column;
 
-        justify-content:
-          center;
+        justify-content:center;
 
-        text-align:
-          center;
+        text-align:center;
 
         padding:
           18px 0;
@@ -2343,14 +1914,11 @@
 
       .sectionTitle {
 
-        align-items:
-          flex-start;
+        align-items:flex-start;
 
-        flex-direction:
-          column;
+        flex-direction:column;
 
-        gap:
-          8px;
+        gap:8px;
       }
 
     }
@@ -2362,35 +1930,29 @@
 
       .topbar {
 
-        font-size:
-          9px;
+        font-size:9px;
 
-        letter-spacing:
-          .1em;
+        letter-spacing:.1em;
       }
 
 
       .avatar {
 
-        width:
-          76px;
+        width:76px;
 
-        height:
-          76px;
+        height:76px;
       }
 
 
       .identity h1 {
 
-        font-size:
-          30px;
+        font-size:30px;
       }
 
 
       .track {
 
         grid-template-columns:
-
           94px
           minmax(0,1fr);
       }
@@ -2398,61 +1960,49 @@
 
       .vinylUnit {
 
-        width:
-          94px;
+        width:94px;
 
-        height:
-          70px;
+        height:70px;
       }
 
 
       .recordCarrier {
 
-        width:
-          62px;
+        width:62px;
 
-        height:
-          62px;
+        height:62px;
 
-        left:
-          4px;
+        left:4px;
       }
 
 
       .recordDisc {
 
-        width:
-          62px;
+        width:62px;
 
-        height:
-          62px;
+        height:62px;
       }
 
 
       .recordLabel {
 
-        width:
-          30px;
+        width:30px;
 
-        height:
-          30px;
+        height:30px;
       }
 
 
       .sleeve {
 
-        width:
-          70px;
+        width:70px;
 
-        height:
-          70px;
+        height:70px;
       }
 
 
       .trackTitle {
 
-        font-size:
-          18px;
+        font-size:18px;
       }
 
 
@@ -2464,15 +2014,13 @@
 
       .buyCol {
 
-        grid-template-columns:
-          1fr;
+        grid-template-columns:1fr;
       }
 
 
       .tabs {
 
-        gap:
-          20px;
+        gap:20px;
 
         overflow:auto;
       }
@@ -2480,28 +2028,7 @@
 
       .meta {
 
-        gap:
-          10px;
-      }
-
-    }
-
-
-
-    @media (prefers-reduced-motion: reduce) {
-
-
-      body::before {
-
-        animation:none;
-      }
-
-
-      .recordCarrier,
-      .sleeve {
-
-        animation-duration:
-          .01ms !important;
+        gap:10px;
       }
 
     }
@@ -2519,10 +2046,7 @@
 
     <header class="topbar">
 
-      <a
-        class="brand"
-        href="index.html"
-      >
+      <a class="brand" href="index.html">
         FRSSN SIGNAL // TRACK NODE
       </a>
 
@@ -2568,7 +2092,10 @@
           </div>
 
 
-          <div class="microstatus">
+          <div
+            class="microstatus"
+            id="microstatus"
+          >
             Connection stable // 01 signal detected
           </div>
 
@@ -2647,15 +2174,16 @@
         >
 
 
-          <!-- VINYL -->
-
           <div class="vinylUnit">
 
 
             <div class="recordCarrier">
 
 
-              <div class="recordDisc">
+              <div
+                class="recordDisc"
+                id="recordDisc"
+              >
 
 
                 <div class="recordLabel">
@@ -2678,8 +2206,6 @@
 
 
 
-            <!-- SLEEVE -->
-
             <div class="sleeve">
 
 
@@ -2696,8 +2222,6 @@
           </div>
 
 
-
-          <!-- INFO -->
 
           <div class="trackInfo">
 
@@ -2730,8 +2254,6 @@
 
 
 
-            <!-- PLAYER -->
-
             <div class="waveRow">
 
 
@@ -2742,9 +2264,7 @@
               >
 
 
-                <svg
-                  viewBox="0 0 24 24"
-                >
+                <svg viewBox="0 0 24 24">
 
                   <path
                     d="M8 5v14l11-7z"
@@ -2796,9 +2316,7 @@
                   0:00
                 </span>
 
-
                 /
-
 
                 <span class="js-total">
                   0:00
@@ -2821,6 +2339,11 @@
 
 
               <span>
+                45 RPM
+              </span>
+
+
+              <span>
                 MP3 license
               </span>
 
@@ -2832,8 +2355,6 @@
 
 
 
-          <!-- BUY -->
-
           <div class="buyCol">
 
 
@@ -2844,17 +2365,13 @@
               rel="noopener noreferrer"
             >
 
-
               License
-
 
               <small>
                 // checkout ↗
               </small>
 
-
             </a>
-
 
 
             <a
@@ -2875,8 +2392,6 @@
         </article>
 
 
-
-        <!-- RECEIVER -->
 
         <section
           class="receiver"
@@ -2921,9 +2436,7 @@
               class="codeBtn"
               type="submit"
             >
-
               Transmit
-
             </button>
 
 
@@ -2999,6 +2512,18 @@
       );
 
 
+    const recordDisc =
+      document.getElementById(
+        "recordDisc"
+      );
+
+
+    const microstatus =
+      document.getElementById(
+        "microstatus"
+      );
+
+
     const playButtons =
       [
         ...document.querySelectorAll(
@@ -3045,7 +2570,261 @@
 
 
     /* ==================================================
-       WAVEFORM
+       VINYL PHYSICS
+    ================================================== */
+
+
+    const VINYL_RPM =
+      45;
+
+
+    const REVOLUTIONS_PER_SECOND =
+      VINYL_RPM / 60;
+
+
+    const DEGREES_PER_SECOND =
+      REVOLUTIONS_PER_SECOND * 360;
+
+
+    let vinylOpened =
+      false;
+
+
+    let isSeeking =
+      false;
+
+
+    let vinylRAF =
+      null;
+
+
+
+    /*
+      45 RPM:
+
+      45 / 60 = 0.75 revolution / second
+
+      0.75 * 360 = 270 degrees / second
+    */
+
+
+    function angleFromAudioTime(
+      seconds
+    ) {
+
+      return (
+        seconds
+        *
+        DEGREES_PER_SECOND
+      );
+
+    }
+
+
+
+    function setVinylAngle(
+      angle
+    ) {
+
+      recordDisc.style.transform =
+        `rotate(${angle}deg)`;
+
+    }
+
+
+
+    /* ==================================================
+       NORMAL PLAYBACK VINYL SYNC
+    ================================================== */
+
+
+    function startVinylSync() {
+
+
+      cancelAnimationFrame(
+        vinylRAF
+      );
+
+
+      function frame() {
+
+
+        if (
+          !audio.paused
+          &&
+          !isSeeking
+        ) {
+
+
+          setVinylAngle(
+            angleFromAudioTime(
+              audio.currentTime
+            )
+          );
+
+
+          vinylRAF =
+            requestAnimationFrame(
+              frame
+            );
+
+
+        }
+
+
+      }
+
+
+      vinylRAF =
+        requestAnimationFrame(
+          frame
+        );
+
+
+    }
+
+
+
+    function stopVinylSync() {
+
+
+      if (
+        vinylRAF
+      ) {
+
+
+        cancelAnimationFrame(
+          vinylRAF
+        );
+
+
+        vinylRAF =
+          null;
+
+
+      }
+
+
+    }
+
+
+
+    /* ==================================================
+       AUDIO CONTEXT / DECODED TRACK
+    ================================================== */
+
+
+    let audioContext =
+      null;
+
+
+    let decodedTrack =
+      null;
+
+
+    let reversedTrack =
+      null;
+
+
+
+    function getAudioContext() {
+
+
+      if (
+        !audioContext
+      ) {
+
+
+        const AudioContextClass =
+          window.AudioContext
+          ||
+          window.webkitAudioContext;
+
+
+        audioContext =
+          new AudioContextClass();
+
+
+      }
+
+
+      return audioContext;
+
+
+    }
+
+
+
+    /* ==================================================
+       REVERSE BUFFER
+    ================================================== */
+
+
+    function createReversedBuffer(
+      original,
+      context
+    ) {
+
+
+      const reversed =
+        context.createBuffer(
+          original.numberOfChannels,
+          original.length,
+          original.sampleRate
+        );
+
+
+      for (
+        let channel = 0;
+        channel < original.numberOfChannels;
+        channel++
+      ) {
+
+
+        const source =
+          original.getChannelData(
+            channel
+          );
+
+
+        const target =
+          reversed.getChannelData(
+            channel
+          );
+
+
+        for (
+          let i = 0;
+          i < source.length;
+          i++
+        ) {
+
+
+          target[i] =
+            source[
+              source.length
+              -
+              1
+              -
+              i
+            ];
+
+
+        }
+
+
+      }
+
+
+      return reversed;
+
+
+    }
+
+
+
+    /* ==================================================
+       REAL WAVEFORM
     ================================================== */
 
 
@@ -3095,11 +2874,12 @@
         }
       );
 
+
     }
 
 
 
-    async function buildWaveformFromAudio(
+    async function loadTrackData(
       url
     ) {
 
@@ -3111,8 +2891,7 @@
           await fetch(
             url,
             {
-              cache:
-                "force-cache"
+              cache:"force-cache"
             }
           );
 
@@ -3137,22 +2916,20 @@
           await response.arrayBuffer();
 
 
-
-        const AudioContextClass =
-          window.AudioContext
-          ||
-          window.webkitAudioContext;
-
-
-
         const context =
-          new AudioContextClass();
+          getAudioContext();
 
 
-
-        const buffer =
+        decodedTrack =
           await context.decodeAudioData(
-            arrayBuffer
+            arrayBuffer.slice(0)
+          );
+
+
+        reversedTrack =
+          createReversedBuffer(
+            decodedTrack,
+            context
           );
 
 
@@ -3161,16 +2938,15 @@
           [];
 
 
-
         for (
           let channel = 0;
-          channel < buffer.numberOfChannels;
+          channel < decodedTrack.numberOfChannels;
           channel++
         ) {
 
 
           channels.push(
-            buffer.getChannelData(
+            decodedTrack.getChannelData(
               channel
             )
           );
@@ -3181,8 +2957,7 @@
 
 
         const totalSamples =
-          buffer.length;
-
+          decodedTrack.length;
 
 
         const blockSize =
@@ -3196,10 +2971,8 @@
           );
 
 
-
         const peaks =
           [];
-
 
 
         for (
@@ -3231,10 +3004,8 @@
             );
 
 
-
           let peak =
             0;
-
 
 
           for (
@@ -3246,7 +3017,6 @@
 
             const data =
               channels[channel];
-
 
 
             for (
@@ -3280,7 +3050,6 @@
           }
 
 
-
           peaks.push(
             peak
           );
@@ -3298,7 +3067,6 @@
           1;
 
 
-
         const heights =
           peaks.map(
             peak =>
@@ -3314,7 +3082,6 @@
           );
 
 
-
         renderBars(
           wave,
           heights
@@ -3327,17 +3094,6 @@
         );
 
 
-
-        try {
-
-
-          await context.close();
-
-
-        }
-        catch (_) {}
-
-
       }
 
 
@@ -3345,10 +3101,9 @@
 
 
         console.warn(
-          "Waveform build error:",
+          "Track decode error:",
           error
         );
-
 
 
         const fallback =
@@ -3375,7 +3130,6 @@
           );
 
 
-
         renderBars(
           wave,
           fallback
@@ -3395,7 +3149,7 @@
 
 
 
-    buildWaveformFromAudio(
+    loadTrackData(
       audio.currentSrc
       ||
       audio.src
@@ -3404,7 +3158,599 @@
 
 
     /* ==================================================
-       TIME
+       SCRUB SOUND
+    ================================================== */
+
+
+    async function playScrubSound(
+      fromTime,
+      toTime,
+      durationMs
+    ) {
+
+
+      if (
+        !decodedTrack
+      ) {
+
+
+        return;
+
+
+      }
+
+
+      const context =
+        getAudioContext();
+
+
+      if (
+        context.state ===
+        "suspended"
+      ) {
+
+
+        try {
+
+
+          await context.resume();
+
+
+        }
+
+
+        catch (_) {}
+
+
+      }
+
+
+
+      const direction =
+        toTime >= fromTime
+        ?
+        1
+        :
+        -1;
+
+
+
+      const distance =
+        Math.abs(
+          toTime
+          -
+          fromTime
+        );
+
+
+
+      const durationSeconds =
+        durationMs
+        /
+        1000;
+
+
+
+      const grainCount =
+        Math.max(
+          7,
+          Math.min(
+            22,
+            Math.round(
+              durationMs
+              /
+              45
+            )
+          )
+        );
+
+
+
+      const masterGain =
+        context.createGain();
+
+
+      masterGain.gain.value =
+        .22;
+
+
+      masterGain.connect(
+        context.destination
+      );
+
+
+
+      const filter =
+        context.createBiquadFilter();
+
+
+      filter.type =
+        "bandpass";
+
+
+      filter.frequency.value =
+        2200;
+
+
+      filter.Q.value =
+        .65;
+
+
+      filter.connect(
+        masterGain
+      );
+
+
+
+      const startAt =
+        context.currentTime
+        +
+        .015;
+
+
+
+      for (
+        let i = 0;
+        i < grainCount;
+        i++
+      ) {
+
+
+        const t =
+          grainCount === 1
+          ?
+          0
+          :
+          i
+          /
+          (
+            grainCount
+            -
+            1
+          );
+
+
+
+        const sourcePosition =
+          fromTime
+          +
+          (
+            toTime
+            -
+            fromTime
+          )
+          *
+          t;
+
+
+
+        const source =
+          context.createBufferSource();
+
+
+
+        source.buffer =
+
+          direction > 0
+
+          ?
+
+          decodedTrack
+
+          :
+
+          reversedTrack;
+
+
+
+        /*
+          Чим довший стрибок,
+          тим сильніше "машина"
+          прискорюється.
+        */
+
+
+        const distanceFactor =
+          Math.min(
+            1,
+            distance
+            /
+            35
+          );
+
+
+
+        const accelerationShape =
+          Math.sin(
+            Math.PI
+            *
+            t
+          );
+
+
+
+        const rate =
+          1.35
+          +
+          (
+            distanceFactor
+            *
+            3.8
+          )
+          +
+          (
+            accelerationShape
+            *
+            2.2
+          );
+
+
+
+        source.playbackRate.value =
+          rate;
+
+
+
+        const gain =
+          context.createGain();
+
+
+
+        source.connect(
+          gain
+        );
+
+
+        gain.connect(
+          filter
+        );
+
+
+
+        const scheduledTime =
+          startAt
+          +
+          (
+            t
+            *
+            durationSeconds
+          );
+
+
+
+        const grainDuration =
+          .055;
+
+
+
+        gain.gain.setValueAtTime(
+          0,
+          scheduledTime
+        );
+
+
+        gain.gain.linearRampToValueAtTime(
+          .9,
+          scheduledTime
+          +
+          .008
+        );
+
+
+        gain.gain.exponentialRampToValueAtTime(
+          .001,
+          scheduledTime
+          +
+          grainDuration
+        );
+
+
+
+        let offset;
+
+
+        if (
+          direction > 0
+        ) {
+
+
+          offset =
+            Math.max(
+              0,
+              Math.min(
+                decodedTrack.duration
+                -
+                .1,
+                sourcePosition
+              )
+            );
+
+
+        }
+
+
+        else {
+
+
+          offset =
+            Math.max(
+              0,
+              Math.min(
+                reversedTrack.duration
+                -
+                .1,
+                reversedTrack.duration
+                -
+                sourcePosition
+              )
+            );
+
+
+        }
+
+
+
+        source.start(
+          scheduledTime,
+          offset
+        );
+
+
+        source.stop(
+          scheduledTime
+          +
+          grainDuration
+        );
+
+
+      }
+
+
+
+      /*
+        Загальна envelope перемотки:
+        fade in → peak → fade out
+      */
+
+
+      masterGain.gain.setValueAtTime(
+        .001,
+        startAt
+      );
+
+
+      masterGain.gain.linearRampToValueAtTime(
+        .24,
+        startAt
+        +
+        Math.min(
+          .10,
+          durationSeconds
+          *
+          .25
+        )
+      );
+
+
+      masterGain.gain.setValueAtTime(
+        .24,
+        startAt
+        +
+        Math.max(
+          .10,
+          durationSeconds
+          -
+          .12
+        )
+      );
+
+
+      masterGain.gain.exponentialRampToValueAtTime(
+        .001,
+        startAt
+        +
+        durationSeconds
+      );
+
+
+
+      await new Promise(
+        resolve =>
+          setTimeout(
+            resolve,
+            durationMs
+          )
+      );
+
+
+      setTimeout(
+        () => {
+
+
+          try {
+
+            masterGain.disconnect();
+            filter.disconnect();
+
+          }
+
+          catch (_) {}
+
+
+        },
+        100
+      );
+
+
+    }
+
+
+
+    /* ==================================================
+       VINYL SEEK ROTATION
+    ================================================== */
+
+
+    function animateVinylSeek(
+      fromTime,
+      toTime,
+      durationMs
+    ) {
+
+
+      return new Promise(
+        resolve => {
+
+
+          const startAngle =
+            angleFromAudioTime(
+              fromTime
+            );
+
+
+          const targetAngle =
+            angleFromAudioTime(
+              toTime
+            );
+
+
+          /*
+            Тут і є реальна кількість обертів.
+
+            deltaSeconds * 0.75 revolution.
+          */
+
+
+          const start =
+            performance.now();
+
+
+
+          function ease(
+            t
+          ) {
+
+
+            /*
+              швидко прискорюємось,
+              потім гальмуємо
+            */
+
+
+            return (
+              t < .5
+
+              ?
+
+              2
+              *
+              t
+              *
+              t
+
+              :
+
+              1
+              -
+              Math.pow(
+                -2 * t + 2,
+                2
+              )
+              /
+              2
+            );
+
+
+          }
+
+
+
+          function frame(
+            now
+          ) {
+
+
+            const raw =
+              Math.min(
+                1,
+                (
+                  now
+                  -
+                  start
+                )
+                /
+                durationMs
+              );
+
+
+            const eased =
+              ease(
+                raw
+              );
+
+
+            const angle =
+              startAngle
+              +
+              (
+                targetAngle
+                -
+                startAngle
+              )
+              *
+              eased;
+
+
+            setVinylAngle(
+              angle
+            );
+
+
+            if (
+              raw < 1
+            ) {
+
+
+              requestAnimationFrame(
+                frame
+              );
+
+
+            }
+
+
+            else {
+
+
+              setVinylAngle(
+                targetAngle
+              );
+
+
+              resolve();
+
+
+            }
+
+
+          }
+
+
+          requestAnimationFrame(
+            frame
+          );
+
+
+        }
+      );
+
+
+    }
+
+
+
+    /* ==================================================
+       TIME FORMAT
     ================================================== */
 
 
@@ -3426,7 +3772,6 @@
       }
 
 
-
       const minutes =
         Math.floor(
           seconds
@@ -3444,22 +3789,44 @@
 
 
       return (
-
         minutes
-
         +
-
         ":"
-
         +
-
         String(
           remainingSeconds
         ).padStart(
           2,
           "0"
         )
+      );
 
+
+    }
+
+
+
+    function signedTime(
+      seconds
+    ) {
+
+
+      const sign =
+        seconds >= 0
+        ?
+        "+"
+        :
+        "−";
+
+
+      return (
+        sign
+        +
+        fmt(
+          Math.abs(
+            seconds
+          )
+        )
       );
 
 
@@ -3468,7 +3835,7 @@
 
 
     /* ==================================================
-       ICON
+       PLAY ICON
     ================================================== */
 
 
@@ -3525,6 +3892,17 @@
 
 
             if (
+              isSeeking
+            ) {
+
+
+              return;
+
+
+            }
+
+
+            if (
               audio.paused
             ) {
 
@@ -3571,13 +3949,8 @@
 
 
     /* ==================================================
-       VINYL STATE
+       AUDIO EVENTS
     ================================================== */
-
-
-    let vinylOpened =
-      false;
-
 
 
     audio.addEventListener(
@@ -3588,15 +3961,6 @@
         setPlayIcon(
           true
         );
-
-
-        /*
-          ПЕРШИЙ PLAY:
-
-          1. Vinyl виходить вправо
-          2. Sleeve їде вліво
-          3. Vinyl повертається назад
-        */
 
 
         if (
@@ -3616,16 +3980,20 @@
         }
 
 
-
-        /*
-          Vinyl починає або
-          продовжує крутитися
-        */
+        if (
+          !isSeeking
+        ) {
 
 
-        track.classList.add(
-          "is-playing"
-        );
+          track.classList.add(
+            "is-playing"
+          );
+
+
+          startVinylSync();
+
+
+        }
 
 
       }
@@ -3643,18 +4011,27 @@
         );
 
 
-        /*
-          Прибираємо тільки
-          стан обертання.
-
-          Sleeve назад
-          НЕ повертається.
-        */
-
-
         track.classList.remove(
           "is-playing"
         );
+
+
+        stopVinylSync();
+
+
+        if (
+          !isSeeking
+        ) {
+
+
+          setVinylAngle(
+            angleFromAudioTime(
+              audio.currentTime
+            )
+          );
+
+
+        }
 
 
       }
@@ -3674,6 +4051,16 @@
 
         track.classList.remove(
           "is-playing"
+        );
+
+
+        stopVinylSync();
+
+
+        setVinylAngle(
+          angleFromAudioTime(
+            audio.duration
+          )
         );
 
 
@@ -3708,51 +4095,71 @@
     ================================================== */
 
 
+    function updateProgressUI(
+      time
+    ) {
+
+
+      const percentage =
+        audio.duration
+
+        ?
+
+        (
+          time
+          /
+          audio.duration
+        )
+        *
+        100
+
+        :
+
+        0;
+
+
+      progress.style.width =
+        percentage
+        +
+        "%";
+
+
+      current.textContent =
+        fmt(
+          time
+        );
+
+
+      seek.setAttribute(
+        "aria-valuenow",
+        String(
+          Math.round(
+            percentage
+          )
+        )
+      );
+
+
+    }
+
+
+
     audio.addEventListener(
       "timeupdate",
       () => {
 
 
-        const percentage =
-
-          audio.duration
-
-          ?
-
-          (
-            audio.currentTime
-            /
-            audio.duration
-          )
-          *
-          100
-
-          :
-
-          0;
+        if (
+          !isSeeking
+        ) {
 
 
-
-        progress.style.width =
-          percentage
-          +
-          "%";
-
-
-        current.textContent =
-          fmt(
+          updateProgressUI(
             audio.currentTime
           );
 
 
-        seek.setAttribute(
-          "aria-valuenow",
-          String(
-            Math.round(
-              percentage
-            )
-          )
-        );
+        }
 
 
       }
@@ -3761,7 +4168,383 @@
 
 
     /* ==================================================
-       SEEK
+       SEEK ENGINE
+    ================================================== */
+
+
+    async function seekTo(
+      targetTime
+    ) {
+
+
+      if (
+        isSeeking
+        ||
+        !audio.duration
+      ) {
+
+
+        return;
+
+
+      }
+
+
+
+      targetTime =
+        Math.max(
+          0,
+          Math.min(
+            audio.duration,
+            targetTime
+          )
+        );
+
+
+
+      const oldTime =
+        audio.currentTime;
+
+
+
+      const delta =
+        targetTime
+        -
+        oldTime;
+
+
+
+      if (
+        Math.abs(
+          delta
+        )
+        <
+        .15
+      ) {
+
+
+        audio.currentTime =
+          targetTime;
+
+
+        updateProgressUI(
+          targetTime
+        );
+
+
+        return;
+
+
+      }
+
+
+
+      const wasPlaying =
+        !audio.paused;
+
+
+
+      isSeeking =
+        true;
+
+
+
+      stopVinylSync();
+
+
+
+      if (
+        wasPlaying
+      ) {
+
+
+        audio.pause();
+
+
+      }
+
+
+
+      /*
+        Якщо користувач seek-нув
+        до першого PLAY —
+        все одно відкриваємо vinyl.
+      */
+
+
+      if (
+        !vinylOpened
+      ) {
+
+
+        vinylOpened =
+          true;
+
+
+        track.classList.add(
+          "is-open"
+        );
+
+
+        await new Promise(
+          resolve =>
+            setTimeout(
+              resolve,
+              800
+            )
+        );
+
+
+      }
+
+
+
+      track.classList.add(
+        "is-seeking"
+      );
+
+
+
+      const revolutions =
+        Math.abs(
+          delta
+        )
+        *
+        REVOLUTIONS_PER_SECOND;
+
+
+
+      /*
+        Маленький seek — швидкий.
+
+        Навіть великий jump не тримаємо
+        користувача 5 секунд.
+
+        max ≈ 1.2 sec.
+      */
+
+
+      const seekDuration =
+        Math.round(
+          Math.max(
+            260,
+            Math.min(
+              1200,
+              260
+              +
+              Math.log1p(
+                revolutions
+              )
+              *
+              190
+            )
+          )
+        );
+
+
+
+      microstatus.textContent =
+
+        "SEEK // "
+
+        +
+
+        signedTime(
+          delta
+        )
+
+        +
+
+        " // "
+
+        +
+
+        revolutions
+          .toFixed(1)
+
+        +
+
+        " REV";
+
+
+
+      /*
+        Під час перемотки прогрес
+        плавно рухається до destination.
+      */
+
+
+      const progressStart =
+        performance.now();
+
+
+
+      function animateProgress(
+        now
+      ) {
+
+
+        if (
+          !isSeeking
+        ) {
+
+
+          return;
+
+
+        }
+
+
+        const t =
+          Math.min(
+            1,
+            (
+              now
+              -
+              progressStart
+            )
+            /
+            seekDuration
+          );
+
+
+        const simulatedTime =
+          oldTime
+          +
+          delta
+          *
+          t;
+
+
+        updateProgressUI(
+          simulatedTime
+        );
+
+
+        if (
+          t < 1
+        ) {
+
+
+          requestAnimationFrame(
+            animateProgress
+          );
+
+
+        }
+
+
+      }
+
+
+
+      requestAnimationFrame(
+        animateProgress
+      );
+
+
+
+      /*
+        VISUAL SEEK
+        +
+        AUDIO SCRUB
+
+        запускаються одночасно.
+      */
+
+
+      await Promise.all([
+
+        animateVinylSeek(
+          oldTime,
+          targetTime,
+          seekDuration
+        ),
+
+        playScrubSound(
+          oldTime,
+          targetTime,
+          seekDuration
+        )
+
+      ]);
+
+
+
+      audio.currentTime =
+        targetTime;
+
+
+
+      updateProgressUI(
+        targetTime
+      );
+
+
+
+      track.classList.remove(
+        "is-seeking"
+      );
+
+
+
+      isSeeking =
+        false;
+
+
+
+      microstatus.textContent =
+        "Connection stable // 01 signal detected";
+
+
+
+      if (
+        wasPlaying
+      ) {
+
+
+        try {
+
+
+          await audio.play();
+
+
+        }
+
+
+        catch (error) {
+
+
+          console.warn(
+            error
+          );
+
+
+        }
+
+
+      }
+
+
+      else {
+
+
+        setVinylAngle(
+          angleFromAudioTime(
+            targetTime
+          )
+        );
+
+
+      }
+
+
+    }
+
+
+
+    /* ==================================================
+       CLICK / POINTER SEEK
     ================================================== */
 
 
@@ -3771,6 +4554,8 @@
 
 
         if (
+          isSeeking
+          ||
           !audio.duration
         ) {
 
@@ -3800,17 +4585,20 @@
 
 
 
-        audio.currentTime =
-
+        const targetTime =
           (
             x
             /
             rect.width
           )
-
           *
-
           audio.duration;
+
+
+
+        seekTo(
+          targetTime
+        );
 
 
       }
@@ -3819,19 +4607,16 @@
 
 
     /* ==================================================
-       ARG RECEIVER
+       ARG
     ================================================== */
 
 
     const ARG_CODES = {
 
-
       "∴∆Ξ":
         "SIGNAL ACCEPTED // NODE UNLOCKED"
 
-
     };
-
 
 
     const codeForm =
@@ -3861,9 +4646,7 @@
         event.preventDefault();
 
 
-
         const code =
-
           codeInput
             .value
             .trim()
@@ -3873,10 +4656,8 @@
             );
 
 
-
         codeResult.style.display =
           "block";
-
 
 
         if (
@@ -3918,7 +4699,6 @@
 
       }
     );
-
 
   </script>
 
