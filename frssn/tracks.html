@@ -1,70 +1,42 @@
 <!doctype html>
 <html lang="uk">
-
 <head>
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, viewport-fit=cover"
-  >
-
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#050605">
-
   <title>FRSSN // Tracks</title>
 
   <style>
-
     :root {
       --bg:#050605;
       --panel:rgba(11,13,11,.94);
       --panel2:rgba(7,9,7,.88);
-
       --accent:#d6ff28;
       --accent-soft:rgba(214,255,40,.12);
       --accent-line:rgba(214,255,40,.38);
-
       --text:#f3f4ef;
       --muted:#90948a;
-
       --border:rgba(255,255,255,.16);
-
       --content-width:1180px;
     }
-
 
     * {
       box-sizing:border-box;
     }
-
 
     html {
       color-scheme:dark;
       scroll-behavior:smooth;
     }
 
-
     body {
-
       margin:0;
-
       min-height:100svh;
-
       color:var(--text);
 
       background:
-
-        linear-gradient(
-          rgba(255,255,255,.018) 1px,
-          transparent 1px
-        ),
-
-        linear-gradient(
-          90deg,
-          rgba(255,255,255,.018) 1px,
-          transparent 1px
-        ),
-
+        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px),
         var(--bg);
 
       background-size:
@@ -79,37 +51,22 @@
         sans-serif;
 
       overflow-x:hidden;
-
       position:relative;
     }
 
-
-
-    /* ==================================================
-       MOVING BACKGROUND LIGHT
-    ================================================== */
-
-
     body::before {
-
       content:"";
-
       position:fixed;
-
       inset:-18%;
-
       z-index:0;
-
       pointer-events:none;
 
       background:
-
         radial-gradient(
           circle at 50% 22%,
           rgba(214,255,40,.16),
           transparent 18%
         ),
-
         radial-gradient(
           circle at 50% 22%,
           rgba(214,255,40,.075),
@@ -130,28 +87,20 @@
         alternate;
     }
 
-
     body::after {
-
       content:"";
-
       position:fixed;
-
       inset:0;
-
       z-index:19;
-
       pointer-events:none;
 
       background:
-
         repeating-linear-gradient(
           0deg,
           transparent 0,
           transparent 3px,
           rgba(255,255,255,.012) 4px
         ),
-
         radial-gradient(
           circle at center,
           transparent 45%,
@@ -161,9 +110,7 @@
       opacity:.72;
     }
 
-
     @keyframes ambientSweep {
-
       0% {
         transform:
           translate3d(-18%,0,0)
@@ -181,61 +128,34 @@
           translate3d(18%,0,0)
           scale(1.02);
       }
-
     }
-
-
 
     a {
       color:inherit;
     }
-
 
     button,
     input {
       font:inherit;
     }
 
-
-
-    /* ==================================================
-       PAGE
-    ================================================== */
-
-
     .page {
-
-      width:
-        min(
-          var(--content-width),
-          calc(100% - 56px)
-        );
+      width:min(
+        var(--content-width),
+        calc(100% - 56px)
+      );
 
       margin:0 auto;
-
       position:relative;
-
       z-index:2;
-
-      padding:
-        30px 0 28px;
+      padding:30px 0 28px;
     }
 
-
-
-    /* ==================================================
-       TOPBAR
-    ================================================== */
-
-
     .topbar {
-
       min-height:44px;
 
       display:flex;
-
       align-items:center;
-
       justify-content:space-between;
 
       gap:24px;
@@ -243,35 +163,24 @@
       color:var(--muted);
 
       font-family:monospace;
-
       font-size:11px;
 
       letter-spacing:.18em;
-
       text-transform:uppercase;
     }
 
-
     .brand {
-
       color:var(--accent);
-
       text-decoration:none;
     }
 
-
     .status {
-
       display:flex;
-
       align-items:center;
-
       gap:10px;
     }
 
-
     .dot {
-
       width:7px;
       height:7px;
 
@@ -280,8 +189,7 @@
       background:var(--accent);
 
       box-shadow:
-        0 0 12px
-        var(--accent);
+        0 0 12px var(--accent);
 
       animation:
         pulse
@@ -290,15 +198,7 @@
         infinite;
     }
 
-
-
-    /* ==================================================
-       PROFILE
-    ================================================== */
-
-
     .profile {
-
       margin-top:34px;
 
       border:
@@ -306,17 +206,14 @@
         var(--border);
 
       background:
-
         linear-gradient(
           135deg,
           rgba(255,255,255,.035),
           transparent 42%
         ),
-
         var(--panel);
 
       clip-path:
-
         polygon(
           0 0,
           calc(100% - 22px) 0,
@@ -329,9 +226,7 @@
       overflow:hidden;
     }
 
-
     .profileHead {
-
       min-height:188px;
 
       padding:
@@ -349,16 +244,11 @@
       position:relative;
     }
 
-
     .profileHead::after {
-
-      content:
-        "TRACK TRANSMISSION ARCHIVE";
+      content:"TRACK TRANSMISSION ARCHIVE";
 
       position:absolute;
-
       right:32px;
-
       bottom:17px;
 
       color:
@@ -370,9 +260,7 @@
       letter-spacing:.26em;
     }
 
-
     .avatar {
-
       width:116px;
       height:116px;
 
@@ -389,9 +277,7 @@
         rgba(214,255,40,.08);
     }
 
-
     .identity h1 {
-
       margin:0;
 
       font-size:46px;
@@ -401,9 +287,7 @@
       line-height:1;
     }
 
-
     .handle {
-
       margin-top:10px;
 
       color:var(--muted);
@@ -416,9 +300,7 @@
       text-transform:uppercase;
     }
 
-
     .microstatus {
-
       margin-top:18px;
 
       color:var(--accent);
@@ -433,9 +315,7 @@
       min-height:15px;
     }
 
-
     .back {
-
       min-height:42px;
 
       padding:0 16px;
@@ -447,7 +327,6 @@
       display:inline-flex;
 
       align-items:center;
-
       justify-content:center;
 
       text-decoration:none;
@@ -462,23 +341,12 @@
       text-transform:uppercase;
     }
 
-
     .back:hover {
-
       background:var(--accent);
-
       color:#090b07;
     }
 
-
-
-    /* ==================================================
-       TABS
-    ================================================== */
-
-
     .tabs {
-
       height:54px;
 
       border-top:
@@ -504,9 +372,7 @@
       text-transform:uppercase;
     }
 
-
     .tab {
-
       height:54px;
 
       display:flex;
@@ -516,15 +382,11 @@
       position:relative;
     }
 
-
     .tab.active {
-
       color:var(--text);
     }
 
-
     .tab.active::after {
-
       content:"";
 
       position:absolute;
@@ -538,22 +400,12 @@
       background:var(--accent);
     }
 
-
-
-    /* ==================================================
-       CONTENT
-    ================================================== */
-
-
     .content {
-
       padding:
         30px 34px 38px;
     }
 
-
     .sectionTitle {
-
       display:flex;
 
       align-items:end;
@@ -565,9 +417,7 @@
       margin-bottom:18px;
     }
 
-
     .sectionTitle h2 {
-
       margin:0;
 
       font-size:16px;
@@ -577,9 +427,7 @@
       text-transform:uppercase;
     }
 
-
     .sectionTitle span {
-
       color:var(--muted);
 
       font:
@@ -590,15 +438,7 @@
       text-transform:uppercase;
     }
 
-
-
-    /* ==================================================
-       TRACK
-    ================================================== */
-
-
     .track {
-
       border:
         1px solid
         var(--border);
@@ -628,9 +468,7 @@
         box-shadow .25s ease;
     }
 
-
     .track::before {
-
       content:"";
 
       position:absolute;
@@ -642,7 +480,6 @@
       width:2px;
 
       background:
-
         linear-gradient(
           180deg,
           transparent,
@@ -651,9 +488,7 @@
         );
     }
 
-
     .track.is-seeking {
-
       border-color:
         rgba(214,255,40,.32);
 
@@ -662,38 +497,23 @@
         rgba(214,255,40,.025);
     }
 
-
-
-    /* ==================================================
-       VINYL
-    ================================================== */
-
-
     .vinylUnit {
-
       width:178px;
-
       height:132px;
 
       position:relative;
 
       display:flex;
-
       align-items:center;
     }
 
-
-
     .recordCarrier {
-
       position:absolute;
 
       left:7px;
-
       top:50%;
 
       width:118px;
-
       height:118px;
 
       transform:
@@ -706,12 +526,8 @@
       will-change:transform;
     }
 
-
-
     .recordDisc {
-
       width:118px;
-
       height:118px;
 
       border-radius:50%;
@@ -719,13 +535,11 @@
       position:relative;
 
       background:
-
         radial-gradient(
           circle at 50% 50%,
           rgba(255,255,255,.055) 0 8%,
           transparent 8.5%
         ),
-
         repeating-radial-gradient(
           circle at 50% 50%,
           #0f1010 0 2px,
@@ -738,27 +552,17 @@
         rgba(255,255,255,.06);
 
       box-shadow:
-
-        0 4px 24px
-        rgba(0,0,0,.45),
-
-        inset 0 0 0 1px
-        rgba(255,255,255,.04),
-
-        inset 0 0 24px
-        rgba(255,255,255,.03);
+        0 4px 24px rgba(0,0,0,.45),
+        inset 0 0 0 1px rgba(255,255,255,.04),
+        inset 0 0 24px rgba(255,255,255,.03);
 
       transform:
         rotate(0deg);
 
-      will-change:
-        transform;
+      will-change:transform;
     }
 
-
-
     .recordDisc::before {
-
       content:"";
 
       position:absolute;
@@ -774,10 +578,7 @@
       pointer-events:none;
     }
 
-
-
     .recordDisc::after {
-
       content:"";
 
       position:absolute;
@@ -789,38 +590,25 @@
       pointer-events:none;
 
       background:
-
         conic-gradient(
           from 10deg,
-
           transparent 0deg,
-
           rgba(255,255,255,.035) 28deg,
-
           transparent 64deg,
-
           transparent 176deg,
-
           rgba(214,255,40,.025) 207deg,
-
           transparent 250deg,
-
           transparent 360deg
         );
     }
 
-
-
     .recordLabel {
-
       position:absolute;
 
       left:50%;
-
       top:50%;
 
       width:54px;
-
       height:54px;
 
       transform:
@@ -843,11 +631,8 @@
       z-index:2;
     }
 
-
     .recordLabel img {
-
       width:100%;
-
       height:100%;
 
       object-fit:cover;
@@ -855,18 +640,13 @@
       display:block;
     }
 
-
-
     .recordHole {
-
       position:absolute;
 
       left:50%;
-
       top:50%;
 
       width:7px;
-
       height:7px;
 
       transform:
@@ -883,17 +663,8 @@
       z-index:3;
     }
 
-
-
-    /* ==================================================
-       SLEEVE
-    ================================================== */
-
-
     .sleeve {
-
       width:132px;
-
       height:132px;
 
       position:relative;
@@ -909,21 +680,15 @@
       background:#090a09;
 
       box-shadow:
-
-        0 8px 22px
-        rgba(0,0,0,.28),
-
-        inset 0 0 0 1px
-        rgba(255,255,255,.02);
+        0 8px 22px rgba(0,0,0,.28),
+        inset 0 0 0 1px rgba(255,255,255,.02);
 
       will-change:
         transform,
         opacity;
     }
 
-
     .sleeve::after {
-
       content:"";
 
       position:absolute;
@@ -933,7 +698,6 @@
       pointer-events:none;
 
       background:
-
         linear-gradient(
           120deg,
           rgba(255,255,255,.05) 0%,
@@ -944,11 +708,8 @@
       mix-blend-mode:screen;
     }
 
-
     .cover {
-
       width:100%;
-
       height:100%;
 
       object-fit:cover;
@@ -956,15 +717,7 @@
       display:block;
     }
 
-
-
-    /* ==================================================
-       VINYL OPENING
-    ================================================== */
-
-
     .track.is-open .recordCarrier {
-
       animation:
         recordReveal
         1.45s
@@ -972,9 +725,7 @@
         both;
     }
 
-
     .track.is-open .sleeve {
-
       animation:
         sleeveExit
         1.45s
@@ -982,43 +733,31 @@
         both;
     }
 
-
-
     @keyframes recordReveal {
-
       0% {
-
         transform:
           translate(0,-50%);
       }
 
       36% {
-
         transform:
           translate(44px,-50%);
       }
 
       55% {
-
         transform:
           translate(44px,-50%);
       }
 
       100% {
-
         transform:
           translate(0,-50%);
       }
-
     }
 
-
-
     @keyframes sleeveExit {
-
       0%,
       34% {
-
         transform:
           translateX(0);
 
@@ -1026,7 +765,6 @@
       }
 
       52% {
-
         transform:
           translateX(-12px);
 
@@ -1034,54 +772,26 @@
       }
 
       100% {
-
         transform:
           translateX(-190px);
 
         opacity:0;
       }
-
     }
-
-
-
-    /* ==================================================
-       SEEK GLOW
-    ================================================== */
-
 
     .track.is-seeking .recordDisc {
-
       box-shadow:
-
-        0 0 14px
-        rgba(214,255,40,.24),
-
-        0 0 40px
-        rgba(214,255,40,.09),
-
-        0 4px 24px
-        rgba(0,0,0,.46),
-
-        inset 0 0 0 1px
-        rgba(255,255,255,.04);
+        0 0 14px rgba(214,255,40,.24),
+        0 0 40px rgba(214,255,40,.09),
+        0 4px 24px rgba(0,0,0,.46),
+        inset 0 0 0 1px rgba(255,255,255,.04);
     }
 
-
-
-    /* ==================================================
-       TRACK INFO
-    ================================================== */
-
-
     .trackInfo {
-
       min-width:0;
     }
 
-
     .topline {
-
       display:flex;
 
       align-items:flex-start;
@@ -1093,9 +803,7 @@
       margin-bottom:18px;
     }
 
-
     .trackTitle {
-
       margin:0;
 
       font-size:23px;
@@ -1105,9 +813,7 @@
       text-transform:uppercase;
     }
 
-
     .artist {
-
       margin-top:5px;
 
       color:var(--muted);
@@ -1120,9 +826,7 @@
       text-transform:uppercase;
     }
 
-
     .badge {
-
       color:var(--accent);
 
       border:
@@ -1140,15 +844,7 @@
       white-space:nowrap;
     }
 
-
-
-    /* ==================================================
-       WAVEFORM
-    ================================================== */
-
-
     .waveRow {
-
       display:grid;
 
       grid-template-columns:
@@ -1161,11 +857,8 @@
       align-items:center;
     }
 
-
     .iconBtn {
-
       width:36px;
-
       height:36px;
 
       border-radius:50%;
@@ -1189,9 +882,7 @@
         box-shadow .2s ease;
     }
 
-
     .iconBtn:hover {
-
       border-color:
         var(--accent-line);
 
@@ -1200,20 +891,14 @@
         rgba(214,255,40,.10);
     }
 
-
     .iconBtn svg {
-
       width:13px;
-
       height:13px;
 
       fill:currentColor;
     }
 
-
-
     .waveBox {
-
       height:56px;
 
       position:relative;
@@ -1225,9 +910,7 @@
       touch-action:none;
     }
 
-
     .wave {
-
       height:100%;
 
       display:flex;
@@ -1241,9 +924,7 @@
       z-index:1;
     }
 
-
     .bar {
-
       flex:1;
 
       min-width:1px;
@@ -1255,15 +936,11 @@
       opacity:.76;
     }
 
-
     .waveProgress {
-
       position:absolute;
 
       left:0;
-
       top:0;
-
       bottom:0;
 
       width:0;
@@ -1275,15 +952,11 @@
       overflow:hidden;
     }
 
-
     .waveProgress .wave {
-
       position:absolute;
 
       left:0;
-
       top:0;
-
       bottom:0;
 
       width:100%;
@@ -1291,9 +964,7 @@
       min-width:100%;
     }
 
-
     .waveProgress .bar {
-
       background:var(--accent);
 
       box-shadow:
@@ -1301,9 +972,7 @@
         rgba(214,255,40,.22);
     }
 
-
     .time {
-
       color:var(--muted);
 
       font:
@@ -1312,9 +981,7 @@
       white-space:nowrap;
     }
 
-
     .meta {
-
       margin-top:12px;
 
       display:flex;
@@ -1333,15 +1000,7 @@
       text-transform:uppercase;
     }
 
-
-
-    /* ==================================================
-       BUY
-    ================================================== */
-
-
     .buyCol {
-
       display:flex;
 
       flex-direction:column;
@@ -1351,9 +1010,7 @@
       min-width:170px;
     }
 
-
     .license {
-
       min-height:50px;
 
       padding:0 18px;
@@ -1371,7 +1028,6 @@
       display:flex;
 
       align-items:center;
-
       justify-content:center;
 
       gap:9px;
@@ -1385,9 +1041,7 @@
       text-transform:uppercase;
     }
 
-
     .license:hover {
-
       filter:brightness(1.07);
 
       box-shadow:
@@ -1395,18 +1049,14 @@
         rgba(214,255,40,.15);
     }
 
-
     .license small {
-
       font:
         500 9px/1 monospace;
 
       color:#313a13;
     }
 
-
     .secondary {
-
       min-height:37px;
 
       border:
@@ -1418,7 +1068,6 @@
       display:flex;
 
       align-items:center;
-
       justify-content:center;
 
       color:var(--muted);
@@ -1431,24 +1080,14 @@
       text-transform:uppercase;
     }
 
-
     .secondary:hover {
-
       color:var(--accent);
 
       border-color:
         var(--accent-line);
     }
 
-
-
-    /* ==================================================
-       RECEIVER
-    ================================================== */
-
-
     .receiver {
-
       margin-top:18px;
 
       border:
@@ -1470,9 +1109,7 @@
       align-items:center;
     }
 
-
     .receiverTitle {
-
       color:var(--accent);
 
       font:
@@ -1483,9 +1120,7 @@
       text-transform:uppercase;
     }
 
-
     .receiverText {
-
       margin-top:7px;
 
       color:var(--muted);
@@ -1498,17 +1133,13 @@
       text-transform:uppercase;
     }
 
-
     .codeForm {
-
       display:flex;
 
       gap:8px;
     }
 
-
     .codeInput {
-
       width:180px;
 
       height:40px;
@@ -1534,15 +1165,11 @@
       text-transform:uppercase;
     }
 
-
     .codeInput:focus {
-
       border-color:var(--accent);
     }
 
-
     .codeBtn {
-
       height:40px;
 
       border:
@@ -1566,17 +1193,12 @@
       text-transform:uppercase;
     }
 
-
     .codeBtn:hover {
-
       background:var(--accent);
-
       color:#090b07;
     }
 
-
     .codeResult {
-
       grid-column:1/-1;
 
       display:none;
@@ -1595,15 +1217,7 @@
       letter-spacing:.1em;
     }
 
-
-
-    /* ==================================================
-       FOOTER
-    ================================================== */
-
-
     .footer {
-
       margin-top:20px;
 
       min-height:48px;
@@ -1630,46 +1244,25 @@
       text-transform:uppercase;
     }
 
-
-
     @keyframes pulse {
-
       0%,
       100% {
-
         opacity:.45;
-
-        transform:
-          scale(.9);
+        transform:scale(.9);
       }
 
       50% {
-
         opacity:1;
-
-        transform:
-          scale(1.15);
+        transform:scale(1.15);
       }
-
     }
 
-
-
-    /* ==================================================
-       MOBILE
-    ================================================== */
-
-
     @media(max-width:760px) {
-
-
       .page {
-
-        width:
-          min(
-            100% - 28px,
-            560px
-          );
+        width:min(
+          100% - 28px,
+          560px
+        );
 
         padding-top:
           max(
@@ -1678,9 +1271,7 @@
           );
       }
 
-
       .profileHead {
-
         grid-template-columns:
           auto 1fr;
 
@@ -1690,51 +1281,34 @@
         gap:18px;
       }
 
-
       .profileHead::after {
-
         display:none;
       }
 
-
       .avatar {
-
         width:88px;
-
         height:88px;
       }
 
-
       .identity h1 {
-
         font-size:34px;
       }
 
-
       .back {
-
         grid-column:1/-1;
-
         width:100%;
       }
 
-
       .tabs {
-
-        padding:
-          0 20px;
+        padding:0 20px;
       }
 
-
       .content {
-
         padding:
           22px 18px 30px;
       }
 
-
       .track {
-
         grid-template-columns:
           112px
           minmax(0,1fr);
@@ -1744,91 +1318,62 @@
         padding:13px;
       }
 
-
       .vinylUnit {
-
         width:112px;
-
         height:86px;
       }
 
-
       .recordCarrier {
-
         width:76px;
-
         height:76px;
-
         left:4px;
       }
 
-
       .recordDisc {
-
         width:76px;
-
         height:76px;
       }
 
-
       .recordLabel {
-
         width:36px;
-
         height:36px;
       }
 
-
       .recordHole {
-
         width:5px;
-
         height:5px;
       }
 
-
       .sleeve {
-
         width:86px;
-
         height:86px;
       }
 
-
       @keyframes recordReveal {
-
         0% {
-
           transform:
             translate(0,-50%);
         }
 
         36% {
-
           transform:
             translate(26px,-50%);
         }
 
         55% {
-
           transform:
             translate(26px,-50%);
         }
 
         100% {
-
           transform:
             translate(0,-50%);
         }
-
       }
 
-
       @keyframes sleeveExit {
-
         0%,
         34% {
-
           transform:
             translateX(0);
 
@@ -1836,7 +1381,6 @@
         }
 
         52% {
-
           transform:
             translateX(-8px);
 
@@ -1844,18 +1388,14 @@
         }
 
         100% {
-
           transform:
             translateX(-120px);
 
           opacity:0;
         }
-
       }
 
-
       .buyCol {
-
         grid-column:1/-1;
 
         display:grid;
@@ -1864,43 +1404,30 @@
           1fr 1fr;
       }
 
-
       .waveRow {
-
         grid-template-columns:
           auto
           minmax(0,1fr);
       }
 
-
       .time {
-
         display:none;
       }
 
-
       .receiver {
-
         grid-template-columns:1fr;
       }
 
-
       .codeForm {
-
         width:100%;
       }
 
-
       .codeInput {
-
         flex:1;
-
         width:auto;
       }
 
-
       .footer {
-
         flex-direction:column;
 
         justify-content:center;
@@ -1911,145 +1438,99 @@
           18px 0;
       }
 
-
       .sectionTitle {
-
         align-items:flex-start;
 
         flex-direction:column;
 
         gap:8px;
       }
-
     }
 
-
-
     @media(max-width:440px) {
-
-
       .topbar {
-
         font-size:9px;
-
         letter-spacing:.1em;
       }
 
-
       .avatar {
-
         width:76px;
-
         height:76px;
       }
 
-
       .identity h1 {
-
         font-size:30px;
       }
 
-
       .track {
-
         grid-template-columns:
           94px
           minmax(0,1fr);
       }
 
-
       .vinylUnit {
-
         width:94px;
-
         height:70px;
       }
 
-
       .recordCarrier {
-
         width:62px;
-
         height:62px;
-
         left:4px;
       }
 
-
       .recordDisc {
-
         width:62px;
-
         height:62px;
       }
 
-
       .recordLabel {
-
         width:30px;
-
         height:30px;
       }
 
-
       .sleeve {
-
         width:70px;
-
         height:70px;
       }
 
-
       .trackTitle {
-
         font-size:18px;
       }
 
-
       .badge {
-
         display:none;
       }
 
-
       .buyCol {
-
         grid-template-columns:1fr;
       }
 
-
       .tabs {
-
         gap:20px;
-
         overflow:auto;
       }
 
-
       .meta {
-
         gap:10px;
       }
-
     }
-
   </style>
-
 </head>
 
 
 <body>
 
-
   <div class="page">
-
 
     <header class="topbar">
 
-      <a class="brand" href="index.html">
+      <a
+        class="brand"
+        href="index.html"
+      >
         FRSSN SIGNAL // TRACK NODE
       </a>
-
 
       <span class="status">
 
@@ -2065,12 +1546,9 @@
     </header>
 
 
-
     <main class="profile">
 
-
       <section class="profileHead">
-
 
         <img
           class="avatar"
@@ -2078,19 +1556,15 @@
           alt="FRSSN"
         >
 
-
         <div class="identity">
-
 
           <h1>
             FRSSN
           </h1>
 
-
           <div class="handle">
             Signal transmission archive
           </div>
-
 
           <div
             class="microstatus"
@@ -2099,9 +1573,7 @@
             Connection stable // 01 signal detected
           </div>
 
-
         </div>
-
 
         <a
           class="back"
@@ -2110,9 +1582,7 @@
           ← Back // Link
         </a>
 
-
       </section>
-
 
 
       <nav
@@ -2120,11 +1590,9 @@
         aria-label="FRSSN track sections"
       >
 
-
         <span class="tab active">
           Tracks
         </span>
-
 
         <a
           class="tab"
@@ -2134,14 +1602,11 @@
           Receiver
         </a>
 
-
         <span class="tab">
           Archive // locked
         </span>
 
-
       </nav>
-
 
 
       <section
@@ -2149,22 +1614,17 @@
         id="tracks"
       >
 
-
         <div class="sectionTitle">
-
 
           <h2>
             Tracks
           </h2>
 
-
           <span>
             NODE 001 // DIRECT LICENSE CHANNEL
           </span>
 
-
         </div>
-
 
 
         <article
@@ -2173,18 +1633,14 @@
           data-audio="old.mp3"
         >
 
-
           <div class="vinylUnit">
 
-
             <div class="recordCarrier">
-
 
               <div
                 class="recordDisc"
                 id="recordDisc"
               >
-
 
                 <div class="recordLabel">
 
@@ -2195,19 +1651,14 @@
 
                 </div>
 
-
                 <div class="recordHole"></div>
 
-
               </div>
-
 
             </div>
 
 
-
             <div class="sleeve">
-
 
               <img
                 class="cover"
@@ -2215,47 +1666,35 @@
                 alt="OLD cover"
               >
 
-
             </div>
-
 
           </div>
 
 
-
           <div class="trackInfo">
-
 
             <div class="topline">
 
-
               <div>
-
 
                 <h3 class="trackTitle">
                   OLD
                 </h3>
 
-
                 <div class="artist">
                   FRSSN
                 </div>
 
-
               </div>
-
 
               <div class="badge">
                 NEW SIGNAL
               </div>
 
-
             </div>
 
 
-
             <div class="waveRow">
-
 
               <button
                 class="iconBtn js-play"
@@ -2263,18 +1702,11 @@
                 aria-label="Play OLD"
               >
 
-
                 <svg viewBox="0 0 24 24">
-
-                  <path
-                    d="M8 5v14l11-7z"
-                  />
-
+                  <path d="M8 5v14l11-7z"/>
                 </svg>
 
-
               </button>
-
 
 
               <div
@@ -2286,31 +1718,16 @@
                 aria-valuenow="0"
               >
 
+                <div class="wave js-wave"></div>
 
-                <div
-                  class="wave js-wave"
-                ></div>
-
-
-                <div
-                  class="waveProgress js-progress"
-                >
-
-
-                  <div
-                    class="wave js-wave-clone"
-                  ></div>
-
-
+                <div class="waveProgress js-progress">
+                  <div class="wave js-wave-clone"></div>
                 </div>
-
 
               </div>
 
 
-
               <div class="time">
-
 
                 <span class="js-current">
                   0:00
@@ -2322,41 +1739,31 @@
                   0:00
                 </span>
 
-
               </div>
-
 
             </div>
 
 
-
             <div class="meta">
-
 
               <span>
                 Signal // 001
               </span>
 
-
               <span>
                 45 RPM
               </span>
-
 
               <span>
                 MP3 license
               </span>
 
-
             </div>
-
 
           </div>
 
 
-
           <div class="buyCol">
-
 
             <a
               class="license"
@@ -2380,17 +1787,12 @@
               target="_blank"
               rel="noopener noreferrer"
             >
-
               TRAKTRAIN CHECKOUT
-
             </a>
-
 
           </div>
 
-
         </article>
-
 
 
         <section
@@ -2398,22 +1800,17 @@
           id="receiver"
         >
 
-
           <div>
-
 
             <div class="receiverTitle">
               Signal Receiver // Code Input
             </div>
 
-
             <div class="receiverText">
               Optional layer. Licensing remains open without a code.
             </div>
 
-
           </div>
-
 
 
           <form
@@ -2421,7 +1818,6 @@
             id="codeForm"
             autocomplete="off"
           >
-
 
             <input
               class="codeInput"
@@ -2431,7 +1827,6 @@
               placeholder="//"
             >
 
-
             <button
               class="codeBtn"
               type="submit"
@@ -2439,9 +1834,7 @@
               Transmit
             </button>
 
-
           </form>
-
 
 
           <div
@@ -2450,35 +1843,26 @@
             aria-live="polite"
           ></div>
 
-
         </section>
 
-
       </section>
-
 
     </main>
 
 
-
     <footer class="footer">
-
 
       <span>
         FRSSN // THAT'S YOUR SKIN TINGLING
       </span>
 
-
       <span>
         Independent signal source
       </span>
 
-
     </footer>
 
-
   </div>
-
 
 
   <audio
@@ -2488,41 +1872,33 @@
   ></audio>
 
 
-
   <script>
-
     "use strict";
-
 
 
     /* ==================================================
        ELEMENTS
     ================================================== */
 
-
     const audio =
       document.getElementById(
         "trackAudio"
       );
-
 
     const track =
       document.getElementById(
         "trackOLD"
       );
 
-
     const recordDisc =
       document.getElementById(
         "recordDisc"
       );
 
-
     const microstatus =
       document.getElementById(
         "microstatus"
       );
-
 
     const playButtons =
       [
@@ -2531,36 +1907,30 @@
         )
       ];
 
-
     const wave =
       document.querySelector(
         ".js-wave"
       );
-
 
     const waveClone =
       document.querySelector(
         ".js-wave-clone"
       );
 
-
     const progress =
       document.querySelector(
         ".js-progress"
       );
-
 
     const seek =
       document.querySelector(
         ".js-seek"
       );
 
-
     const current =
       document.querySelector(
         ".js-current"
       );
-
 
     const total =
       document.querySelector(
@@ -2568,44 +1938,27 @@
       );
 
 
-
     /* ==================================================
        VINYL PHYSICS
     ================================================== */
 
-
     const VINYL_RPM =
       45;
-
 
     const REVOLUTIONS_PER_SECOND =
       VINYL_RPM / 60;
 
-
     const DEGREES_PER_SECOND =
       REVOLUTIONS_PER_SECOND * 360;
-
 
     let vinylOpened =
       false;
 
-
     let isSeeking =
       false;
 
-
     let vinylRAF =
       null;
-
-
-
-    /*
-      45 RPM:
-
-      45 / 60 = 0.75 revolution / second
-
-      0.75 * 360 = 270 degrees / second
-    */
 
 
     function angleFromAudioTime(
@@ -2621,7 +1974,6 @@
     }
 
 
-
     function setVinylAngle(
       angle
     ) {
@@ -2632,22 +1984,17 @@
     }
 
 
-
     /* ==================================================
-       NORMAL PLAYBACK VINYL SYNC
+       NORMAL VINYL SYNC
     ================================================== */
 
-
     function startVinylSync() {
-
 
       cancelAnimationFrame(
         vinylRAF
       );
 
-
       function frame() {
-
 
         if (
           !audio.paused
@@ -2655,116 +2002,90 @@
           !isSeeking
         ) {
 
-
           setVinylAngle(
             angleFromAudioTime(
               audio.currentTime
             )
           );
 
-
           vinylRAF =
             requestAnimationFrame(
               frame
             );
 
-
         }
 
-
       }
-
 
       vinylRAF =
         requestAnimationFrame(
           frame
         );
 
-
     }
 
 
-
     function stopVinylSync() {
-
 
       if (
         vinylRAF
       ) {
 
-
         cancelAnimationFrame(
           vinylRAF
         );
 
-
         vinylRAF =
           null;
 
-
       }
-
 
     }
 
 
-
     /* ==================================================
-       AUDIO CONTEXT / DECODED TRACK
+       AUDIO CONTEXT
     ================================================== */
-
 
     let audioContext =
       null;
 
-
     let decodedTrack =
       null;
-
 
     let reversedTrack =
       null;
 
 
-
     function getAudioContext() {
-
 
       if (
         !audioContext
       ) {
-
 
         const AudioContextClass =
           window.AudioContext
           ||
           window.webkitAudioContext;
 
-
         audioContext =
           new AudioContextClass();
 
-
       }
-
 
       return audioContext;
 
-
     }
-
 
 
     /* ==================================================
        REVERSE BUFFER
     ================================================== */
 
-
     function createReversedBuffer(
       original,
       context
     ) {
-
 
       const reversed =
         context.createBuffer(
@@ -2773,32 +2094,27 @@
           original.sampleRate
         );
 
-
       for (
         let channel = 0;
         channel < original.numberOfChannels;
         channel++
       ) {
 
-
         const source =
           original.getChannelData(
             channel
           );
-
 
         const target =
           reversed.getChannelData(
             channel
           );
 
-
         for (
           let i = 0;
           i < source.length;
           i++
         ) {
-
 
           target[i] =
             source[
@@ -2809,28 +2125,21 @@
               i
             ];
 
-
         }
-
 
       }
 
-
       return reversed;
-
 
     }
 
 
-
     /* ==================================================
-       REAL WAVEFORM
+       WAVEFORM + DECODE
     ================================================== */
-
 
     const WAVE_BARS =
       96;
-
 
 
     function renderBars(
@@ -2838,24 +2147,19 @@
       heights
     ) {
 
-
       element.innerHTML =
         "";
 
-
       heights.forEach(
         height => {
-
 
           const bar =
             document.createElement(
               "span"
             );
 
-
           bar.className =
             "bar";
-
 
           bar.style.height =
             Math.max(
@@ -2865,27 +2169,21 @@
             +
             "%";
 
-
           element.appendChild(
             bar
           );
 
-
         }
       );
 
-
     }
-
 
 
     async function loadTrackData(
       url
     ) {
 
-
       try {
-
 
         const response =
           await fetch(
@@ -2895,11 +2193,9 @@
             }
           );
 
-
         if (
           !response.ok
         ) {
-
 
           throw new Error(
             "Audio fetch failed: "
@@ -2907,24 +2203,18 @@
             response.status
           );
 
-
         }
-
-
 
         const arrayBuffer =
           await response.arrayBuffer();
 
-
         const context =
           getAudioContext();
-
 
         decodedTrack =
           await context.decodeAudioData(
             arrayBuffer.slice(0)
           );
-
 
         reversedTrack =
           createReversedBuffer(
@@ -2932,11 +2222,8 @@
             context
           );
 
-
-
         const channels =
           [];
-
 
         for (
           let channel = 0;
@@ -2944,21 +2231,16 @@
           channel++
         ) {
 
-
           channels.push(
             decodedTrack.getChannelData(
               channel
             )
           );
 
-
         }
-
-
 
         const totalSamples =
           decodedTrack.length;
-
 
         const blockSize =
           Math.max(
@@ -2970,10 +2252,8 @@
             )
           );
 
-
         const peaks =
           [];
-
 
         for (
           let i = 0;
@@ -2981,32 +2261,23 @@
           i++
         ) {
 
-
           const start =
             i
             *
             blockSize;
 
-
           const end =
-
             i === WAVE_BARS - 1
-
             ?
-
             totalSamples
-
             :
-
             Math.min(
               totalSamples,
               start + blockSize
             );
 
-
           let peak =
             0;
-
 
           for (
             let channel = 0;
@@ -3014,10 +2285,8 @@
             channel++
           ) {
 
-
             const data =
               channels[channel];
-
 
             for (
               let sample = start;
@@ -3025,39 +2294,29 @@
               sample++
             ) {
 
-
               const value =
                 Math.abs(
                   data[sample]
                 );
 
-
               if (
                 value > peak
               ) {
 
-
                 peak =
                   value;
 
-
               }
-
 
             }
 
-
           }
-
 
           peaks.push(
             peak
           );
 
-
         }
-
-
 
         const maxPeak =
           Math.max(
@@ -3065,7 +2324,6 @@
           )
           ||
           1;
-
 
         const heights =
           peaks.map(
@@ -3081,30 +2339,24 @@
               )
           );
 
-
         renderBars(
           wave,
           heights
         );
-
 
         renderBars(
           waveClone,
           heights
         );
 
-
       }
 
-
       catch (error) {
-
 
         console.warn(
           "Track decode error:",
           error
         );
-
 
         const fallback =
           Array.from(
@@ -3129,24 +2381,19 @@
               )
           );
 
-
         renderBars(
           wave,
           fallback
         );
-
 
         renderBars(
           waveClone,
           fallback
         );
 
-
       }
 
-
     }
-
 
 
     loadTrackData(
@@ -3156,11 +2403,9 @@
     );
 
 
-
     /* ==================================================
-       SCRUB SOUND
+       SCRUB SOUND WITH ACCELERATION
     ================================================== */
-
 
     async function playScrubSound(
       fromTime,
@@ -3168,42 +2413,31 @@
       durationMs
     ) {
 
-
       if (
         !decodedTrack
       ) {
 
-
         return;
-
 
       }
 
-
       const context =
         getAudioContext();
-
 
       if (
         context.state ===
         "suspended"
       ) {
 
-
         try {
-
 
           await context.resume();
 
-
         }
-
 
         catch (_) {}
 
-
       }
-
 
 
       const direction =
@@ -3214,7 +2448,6 @@
         -1;
 
 
-
       const distance =
         Math.abs(
           toTime
@@ -3223,42 +2456,102 @@
         );
 
 
-
       const durationSeconds =
         durationMs
         /
         1000;
 
 
+      const source =
+        context.createBufferSource();
 
-      const grainCount =
-        Math.max(
-          7,
-          Math.min(
-            22,
-            Math.round(
-              durationMs
-              /
-              45
-            )
-          )
+
+      source.buffer =
+        direction > 0
+        ?
+        decodedTrack
+        :
+        reversedTrack;
+
+
+      const minRate =
+        0.85;
+
+
+      const distanceFactor =
+        Math.min(
+          1,
+          distance
+          /
+          45
         );
 
 
-
-      const masterGain =
-        context.createGain();
-
-
-      masterGain.gain.value =
-        .22;
-
-
-      masterGain.connect(
-        context.destination
-      );
+      const maxRate =
+        3.5
+        +
+        distanceFactor
+        *
+        9.5;
 
 
+      const startAt =
+        context.currentTime
+        +
+        0.02;
+
+
+      const accelerationEnd =
+        startAt
+        +
+        durationSeconds
+        *
+        0.42;
+
+
+      const decelerationStart =
+        startAt
+        +
+        durationSeconds
+        *
+        0.58;
+
+
+      const endAt =
+        startAt
+        +
+        durationSeconds;
+
+
+      source.playbackRate
+        .setValueAtTime(
+          minRate,
+          startAt
+        );
+
+
+      source.playbackRate
+        .exponentialRampToValueAtTime(
+          maxRate,
+          accelerationEnd
+        );
+
+
+      source.playbackRate
+        .setValueAtTime(
+          maxRate,
+          decelerationStart
+        );
+
+
+      source.playbackRate
+        .exponentialRampToValueAtTime(
+          minRate,
+          endAt
+        );
+
+
+      /* FILTER */
 
       const filter =
         context.createBiquadFilter();
@@ -3268,290 +2561,157 @@
         "bandpass";
 
 
-      filter.frequency.value =
-        2200;
-
-
       filter.Q.value =
-        .65;
+        0.55;
 
 
-      filter.connect(
-        masterGain
+      filter.frequency
+        .setValueAtTime(
+          850,
+          startAt
+        );
+
+
+      filter.frequency
+        .exponentialRampToValueAtTime(
+          4200,
+          accelerationEnd
+        );
+
+
+      filter.frequency
+        .setValueAtTime(
+          4200,
+          decelerationStart
+        );
+
+
+      filter.frequency
+        .exponentialRampToValueAtTime(
+          1100,
+          endAt
+        );
+
+
+      /* GAIN */
+
+      const gain =
+        context.createGain();
+
+
+      gain.gain
+        .setValueAtTime(
+          0.001,
+          startAt
+        );
+
+
+      gain.gain
+        .linearRampToValueAtTime(
+          0.22,
+          startAt
+          +
+          durationSeconds
+          *
+          0.18
+        );
+
+
+      gain.gain
+        .setValueAtTime(
+          0.22,
+          startAt
+          +
+          durationSeconds
+          *
+          0.72
+        );
+
+
+      gain.gain
+        .exponentialRampToValueAtTime(
+          0.001,
+          endAt
+        );
+
+
+      source.connect(
+        filter
       );
 
 
-
-      const startAt =
-        context.currentTime
-        +
-        .015;
+      filter.connect(
+        gain
+      );
 
 
+      gain.connect(
+        context.destination
+      );
 
-      for (
-        let i = 0;
-        i < grainCount;
-        i++
+
+      let offset;
+
+
+      if (
+        direction > 0
       ) {
 
-
-        const t =
-          grainCount === 1
-          ?
-          0
-          :
-          i
-          /
-          (
-            grainCount
-            -
-            1
+        offset =
+          Math.max(
+            0,
+            Math.min(
+              decodedTrack.duration
+              -
+              0.2,
+              fromTime
+            )
           );
 
+      }
 
+      else {
 
-        const sourcePosition =
-          fromTime
-          +
-          (
-            toTime
-            -
-            fromTime
-          )
-          *
-          t;
-
-
-
-        const source =
-          context.createBufferSource();
-
-
-
-        source.buffer =
-
-          direction > 0
-
-          ?
-
-          decodedTrack
-
-          :
-
-          reversedTrack;
-
-
-
-        /*
-          Чим довший стрибок,
-          тим сильніше "машина"
-          прискорюється.
-        */
-
-
-        const distanceFactor =
-          Math.min(
-            1,
-            distance
-            /
-            35
+        offset =
+          Math.max(
+            0,
+            Math.min(
+              reversedTrack.duration
+              -
+              0.2,
+              reversedTrack.duration
+              -
+              fromTime
+            )
           );
 
+      }
 
 
-        const accelerationShape =
-          Math.sin(
-            Math.PI
-            *
-            t
-          );
-
-
-
-        const rate =
-          1.35
-          +
-          (
-            distanceFactor
-            *
-            3.8
-          )
-          +
-          (
-            accelerationShape
-            *
-            2.2
-          );
-
-
-
-        source.playbackRate.value =
-          rate;
-
-
-
-        const gain =
-          context.createGain();
-
-
-
-        source.connect(
-          gain
-        );
-
-
-        gain.connect(
-          filter
-        );
-
-
-
-        const scheduledTime =
-          startAt
-          +
-          (
-            t
-            *
-            durationSeconds
-          );
-
-
-
-        const grainDuration =
-          .055;
-
-
-
-        gain.gain.setValueAtTime(
-          0,
-          scheduledTime
-        );
-
-
-        gain.gain.linearRampToValueAtTime(
-          .9,
-          scheduledTime
-          +
-          .008
-        );
-
-
-        gain.gain.exponentialRampToValueAtTime(
-          .001,
-          scheduledTime
-          +
-          grainDuration
-        );
-
-
-
-        let offset;
-
-
-        if (
-          direction > 0
-        ) {
-
-
-          offset =
-            Math.max(
-              0,
-              Math.min(
-                decodedTrack.duration
-                -
-                .1,
-                sourcePosition
-              )
-            );
-
-
-        }
-
-
-        else {
-
-
-          offset =
-            Math.max(
-              0,
-              Math.min(
-                reversedTrack.duration
-                -
-                .1,
-                reversedTrack.duration
-                -
-                sourcePosition
-              )
-            );
-
-
-        }
-
-
+      try {
 
         source.start(
-          scheduledTime,
+          startAt,
           offset
         );
 
 
         source.stop(
-          scheduledTime
+          endAt
           +
-          grainDuration
+          0.05
         );
-
 
       }
 
+      catch (error) {
 
+        console.warn(
+          "Scrub start error:",
+          error
+        );
 
-      /*
-        Загальна envelope перемотки:
-        fade in → peak → fade out
-      */
-
-
-      masterGain.gain.setValueAtTime(
-        .001,
-        startAt
-      );
-
-
-      masterGain.gain.linearRampToValueAtTime(
-        .24,
-        startAt
-        +
-        Math.min(
-          .10,
-          durationSeconds
-          *
-          .25
-        )
-      );
-
-
-      masterGain.gain.setValueAtTime(
-        .24,
-        startAt
-        +
-        Math.max(
-          .10,
-          durationSeconds
-          -
-          .12
-        )
-      );
-
-
-      masterGain.gain.exponentialRampToValueAtTime(
-        .001,
-        startAt
-        +
-        durationSeconds
-      );
-
+      }
 
 
       await new Promise(
@@ -3566,30 +2726,26 @@
       setTimeout(
         () => {
 
-
           try {
 
-            masterGain.disconnect();
+            source.disconnect();
             filter.disconnect();
+            gain.disconnect();
 
           }
 
           catch (_) {}
 
-
         },
         100
       );
 
-
     }
 
 
-
     /* ==================================================
-       VINYL SEEK ROTATION
+       VISUAL SEEK WITH SMOOTH ACCELERATION
     ================================================== */
-
 
     function animateVinylSeek(
       fromTime,
@@ -3597,10 +2753,8 @@
       durationMs
     ) {
 
-
       return new Promise(
         resolve => {
-
 
           const startAngle =
             angleFromAudioTime(
@@ -3614,61 +2768,48 @@
             );
 
 
-          /*
-            Тут і є реальна кількість обертів.
-
-            deltaSeconds * 0.75 revolution.
-          */
+          const deltaAngle =
+            targetAngle
+            -
+            startAngle;
 
 
           const start =
             performance.now();
 
 
-
-          function ease(
+          function smootherStep(
             t
           ) {
 
-
-            /*
-              швидко прискорюємось,
-              потім гальмуємо
-            */
-
-
             return (
-              t < .5
-
-              ?
-
-              2
+              t
               *
               t
               *
               t
-
-              :
-
-              1
-              -
-              Math.pow(
-                -2 * t + 2,
-                2
+              *
+              (
+                t
+                *
+                (
+                  t
+                  *
+                  6
+                  -
+                  15
+                )
+                +
+                10
               )
-              /
-              2
             );
 
-
           }
-
 
 
           function frame(
             now
           ) {
-
 
             const raw =
               Math.min(
@@ -3684,7 +2825,7 @@
 
 
             const eased =
-              ease(
+              smootherStep(
                 raw
               );
 
@@ -3692,11 +2833,7 @@
             const angle =
               startAngle
               +
-              (
-                targetAngle
-                -
-                startAngle
-              )
+              deltaAngle
               *
               eased;
 
@@ -3710,17 +2847,13 @@
               raw < 1
             ) {
 
-
               requestAnimationFrame(
                 frame
               );
 
-
             }
 
-
             else {
-
 
               setVinylAngle(
                 targetAngle
@@ -3729,9 +2862,7 @@
 
               resolve();
 
-
             }
-
 
           }
 
@@ -3740,24 +2871,19 @@
             frame
           );
 
-
         }
       );
-
 
     }
 
 
-
     /* ==================================================
-       TIME FORMAT
+       TIME
     ================================================== */
-
 
     function fmt(
       seconds
     ) {
-
 
       if (
         !Number.isFinite(
@@ -3765,9 +2891,7 @@
         )
       ) {
 
-
         return "0:00";
-
 
       }
 
@@ -3801,15 +2925,12 @@
         )
       );
 
-
     }
-
 
 
     function signedTime(
       seconds
     ) {
-
 
       const sign =
         seconds >= 0
@@ -3829,75 +2950,57 @@
         )
       );
 
-
     }
-
 
 
     /* ==================================================
        PLAY ICON
     ================================================== */
 
-
     function setPlayIcon(
       playing
     ) {
 
-
       playButtons.forEach(
         button => {
 
-
           button.innerHTML =
-
             playing
-
             ?
-
             `
             <svg viewBox="0 0 24 24">
               <path d="M7 5h4v14H7zm6 0h4v14h-4z"/>
             </svg>
             `
-
             :
-
             `
             <svg viewBox="0 0 24 24">
               <path d="M8 5v14l11-7z"/>
             </svg>
             `;
 
-
         }
       );
 
-
     }
-
 
 
     /* ==================================================
        PLAY BUTTON
     ================================================== */
 
-
     playButtons.forEach(
       button => {
-
 
         button.addEventListener(
           "click",
           async () => {
 
-
             if (
               isSeeking
             ) {
 
-
               return;
-
 
             }
 
@@ -3906,57 +3009,42 @@
               audio.paused
             ) {
 
-
               try {
-
 
                 await audio.play();
 
-
               }
 
-
               catch (error) {
-
 
                 console.warn(
                   error
                 );
 
-
               }
 
-
             }
-
 
             else {
 
-
               audio.pause();
 
-
             }
-
 
           }
         );
 
-
       }
     );
-
 
 
     /* ==================================================
        AUDIO EVENTS
     ================================================== */
 
-
     audio.addEventListener(
       "play",
       () => {
-
 
         setPlayIcon(
           true
@@ -3967,7 +3055,6 @@
           !vinylOpened
         ) {
 
-
           vinylOpened =
             true;
 
@@ -3976,14 +3063,12 @@
             "is-open"
           );
 
-
         }
 
 
         if (
           !isSeeking
         ) {
-
 
           track.classList.add(
             "is-playing"
@@ -3992,19 +3077,15 @@
 
           startVinylSync();
 
-
         }
-
 
       }
     );
 
 
-
     audio.addEventListener(
       "pause",
       () => {
-
 
         setPlayIcon(
           false
@@ -4023,26 +3104,21 @@
           !isSeeking
         ) {
 
-
           setVinylAngle(
             angleFromAudioTime(
               audio.currentTime
             )
           );
 
-
         }
-
 
       }
     );
 
 
-
     audio.addEventListener(
       "ended",
       () => {
-
 
         setPlayIcon(
           false
@@ -4063,48 +3139,34 @@
           )
         );
 
-
       }
     );
-
-
-
-    /* ==================================================
-       METADATA
-    ================================================== */
 
 
     audio.addEventListener(
       "loadedmetadata",
       () => {
 
-
         total.textContent =
           fmt(
             audio.duration
           );
 
-
       }
     );
-
 
 
     /* ==================================================
        PROGRESS
     ================================================== */
 
-
     function updateProgressUI(
       time
     ) {
 
-
       const percentage =
         audio.duration
-
         ?
-
         (
           time
           /
@@ -4112,9 +3174,7 @@
         )
         *
         100
-
         :
-
         0;
 
 
@@ -4139,43 +3199,34 @@
         )
       );
 
-
     }
-
 
 
     audio.addEventListener(
       "timeupdate",
       () => {
 
-
         if (
           !isSeeking
         ) {
-
 
           updateProgressUI(
             audio.currentTime
           );
 
-
         }
-
 
       }
     );
-
 
 
     /* ==================================================
        SEEK ENGINE
     ================================================== */
 
-
     async function seekTo(
       targetTime
     ) {
-
 
       if (
         isSeeking
@@ -4183,12 +3234,9 @@
         !audio.duration
       ) {
 
-
         return;
 
-
       }
-
 
 
       targetTime =
@@ -4201,10 +3249,8 @@
         );
 
 
-
       const oldTime =
         audio.currentTime;
-
 
 
       const delta =
@@ -4213,15 +3259,13 @@
         oldTime;
 
 
-
       if (
         Math.abs(
           delta
         )
         <
-        .15
+        0.15
       ) {
-
 
         audio.currentTime =
           targetTime;
@@ -4234,48 +3278,32 @@
 
         return;
 
-
       }
-
 
 
       const wasPlaying =
         !audio.paused;
 
 
-
       isSeeking =
         true;
 
 
-
       stopVinylSync();
-
 
 
       if (
         wasPlaying
       ) {
 
-
         audio.pause();
 
-
       }
-
-
-
-      /*
-        Якщо користувач seek-нув
-        до першого PLAY —
-        все одно відкриваємо vinyl.
-      */
 
 
       if (
         !vinylOpened
       ) {
-
 
         vinylOpened =
           true;
@@ -4294,15 +3322,12 @@
             )
         );
 
-
       }
-
 
 
       track.classList.add(
         "is-seeking"
       );
-
 
 
       const revolutions =
@@ -4313,84 +3338,52 @@
         REVOLUTIONS_PER_SECOND;
 
 
-
-      /*
-        Маленький seek — швидкий.
-
-        Навіть великий jump не тримаємо
-        користувача 5 секунд.
-
-        max ≈ 1.2 sec.
-      */
-
-
       const seekDuration =
         Math.round(
           Math.max(
-            260,
+            380,
             Math.min(
-              1200,
-              260
+              1600,
+              380
               +
               Math.log1p(
                 revolutions
               )
               *
-              190
+              240
             )
           )
         );
 
 
-
       microstatus.textContent =
-
         "SEEK // "
-
         +
-
         signedTime(
           delta
         )
-
         +
-
         " // "
-
         +
-
         revolutions
           .toFixed(1)
-
         +
-
         " REV";
-
-
-
-      /*
-        Під час перемотки прогрес
-        плавно рухається до destination.
-      */
 
 
       const progressStart =
         performance.now();
 
 
-
       function animateProgress(
         now
       ) {
-
 
         if (
           !isSeeking
         ) {
 
-
           return;
-
 
         }
 
@@ -4408,12 +3401,34 @@
           );
 
 
+        const smooth =
+          t
+          *
+          t
+          *
+          t
+          *
+          (
+            t
+            *
+            (
+              t
+              *
+              6
+              -
+              15
+            )
+            +
+            10
+          );
+
+
         const simulatedTime =
           oldTime
           +
           delta
           *
-          t;
+          smooth;
 
 
         updateProgressUI(
@@ -4425,32 +3440,18 @@
           t < 1
         ) {
 
-
           requestAnimationFrame(
             animateProgress
           );
 
-
         }
 
-
       }
-
 
 
       requestAnimationFrame(
         animateProgress
       );
-
-
-
-      /*
-        VISUAL SEEK
-        +
-        AUDIO SCRUB
-
-        запускаються одночасно.
-      */
 
 
       await Promise.all([
@@ -4470,10 +3471,8 @@
       ]);
 
 
-
       audio.currentTime =
         targetTime;
-
 
 
       updateProgressUI(
@@ -4481,53 +3480,40 @@
       );
 
 
-
       track.classList.remove(
         "is-seeking"
       );
-
 
 
       isSeeking =
         false;
 
 
-
       microstatus.textContent =
         "Connection stable // 01 signal detected";
-
 
 
       if (
         wasPlaying
       ) {
 
-
         try {
-
 
           await audio.play();
 
-
         }
 
-
         catch (error) {
-
 
           console.warn(
             error
           );
 
-
         }
-
 
       }
 
-
       else {
-
 
         setVinylAngle(
           angleFromAudioTime(
@@ -4535,23 +3521,18 @@
           )
         );
 
-
       }
-
 
     }
 
 
-
     /* ==================================================
-       CLICK / POINTER SEEK
+       SEEK CLICK
     ================================================== */
-
 
     seek.addEventListener(
       "click",
       event => {
-
 
         if (
           isSeeking
@@ -4559,17 +3540,13 @@
           !audio.duration
         ) {
 
-
           return;
-
 
         }
 
 
-
         const rect =
           seek.getBoundingClientRect();
-
 
 
         const x =
@@ -4584,7 +3561,6 @@
           );
 
 
-
         const targetTime =
           (
             x
@@ -4595,27 +3571,21 @@
           audio.duration;
 
 
-
         seekTo(
           targetTime
         );
 
-
       }
     );
-
 
 
     /* ==================================================
        ARG
     ================================================== */
 
-
     const ARG_CODES = {
-
       "∴∆Ξ":
         "SIGNAL ACCEPTED // NODE UNLOCKED"
-
     };
 
 
@@ -4637,11 +3607,9 @@
       );
 
 
-
     codeForm.addEventListener(
       "submit",
       event => {
-
 
         event.preventDefault();
 
@@ -4664,7 +3632,6 @@
           ARG_CODES[code]
         ) {
 
-
           codeResult.textContent =
             ARG_CODES[code];
 
@@ -4674,35 +3641,23 @@
             code
           );
 
-
         }
-
 
         else {
 
-
           codeResult.textContent =
-
             code
-
             ?
-
             "UNKNOWN SIGNAL"
-
             :
-
             "WAITING FOR INPUT";
 
-
         }
-
 
       }
     );
 
   </script>
 
-
 </body>
-
 </html>
