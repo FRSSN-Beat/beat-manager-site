@@ -208,7 +208,6 @@ input{
 .status{
   display:flex;
   align-items:center;
-
   gap:10px;
 }
 
@@ -555,6 +554,11 @@ input{
     rgba(214,255,40,.03);
 }
 
+.track.is-motor-recovering{
+  border-color:
+    rgba(214,255,40,.3);
+}
+
 
 /* =====================================================
    VINYL SCENE
@@ -843,6 +847,15 @@ input{
 
     0 0 50px
     rgba(214,255,40,.08),
+
+    0 4px 24px
+    rgba(0,0,0,.45);
+}
+
+.track.is-motor-recovering .recordDisc{
+  box-shadow:
+    0 0 14px
+    rgba(214,255,40,.14),
 
     0 4px 24px
     rgba(0,0,0,.45);
@@ -2168,9 +2181,9 @@ input{
 </div>
 
 
-<!-- =============================================
-     TEMP DEBUG
-============================================= -->
+<!-- =====================================================
+     TEMP SCRATCH DEBUG
+===================================================== -->
 
 <div
   class="scratchDebug"
@@ -2348,6 +2361,10 @@ let isScratching =
   false;
 
 
+let isMotorRecovering =
+  false;
+
+
 let vinylRAF =
   null;
 
@@ -2384,23 +2401,9 @@ let scratchWasPlaying =
   false;
 
 
-/*
-  True only while we're performing
-  the FIRST automatic braking
-  after grabbing a playing record.
-*/
-
 let grabBrakeActive =
   false;
 
-
-/*
-  As soon as the user actually moves
-  the platter this becomes true.
-
-  From this point until pointerup
-  there is NO automatic physics.
-*/
 
 let manualScratchStarted =
   false;
@@ -2410,8 +2413,12 @@ let grabBrakeRAF =
   null;
 
 
+let motorRecoveryRAF =
+  null;
+
+
 /* =====================================================
-   DEBUG VALUE
+   DEBUG
 ===================================================== */
 
 let SCRATCH_TIME_SCALE =
@@ -2438,7 +2445,7 @@ scratchSensitivity.addEventListener(
 
 
 /* =====================================================
-   SCRATCH CONFIG
+   SCRATCH AUDIO CONFIG
 ===================================================== */
 
 const SCRATCH_RATE_SCALE =
@@ -2453,17 +2460,6 @@ const SCRATCH_MAX_RATE =
   4.0;
 
 
-/*
-  Slightly longer grain.
-
-  Existing grain is allowed to
-  finish naturally.
-
-  This is important:
-  stopping the hand does NOT
-  forcibly kill the audio tail.
-*/
-
 const SCRATCH_GRAIN_DURATION =
   0.085;
 
@@ -2472,31 +2468,56 @@ const SCRATCH_GRAIN_INTERVAL_MS =
   24;
 
 
-/*
-  Initial grab brake.
-
-  Total duration.
-*/
+/* =====================================================
+   GRAB BRAKE CONFIG
+===================================================== */
 
 const GRAB_BRAKE_DURATION =
   820;
 
 
 /*
-  Shape > 1:
+  Start:
+  soft resistance.
 
-  beginning:
-  very gentle slowdown
-
-  ending:
-  braking becomes progressively
-  stronger.
-
-  2.35 is intentionally non-linear.
+  End:
+  stronger braking.
 */
 
 const GRAB_BRAKE_CURVE =
   2.35;
+
+
+/* =====================================================
+   MOTOR RECOVERY CONFIG
+===================================================== */
+
+/*
+  Shortest motor recovery.
+*/
+
+const MOTOR_RECOVERY_MIN_DURATION =
+  420;
+
+
+/*
+  Longest recovery, useful if released
+  from reverse direction.
+*/
+
+const MOTOR_RECOVERY_MAX_DURATION =
+  1300;
+
+
+/*
+  Higher = motor grabs more quickly.
+
+  Around 2.4–3.0 feels like a
+  strong direct-drive turntable.
+*/
+
+const MOTOR_PULL_STRENGTH =
+  2.65;
 
 
 /* =====================================================
@@ -2622,7 +2643,7 @@ setTonearmAngle(
 
 
 /* =====================================================
-   ARM ANIMATION
+   EASING
 ===================================================== */
 
 function smootherStep(
@@ -2647,6 +2668,10 @@ function smootherStep(
 
 }
 
+
+/* =====================================================
+   ARM ANIMATION
+===================================================== */
 
 function animateTonearmTo(
   targetAngle,
@@ -2787,6 +2812,8 @@ function startVinylSync(){
       &&
       !isScratching
       &&
+      !isMotorRecovering
+      &&
       !isPacking
     ){
 
@@ -2887,7 +2914,7 @@ function getAudioContext(){
 
 
 /* =====================================================
-   REVERSE AUDIO
+   REVERSE BUFFER
 ===================================================== */
 
 function createReversedBuffer(
@@ -3284,10 +3311,6 @@ function updateScratchVisuals(){
 
 /* =====================================================
    SCRATCH GRAIN
-
-   IMPORTANT:
-   once started, grain is NOT cancelled.
-   Its envelope always finishes naturally.
 ===================================================== */
 
 function playScratchGrain(
@@ -3402,12 +3425,6 @@ function playScratchGrain(
   const now =
     context.currentTime;
 
-
-  /*
-    Soft envelope.
-
-    No hard mute when hand stops.
-  */
 
   gain.gain.setValueAtTime(
     .001,
@@ -3587,21 +3604,10 @@ function pointerAngle(
 /* =====================================================
    GRAB BRAKE
 
-   IMPORTANT:
+   Playing platter grabbed by hand:
 
-   speed curve:
-
-      1.0 ─────────╮
-                   │\
-                   │ \
-                   │  \
-                   │   \__
-      0.0 ────────────────
-
-   At the beginning braking is gentle.
-
-   The closer we get to the end,
-   the faster the braking becomes.
+   starts slowing gently,
+   then braking becomes stronger.
 ===================================================== */
 
 function startGrabBrake(){
@@ -3680,19 +3686,6 @@ function startGrabBrake(){
       );
 
 
-    /*
-      This is the important curve.
-
-      t^2.35:
-
-      early phase changes very little,
-      later phase changes much faster.
-
-      Therefore:
-      gentle start -> stronger braking
-      toward the stop.
-    */
-
     const braking =
       Math.pow(
         t,
@@ -3710,10 +3703,7 @@ function startGrabBrake(){
 
 
     /*
-      Make final tail slightly firmer.
-
-      Once we're below ~12% speed,
-      collapse that last part faster.
+      Final tail brakes harder.
     */
 
     if(
@@ -3766,8 +3756,7 @@ function startGrabBrake(){
     microstatus.textContent =
       "GRAB BRAKE // "
       +
-      scratchVelocity
-      .toFixed(
+      scratchVelocity.toFixed(
         2
       )
       +
@@ -3818,12 +3807,7 @@ function startGrabBrake(){
 
 
 /* =====================================================
-   CANCEL AUTOMATIC BRAKE
-
-   Called on the FIRST actual manual movement.
-
-   After this:
-   NO automatic movement occurs while held.
+   CANCEL GRAB BRAKE
 ===================================================== */
 
 function cancelGrabBrake(){
@@ -3845,6 +3829,302 @@ function cancelGrabBrake(){
       null;
 
   }
+
+}
+
+
+/* =====================================================
+   CANCEL MOTOR RECOVERY
+===================================================== */
+
+function cancelMotorRecovery(){
+
+  isMotorRecovering =
+    false;
+
+
+  track.classList.remove(
+    "is-motor-recovering"
+  );
+
+
+  if(
+    motorRecoveryRAF
+  ){
+
+    cancelAnimationFrame(
+      motorRecoveryRAF
+    );
+
+
+    motorRecoveryRAF =
+      null;
+
+  }
+
+}
+
+
+/* =====================================================
+   MOTOR RECOVERY
+
+   Motor is always trying to return platter
+   to +1.0x.
+
+   If platter is reverse:
+   negative -> 0 -> positive -> 1.0
+===================================================== */
+
+function startMotorRecovery(){
+
+  return new Promise(
+    resolve => {
+
+      cancelMotorRecovery();
+
+
+      isMotorRecovering =
+        true;
+
+
+      track.classList.add(
+        "is-motor-recovering"
+      );
+
+
+      const startVelocity =
+        scratchVelocity;
+
+
+      /*
+        More distance from 1x =
+        slightly longer recovery.
+      */
+
+      const distanceToNormal =
+        Math.abs(
+          1
+          -
+          startVelocity
+        );
+
+
+      const duration =
+        Math.min(
+          MOTOR_RECOVERY_MAX_DURATION,
+          Math.max(
+            MOTOR_RECOVERY_MIN_DURATION,
+            420
+            +
+            distanceToNormal
+            *
+            520
+          )
+        );
+
+
+      const started =
+        performance.now();
+
+
+      let previous =
+        started;
+
+
+      function frame(
+        now
+      ){
+
+        if(
+          !isMotorRecovering
+          ||
+          isPacking
+          ||
+          isScratching
+        ){
+
+          motorRecoveryRAF =
+            null;
+
+
+          resolve();
+
+
+          return;
+
+        }
+
+
+        const dt =
+          Math.min(
+            .035,
+            (
+              now
+              -
+              previous
+            )
+            /
+            1000
+          );
+
+
+        previous =
+          now;
+
+
+        const t =
+          Math.min(
+            1,
+            (
+              now
+              -
+              started
+            )
+            /
+            duration
+          );
+
+
+        /*
+          Motor curve.
+
+          Starts gently,
+          then increasingly wins,
+          final section softly locks
+          to 1x.
+        */
+
+        const motorCurve =
+          1
+          -
+          Math.pow(
+            1
+            -
+            t,
+            MOTOR_PULL_STRENGTH
+          );
+
+
+        scratchVelocity =
+          startVelocity
+          +
+          (
+            1
+            -
+            startVelocity
+          )
+          *
+          motorCurve;
+
+
+        /*
+          Near 1x lock it exactly.
+        */
+
+        if(
+          Math.abs(
+            1
+            -
+            scratchVelocity
+          )
+          <
+          .006
+        ){
+
+          scratchVelocity =
+            1;
+
+        }
+
+
+        scratchTime +=
+          scratchVelocity
+          *
+          dt;
+
+
+        scratchTime =
+          Math.max(
+            0,
+            Math.min(
+              audio.duration,
+              scratchTime
+            )
+          );
+
+
+        updateScratchVisuals();
+
+
+        /*
+          During motor recovery pitch
+          follows real physical speed.
+        */
+
+        maybeEmitScratchGrain(
+          now,
+          true
+        );
+
+
+        microstatus.textContent =
+          "MOTOR // "
+          +
+          scratchVelocity.toFixed(
+            2
+          )
+          +
+          "×";
+
+
+        if(
+          t < 1
+          &&
+          scratchTime
+          <
+          audio.duration
+        ){
+
+          motorRecoveryRAF =
+            requestAnimationFrame(
+              frame
+            );
+
+        }
+
+        else{
+
+          scratchVelocity =
+            1;
+
+
+          isMotorRecovering =
+            false;
+
+
+          track.classList.remove(
+            "is-motor-recovering"
+          );
+
+
+          motorRecoveryRAF =
+            null;
+
+
+          resolve();
+
+        }
+
+      }
+
+
+      motorRecoveryRAF =
+        requestAnimationFrame(
+          frame
+        );
+
+    }
+  );
 
 }
 
@@ -3875,6 +4155,15 @@ recordDisc.addEventListener(
     event.preventDefault();
 
 
+    /*
+      If user grabs platter while motor
+      is still recovering, instantly transfer
+      control back to hand.
+    */
+
+    cancelMotorRecovery();
+
+
     isScratching =
       true;
 
@@ -3892,7 +4181,22 @@ recordDisc.addEventListener(
       !audio.paused;
 
 
+    /*
+      If audio isn't playing because we're
+      coming from motor-recovery state,
+      PLAY still conceptually remains active.
+
+      But in this implementation recovery
+      completes before normal audio resumes,
+      so regular pointerdown during recovery
+      inherits physical position.
+    */
+
     scratchTime =
+      audio.paused
+      ?
+      scratchTime
+      :
       audio.currentTime;
 
 
@@ -3918,9 +4222,8 @@ recordDisc.addEventListener(
 
 
     /*
-      Preserve the fact that platter was
-      rotating at natural 1x speed BEFORE
-      pausing <audio>.
+      If normal audio was playing,
+      platter initially has +1x velocity.
     */
 
     if(
@@ -3929,13 +4232,6 @@ recordDisc.addEventListener(
 
       scratchVelocity =
         1;
-
-    }
-
-    else{
-
-      scratchVelocity =
-        0;
 
     }
 
@@ -3974,11 +4270,6 @@ recordDisc.addEventListener(
     }
 
 
-    /*
-      ONLY if record was actually playing:
-      begin the one-off physical hand brake.
-    */
-
     if(
       scratchWasPlaying
     ){
@@ -4003,7 +4294,7 @@ recordDisc.addEventListener(
 
 
 /* =====================================================
-   MANUAL SCRATCH MOVE
+   MANUAL SCRATCH
 ===================================================== */
 
 recordDisc.addEventListener(
@@ -4065,11 +4356,7 @@ recordDisc.addEventListener(
 
 
     /*
-      Ignore microscopic pointer noise.
-
-      Very important because browsers
-      may send tiny pointermove events
-      even when the hand is essentially still.
+      Ignore tiny pointer jitter.
     */
 
     if(
@@ -4086,10 +4373,9 @@ recordDisc.addEventListener(
 
 
     /*
-      FIRST genuine manual movement:
-
-      kill automatic braking permanently
-      until pointerup.
+      First true hand movement permanently
+      cancels automatic grab braking
+      until release.
     */
 
     if(
@@ -4143,11 +4429,9 @@ recordDisc.addEventListener(
 
 
     /*
-      Manual movement now directly
-      determines platter velocity.
+      Hand determines platter velocity.
 
-      A little smoothing prevents
-      nasty digital spikes.
+      Slight smoothing only.
     */
 
     scratchVelocity =
@@ -4218,14 +4502,15 @@ recordDisc.addEventListener(
 /* =====================================================
    RELEASE
 
-   No extra fake inertia here.
+   If PLAY was active:
 
-   User asked:
-   while holding = only hand movement.
-
-   On release we simply resume normal
-   playback if the record was playing
-   before the grab.
+   hand releases resistance
+   ->
+   motor pulls platter toward +1x
+   ->
+   physical speed reaches 45 RPM
+   ->
+   normal HTML audio takes over.
 ===================================================== */
 
 async function finishScratch(
@@ -4283,16 +4568,11 @@ async function finishScratch(
     null;
 
 
-  audio.currentTime =
-    scratchTime;
-
-
-  updateScratchVisuals();
-
-
-  microstatus.textContent =
-    "Connection stable // 01 signal detected";
-
+  /*
+    =========================================
+    PLAY WAS ACTIVE BEFORE GRAB
+    =========================================
+  */
 
   if(
     scratchWasPlaying
@@ -4301,6 +4581,38 @@ async function finishScratch(
     <
     audio.duration
   ){
+
+    /*
+      Motor takes control.
+
+      Important:
+      do NOT call audio.play() yet.
+    */
+
+    await startMotorRecovery();
+
+
+    if(
+      isScratching
+      ||
+      isPacking
+    ){
+
+      return;
+
+    }
+
+
+    audio.currentTime =
+      scratchTime;
+
+
+    updateScratchVisuals();
+
+
+    microstatus.textContent =
+      "MOTOR LOCK // 45 RPM";
+
 
     try{
 
@@ -4315,6 +4627,54 @@ async function finishScratch(
       );
 
     }
+
+
+    setTimeout(
+      () => {
+
+        if(
+          !isScratching
+          &&
+          !isPacking
+          &&
+          !isMotorRecovering
+        ){
+
+          microstatus.textContent =
+            "Connection stable // 01 signal detected";
+
+        }
+
+      },
+      420
+    );
+
+  }
+
+  else{
+
+    /*
+      PLAY wasn't active before grab.
+
+      Motor is not pulling because player
+      itself is paused.
+
+      Leave platter exactly at hand position.
+    */
+
+    scratchVelocity =
+      0;
+
+
+    audio.currentTime =
+      scratchTime;
+
+
+    updateScratchVisuals();
+
+
+    microstatus.textContent =
+      "Connection stable // 01 signal detected";
 
   }
 
@@ -4349,7 +4709,7 @@ function setPlayIcon(
         ?
         `
         <svg viewBox="0 0 24 24">
-          <path d="M7 5h4v14H7zm6 0h4v14H7z"/>
+          <path d="M7 5h4v14H7zm6 0h4v14h-4z"/>
         </svg>
         `
         :
@@ -4405,7 +4765,7 @@ recordCarrier.addEventListener(
 
 
 /* =====================================================
-   PLAY
+   PLAY BUTTON
 ===================================================== */
 
 playButtons.forEach(
@@ -4419,6 +4779,8 @@ playButtons.forEach(
           isPacking
           ||
           isScratching
+          ||
+          isMotorRecovering
         ){
 
           return;
@@ -4459,6 +4821,10 @@ playButtons.forEach(
 );
 
 
+/* =====================================================
+   PLAY
+===================================================== */
+
 audio.addEventListener(
   "play",
   () => {
@@ -4467,6 +4833,8 @@ audio.addEventListener(
       isPacking
       ||
       isScratching
+      ||
+      isMotorRecovering
     ){
 
       audio.pause();
@@ -4501,6 +4869,10 @@ audio.addEventListener(
   }
 );
 
+
+/* =====================================================
+   PAUSE
+===================================================== */
 
 audio.addEventListener(
   "pause",
@@ -4541,6 +4913,8 @@ audio.addEventListener(
     if(
       !isScratching
       &&
+      !isMotorRecovering
+      &&
       !isPacking
     ){
 
@@ -4572,6 +4946,9 @@ async function stopAndPack(){
 
 
   cancelGrabBrake();
+
+
+  cancelMotorRecovery();
 
 
   isPacking =
@@ -4635,7 +5012,8 @@ async function stopAndPack(){
   track.classList.remove(
     "is-open",
     "is-closing",
-    "is-scratching"
+    "is-scratching",
+    "is-motor-recovering"
   );
 
 
@@ -4651,11 +5029,19 @@ async function stopAndPack(){
     false;
 
 
+  isMotorRecovering =
+    false;
+
+
   audio.currentTime =
     0;
 
 
   scratchTime =
+    0;
+
+
+  scratchVelocity =
     0;
 
 
@@ -4701,6 +5087,8 @@ seek.addEventListener(
     if(
       isScratching
       ||
+      isMotorRecovering
+      ||
       isPacking
       ||
       !audio.duration
@@ -4735,6 +5123,10 @@ seek.addEventListener(
       ratio
       *
       audio.duration;
+
+
+    scratchTime =
+      audio.currentTime;
 
 
     updateProgressUI(
