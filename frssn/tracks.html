@@ -62,7 +62,7 @@
       position:relative;
     }
 
-    /* MOVING LIGHT */
+    /* MOVING BACKGROUND LIGHT */
 
     body::before {
       content:"";
@@ -98,8 +98,6 @@
 
       opacity:1;
     }
-
-    /* SCANLINES + VIGNETTE */
 
     body::after {
       content:"";
@@ -144,12 +142,6 @@
       }
     }
 
-    @media (prefers-reduced-motion: reduce) {
-      body::before {
-        animation:none;
-      }
-    }
-
     a {
       color:inherit;
     }
@@ -173,7 +165,7 @@
       padding:30px 0 28px;
     }
 
-    /* TOPBAR */
+    /* TOP */
 
     .topbar {
       min-height:44px;
@@ -280,6 +272,30 @@
       letter-spacing:.26em;
     }
 
+    /* AVATAR */
+
+    .avatarWrap {
+      width:116px;
+      height:116px;
+      border-radius:50%;
+      position:relative;
+      flex-shrink:0;
+    }
+
+    .avatarWrap::before {
+      content:"";
+      position:absolute;
+      inset:-8px;
+      border-radius:50%;
+      border:1px solid rgba(214,255,40,.0);
+      opacity:0;
+      transition:
+        opacity .35s ease,
+        border-color .35s ease,
+        box-shadow .35s ease;
+      pointer-events:none;
+    }
+
     .avatar {
       width:116px;
       height:116px;
@@ -295,6 +311,67 @@
       box-shadow:
         0 0 34px
         rgba(214,255,40,.08);
+
+      display:block;
+
+      transition:
+        box-shadow .35s ease,
+        filter .35s ease;
+    }
+
+    .avatarWrap.is-playing .avatar {
+      animation:
+        avatarPulse 2.2s ease-in-out infinite,
+        avatarDrift 8s ease-in-out infinite alternate;
+
+      box-shadow:
+        0 0 18px rgba(214,255,40,.24),
+        0 0 42px rgba(214,255,40,.14),
+        0 0 72px rgba(214,255,40,.05);
+
+      filter:
+        brightness(1.08)
+        contrast(1.04);
+    }
+
+    .avatarWrap.is-playing::before {
+      opacity:1;
+      border-color:rgba(214,255,40,.18);
+
+      box-shadow:
+        0 0 18px rgba(214,255,40,.08),
+        inset 0 0 18px rgba(214,255,40,.03);
+    }
+
+    @keyframes avatarPulse {
+      0%,
+      100% {
+        transform:scale(1);
+      }
+
+      50% {
+        transform:scale(1.035);
+      }
+    }
+
+    @keyframes avatarDrift {
+      0% {
+        transform:
+          scale(1.02)
+          translate(-1px,-1px);
+      }
+
+      50% {
+        transform:
+          scale(1.045)
+          translate(1px,0);
+      }
+
+      100% {
+        transform:
+          scale(1.025)
+          translate(0,1px);
+      }
     }
 
     .identity h1 {
@@ -461,7 +538,7 @@
       text-transform:uppercase;
     }
 
-    /* TRACK CARD */
+    /* TRACK */
 
     .track {
       border:
@@ -509,8 +586,6 @@
         );
     }
 
-    /* COVER */
-
     .coverWrap {
       width:132px;
       height:132px;
@@ -534,8 +609,6 @@
 
       display:block;
     }
-
-    /* TRACK INFO */
 
     .trackInfo {
       min-width:0;
@@ -1039,6 +1112,7 @@
         display:none;
       }
 
+      .avatarWrap,
       .avatar {
         width:88px;
         height:88px;
@@ -1137,6 +1211,7 @@
         letter-spacing:.1em;
       }
 
+      .avatarWrap,
       .avatar {
         width:76px;
         height:76px;
@@ -1179,6 +1254,16 @@
         gap:10px;
       }
     }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      body::before,
+      .avatarWrap.is-playing .avatar {
+        animation:none;
+      }
+
+    }
+
   </style>
 </head>
 
@@ -1212,11 +1297,18 @@
 
       <section class="profileHead">
 
-        <img
-          class="avatar"
-          src="frssn-avatar.png"
-          alt="FRSSN"
+        <div
+          class="avatarWrap"
+          id="avatarWrap"
         >
+
+          <img
+            class="avatar"
+            src="frssn-avatar.png"
+            alt="FRSSN"
+          >
+
+        </div>
 
         <div class="identity">
 
@@ -1499,6 +1591,11 @@
         "trackAudio"
       );
 
+    const avatarWrap =
+      document.getElementById(
+        "avatarWrap"
+      );
+
     const playButtons =
       [
         ...document.querySelectorAll(
@@ -1536,7 +1633,9 @@
         ".js-total"
       );
 
-    /* REAL AUDIO WAVEFORM */
+    /* =========================
+       REAL AUDIO WAVEFORM
+    ========================= */
 
     const WAVE_BARS = 96;
 
@@ -1583,15 +1682,15 @@
           await fetch(
             url,
             {
-              cache:
-                "force-cache"
+              cache:"force-cache"
             }
           );
 
         if (!response.ok) {
           throw new Error(
             "Audio fetch failed: "
-            + response.status
+            +
+            response.status
           );
         }
 
@@ -1654,9 +1753,9 @@
           const end =
             i ===
             WAVE_BARS - 1
-            ?
+              ?
             totalSamples
-            :
+              :
             Math.min(
               totalSamples,
               start + blockSize
@@ -1743,8 +1842,6 @@
           error
         );
 
-        /* FALLBACK ONLY */
-
         const fallback =
           Array.from(
             {
@@ -1785,7 +1882,9 @@
       audio.src
     );
 
-    /* TIME FORMAT */
+    /* =========================
+       TIME FORMAT
+    ========================= */
 
     const fmt =
       seconds => {
@@ -1800,16 +1899,12 @@
 
         const minutes =
           Math.floor(
-            seconds
-            /
-            60
+            seconds / 60
           );
 
         const remainingSeconds =
           Math.floor(
-            seconds
-            %
-            60
+            seconds % 60
           );
 
         return (
@@ -1827,7 +1922,9 @@
 
       };
 
-    /* PLAY ICON */
+    /* =========================
+       PLAY BUTTON ICON
+    ========================= */
 
     const setPlayIcon =
       playing => {
@@ -1881,7 +1978,9 @@
 
             }
             else {
+
               audio.pause();
+
             }
 
           }
@@ -1890,31 +1989,58 @@
       }
     );
 
+    /* =========================
+       PLAY STATE
+    ========================= */
+
     audio.addEventListener(
       "play",
-      () =>
+      () => {
+
         setPlayIcon(
           true
-        )
+        );
+
+        avatarWrap.classList.add(
+          "is-playing"
+        );
+
+      }
     );
 
     audio.addEventListener(
       "pause",
-      () =>
+      () => {
+
         setPlayIcon(
           false
-        )
+        );
+
+        avatarWrap.classList.remove(
+          "is-playing"
+        );
+
+      }
     );
 
     audio.addEventListener(
       "ended",
-      () =>
+      () => {
+
         setPlayIcon(
           false
-        )
+        );
+
+        avatarWrap.classList.remove(
+          "is-playing"
+        );
+
+      }
     );
 
-    /* AUDIO METADATA */
+    /* =========================
+       AUDIO METADATA
+    ========================= */
 
     audio.addEventListener(
       "loadedmetadata",
@@ -1928,7 +2054,9 @@
       }
     );
 
-    /* PLAYBACK PROGRESS */
+    /* =========================
+       PROGRESS
+    ========================= */
 
     audio.addEventListener(
       "timeupdate",
@@ -1936,9 +2064,7 @@
 
         const percentage =
           audio.duration
-
-          ?
-
+            ?
           (
             audio.currentTime
             /
@@ -1946,9 +2072,7 @@
           )
           *
           100
-
-          :
-
+            :
           0;
 
         progress.style.width =
@@ -1973,7 +2097,9 @@
       }
     );
 
-    /* SEEK */
+    /* =========================
+       SEEK
+    ========================= */
 
     seek.addEventListener(
       "click",
@@ -2011,11 +2137,15 @@
       }
     );
 
-    /* ARG RECEIVER */
+    /* =========================
+       ARG RECEIVER
+    ========================= */
 
     const ARG_CODES = {
+
       "∴∆Ξ":
         "SIGNAL ACCEPTED // NODE UNLOCKED"
+
     };
 
     const codeForm =
@@ -2068,13 +2198,9 @@
 
           codeResult.textContent =
             code
-
-            ?
-
+              ?
             "UNKNOWN SIGNAL"
-
-            :
-
+              :
             "WAITING FOR INPUT";
 
         }
