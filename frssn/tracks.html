@@ -2256,13 +2256,6 @@ const PAUSE_BRAKE_SPEED =
   2.30;
 
 
-/*
-  Production seek volume:
-  attenuated.
-
-  No debug switch anymore.
-*/
-
 const SEEK_FULL_VOLUME =
   false;
 
@@ -3997,10 +3990,6 @@ function startPauseBrake(){
           );
 
 
-        /*
-          Stronger final stop.
-        */
-
         if(
           scratchVelocity
           <
@@ -5283,13 +5272,6 @@ async function prePlayCueTo(
           );
 
 
-        /*
-          Only tonearm moves.
-
-          No seek sound.
-          No visible record rewind.
-        */
-
         setTonearmAngle(
           startArm
           +
@@ -5354,12 +5336,6 @@ async function prePlayCueTo(
   scratchVelocity =
     0;
 
-
-  /*
-    Internal silent synchronization.
-
-    No rewind animation.
-  */
 
   setVinylAngle(
     angleFromAudioTime(
@@ -5482,12 +5458,6 @@ async function playSeekSound(
     *
     9.5;
 
-
-  /*
-    Seek NEVER stops.
-
-    It returns exactly to 1x.
-  */
 
   const endRate =
     1;
@@ -5873,12 +5843,6 @@ function animateVinylSeek(
 
         else{
 
-          /*
-            Final seek phase = normal 1x.
-
-            No stop.
-          */
-
           const tailElapsed =
             Math.min(
               normalTailSeconds,
@@ -6023,12 +5987,13 @@ async function seekTo(
 
 
   /*
-    =================================================
-    FIRST CUE BEFORE FIRST PLAY
-    =================================================
+    FIRST CUE BEFORE FIRST PLAY.
 
-    Pick location -> open -> move tonearm ->
-    sync silently -> automatically start Play.
+    This branch now also works again after
+    the track has naturally ended and has
+    been fully packed back into the sleeve,
+    because stopAndPack() resets
+    hasPlaybackEverStarted = false.
   */
 
   if(
@@ -6066,8 +6031,7 @@ async function seekTo(
 
 
   /*
-    First cue to beginning:
-    leave it ready at zero.
+    Beginning before first Play.
   */
 
   if(
@@ -6101,13 +6065,9 @@ async function seekTo(
 
 
   /*
-    =================================================
-    NORMAL SEEK
-    =================================================
+    NORMAL SEEK.
 
-    If currently paused:
-    clicking waveform automatically
-    enables Play.
+    If currently paused, seek also starts Play.
   */
 
   if(
@@ -6283,10 +6243,6 @@ async function seekTo(
   scratchTime =
     targetTime;
 
-
-  /*
-    Seek ends already at normal speed.
-  */
 
   scratchVelocity =
     1;
@@ -6505,9 +6461,7 @@ playButtons.forEach(
 
 
         /*
-          =================================================
           PAUSE
-          =================================================
         */
 
         if(
@@ -6545,10 +6499,6 @@ playButtons.forEach(
           );
 
 
-          /*
-            Physical platter slowdown.
-          */
-
           await startPauseBrake();
 
 
@@ -6558,9 +6508,7 @@ playButtons.forEach(
 
 
         /*
-          =================================================
           PLAY
-          =================================================
         */
 
         cancelPauseBrake();
@@ -6681,11 +6629,6 @@ audio.addEventListener(
 
     stopVinylSync();
 
-
-    /*
-      Internal physical pause doesn't alter
-      logical Play/Pause icon.
-    */
 
     setPlayIcon(
       playIntent
@@ -6914,6 +6857,25 @@ async function stopAndPack(){
     false;
 
 
+  /*
+    CRITICAL FULL RESET.
+
+    After the record has been completely packed
+    back into its sleeve, the player returns to
+    exactly the same logical state as on first load.
+
+    Therefore the next waveform click uses
+    PRE-PLAY CUE again.
+  */
+
+  playIntent =
+    false;
+
+
+  hasPlaybackEverStarted =
+    false;
+
+
   audio.currentTime =
     0;
 
@@ -6938,6 +6900,11 @@ async function stopAndPack(){
 
   updateProgressUI(
     0
+  );
+
+
+  setPlayIcon(
+    false
   );
 
 
