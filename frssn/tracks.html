@@ -20,7 +20,9 @@
   --content-width:1180px;
 }
 
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
 
 html{
   color-scheme:dark;
@@ -37,7 +39,10 @@ body{
     linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px),
     var(--bg);
 
-  background-size:48px 48px,48px 48px,auto;
+  background-size:
+    48px 48px,
+    48px 48px,
+    auto;
 
   font-family:
     "Arial Narrow",
@@ -130,12 +135,14 @@ body::after{
   }
 }
 
-
-a{color:inherit}
+a{
+  color:inherit;
+}
 
 button,
-input{font:inherit}
-
+input{
+  font:inherit;
+}
 
 .page{
   width:min(
@@ -205,6 +212,10 @@ input{font:inherit}
 }
 
 
+/* =====================================================
+   PROFILE
+===================================================== */
+
 .profile{
   margin-top:34px;
 
@@ -232,7 +243,6 @@ input{font:inherit}
 
   overflow:hidden;
 }
-
 
 .profileHead{
   min-height:188px;
@@ -271,7 +281,6 @@ input{font:inherit}
   letter-spacing:.26em;
 }
 
-
 .avatar{
   width:116px;
   height:116px;
@@ -289,7 +298,6 @@ input{font:inherit}
     rgba(214,255,40,.08);
 }
 
-
 .identity h1{
   margin:0;
 
@@ -299,7 +307,6 @@ input{font:inherit}
 
   line-height:1;
 }
-
 
 .handle{
   margin-top:10px;
@@ -313,7 +320,6 @@ input{font:inherit}
 
   text-transform:uppercase;
 }
-
 
 .microstatus{
   margin-top:18px;
@@ -329,7 +335,6 @@ input{font:inherit}
 
   min-height:15px;
 }
-
 
 .back{
   min-height:42px;
@@ -549,19 +554,11 @@ input{font:inherit}
 
 
 /* =====================================================
-   TONEARM COMPLETE MECHANISM
-
-   Initial state:
-   hidden behind record / sleeve
+   COMPLETE TONEARM MECHANISM
 ===================================================== */
 
 .tonearmMechanism{
   position:absolute;
-
-  /*
-    Final position of mechanism.
-    Pivot is top/right.
-  */
 
   left:126px;
   top:4px;
@@ -570,9 +567,9 @@ input{font:inherit}
   height:92px;
 
   /*
-    Initially the whole mechanism is
-    moved into the middle underneath
-    vinyl + sleeve.
+    ДО REVEAL:
+    механізм захований усередині,
+    під іншими шарами.
   */
 
   transform:
@@ -595,11 +592,9 @@ input{font:inherit}
 
 
 /*
-  While vinyl is returning home,
-  entire mechanism travels out
-  into its correct location.
-
-  It is still UNDER the vinyl.
+  Під час повернення платівки
+  механізм одночасно виїжджає
+  у праву верхню позицію.
 */
 
 .track.is-open .tonearmMechanism{
@@ -615,7 +610,6 @@ input{font:inherit}
 
   0%,
   57%{
-
     transform:
       translate(-77px,25px)
       scale(.94);
@@ -623,9 +617,7 @@ input{font:inherit}
     opacity:.7;
   }
 
-
   72%{
-
     transform:
       translate(-42px,14px)
       scale(.97);
@@ -633,9 +625,7 @@ input{font:inherit}
     opacity:.88;
   }
 
-
   100%{
-
     transform:
       translate(0,0)
       scale(1);
@@ -647,10 +637,8 @@ input{font:inherit}
 
 
 /*
-  ONLY AFTER mechanism has reached
-  correct position, JS adds this class.
-
-  Now tonearm is above record.
+  Після завершення deploy
+  тонарм стає НАД платівкою.
 */
 
 .track.arm-on-top .tonearmMechanism{
@@ -659,7 +647,7 @@ input{font:inherit}
 
 
 /* =====================================================
-   PIVOT / BASE
+   BASE / PIVOT
 ===================================================== */
 
 .tonearmBase{
@@ -688,6 +676,7 @@ input{font:inherit}
   box-shadow:
     0 3px 11px
     rgba(0,0,0,.72),
+
     inset
     0 0 5px
     rgba(255,255,255,.04);
@@ -720,6 +709,7 @@ input{font:inherit}
   box-shadow:
     0 2px 7px
     rgba(0,0,0,.7),
+
     0 0 7px
     rgba(214,255,40,.025);
 
@@ -730,18 +720,12 @@ input{font:inherit}
 /* =====================================================
    ARM
 
-   IMPORTANT:
-   rod itself points DOWN.
-
-   rotate(0deg) = straight downward.
+   0deg = вниз
+   + кут = нахил уліво
 ===================================================== */
 
 .tonearmArm{
   position:absolute;
-
-  /*
-    exactly under pivot center
-  */
 
   left:13px;
   top:14px;
@@ -752,12 +736,8 @@ input{font:inherit}
   transform-origin:
     50% 0;
 
-  /*
-    parked state
-  */
-
   transform:
-    rotate(8deg);
+    rotate(-8deg);
 
   background:
     linear-gradient(
@@ -782,7 +762,7 @@ input{font:inherit}
 
 
 /* =====================================================
-   HEAD / CARTRIDGE
+   CARTRIDGE / NEEDLE
 ===================================================== */
 
 .cartridge{
@@ -816,9 +796,6 @@ input{font:inherit}
     0 2px 4px
     rgba(0,0,0,.7);
 }
-
-
-/* actual stylus */
 
 .needle{
   position:absolute;
@@ -943,19 +920,12 @@ input{font:inherit}
   background:
     conic-gradient(
       from 10deg,
-
       transparent 0deg,
-
       rgba(255,255,255,.035) 28deg,
-
       transparent 64deg,
-
       transparent 176deg,
-
       rgba(214,255,40,.025) 207deg,
-
       transparent 250deg,
-
       transparent 360deg
     );
 }
@@ -1034,10 +1004,6 @@ input{font:inherit}
   height:132px;
 
   position:relative;
-
-  /*
-    highest layer during opening
-  */
 
   z-index:6;
 
@@ -1148,7 +1114,6 @@ input{font:inherit}
 
   0%,
   34%{
-
     transform:
       translateX(0);
 
@@ -1157,7 +1122,6 @@ input{font:inherit}
 
 
   52%{
-
     transform:
       translateX(-12px);
 
@@ -1166,7 +1130,6 @@ input{font:inherit}
 
 
   100%{
-
     transform:
       translateX(-190px);
 
@@ -1256,7 +1219,7 @@ input{font:inherit}
 
 
 /* =====================================================
-   WAVE
+   WAVEFORM
 ===================================================== */
 
 .waveRow{
@@ -1999,14 +1962,10 @@ input{font:inherit}
 >
 
 
-<!-- =========================================
-     VINYL SCENE
-========================================= -->
-
 <div class="vinylUnit">
 
 
-  <!-- TONEARM COMPLETE MECHANISM -->
+  <!-- TONEARM -->
 
   <div
     class="tonearmMechanism"
@@ -2079,10 +2038,6 @@ input{font:inherit}
 
 </div>
 
-
-<!-- =========================================
-     INFO
-========================================= -->
 
 <div class="trackInfo">
 
@@ -2182,6 +2137,7 @@ input{font:inherit}
     class="license"
     href="https://traktrain.com/cart-single-track/1679177"
     target="_blank"
+    rel="noopener noreferrer"
   >
     License
     <small>// checkout ↗</small>
@@ -2191,6 +2147,7 @@ input{font:inherit}
     class="secondary"
     href="https://traktrain.com/cart-single-track/1679177"
     target="_blank"
+    rel="noopener noreferrer"
   >
     TRAKTRAIN CHECKOUT
   </a>
@@ -2359,7 +2316,7 @@ const total =
 
 
 /* =====================================================
-   VINYL
+   VINYL PHYSICS
 ===================================================== */
 
 const VINYL_RPM =
@@ -2414,26 +2371,30 @@ function setVinylAngle(
 /* =====================================================
    TONEARM GEOMETRY
 
-   0 degrees = straight DOWN
+   0° = straight DOWN
+
+   IMPORTANT:
+   Positive rotation here sends the needle
+   LEFT toward the record.
 
    PARK:
-   arm is slightly outside record
+   just outside record.
 
    START:
-   outer groove on right side
+   outer right groove.
 
    END:
-   closer to center label
+   progressively closer to center.
 ===================================================== */
 
 const ARM_PARK_ANGLE =
-  8;
+  -8;
 
 const ARM_START_ANGLE =
-  -28;
+  28;
 
 const ARM_END_ANGLE =
-  -43;
+  43;
 
 
 function armAngleFromTime(
@@ -2493,11 +2454,6 @@ setTonearmAngle(
 
 /* =====================================================
    TONEARM ENGAGE
-
-   Entire mechanism is already in place.
-
-   NOW needle goes from PARK
-   to actual groove.
 ===================================================== */
 
 function engageTonearm(){
@@ -2717,7 +2673,7 @@ function getAudioContext(){
 
 
 /* =====================================================
-   REVERSE AUDIO BUFFER
+   REVERSE BUFFER
 ===================================================== */
 
 function createReversedBuffer(
@@ -3015,6 +2971,7 @@ async function loadTrackData(
     );
 
   }
+
   catch(error){
 
     console.warn(
@@ -3025,8 +2982,7 @@ async function loadTrackData(
     const fallback =
       Array.from(
         {
-          length:
-            WAVE_BARS
+          length:WAVE_BARS
         },
         (_,i) =>
           18
@@ -3327,6 +3283,7 @@ async function playScrubSound(
       );
 
   }
+
   else{
 
     offset =
@@ -3360,6 +3317,7 @@ async function playScrubSound(
     );
 
   }
+
   catch(error){
 
     console.warn(
@@ -3516,7 +3474,24 @@ function animateVinylSeek(
           );
 
         }
+
         else{
+
+          setVinylAngle(
+            targetVinyl
+          );
+
+
+          if(
+            tonearmEngaged
+          ){
+
+            setTonearmAngle(
+              targetArm
+            );
+
+          }
+
 
           resolve();
 
@@ -3668,6 +3643,7 @@ playButtons.forEach(
             await audio.play();
 
           }
+
           catch(error){
 
             console.warn(
@@ -3677,6 +3653,7 @@ playButtons.forEach(
           }
 
         }
+
         else{
 
           audio.pause();
@@ -3692,12 +3669,6 @@ playButtons.forEach(
 
 /* =====================================================
    OPENING COMPLETE
-
-   Record + mechanism both arrive.
-
-   Mechanism now becomes TOP layer.
-
-   Then needle moves onto outer groove.
 ===================================================== */
 
 recordCarrier.addEventListener(
@@ -3727,20 +3698,10 @@ recordCarrier.addEventListener(
       true;
 
 
-    /*
-      NOW whole mechanism is above record
-    */
-
     track.classList.add(
       "arm-on-top"
     );
 
-
-    /*
-      one rendering frame later:
-      move needle from parking position
-      to outer groove
-    */
 
     requestAnimationFrame(
       () => {
@@ -4030,11 +3991,6 @@ async function seekTo(
   }
 
 
-  /*
-    If user seeks before first play,
-    open entire physical mechanism first.
-  */
-
   if(
     !vinylOpened
   ){
@@ -4244,6 +4200,7 @@ async function seekTo(
       await audio.play();
 
     }
+
     catch(error){
 
       console.warn(
@@ -4253,6 +4210,7 @@ async function seekTo(
     }
 
   }
+
   else{
 
     setVinylAngle(
@@ -4393,6 +4351,7 @@ codeForm.addEventListener(
         ];
 
     }
+
     else{
 
       codeResult.textContent =
