@@ -12,11 +12,15 @@
   --bg:#050605;
   --panel:rgba(11,13,11,.94);
   --panel2:rgba(7,9,7,.88);
+
   --accent:#d6ff28;
   --accent-line:rgba(214,255,40,.38);
+
   --text:#f3f4ef;
   --muted:#90948a;
+
   --border:rgba(255,255,255,.16);
+
   --content-width:1180px;
 }
 
@@ -31,6 +35,7 @@ html{
 
 body{
   margin:0;
+
   min-height:100svh;
 
   color:var(--text);
@@ -59,6 +64,7 @@ body{
     sans-serif;
 
   overflow-x:hidden;
+
   position:relative;
 }
 
@@ -71,6 +77,7 @@ body::before{
   content:"";
 
   position:fixed;
+
   inset:-18%;
 
   z-index:0;
@@ -89,7 +96,8 @@ body::before{
       transparent 30%
     );
 
-  filter:blur(18px);
+  filter:
+    blur(18px);
 
   transform:
     translate3d(-18%,0,0)
@@ -103,11 +111,11 @@ body::before{
     alternate;
 }
 
-
 body::after{
   content:"";
 
   position:fixed;
+
   inset:0;
 
   z-index:19;
@@ -129,7 +137,6 @@ body::after{
 
   opacity:.72;
 }
-
 
 @keyframes ambientSweep{
 
@@ -158,7 +165,6 @@ a{
   color:inherit;
 }
 
-
 button,
 input{
   font:inherit;
@@ -166,7 +172,6 @@ input{
 
 
 .page{
-
   width:min(
     var(--content-width),
     calc(100% - 56px)
@@ -175,6 +180,7 @@ input{
   margin:0 auto;
 
   position:relative;
+
   z-index:2;
 
   padding:
@@ -183,15 +189,16 @@ input{
 
 
 /* =====================================================
-   TOP
+   TOPBAR
 ===================================================== */
 
 .topbar{
-
   min-height:44px;
 
   display:flex;
+
   align-items:center;
+
   justify-content:space-between;
 
   gap:24px;
@@ -207,26 +214,21 @@ input{
   text-transform:uppercase;
 }
 
-
 .brand{
-
   color:var(--accent);
 
   text-decoration:none;
 }
 
-
 .status{
-
   display:flex;
+
   align-items:center;
 
   gap:10px;
 }
 
-
 .dot{
-
   width:7px;
   height:7px;
 
@@ -251,7 +253,6 @@ input{
 ===================================================== */
 
 .profile{
-
   margin-top:34px;
 
   border:
@@ -281,7 +282,6 @@ input{
 
 
 .profileHead{
-
   min-height:188px;
 
   padding:
@@ -303,13 +303,13 @@ input{
 
 
 .profileHead::after{
-
   content:
     "TRACK TRANSMISSION ARCHIVE";
 
   position:absolute;
 
   right:32px;
+
   bottom:17px;
 
   color:
@@ -323,7 +323,6 @@ input{
 
 
 .avatar{
-
   width:116px;
   height:116px;
 
@@ -342,7 +341,6 @@ input{
 
 
 .identity h1{
-
   margin:0;
 
   font-size:46px;
@@ -354,7 +352,6 @@ input{
 
 
 .handle{
-
   margin-top:10px;
 
   color:var(--muted);
@@ -369,7 +366,6 @@ input{
 
 
 .microstatus{
-
   margin-top:18px;
 
   color:var(--accent);
@@ -386,7 +382,6 @@ input{
 
 
 .back{
-
   min-height:42px;
 
   padding:
@@ -399,6 +394,7 @@ input{
   display:inline-flex;
 
   align-items:center;
+
   justify-content:center;
 
   text-decoration:none;
@@ -413,9 +409,7 @@ input{
   text-transform:uppercase;
 }
 
-
 .back:hover{
-
   background:var(--accent);
 
   color:#090b07;
@@ -427,7 +421,6 @@ input{
 ===================================================== */
 
 .tabs{
-
   height:54px;
 
   border-top:
@@ -455,7 +448,6 @@ input{
 
 
 .tab{
-
   height:54px;
 
   display:flex;
@@ -467,13 +459,11 @@ input{
 
 
 .tab.active{
-
   color:var(--text);
 }
 
 
 .tab.active::after{
-
   content:"";
 
   position:absolute;
@@ -493,14 +483,12 @@ input{
 ===================================================== */
 
 .content{
-
   padding:
     30px 34px 38px;
 }
 
 
 .sectionTitle{
-
   display:flex;
 
   align-items:end;
@@ -514,7 +502,6 @@ input{
 
 
 .sectionTitle h2{
-
   margin:0;
 
   font-size:16px;
@@ -526,7 +513,6 @@ input{
 
 
 .sectionTitle span{
-
   color:var(--muted);
 
   font:
@@ -543,7 +529,6 @@ input{
 ===================================================== */
 
 .track{
-
   border:
     1px solid
     var(--border);
@@ -575,7 +560,6 @@ input{
 
 
 .track::before{
-
   content:"";
 
   position:absolute;
@@ -597,7 +581,6 @@ input{
 
 
 .track.is-seeking{
-
   border-color:
     rgba(214,255,40,.32);
 
@@ -612,7 +595,6 @@ input{
 ===================================================== */
 
 .vinylUnit{
-
   width:178px;
   height:132px;
 
@@ -627,11 +609,10 @@ input{
 
 
 /* =====================================================
-   COMPLETE TONEARM MECHANISM
+   TONEARM COMPLETE MECHANISM
 ===================================================== */
 
 .tonearmMechanism{
-
   position:absolute;
 
   left:126px;
@@ -639,6 +620,10 @@ input{
 
   width:40px;
   height:92px;
+
+  /*
+    initial hidden position
+  */
 
   transform:
     translate(-77px,25px)
@@ -659,8 +644,9 @@ input{
 }
 
 
-.track.is-open .tonearmMechanism{
+/* OPEN */
 
+.track.is-open .tonearmMechanism{
   animation:
     mechanismDeploy
     1.45s
@@ -673,7 +659,6 @@ input{
 
   0%,
   57%{
-
     transform:
       translate(-77px,25px)
       scale(.94);
@@ -683,7 +668,6 @@ input{
 
 
   72%{
-
     transform:
       translate(-42px,14px)
       scale(.97);
@@ -693,7 +677,6 @@ input{
 
 
   100%{
-
     transform:
       translate(0,0)
       scale(1);
@@ -704,8 +687,12 @@ input{
 }
 
 
-.track.arm-on-top .tonearmMechanism{
+/*
+  after deploy:
+  tonearm becomes upper layer
+*/
 
+.track.arm-on-top .tonearmMechanism{
   z-index:5;
 }
 
@@ -715,7 +702,6 @@ input{
 ===================================================== */
 
 .tonearmBase{
-
   position:absolute;
 
   left:1px;
@@ -749,7 +735,6 @@ input{
 
 
 .tonearmPivot{
-
   position:absolute;
 
   left:6px;
@@ -788,7 +773,6 @@ input{
 ===================================================== */
 
 .tonearmArm{
-
   position:absolute;
 
   left:13px;
@@ -826,11 +810,10 @@ input{
 
 
 /* =====================================================
-   CARTRIDGE
+   CARTRIDGE + NEEDLE
 ===================================================== */
 
 .cartridge{
-
   position:absolute;
 
   left:50%;
@@ -864,7 +847,6 @@ input{
 
 
 .needle{
-
   position:absolute;
 
   left:50%;
@@ -890,7 +872,6 @@ input{
 ===================================================== */
 
 .recordCarrier{
-
   position:absolute;
 
   left:7px;
@@ -912,7 +893,6 @@ input{
 
 
 .recordDisc{
-
   width:118px;
   height:118px;
 
@@ -958,7 +938,6 @@ input{
 
 
 .recordDisc::before{
-
   content:"";
 
   position:absolute;
@@ -976,7 +955,6 @@ input{
 
 
 .recordDisc::after{
-
   content:"";
 
   position:absolute;
@@ -1002,7 +980,6 @@ input{
 
 
 .recordLabel{
-
   position:absolute;
 
   left:50%;
@@ -1033,7 +1010,6 @@ input{
 
 
 .recordLabel img{
-
   width:100%;
   height:100%;
 
@@ -1044,7 +1020,6 @@ input{
 
 
 .recordHole{
-
   position:absolute;
 
   left:50%;
@@ -1073,7 +1048,6 @@ input{
 ===================================================== */
 
 .sleeve{
-
   width:132px;
   height:132px;
 
@@ -1104,7 +1078,6 @@ input{
 
 
 .sleeve::after{
-
   content:"";
 
   position:absolute;
@@ -1126,7 +1099,6 @@ input{
 
 
 .cover{
-
   width:100%;
   height:100%;
 
@@ -1141,7 +1113,6 @@ input{
 ===================================================== */
 
 .track.is-open .recordCarrier{
-
   animation:
     recordReveal
     1.45s
@@ -1151,7 +1122,6 @@ input{
 
 
 .track.is-open .sleeve{
-
   animation:
     sleeveExit
     1.45s
@@ -1163,28 +1133,24 @@ input{
 @keyframes recordReveal{
 
   0%{
-
     transform:
       translate(0,-50%);
   }
 
 
   36%{
-
     transform:
       translate(44px,-50%);
   }
 
 
   55%{
-
     transform:
       translate(44px,-50%);
   }
 
 
   100%{
-
     transform:
       translate(0,-50%);
   }
@@ -1196,7 +1162,6 @@ input{
 
   0%,
   34%{
-
     transform:
       translateX(0);
 
@@ -1205,7 +1170,6 @@ input{
 
 
   52%{
-
     transform:
       translateX(-12px);
 
@@ -1214,7 +1178,6 @@ input{
 
 
   100%{
-
     transform:
       translateX(-190px);
 
@@ -1224,8 +1187,170 @@ input{
 }
 
 
-.track.is-seeking .recordDisc{
+/* =====================================================
+   CLOSING / REPACK
 
+   Reverse sequence:
+   tonearm mechanism hides
+   record goes right
+   sleeve returns
+   record goes back inside sleeve
+===================================================== */
+
+.track.is-closing .tonearmMechanism{
+  animation:
+    mechanismHide
+    1.45s
+    cubic-bezier(.22,.8,.22,1)
+    both;
+}
+
+
+.track.is-closing .recordCarrier{
+  animation:
+    recordPack
+    1.45s
+    cubic-bezier(.22,.8,.22,1)
+    both;
+}
+
+
+.track.is-closing .sleeve{
+  animation:
+    sleeveReturn
+    1.45s
+    cubic-bezier(.22,.8,.22,1)
+    both;
+}
+
+
+@keyframes mechanismHide{
+
+  0%{
+    transform:
+      translate(0,0)
+      scale(1);
+
+    opacity:1;
+  }
+
+
+  28%{
+    transform:
+      translate(-20px,7px)
+      scale(.99);
+
+    opacity:.95;
+  }
+
+
+  48%{
+    transform:
+      translate(-42px,14px)
+      scale(.97);
+
+    opacity:.86;
+  }
+
+
+  100%{
+    transform:
+      translate(-77px,25px)
+      scale(.94);
+
+    opacity:.7;
+  }
+
+}
+
+
+@keyframes recordPack{
+
+  /*
+    record starts on its playback position
+  */
+
+  0%{
+    transform:
+      translate(0,-50%);
+  }
+
+
+  /*
+    moves right so sleeve can return
+  */
+
+  34%{
+    transform:
+      translate(44px,-50%);
+  }
+
+
+  58%{
+    transform:
+      translate(44px,-50%);
+  }
+
+
+  /*
+    slides back under sleeve
+  */
+
+  100%{
+    transform:
+      translate(0,-50%);
+  }
+
+}
+
+
+@keyframes sleeveReturn{
+
+  /*
+    sleeve starts outside left
+  */
+
+  0%{
+    transform:
+      translateX(-190px);
+
+    opacity:0;
+  }
+
+
+  20%{
+    opacity:1;
+  }
+
+
+  /*
+    sleeve reaches its original position
+    while vinyl is still out to the right
+  */
+
+  55%{
+    transform:
+      translateX(0);
+
+    opacity:1;
+  }
+
+
+  100%{
+    transform:
+      translateX(0);
+
+    opacity:1;
+  }
+
+}
+
+
+/* =====================================================
+   SEEK
+===================================================== */
+
+.track.is-seeking .recordDisc{
   box-shadow:
     0 0 14px
     rgba(214,255,40,.24),
@@ -1247,13 +1372,11 @@ input{
 ===================================================== */
 
 .trackInfo{
-
   min-width:0;
 }
 
 
 .topline{
-
   display:flex;
 
   align-items:flex-start;
@@ -1267,7 +1390,6 @@ input{
 
 
 .trackTitle{
-
   margin:0;
 
   font-size:23px;
@@ -1279,7 +1401,6 @@ input{
 
 
 .artist{
-
   margin-top:5px;
 
   color:var(--muted);
@@ -1294,7 +1415,6 @@ input{
 
 
 .badge{
-
   color:var(--accent);
 
   border:
@@ -1314,11 +1434,10 @@ input{
 
 
 /* =====================================================
-   WAVEFORM
+   WAVE
 ===================================================== */
 
 .waveRow{
-
   display:grid;
 
   grid-template-columns:
@@ -1333,7 +1452,6 @@ input{
 
 
 .iconBtn{
-
   width:36px;
   height:36px;
 
@@ -1360,7 +1478,6 @@ input{
 
 
 .iconBtn:hover{
-
   border-color:
     var(--accent-line);
 
@@ -1371,7 +1488,6 @@ input{
 
 
 .iconBtn svg{
-
   width:13px;
   height:13px;
 
@@ -1380,7 +1496,6 @@ input{
 
 
 .waveBox{
-
   height:56px;
 
   position:relative;
@@ -1394,7 +1509,6 @@ input{
 
 
 .wave{
-
   height:100%;
 
   display:flex;
@@ -1410,7 +1524,6 @@ input{
 
 
 .bar{
-
   flex:1;
 
   min-width:1px;
@@ -1424,7 +1537,6 @@ input{
 
 
 .waveProgress{
-
   position:absolute;
 
   left:0;
@@ -1442,7 +1554,6 @@ input{
 
 
 .waveProgress .wave{
-
   position:absolute;
 
   left:0;
@@ -1456,7 +1567,6 @@ input{
 
 
 .waveProgress .bar{
-
   background:var(--accent);
 
   box-shadow:
@@ -1466,7 +1576,6 @@ input{
 
 
 .time{
-
   color:var(--muted);
 
   font:
@@ -1477,7 +1586,6 @@ input{
 
 
 .meta{
-
   margin-top:12px;
 
   display:flex;
@@ -1502,7 +1610,6 @@ input{
 ===================================================== */
 
 .buyCol{
-
   display:flex;
 
   flex-direction:column;
@@ -1514,7 +1621,6 @@ input{
 
 
 .license{
-
   min-height:50px;
 
   padding:
@@ -1549,7 +1655,6 @@ input{
 
 
 .license small{
-
   font:
     500 9px/1 monospace;
 
@@ -1558,7 +1663,6 @@ input{
 
 
 .secondary{
-
   min-height:37px;
 
   border:
@@ -1589,7 +1693,6 @@ input{
 ===================================================== */
 
 .receiver{
-
   margin-top:18px;
 
   border:
@@ -1614,7 +1717,6 @@ input{
 
 
 .receiverTitle{
-
   color:var(--accent);
 
   font:
@@ -1627,7 +1729,6 @@ input{
 
 
 .receiverText{
-
   margin-top:7px;
 
   color:var(--muted);
@@ -1642,7 +1743,6 @@ input{
 
 
 .codeForm{
-
   display:flex;
 
   gap:8px;
@@ -1650,7 +1750,6 @@ input{
 
 
 .codeInput{
-
   width:180px;
   height:40px;
 
@@ -1677,7 +1776,6 @@ input{
 
 
 .codeBtn{
-
   height:40px;
 
   border:
@@ -1703,7 +1801,6 @@ input{
 
 
 .codeResult{
-
   grid-column:
     1 / -1;
 
@@ -1724,8 +1821,11 @@ input{
 }
 
 
-.footer{
+/* =====================================================
+   FOOTER
+===================================================== */
 
+.footer{
   margin-top:20px;
 
   min-height:48px;
@@ -1757,7 +1857,6 @@ input{
 
   0%,
   100%{
-
     opacity:.45;
 
     transform:
@@ -1766,7 +1865,6 @@ input{
 
 
   50%{
-
     opacity:1;
 
     transform:
@@ -1783,7 +1881,6 @@ input{
 @media(max-width:760px){
 
   .page{
-
     width:min(
       100% - 28px,
       560px
@@ -1792,38 +1889,39 @@ input{
 
 
   .profileHead{
-
     grid-template-columns:
-      auto 1fr;
+      auto
+      1fr;
 
     padding:
       24px 20px;
   }
 
 
-  .avatar{
+  .profileHead::after{
+    display:none;
+  }
 
+
+  .avatar{
     width:88px;
     height:88px;
   }
 
 
   .back{
-
     grid-column:
       1 / -1;
   }
 
 
   .content{
-
     padding:
       22px 18px 30px;
   }
 
 
   .track{
-
     grid-template-columns:
       112px
       minmax(0,1fr);
@@ -1835,14 +1933,12 @@ input{
 
 
   .vinylUnit{
-
     width:112px;
     height:86px;
   }
 
 
   .recordCarrier{
-
     width:76px;
     height:76px;
 
@@ -1851,28 +1947,24 @@ input{
 
 
   .recordDisc{
-
     width:76px;
     height:76px;
   }
 
 
   .recordLabel{
-
     width:36px;
     height:36px;
   }
 
 
   .sleeve{
-
     width:86px;
     height:86px;
   }
 
 
   .tonearmMechanism{
-
     left:78px;
     top:1px;
 
@@ -1880,14 +1972,23 @@ input{
       translate(-49px,16px)
       scale(.63);
 
-    transform-origin:0 0;
+    transform-origin:
+      0 0;
   }
 
 
   .track.is-open .tonearmMechanism{
-
     animation:
       mechanismDeployMobile
+      1.45s
+      cubic-bezier(.22,.8,.22,1)
+      both;
+  }
+
+
+  .track.is-closing .tonearmMechanism{
+    animation:
+      mechanismHideMobile
       1.45s
       cubic-bezier(.22,.8,.22,1)
       both;
@@ -1898,7 +1999,6 @@ input{
 
     0%,
     57%{
-
       transform:
         translate(-49px,16px)
         scale(.63);
@@ -1906,9 +2006,26 @@ input{
 
 
     100%{
-
       transform:
         translate(0,0)
+        scale(.63);
+    }
+
+  }
+
+
+  @keyframes mechanismHideMobile{
+
+    0%{
+      transform:
+        translate(0,0)
+        scale(.63);
+    }
+
+
+    100%{
+      transform:
+        translate(-49px,16px)
         scale(.63);
     }
 
@@ -1918,7 +2035,6 @@ input{
   @keyframes recordReveal{
 
     0%{
-
       transform:
         translate(0,-50%);
     }
@@ -1926,14 +2042,12 @@ input{
 
     36%,
     55%{
-
       transform:
         translate(26px,-50%);
     }
 
 
     100%{
-
       transform:
         translate(0,-50%);
     }
@@ -1945,7 +2059,6 @@ input{
 
     0%,
     34%{
-
       transform:
         translateX(0);
 
@@ -1954,7 +2067,6 @@ input{
 
 
     100%{
-
       transform:
         translateX(-120px);
 
@@ -1964,26 +2076,80 @@ input{
   }
 
 
-  .buyCol{
+  @keyframes recordPack{
 
+    0%{
+      transform:
+        translate(0,-50%);
+    }
+
+
+    34%,
+    58%{
+      transform:
+        translate(26px,-50%);
+    }
+
+
+    100%{
+      transform:
+        translate(0,-50%);
+    }
+
+  }
+
+
+  @keyframes sleeveReturn{
+
+    0%{
+      transform:
+        translateX(-120px);
+
+      opacity:0;
+    }
+
+
+    20%{
+      opacity:1;
+    }
+
+
+    55%,
+    100%{
+      transform:
+        translateX(0);
+
+      opacity:1;
+    }
+
+  }
+
+
+  .buyCol{
     grid-column:
       1 / -1;
 
     display:grid;
 
     grid-template-columns:
-      1fr 1fr;
+      1fr
+      1fr;
+  }
+
+
+  .waveRow{
+    grid-template-columns:
+      auto
+      minmax(0,1fr);
   }
 
 
   .time{
-
     display:none;
   }
 
 
   .receiver{
-
     grid-template-columns:
       1fr;
   }
@@ -1994,7 +2160,6 @@ input{
 @media(max-width:440px){
 
   .track{
-
     grid-template-columns:
       94px
       minmax(0,1fr);
@@ -2002,54 +2167,48 @@ input{
 
 
   .vinylUnit{
-
     width:94px;
     height:70px;
   }
 
 
   .recordCarrier{
-
     width:62px;
     height:62px;
   }
 
 
   .recordDisc{
-
     width:62px;
     height:62px;
   }
 
 
   .recordLabel{
-
     width:30px;
     height:30px;
   }
 
 
   .sleeve{
-
     width:70px;
     height:70px;
   }
 
 
   .tonearmMechanism{
-
     left:65px;
     top:0;
   }
 
 
   .buyCol{
-
     grid-template-columns:
       1fr;
   }
 
 }
+
 </style>
 </head>
 
@@ -2057,6 +2216,7 @@ input{
 <body>
 
 <div class="page">
+
 
 <header class="topbar">
 
@@ -2079,6 +2239,7 @@ input{
 
 
 <main class="profile">
+
 
 <section class="profileHead">
 
@@ -2143,6 +2304,7 @@ input{
   id="tracks"
 >
 
+
 <div class="sectionTitle">
 
   <h2>
@@ -2193,7 +2355,7 @@ input{
   </div>
 
 
-  <!-- RECORD -->
+  <!-- VINYL -->
 
   <div
     class="recordCarrier"
@@ -2267,6 +2429,7 @@ input{
     <button
       class="iconBtn js-play"
       type="button"
+      aria-label="Play OLD"
     >
 
       <svg viewBox="0 0 24 24">
@@ -2287,6 +2450,7 @@ input{
       <div
         class="wave js-wave"
       ></div>
+
 
       <div
         class="waveProgress js-progress"
@@ -2345,12 +2509,15 @@ input{
     target="_blank"
     rel="noopener noreferrer"
   >
+
     License
 
     <small>
       // checkout ↗
     </small>
+
   </a>
+
 
   <a
     class="secondary"
@@ -2358,7 +2525,9 @@ input{
     target="_blank"
     rel="noopener noreferrer"
   >
+
     TRAKTRAIN CHECKOUT
+
   </a>
 
 </div>
@@ -2412,6 +2581,7 @@ input{
 
 </section>
 
+
 </section>
 
 </main>
@@ -2428,6 +2598,7 @@ input{
   </span>
 
 </footer>
+
 
 </div>
 
@@ -2540,24 +2711,8 @@ const total =
 
 
 /* =====================================================
-   VINYL PHYSICS
+   STATE
 ===================================================== */
-
-const VINYL_RPM =
-  45;
-
-
-const REVOLUTIONS_PER_SECOND =
-  VINYL_RPM
-  /
-  60;
-
-
-const DEGREES_PER_SECOND =
-  REVOLUTIONS_PER_SECOND
-  *
-  360;
-
 
 let vinylOpened =
   false;
@@ -2575,8 +2730,32 @@ let isSeeking =
   false;
 
 
+let isPacking =
+  false;
+
+
 let vinylRAF =
   null;
+
+
+/* =====================================================
+   VINYL PHYSICS
+===================================================== */
+
+const VINYL_RPM =
+  45;
+
+
+const REVOLUTIONS_PER_SECOND =
+  VINYL_RPM
+  /
+  60;
+
+
+const DEGREES_PER_SECOND =
+  REVOLUTIONS_PER_SECOND
+  *
+  360;
 
 
 function angleFromAudioTime(
@@ -2604,17 +2783,6 @@ function setVinylAngle(
 
 /* =====================================================
    TONEARM GEOMETRY
-
-   IMPORTANT:
-
-   0° = straight DOWN
-
-   START:
-   outer groove
-
-   END:
-   inner groove,
-   but BEFORE large label
 ===================================================== */
 
 const ARM_PARK_ANGLE =
@@ -2627,6 +2795,10 @@ const ARM_START_ANGLE =
 
 const ARM_END_ANGLE =
   32.5;
+
+
+let currentTonearmAngle =
+  ARM_PARK_ANGLE;
 
 
 function armAngleFromTime(
@@ -2673,6 +2845,10 @@ function setTonearmAngle(
   angle
 ){
 
+  currentTonearmAngle =
+    angle;
+
+
   tonearmArm.style.transform =
     `rotate(${angle}deg)`;
 
@@ -2685,10 +2861,136 @@ setTonearmAngle(
 
 
 /* =====================================================
-   ENGAGE TONEARM
+   EASING
 ===================================================== */
 
-function engageTonearm(){
+function smootherStep(
+  t
+){
+
+  return (
+    t
+    *
+    t
+    *
+    t
+    *
+    (
+      t
+      *
+      (
+        t
+        *
+        6
+        -
+        15
+      )
+      +
+      10
+    )
+  );
+
+}
+
+
+/* =====================================================
+   GENERIC ARM ANIMATION
+===================================================== */
+
+function animateTonearmTo(
+  targetAngle,
+  duration = 600
+){
+
+  return new Promise(
+    resolve => {
+
+      const startAngle =
+        currentTonearmAngle;
+
+
+      const started =
+        performance.now();
+
+
+      function frame(
+        now
+      ){
+
+        const raw =
+          Math.min(
+            1,
+            (
+              now
+              -
+              started
+            )
+            /
+            duration
+          );
+
+
+        const eased =
+          smootherStep(
+            raw
+          );
+
+
+        const angle =
+          startAngle
+          +
+          (
+            targetAngle
+            -
+            startAngle
+          )
+          *
+          eased;
+
+
+        setTonearmAngle(
+          angle
+        );
+
+
+        if(
+          raw < 1
+        ){
+
+          requestAnimationFrame(
+            frame
+          );
+
+        }
+        else{
+
+          setTonearmAngle(
+            targetAngle
+          );
+
+
+          resolve();
+
+        }
+
+      }
+
+
+      requestAnimationFrame(
+        frame
+      );
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   ENGAGE ARM
+===================================================== */
+
+async function engageTonearm(){
 
   if(
     tonearmEngaged
@@ -2703,83 +3005,15 @@ function engageTonearm(){
     true;
 
 
-  const start =
-    performance.now();
-
-
-  const duration =
-    680;
-
-
   const target =
     armAngleFromTime(
       audio.currentTime
     );
 
 
-  function frame(
-    now
-  ){
-
-    const t =
-      Math.min(
-        1,
-        (
-          now
-          -
-          start
-        )
-        /
-        duration
-      );
-
-
-    const smooth =
-      t
-      *
-      t
-      *
-      (
-        3
-        -
-        2
-        *
-        t
-      );
-
-
-    const angle =
-      ARM_PARK_ANGLE
-      +
-      (
-        target
-        -
-        ARM_PARK_ANGLE
-      )
-      *
-      smooth;
-
-
-    setTonearmAngle(
-      angle
-    );
-
-
-    if(
-      t < 1
-    ){
-
-      requestAnimationFrame(
-        frame
-      );
-
-    }
-
-  }
-
-
-  requestAnimationFrame(
-    frame
+  await animateTonearmTo(
+    target,
+    680
   );
 
 }
@@ -2808,6 +3042,8 @@ function startVinylSync(){
       !audio.paused
       &&
       !isSeeking
+      &&
+      !isPacking
     ){
 
       setVinylAngle(
@@ -3574,34 +3810,7 @@ async function playScrubSound(
 
 
 /* =====================================================
-   EASING
-===================================================== */
-
-function smootherStep(
-  t
-){
-
-  return (
-    t*t*t
-    *
-    (
-      t
-      *
-      (
-        t*6
-        -
-        15
-      )
-      +
-      10
-    )
-  );
-
-}
-
-
-/* =====================================================
-   SEEK ANIMATION
+   VINYL + ARM SEEK
 ===================================================== */
 
 function animateVinylSeek(
@@ -3850,6 +4059,62 @@ function setPlayIcon(
 
 
 /* =====================================================
+   OPENING COMPLETE
+===================================================== */
+
+recordCarrier.addEventListener(
+  "animationend",
+  event => {
+
+    if(
+      event.animationName !==
+      "recordReveal"
+    ){
+
+      return;
+
+    }
+
+
+    if(
+      mechanismDeployed
+      ||
+      isPacking
+    ){
+
+      return;
+
+    }
+
+
+    mechanismDeployed =
+      true;
+
+
+    track.classList.add(
+      "arm-on-top"
+    );
+
+
+    requestAnimationFrame(
+      () => {
+
+        requestAnimationFrame(
+          () => {
+
+            engageTonearm();
+
+          }
+        );
+
+      }
+    );
+
+  }
+);
+
+
+/* =====================================================
    PLAY BUTTON
 ===================================================== */
 
@@ -3862,6 +4127,8 @@ playButtons.forEach(
 
         if(
           isSeeking
+          ||
+          isPacking
         ){
 
           return;
@@ -3903,66 +4170,23 @@ playButtons.forEach(
 
 
 /* =====================================================
-   OPENING COMPLETE
-===================================================== */
-
-recordCarrier.addEventListener(
-  "animationend",
-  event => {
-
-    if(
-      event.animationName !==
-      "recordReveal"
-    ){
-
-      return;
-
-    }
-
-
-    if(
-      mechanismDeployed
-    ){
-
-      return;
-
-    }
-
-
-    mechanismDeployed =
-      true;
-
-
-    track.classList.add(
-      "arm-on-top"
-    );
-
-
-    requestAnimationFrame(
-      () => {
-
-        requestAnimationFrame(
-          () => {
-
-            engageTonearm();
-
-          }
-        );
-
-      }
-    );
-
-  }
-);
-
-
-/* =====================================================
-   AUDIO EVENTS
+   AUDIO PLAY
 ===================================================== */
 
 audio.addEventListener(
   "play",
   () => {
+
+    if(
+      isPacking
+    ){
+
+      audio.pause();
+
+      return;
+
+    }
+
 
     setPlayIcon(
       true
@@ -3996,6 +4220,10 @@ audio.addEventListener(
 );
 
 
+/* =====================================================
+   AUDIO PAUSE
+===================================================== */
+
 audio.addEventListener(
   "pause",
   () => {
@@ -4008,8 +4236,16 @@ audio.addEventListener(
     stopVinylSync();
 
 
+    /*
+      Important:
+      while packing we do NOT force
+      tonearm back to current track position
+    */
+
     if(
       !isSeeking
+      &&
+      !isPacking
     ){
 
       setVinylAngle(
@@ -4037,38 +4273,242 @@ audio.addEventListener(
 );
 
 
-audio.addEventListener(
-  "ended",
-  () => {
+/* =====================================================
+   STOP / REPACK
 
-    setPlayIcon(
-      false
+   This is our universal STOP operation.
+
+   Ended track = STOP
+   Switching track = STOP
+===================================================== */
+
+async function stopAndPack(){
+
+  if(
+    isPacking
+  ){
+
+    return;
+
+  }
+
+
+  /*
+    if vinyl was never opened
+    there is nothing to pack
+  */
+
+  if(
+    !vinylOpened
+  ){
+
+    audio.currentTime =
+      0;
+
+
+    updateProgressUI(
+      0
     );
-
-
-    stopVinylSync();
 
 
     setVinylAngle(
-      angleFromAudioTime(
-        audio.duration
-      )
+      0
     );
 
 
-    if(
-      tonearmEngaged
-    ){
+    return;
 
-      setTonearmAngle(
-        ARM_END_ANGLE
-      );
+  }
 
-    }
+
+  isPacking =
+    true;
+
+
+  isSeeking =
+    false;
+
+
+  stopVinylSync();
+
+
+  setPlayIcon(
+    false
+  );
+
+
+  if(
+    !audio.paused
+  ){
+
+    audio.pause();
+
+  }
+
+
+  microstatus.textContent =
+    "STOP // RETURNING SIGNAL";
+
+
+  /*
+    =========================================
+    PHASE 1
+
+    NEEDLE LEAVES RECORD
+    AND GOES TO PARK
+    =========================================
+  */
+
+
+  if(
+    tonearmEngaged
+  ){
+
+    await animateTonearmTo(
+      ARM_PARK_ANGLE,
+      600
+    );
+
+  }
+
+
+  /*
+    Mechanism now moves BELOW record
+    before it retracts.
+  */
+
+
+  track.classList.remove(
+    "arm-on-top"
+  );
+
+
+  tonearmEngaged =
+    false;
+
+
+  /*
+    Tiny mechanical delay.
+  */
+
+  await new Promise(
+    resolve =>
+      setTimeout(
+        resolve,
+        90
+      )
+  );
+
+
+  /*
+    =========================================
+    PHASE 2
+
+    Complete reverse choreography:
+    mechanism hides,
+    vinyl moves right,
+    sleeve returns,
+    vinyl enters sleeve.
+    =========================================
+  */
+
+
+  track.classList.add(
+    "is-closing"
+  );
+
+
+  await new Promise(
+    resolve =>
+      setTimeout(
+        resolve,
+        1480
+      )
+  );
+
+
+  /*
+    =========================================
+    PHASE 3
+
+    RESET DOM STATE
+    =========================================
+  */
+
+
+  track.classList.remove(
+    "is-open"
+  );
+
+
+  track.classList.remove(
+    "is-closing"
+  );
+
+
+  track.classList.remove(
+    "is-seeking"
+  );
+
+
+  mechanismDeployed =
+    false;
+
+
+  vinylOpened =
+    false;
+
+
+  tonearmEngaged =
+    false;
+
+
+  audio.currentTime =
+    0;
+
+
+  setVinylAngle(
+    0
+  );
+
+
+  setTonearmAngle(
+    ARM_PARK_ANGLE
+  );
+
+
+  updateProgressUI(
+    0
+  );
+
+
+  microstatus.textContent =
+    "Connection stable // 01 signal detected";
+
+
+  isPacking =
+    false;
+
+}
+
+
+/* =====================================================
+   TRACK ENDED = STOP
+===================================================== */
+
+audio.addEventListener(
+  "ended",
+  async () => {
+
+    await stopAndPack();
 
   }
 );
 
+
+/* =====================================================
+   METADATA
+===================================================== */
 
 audio.addEventListener(
   "loadedmetadata",
@@ -4133,6 +4573,8 @@ audio.addEventListener(
 
     if(
       !isSeeking
+      &&
+      !isPacking
     ){
 
       updateProgressUI(
@@ -4155,6 +4597,8 @@ async function seekTo(
 
   if(
     isSeeking
+    ||
+    isPacking
     ||
     !audio.duration
   ){
@@ -4226,6 +4670,11 @@ async function seekTo(
   }
 
 
+  /*
+    If user seeks before first play,
+    open the physical object first.
+  */
+
   if(
     !vinylOpened
   ){
@@ -4261,7 +4710,7 @@ async function seekTo(
       );
 
 
-      engageTonearm();
+      await engageTonearm();
 
     }
 
@@ -4270,7 +4719,7 @@ async function seekTo(
       resolve =>
         setTimeout(
           resolve,
-          700
+          120
         )
     );
 
@@ -4482,6 +4931,8 @@ seek.addEventListener(
 
     if(
       isSeeking
+      ||
+      isPacking
       ||
       !audio.duration
     ){
