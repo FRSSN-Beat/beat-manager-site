@@ -63,6 +63,7 @@ body{
     sans-serif;
 
   overflow-x:hidden;
+
   position:relative;
 }
 
@@ -78,6 +79,7 @@ body::before{
   inset:-18%;
 
   z-index:0;
+
   pointer-events:none;
 
   background:
@@ -113,6 +115,7 @@ body::after{
   inset:0;
 
   z-index:19;
+
   pointer-events:none;
 
   background:
@@ -179,7 +182,7 @@ input{
 
 
 /* =====================================================
-   TOP
+   TOPBAR
 ===================================================== */
 
 .topbar{
@@ -197,17 +200,20 @@ input{
   font-size:11px;
 
   letter-spacing:.18em;
+
   text-transform:uppercase;
 }
 
 .brand{
   color:var(--accent);
+
   text-decoration:none;
 }
 
 .status{
   display:flex;
   align-items:center;
+
   gap:10px;
 }
 
@@ -323,6 +329,7 @@ input{
   font-size:46px;
 
   letter-spacing:.08em;
+
   line-height:1;
 }
 
@@ -383,6 +390,7 @@ input{
 
 .back:hover{
   background:var(--accent);
+
   color:#090b07;
 }
 
@@ -412,6 +420,7 @@ input{
     700 10px/1 monospace;
 
   letter-spacing:.15em;
+
   text-transform:uppercase;
 }
 
@@ -419,6 +428,7 @@ input{
   height:54px;
 
   display:flex;
+
   align-items:center;
 
   position:relative;
@@ -541,16 +551,17 @@ input{
 
 .track.is-scratching{
   border-color:
-    rgba(214,255,40,.5);
+    rgba(214,255,40,.50);
 
   box-shadow:
-    inset 0 0 34px
+    inset
+    0 0 34px
     rgba(214,255,40,.03);
 }
 
 .track.is-seeking{
   border-color:
-    rgba(214,255,40,.35);
+    rgba(214,255,40,.34);
 }
 
 .track.is-motor-recovering{
@@ -570,6 +581,7 @@ input{
   position:relative;
 
   display:flex;
+
   align-items:center;
 
   overflow:visible;
@@ -601,6 +613,10 @@ input{
   pointer-events:none;
 
   opacity:.92;
+
+  will-change:
+    transform,
+    opacity;
 }
 
 .track.is-open .tonearmMechanism{
@@ -725,6 +741,8 @@ input{
   border-radius:4px;
 
   z-index:3;
+
+  will-change:transform;
 }
 
 .cartridge{
@@ -738,6 +756,9 @@ input{
 
   transform:
     translateX(-50%);
+
+  border-radius:
+    2px 2px 3px 3px;
 
   background:
     linear-gradient(
@@ -792,6 +813,8 @@ input{
   z-index:2;
 
   pointer-events:auto;
+
+  will-change:transform;
 }
 
 .recordDisc{
@@ -803,6 +826,11 @@ input{
   position:relative;
 
   background:
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(255,255,255,.055) 0 8%,
+      transparent 8.5%
+    ),
     repeating-radial-gradient(
       circle at 50% 50%,
       #0f1010 0 2px,
@@ -825,9 +853,12 @@ input{
   transform:
     rotate(0deg);
 
+  will-change:transform;
+
   cursor:default;
 
   user-select:none;
+
   -webkit-user-select:none;
 
   touch-action:none;
@@ -846,6 +877,15 @@ input{
 
     0 0 50px
     rgba(214,255,40,.08),
+
+    0 4px 24px
+    rgba(0,0,0,.45);
+}
+
+.track.is-motor-recovering .recordDisc{
+  box-shadow:
+    0 0 17px
+    rgba(214,255,40,.14),
 
     0 4px 24px
     rgba(0,0,0,.45);
@@ -953,6 +993,10 @@ input{
   box-shadow:
     0 8px 22px
     rgba(0,0,0,.28);
+
+  will-change:
+    transform,
+    opacity;
 }
 
 .cover{
@@ -1066,12 +1110,16 @@ input{
     transform:
       translate(0,0)
       scale(1);
+
+    opacity:1;
   }
 
   100%{
     transform:
       translate(-77px,25px)
       scale(.94);
+
+    opacity:.7;
   }
 
 }
@@ -1103,6 +1151,10 @@ input{
       translateX(-190px);
 
     opacity:0;
+  }
+
+  20%{
+    opacity:1;
   }
 
   55%,
@@ -1151,6 +1203,10 @@ input{
 
   font:
     10px/1.4 monospace;
+
+  letter-spacing:.14em;
+
+  text-transform:uppercase;
 }
 
 .badge{
@@ -1165,11 +1221,13 @@ input{
 
   font:
     9px/1 monospace;
+
+  letter-spacing:.12em;
 }
 
 
 /* =====================================================
-   WAVE
+   WAVEFORM
 ===================================================== */
 
 .waveRow{
@@ -1242,6 +1300,8 @@ input{
 
   background:#565a52;
 
+  border-radius:1px;
+
   opacity:.76;
 }
 
@@ -1271,6 +1331,10 @@ input{
 
 .waveProgress .bar{
   background:var(--accent);
+
+  box-shadow:
+    0 0 7px
+    rgba(214,255,40,.22);
 }
 
 .time{
@@ -1340,7 +1404,19 @@ input{
   gap:9px;
 
   font-size:11px;
+
   font-weight:800;
+
+  letter-spacing:.12em;
+
+  text-transform:uppercase;
+}
+
+.license small{
+  font:
+    500 9px/1 monospace;
+
+  color:#313a13;
 }
 
 .secondary{
@@ -1361,6 +1437,10 @@ input{
 
   font:
     700 9px/1 monospace;
+
+  letter-spacing:.12em;
+
+  text-transform:uppercase;
 }
 
 
@@ -1420,6 +1500,9 @@ input{
     var(--border);
 
   color:var(--accent);
+
+  padding:
+    0 10px;
 }
 
 .codeBtn{
@@ -1432,6 +1515,11 @@ input{
   background:transparent;
 
   color:var(--accent);
+
+  padding:
+    0 14px;
+
+  cursor:pointer;
 }
 
 .codeResult{
@@ -1441,6 +1529,9 @@ input{
   display:none;
 
   color:var(--accent);
+
+  font:
+    10px/1.5 monospace;
 }
 
 
@@ -1454,7 +1545,12 @@ input{
   right:18px;
   bottom:18px;
 
-  width:310px;
+  width:320px;
+
+  max-height:
+    calc(100vh - 36px);
+
+  overflow-y:auto;
 
   z-index:100;
 
@@ -1507,9 +1603,11 @@ input{
 }
 
 .scratchDebugValue{
-  color:white;
+  color:#fff;
 
   font-size:12px;
+
+  white-space:nowrap;
 }
 
 .scratchDebug input[type="range"]{
@@ -1557,7 +1655,7 @@ input{
   font:
     700 9px/1 monospace;
 
-  letter-spacing:.1em;
+  letter-spacing:.10em;
 
   text-transform:uppercase;
 }
@@ -1571,10 +1669,6 @@ input{
 
   color:
     var(--accent);
-
-  box-shadow:
-    inset 0 0 16px
-    rgba(214,255,40,.04);
 }
 
 
@@ -1591,6 +1685,8 @@ input{
 
   align-items:center;
   justify-content:space-between;
+
+  gap:20px;
 
   color:var(--muted);
 
@@ -1632,6 +1728,10 @@ input{
       24px 20px;
   }
 
+  .profileHead::after{
+    display:none;
+  }
+
   .avatar{
     width:88px;
     height:88px;
@@ -1653,6 +1753,8 @@ input{
       minmax(0,1fr);
 
     gap:14px;
+
+    padding:13px;
   }
 
   .vinylUnit{
@@ -1838,7 +1940,11 @@ input{
 
     left:14px;
     right:14px;
+
     bottom:12px;
+
+    max-height:
+      48vh;
   }
 
 }
@@ -1862,8 +1968,11 @@ input{
   </a>
 
   <span class="status">
+
     <span class="dot"></span>
+
     Receiver online
+
   </span>
 
 </header>
@@ -1879,6 +1988,7 @@ input{
     src="frssn-avatar.png"
     alt="FRSSN"
   >
+
 
   <div class="identity">
 
@@ -1898,6 +2008,7 @@ input{
     </div>
 
   </div>
+
 
   <a
     class="back"
@@ -1966,6 +2077,7 @@ input{
     <div class="tonearmBase"></div>
 
     <div class="tonearmPivot"></div>
+
 
     <div
       class="tonearmArm"
@@ -2039,6 +2151,7 @@ input{
 
     </div>
 
+
     <div class="badge">
       NEW SIGNAL
     </div>
@@ -2048,9 +2161,11 @@ input{
 
   <div class="waveRow">
 
+
     <button
       class="iconBtn js-play"
       type="button"
+      aria-label="Play OLD"
     >
 
       <svg viewBox="0 0 24 24">
@@ -2063,18 +2178,24 @@ input{
     <div
       class="waveBox js-seek"
       role="slider"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      aria-valuenow="0"
     >
 
       <div
         class="wave js-wave"
       ></div>
 
+
       <div
         class="waveProgress js-progress"
       >
+
         <div
           class="wave js-wave-clone"
         ></div>
+
       </div>
 
     </div>
@@ -2126,15 +2247,21 @@ input{
     class="license"
     href="https://traktrain.com/cart-single-track/1679177"
     target="_blank"
+    rel="noopener noreferrer"
   >
     License
-    <small>// checkout ↗</small>
+
+    <small>
+      // checkout ↗
+    </small>
   </a>
+
 
   <a
     class="secondary"
     href="https://traktrain.com/cart-single-track/1679177"
     target="_blank"
+    rel="noopener noreferrer"
   >
     TRAKTRAIN CHECKOUT
   </a>
@@ -2214,12 +2341,10 @@ input{
 
 
 <!-- =====================================================
-     TEMP DEBUG PANEL
+     DEBUG PANEL
 ===================================================== -->
 
-<div
-  class="scratchDebug"
->
+<div class="scratchDebug">
 
 
   <div class="debugBlock">
@@ -2286,8 +2411,8 @@ input{
     <input
       id="motorRecoverySpeed"
       type="range"
-      min="0.35"
-      max="2.50"
+      min="0.20"
+      max="3.00"
       step="0.05"
       value="1.00"
     >
@@ -2301,6 +2426,92 @@ input{
 
       <span>
         FAST
+      </span>
+
+    </div>
+
+  </div>
+
+
+  <div class="debugBlock">
+
+    <div class="scratchDebugHead">
+
+      <span>
+        SEEK START SPEED
+      </span>
+
+      <span
+        class="scratchDebugValue"
+        id="seekStartValue"
+      >
+        1.00×
+      </span>
+
+    </div>
+
+
+    <input
+      id="seekStartSpeed"
+      type="range"
+      min="0.20"
+      max="4.00"
+      step="0.05"
+      value="1.00"
+    >
+
+
+    <div class="scratchDebugScale">
+
+      <span>
+        SOFT START
+      </span>
+
+      <span>
+        FAST START
+      </span>
+
+    </div>
+
+  </div>
+
+
+  <div class="debugBlock">
+
+    <div class="scratchDebugHead">
+
+      <span>
+        SEEK STOP SPEED
+      </span>
+
+      <span
+        class="scratchDebugValue"
+        id="seekStopValue"
+      >
+        1.00×
+      </span>
+
+    </div>
+
+
+    <input
+      id="seekStopSpeed"
+      type="range"
+      min="0.20"
+      max="4.00"
+      step="0.05"
+      value="1.00"
+    >
+
+
+    <div class="scratchDebugScale">
+
+      <span>
+        LONG BRAKE
+      </span>
+
+      <span>
+        HARD STOP
       </span>
 
     </div>
@@ -2407,7 +2618,9 @@ const total =
   );
 
 
-/* DEBUG */
+/* =====================================================
+   DEBUG ELEMENTS
+===================================================== */
 
 const scratchSensitivity =
   document.getElementById(
@@ -2419,6 +2632,7 @@ const scratchSensitivityValue =
     "scratchSensitivityValue"
   );
 
+
 const motorRecoverySpeed =
   document.getElementById(
     "motorRecoverySpeed"
@@ -2429,6 +2643,29 @@ const motorRecoveryValue =
     "motorRecoveryValue"
   );
 
+
+const seekStartSpeed =
+  document.getElementById(
+    "seekStartSpeed"
+  );
+
+const seekStartValue =
+  document.getElementById(
+    "seekStartValue"
+  );
+
+
+const seekStopSpeed =
+  document.getElementById(
+    "seekStopSpeed"
+  );
+
+const seekStopValue =
+  document.getElementById(
+    "seekStopValue"
+  );
+
+
 const seekVolumeToggle =
   document.getElementById(
     "seekVolumeToggle"
@@ -2436,7 +2673,24 @@ const seekVolumeToggle =
 
 
 /* =====================================================
-   GLOBAL STATE
+   LOGICAL PLAYER STATE
+
+   IMPORTANT:
+
+   playIntent is changed ONLY
+   by the actual Play/Pause button
+   or natural end.
+
+   Scratch / seek / motor physics
+   NEVER logically pause playback.
+===================================================== */
+
+let playIntent =
+  false;
+
+
+/* =====================================================
+   PHYSICAL STATE
 ===================================================== */
 
 let vinylOpened =
@@ -2486,9 +2740,6 @@ let scratchVelocity =
 let scratchLastGrainTime =
   0;
 
-let scratchWasPlaying =
-  false;
-
 let grabBrakeActive =
   false;
 
@@ -2510,27 +2761,25 @@ let SCRATCH_TIME_SCALE =
   0.28;
 
 
-/*
-  1.0 = current recovery speed.
-
-  Bigger number = quicker motor recovery.
-*/
-
 let MOTOR_RECOVERY_SPEED =
-  1.0;
+  1.00;
 
 
-/*
-  OFF:
-  seek is quieter.
+let SEEK_START_SPEED =
+  1.00;
 
-  ON:
-  seek uses full volume.
-*/
+
+let SEEK_STOP_SPEED =
+  1.00;
+
 
 let SEEK_FULL_VOLUME =
   false;
 
+
+/* =====================================================
+   DEBUG EVENTS
+===================================================== */
 
 scratchSensitivity.addEventListener(
   "input",
@@ -2543,7 +2792,8 @@ scratchSensitivity.addEventListener(
 
 
     scratchSensitivityValue.textContent =
-      SCRATCH_TIME_SCALE.toFixed(
+      SCRATCH_TIME_SCALE
+      .toFixed(
         2
       );
 
@@ -2562,7 +2812,52 @@ motorRecoverySpeed.addEventListener(
 
 
     motorRecoveryValue.textContent =
-      MOTOR_RECOVERY_SPEED.toFixed(
+      MOTOR_RECOVERY_SPEED
+      .toFixed(
+        2
+      )
+      +
+      "×";
+
+  }
+);
+
+
+seekStartSpeed.addEventListener(
+  "input",
+  () => {
+
+    SEEK_START_SPEED =
+      Number(
+        seekStartSpeed.value
+      );
+
+
+    seekStartValue.textContent =
+      SEEK_START_SPEED
+      .toFixed(
+        2
+      )
+      +
+      "×";
+
+  }
+);
+
+
+seekStopSpeed.addEventListener(
+  "input",
+  () => {
+
+    SEEK_STOP_SPEED =
+      Number(
+        seekStopSpeed.value
+      );
+
+
+    seekStopValue.textContent =
+      SEEK_STOP_SPEED
+      .toFixed(
         2
       )
       +
@@ -2598,47 +2893,44 @@ seekVolumeToggle.addEventListener(
 
 
 /* =====================================================
-   SCRATCH CONFIG
+   AUDIO CONFIG
 ===================================================== */
 
 const SCRATCH_RATE_SCALE =
   0.42;
 
+
 const SCRATCH_MIN_RATE =
   0.09;
+
 
 const SCRATCH_MAX_RATE =
   4.0;
 
+
 const SCRATCH_GRAIN_DURATION =
   0.085;
+
 
 const SCRATCH_GRAIN_INTERVAL_MS =
   24;
 
 
 /*
-  Scratch is now full volume.
-
-  1.00 = no intentional attenuation.
+  No intentional scratch attenuation.
 */
 
 const SCRATCH_GAIN =
   1.0;
 
 
-/* =====================================================
-   SEEK CONFIG
-===================================================== */
-
 /*
-  Normal seek stays reduced.
-
-  Debug toggle changes it to 1.0.
+  Seek attenuation only.
 */
 
 const SEEK_REDUCED_GAIN =
   0.28;
+
 
 const SEEK_FULL_GAIN =
   1.0;
@@ -2651,6 +2943,7 @@ const SEEK_FULL_GAIN =
 const GRAB_BRAKE_DURATION =
   820;
 
+
 const GRAB_BRAKE_CURVE =
   2.35;
 
@@ -2662,8 +2955,10 @@ const GRAB_BRAKE_CURVE =
 const MOTOR_RECOVERY_MIN_DURATION =
   420;
 
+
 const MOTOR_RECOVERY_MAX_DURATION =
   1300;
+
 
 const MOTOR_PULL_STRENGTH =
   2.65;
@@ -2676,10 +2971,12 @@ const MOTOR_PULL_STRENGTH =
 const VINYL_RPM =
   45;
 
+
 const REVOLUTIONS_PER_SECOND =
   VINYL_RPM
   /
   60;
+
 
 const DEGREES_PER_SECOND =
   REVOLUTIONS_PER_SECOND
@@ -2717,11 +3014,14 @@ function setVinylAngle(
 const ARM_PARK_ANGLE =
   -8;
 
+
 const ARM_START_ANGLE =
   19.5;
 
+
 const ARM_END_ANGLE =
   32.5;
+
 
 let currentTonearmAngle =
   ARM_PARK_ANGLE;
@@ -2814,7 +3114,100 @@ function smootherStep(
 
 
 /* =====================================================
-   ARM
+   SEEK MOTION CURVE
+
+   Two independent parameters:
+
+   SEEK_START_SPEED:
+   how quickly movement gets away
+   from its start position.
+
+   SEEK_STOP_SPEED:
+   how aggressively it settles
+   into target position.
+===================================================== */
+
+function seekMotionProgress(
+  t
+){
+
+  t =
+    Math.max(
+      0,
+      Math.min(
+        1,
+        t
+      )
+    );
+
+
+  const startExponent =
+    1
+    +
+    1
+    /
+    Math.max(
+      .15,
+      SEEK_START_SPEED
+    );
+
+
+  const stopExponent =
+    1
+    +
+    SEEK_STOP_SPEED
+    *
+    1.45;
+
+
+  if(
+    t < .5
+  ){
+
+    const x =
+      t
+      *
+      2;
+
+
+    return (
+      .5
+      *
+      Math.pow(
+        x,
+        startExponent
+      )
+    );
+
+  }
+
+
+  const x =
+    (
+      1
+      -
+      t
+    )
+    *
+    2;
+
+
+  return (
+    1
+    -
+    .5
+    *
+    Math.pow(
+      x,
+      stopExponent
+    )
+  );
+
+}
+
+
+/* =====================================================
+   TONEARM ANIMATION
 ===================================================== */
 
 function animateTonearmTo(
@@ -2929,7 +3322,7 @@ async function engageTonearm(){
 
 
 /* =====================================================
-   NORMAL PLAYBACK
+   NORMAL VINYL SYNC
 ===================================================== */
 
 function startVinylSync(){
@@ -2948,6 +3341,8 @@ function startVinylSync(){
   function frame(){
 
     if(
+      playIntent
+      &&
       !audio.paused
       &&
       !isScratching
@@ -3023,8 +3418,10 @@ function stopVinylSync(){
 let audioContext =
   null;
 
+
 let decodedTrack =
   null;
+
 
 let reversedTrack =
   null;
@@ -3177,6 +3574,17 @@ async function loadTrackData(
       );
 
 
+    if(
+      !response.ok
+    ){
+
+      throw new Error(
+        "Audio fetch failed"
+      );
+
+    }
+
+
     const arrayBuffer =
       await response.arrayBuffer();
 
@@ -3327,6 +3735,37 @@ async function loadTrackData(
       error
     );
 
+
+    const fallback =
+      Array.from(
+        {
+          length:
+            WAVE_BARS
+        },
+        (_,i) =>
+          18
+          +
+          (
+            i
+            *
+            37
+          )
+          %
+          58
+      );
+
+
+    renderBars(
+      wave,
+      fallback
+    );
+
+
+    renderBars(
+      waveClone,
+      fallback
+    );
+
   }
 
 }
@@ -3340,7 +3779,7 @@ loadTrackData(
 
 
 /* =====================================================
-   TIME
+   TIME / UI
 ===================================================== */
 
 function fmt(
@@ -3416,6 +3855,16 @@ function updateProgressUI(
     fmt(
       time
     );
+
+
+  seek.setAttribute(
+    "aria-valuenow",
+    String(
+      Math.round(
+        percentage
+      )
+    )
+  );
 
 }
 
@@ -3567,11 +4016,7 @@ function playScratchGrain(
 
 
   /*
-    IMPORTANT:
-
     SCRATCH = FULL VOLUME.
-
-    No intentional attenuation.
   */
 
   gain.gain.setValueAtTime(
@@ -3780,8 +4225,12 @@ async function playSeekSound(
     );
 
 
+  /*
+    Base seek rate.
+  */
+
   const minRate =
-    .85;
+    .75;
 
 
   const maxRate =
@@ -3808,6 +4257,60 @@ async function playSeekSound(
     duration;
 
 
+  /*
+    START SPEED DEBUG
+
+    Bigger value =
+    shorter acceleration zone.
+  */
+
+  const accelerationFraction =
+    Math.max(
+      .07,
+      Math.min(
+        .55,
+        .42
+        /
+        SEEK_START_SPEED
+      )
+    );
+
+
+  /*
+    STOP SPEED DEBUG
+
+    Bigger value =
+    shorter / harder braking zone.
+  */
+
+  const brakingFraction =
+    Math.max(
+      .07,
+      Math.min(
+        .55,
+        .42
+        /
+        SEEK_STOP_SPEED
+      )
+    );
+
+
+  const accelerationEnd =
+    now
+    +
+    duration
+    *
+    accelerationFraction;
+
+
+  const brakingStart =
+    end
+    -
+    duration
+    *
+    brakingFraction;
+
+
   source.playbackRate.setValueAtTime(
     minRate,
     now
@@ -3816,21 +4319,37 @@ async function playSeekSound(
 
   source.playbackRate.exponentialRampToValueAtTime(
     maxRate,
-    now
-    +
-    duration
-    *
-    .42
+    accelerationEnd
+  );
+
+
+  /*
+    If start and stop zones cross,
+    browser still gets stable rate.
+  */
+
+  const cruiseStart =
+    Math.min(
+      brakingStart,
+      accelerationEnd
+    );
+
+
+  source.playbackRate.setValueAtTime(
+    maxRate,
+    Math.max(
+      accelerationEnd,
+      cruiseStart
+    )
   );
 
 
   source.playbackRate.setValueAtTime(
     maxRate,
-    now
-    +
-    duration
-    *
-    .58
+    Math.max(
+      accelerationEnd,
+      brakingStart
+    )
   );
 
 
@@ -3860,21 +4379,16 @@ async function playSeekSound(
 
   filter.frequency.exponentialRampToValueAtTime(
     4200,
-    now
-    +
-    duration
-    *
-    .42
+    accelerationEnd
   );
 
 
   filter.frequency.setValueAtTime(
     4200,
-    now
-    +
-    duration
-    *
-    .58
+    Math.max(
+      accelerationEnd,
+      brakingStart
+    )
   );
 
 
@@ -3887,13 +4401,6 @@ async function playSeekSound(
   const gain =
     context.createGain();
 
-
-  /*
-    ONLY SEEK is attenuated.
-
-    Debug button can completely disable
-    this attenuation.
-  */
 
   const targetGain =
     SEEK_FULL_VOLUME
@@ -3913,19 +4420,28 @@ async function playSeekSound(
     targetGain,
     now
     +
-    duration
-    *
-    .12
+    Math.min(
+      .08,
+      duration
+      *
+      .12
+    )
   );
 
 
   gain.gain.setValueAtTime(
     targetGain,
-    now
-    +
-    duration
-    *
-    .78
+    Math.max(
+      now,
+      end
+      -
+      Math.min(
+        .09,
+        duration
+        *
+        .14
+      )
+    )
   );
 
 
@@ -4069,7 +4585,10 @@ function pointerAngle(
    GRAB BRAKE
 ===================================================== */
 
-function startGrabBrake(){
+function startGrabBrake(
+  initialVelocity =
+    scratchVelocity
+){
 
   if(
     grabBrakeRAF
@@ -4084,6 +4603,13 @@ function startGrabBrake(){
 
   grabBrakeActive =
     true;
+
+
+  const startVelocity =
+    Math.max(
+      0,
+      initialVelocity
+    );
 
 
   const started =
@@ -4155,14 +4681,18 @@ function startGrabBrake(){
     scratchVelocity =
       Math.max(
         0,
-        1
-        -
-        braking
+        startVelocity
+        *
+        (
+          1
+          -
+          braking
+        )
       );
 
 
     /*
-      Final tail brakes harder.
+      Final part gets stronger.
     */
 
     if(
@@ -4206,11 +4736,6 @@ function startGrabBrake(){
     updateScratchVisuals();
 
 
-    /*
-      Grab brake is part of scratch physics,
-      therefore FULL VOLUME.
-    */
-
     maybeEmitScratchGrain(
       now,
       true
@@ -4220,7 +4745,8 @@ function startGrabBrake(){
     microstatus.textContent =
       "GRAB BRAKE // "
       +
-      scratchVelocity.toFixed(
+      scratchVelocity
+      .toFixed(
         2
       )
       +
@@ -4294,7 +4820,7 @@ function cancelGrabBrake(){
 
 
 /* =====================================================
-   MOTOR
+   MOTOR RECOVERY
 ===================================================== */
 
 function cancelMotorRecovery(){
@@ -4325,10 +4851,6 @@ function cancelMotorRecovery(){
 }
 
 
-/* =====================================================
-   MOTOR RECOVERY
-===================================================== */
-
 function startMotorRecovery(){
 
   return new Promise(
@@ -4358,10 +4880,6 @@ function startMotorRecovery(){
         );
 
 
-      /*
-        Base physical duration.
-      */
-
       const baseDuration =
         Math.min(
           MOTOR_RECOVERY_MAX_DURATION,
@@ -4375,14 +4893,6 @@ function startMotorRecovery(){
           )
         );
 
-
-      /*
-        DEBUG:
-
-        0.5x motor speed -> duration doubles.
-
-        2.0x motor speed -> duration halves.
-      */
 
       const duration =
         baseDuration
@@ -4408,7 +4918,18 @@ function startMotorRecovery(){
           isPacking
           ||
           isScratching
+          ||
+          !playIntent
         ){
+
+          isMotorRecovering =
+            false;
+
+
+          track.classList.remove(
+            "is-motor-recovering"
+          );
+
 
           motorRecoveryRAF =
             null;
@@ -4510,12 +5031,6 @@ function startMotorRecovery(){
         updateScratchVisuals();
 
 
-        /*
-          Motor recovery is not seek.
-
-          Therefore FULL VOLUME too.
-        */
-
         maybeEmitScratchGrain(
           now,
           true
@@ -4525,7 +5040,8 @@ function startMotorRecovery(){
         microstatus.textContent =
           "MOTOR // "
           +
-          scratchVelocity.toFixed(
+          scratchVelocity
+          .toFixed(
             2
           )
           +
@@ -4612,6 +5128,18 @@ recordDisc.addEventListener(
     event.preventDefault();
 
 
+    const wasRecovering =
+      isMotorRecovering;
+
+
+    const recoveryVelocity =
+      scratchVelocity;
+
+
+    const recoveryTime =
+      scratchTime;
+
+
     cancelMotorRecovery();
 
 
@@ -4628,16 +5156,39 @@ recordDisc.addEventListener(
     );
 
 
-    scratchWasPlaying =
-      !audio.paused;
+    /*
+      PLAY state is NOT based on
+      audio.paused.
+
+      Only actual Play/Pause button
+      controls this.
+    */
+
+    if(
+      !audio.paused
+    ){
+
+      scratchTime =
+        audio.currentTime;
 
 
-    scratchTime =
-      audio.paused
-      ?
-      scratchTime
-      :
-      audio.currentTime;
+      scratchVelocity =
+        1;
+
+    }
+
+    else if(
+      wasRecovering
+    ){
+
+      scratchTime =
+        recoveryTime;
+
+
+      scratchVelocity =
+        recoveryVelocity;
+
+    }
 
 
     scratchLastAngle =
@@ -4661,15 +5212,10 @@ recordDisc.addEventListener(
     stopVinylSync();
 
 
-    if(
-      scratchWasPlaying
-    ){
-
-      scratchVelocity =
-        1;
-
-    }
-
+    /*
+      Internal pause only.
+      playIntent remains unchanged.
+    */
 
     if(
       !audio.paused
@@ -4678,6 +5224,11 @@ recordDisc.addEventListener(
       audio.pause();
 
     }
+
+
+    setPlayIcon(
+      playIntent
+    );
 
 
     track.classList.add(
@@ -4705,15 +5256,26 @@ recordDisc.addEventListener(
     }
 
 
+    /*
+      If PLAY is logically ON,
+      hand is grabbing a motor-driven platter.
+    */
+
     if(
-      scratchWasPlaying
+      playIntent
     ){
 
-      startGrabBrake();
+      startGrabBrake(
+        scratchVelocity
+      );
 
     }
 
     else{
+
+      scratchVelocity =
+        0;
+
 
       grabBrakeActive =
         false;
@@ -4789,6 +5351,10 @@ recordDisc.addEventListener(
 
     }
 
+
+    /*
+      Ignore microscopic mouse jitter.
+    */
 
     if(
       Math.abs(
@@ -4888,10 +5454,6 @@ recordDisc.addEventListener(
     updateScratchVisuals();
 
 
-    /*
-      FULL VOLUME.
-    */
-
     maybeEmitScratchGrain(
       now,
       false
@@ -4924,6 +5486,17 @@ recordDisc.addEventListener(
 
 /* =====================================================
    SCRATCH RELEASE
+
+   IMPORTANT:
+
+   Scratch NEVER creates pause.
+
+   If playIntent = true:
+   motor always recovers and play continues.
+
+   If playIntent = false:
+   user explicitly pressed Pause,
+   so it stays paused.
 ===================================================== */
 
 async function finishScratch(
@@ -4981,17 +5554,19 @@ async function finishScratch(
     null;
 
 
+  /*
+    PLAY WAS LOGICALLY ON.
+
+    Always recover and continue.
+  */
+
   if(
-    scratchWasPlaying
+    playIntent
     &&
     scratchTime
     <
     audio.duration
   ){
-
-    /*
-      Motor smoothly gets platter back.
-    */
 
     await startMotorRecovery();
 
@@ -5000,6 +5575,8 @@ async function finishScratch(
       isScratching
       ||
       isPacking
+      ||
+      !playIntent
     ){
 
       return;
@@ -5033,15 +5610,24 @@ async function finishScratch(
     }
 
 
+    setPlayIcon(
+      true
+    );
+
+
     setTimeout(
       () => {
 
         if(
+          playIntent
+          &&
           !isScratching
           &&
           !isPacking
           &&
           !isMotorRecovering
+          &&
+          !isSeeking
         ){
 
           microstatus.textContent =
@@ -5057,6 +5643,10 @@ async function finishScratch(
 
   else{
 
+    /*
+      Explicit pause from button.
+    */
+
     scratchVelocity =
       0;
 
@@ -5066,6 +5656,11 @@ async function finishScratch(
 
 
     updateScratchVisuals();
+
+
+    setPlayIcon(
+      false
+    );
 
 
     microstatus.textContent =
@@ -5089,7 +5684,112 @@ recordDisc.addEventListener(
 
 
 /* =====================================================
-   SEEK VINYL ANIMATION
+   ENSURE VINYL IS OPEN
+
+   Used when user clicks waveform
+   BEFORE ever pressing PLAY.
+
+   Full sleeve / record / tonearm
+   animation happens first.
+===================================================== */
+
+async function ensureVinylOpen(){
+
+  if(
+    vinylOpened
+  ){
+
+    if(
+      !mechanismDeployed
+    ){
+
+      await new Promise(
+        resolve =>
+          setTimeout(
+            resolve,
+            120
+          )
+      );
+
+    }
+
+
+    return;
+
+  }
+
+
+  vinylOpened =
+    true;
+
+
+  track.classList.add(
+    "is-open"
+  );
+
+
+  microstatus.textContent =
+    "LOADING SIGNAL // OPENING MEDIA";
+
+
+  /*
+    Let complete sleeve animation run.
+  */
+
+  await new Promise(
+    resolve =>
+      setTimeout(
+        resolve,
+        1480
+      )
+  );
+
+
+  /*
+    animationend usually performs this,
+    but this is fallback-safe.
+  */
+
+  if(
+    !mechanismDeployed
+  ){
+
+    mechanismDeployed =
+      true;
+
+
+    track.classList.add(
+      "arm-on-top"
+    );
+
+
+    await engageTonearm();
+
+  }
+
+
+  else if(
+    !tonearmEngaged
+  ){
+
+    await engageTonearm();
+
+  }
+
+
+  await new Promise(
+    resolve =>
+      setTimeout(
+        resolve,
+        80
+      )
+  );
+
+}
+
+
+/* =====================================================
+   SEEK VISUAL ANIMATION
 ===================================================== */
 
 function animateVinylSeek(
@@ -5158,10 +5858,26 @@ function animateVinylSeek(
           );
 
 
-        const eased =
-          smootherStep(
+        /*
+          Custom start / stop curve.
+        */
+
+        const moved =
+          seekMotionProgress(
             raw
           );
+
+
+        const visualTime =
+          fromTime
+          +
+          (
+            toTime
+            -
+            fromTime
+          )
+          *
+          moved;
 
 
         setVinylAngle(
@@ -5169,7 +5885,7 @@ function animateVinylSeek(
           +
           deltaVinyl
           *
-          eased
+          moved
         );
 
 
@@ -5182,22 +5898,14 @@ function animateVinylSeek(
             +
             deltaArm
             *
-            eased
+            moved
           );
 
         }
 
 
         updateProgressUI(
-          fromTime
-          +
-          (
-            toTime
-            -
-            fromTime
-          )
-          *
-          eased
+          visualTime
         );
 
 
@@ -5212,6 +5920,27 @@ function animateVinylSeek(
         }
 
         else{
+
+          setVinylAngle(
+            targetVinyl
+          );
+
+
+          if(
+            tonearmEngaged
+          ){
+
+            setTonearmAngle(
+              targetArm
+            );
+
+          }
+
+
+          updateProgressUI(
+            toTime
+          );
+
 
           resolve();
 
@@ -5255,10 +5984,6 @@ async function seekTo(
   }
 
 
-  const oldTime =
-    audio.currentTime;
-
-
   targetTime =
     Math.max(
       0,
@@ -5267,6 +5992,31 @@ async function seekTo(
         targetTime
       )
     );
+
+
+  /*
+    BEFORE FIRST PLAY:
+
+    open entire physical mechanism
+    before seek starts.
+  */
+
+  await ensureVinylOpen();
+
+
+  if(
+    isPacking
+    ||
+    isScratching
+  ){
+
+    return;
+
+  }
+
+
+  const oldTime =
+    audio.currentTime;
 
 
   const delta =
@@ -5280,16 +6030,23 @@ async function seekTo(
       delta
     )
     <
-    .1
+    .08
   ){
+
+    audio.currentTime =
+      targetTime;
+
+
+    scratchTime =
+      targetTime;
+
+
+    updateScratchVisuals();
+
 
     return;
 
   }
-
-
-  const wasPlaying =
-    !audio.paused;
 
 
   isSeeking =
@@ -5304,13 +6061,24 @@ async function seekTo(
   stopVinylSync();
 
 
+  /*
+    Internal physical pause.
+
+    DO NOT alter playIntent.
+  */
+
   if(
-    wasPlaying
+    !audio.paused
   ){
 
     audio.pause();
 
   }
+
+
+  setPlayIcon(
+    playIntent
+  );
 
 
   const revolutions =
@@ -5326,7 +6094,7 @@ async function seekTo(
       Math.max(
         380,
         Math.min(
-          1600,
+          1700,
           380
           +
           Math.log1p(
@@ -5390,29 +6158,11 @@ async function seekTo(
     targetTime;
 
 
-  updateProgressUI(
-    targetTime
-  );
+  scratchVelocity =
+    0;
 
 
-  setVinylAngle(
-    angleFromAudioTime(
-      targetTime
-    )
-  );
-
-
-  if(
-    tonearmEngaged
-  ){
-
-    setTonearmAngle(
-      armAngleFromTime(
-        targetTime
-      )
-    );
-
-  }
+  updateScratchVisuals();
 
 
   track.classList.remove(
@@ -5424,13 +6174,21 @@ async function seekTo(
     false;
 
 
-  microstatus.textContent =
-    "Connection stable // 01 signal detected";
+  /*
+    If PLAY was logically on,
+    continue playing automatically.
 
+    If user had explicitly paused,
+    remain ready at chosen position.
+  */
 
   if(
-    wasPlaying
+    playIntent
   ){
+
+    microstatus.textContent =
+      "SEEK LOCK // RESUME";
+
 
     try{
 
@@ -5445,6 +6203,27 @@ async function seekTo(
       );
 
     }
+
+
+    setPlayIcon(
+      true
+    );
+
+  }
+
+  else{
+
+    setPlayIcon(
+      false
+    );
+
+
+    microstatus.textContent =
+      "START POSITION // "
+      +
+      fmt(
+        targetTime
+      );
 
   }
 
@@ -5488,10 +6267,14 @@ seek.addEventListener(
       );
 
 
-    seekTo(
+    const target =
       ratio
       *
-      audio.duration
+      audio.duration;
+
+
+    seekTo(
+      target
     );
 
   }
@@ -5531,7 +6314,7 @@ function setPlayIcon(
 
 
 /* =====================================================
-   OPEN
+   OPEN ANIMATION COMPLETE
 ===================================================== */
 
 recordCarrier.addEventListener(
@@ -5562,7 +6345,17 @@ recordCarrier.addEventListener(
 
 
     requestAnimationFrame(
-      engageTonearm
+      () => {
+
+        requestAnimationFrame(
+          () => {
+
+            engageTonearm();
+
+          }
+        );
+
+      }
     );
 
   }
@@ -5570,7 +6363,10 @@ recordCarrier.addEventListener(
 
 
 /* =====================================================
-   PLAY BUTTON
+   PLAY / PAUSE BUTTON
+
+   THIS IS THE ONLY PLACE
+   THAT CHANGES playIntent.
 ===================================================== */
 
 playButtons.forEach(
@@ -5582,12 +6378,6 @@ playButtons.forEach(
 
         if(
           isPacking
-          ||
-          isScratching
-          ||
-          isMotorRecovering
-          ||
-          isSeeking
         ){
 
           return;
@@ -5595,29 +6385,98 @@ playButtons.forEach(
         }
 
 
+        /*
+          =====================================
+          USER PRESSED PAUSE
+          =====================================
+        */
+
         if(
-          audio.paused
+          playIntent
         ){
 
-          try{
+          playIntent =
+            false;
 
-            await audio.play();
+
+          cancelGrabBrake();
+
+
+          cancelMotorRecovery();
+
+
+          if(
+            !audio.paused
+          ){
+
+            audio.pause();
 
           }
 
-          catch(error){
 
-            console.warn(
-              error
-            );
+          setPlayIcon(
+            false
+          );
 
-          }
+
+          microstatus.textContent =
+            "PLAYBACK // PAUSED";
+
+
+          return;
 
         }
 
-        else{
 
-          audio.pause();
+        /*
+          =====================================
+          USER PRESSED PLAY
+          =====================================
+        */
+
+        playIntent =
+          true;
+
+
+        setPlayIcon(
+          true
+        );
+
+
+        /*
+          If some physical operation
+          is still running, it will resume
+          playback itself when finished.
+        */
+
+        if(
+          isScratching
+          ||
+          isSeeking
+          ||
+          isMotorRecovering
+        ){
+
+          return;
+
+        }
+
+
+        /*
+          Normal first play.
+        */
+
+        try{
+
+          await audio.play();
+
+        }
+
+        catch(error){
+
+          console.warn(
+            error
+          );
 
         }
 
@@ -5635,6 +6494,25 @@ playButtons.forEach(
 audio.addEventListener(
   "play",
   () => {
+
+    /*
+      playIntent can only be enabled
+      by button.
+
+      Internal physical processes
+      don't create logical playback.
+    */
+
+    if(
+      !playIntent
+    ){
+
+      audio.pause();
+
+      return;
+
+    }
+
 
     if(
       isPacking
@@ -5680,26 +6558,32 @@ audio.addEventListener(
 
 
 /* =====================================================
-   PAUSE
+   AUDIO PAUSE
+
+   audio.pause() may be used internally by
+   scratch/seek.
+
+   Therefore icon follows playIntent,
+   NOT audio.paused.
 ===================================================== */
 
 audio.addEventListener(
   "pause",
   () => {
 
-    setPlayIcon(
-      false
-    );
-
-
     stopVinylSync();
+
+
+    setPlayIcon(
+      playIntent
+    );
 
   }
 );
 
 
 /* =====================================================
-   TIME
+   METADATA / TIME
 ===================================================== */
 
 audio.addEventListener(
@@ -5740,7 +6624,33 @@ audio.addEventListener(
 
 
 /* =====================================================
-   STOP / PACK
+   END
+
+   Natural end is the other event that
+   may reset logical PLAY state.
+===================================================== */
+
+audio.addEventListener(
+  "ended",
+  async () => {
+
+    playIntent =
+      false;
+
+
+    setPlayIcon(
+      false
+    );
+
+
+    await stopAndPack();
+
+  }
+);
+
+
+/* =====================================================
+   STOP / REPACK
 ===================================================== */
 
 async function stopAndPack(){
@@ -5770,10 +6680,20 @@ async function stopAndPack(){
     false;
 
 
+  isScratching =
+    false;
+
+
   stopVinylSync();
 
 
-  audio.pause();
+  if(
+    !audio.paused
+  ){
+
+    audio.pause();
+
+  }
 
 
   microstatus.textContent =
@@ -5849,6 +6769,10 @@ async function stopAndPack(){
     false;
 
 
+  isSeeking =
+    false;
+
+
   audio.currentTime =
     0;
 
@@ -5876,6 +6800,11 @@ async function stopAndPack(){
   );
 
 
+  setPlayIcon(
+    playIntent
+  );
+
+
   microstatus.textContent =
     "Connection stable // 01 signal detected";
 
@@ -5884,12 +6813,6 @@ async function stopAndPack(){
     false;
 
 }
-
-
-audio.addEventListener(
-  "ended",
-  stopAndPack
-);
 
 
 /* =====================================================
@@ -5944,7 +6867,9 @@ codeForm.addEventListener(
 
 
     codeResult.textContent =
-      ARG_CODES[code]
+      ARG_CODES[
+        code
+      ]
       ||
       (
         code
