@@ -35,7 +35,6 @@ html{
 
 body{
   margin:0;
-
   min-height:100svh;
 
   color:var(--text);
@@ -96,8 +95,7 @@ body::before{
       transparent 30%
     );
 
-  filter:
-    blur(18px);
+  filter:blur(18px);
 
   transform:
     translate3d(-18%,0,0)
@@ -180,7 +178,6 @@ input{
   margin:0 auto;
 
   position:relative;
-
   z-index:2;
 
   padding:
@@ -196,9 +193,7 @@ input{
   min-height:44px;
 
   display:flex;
-
   align-items:center;
-
   justify-content:space-between;
 
   gap:24px;
@@ -206,23 +201,19 @@ input{
   color:var(--muted);
 
   font-family:monospace;
-
   font-size:11px;
 
   letter-spacing:.18em;
-
   text-transform:uppercase;
 }
 
 .brand{
   color:var(--accent);
-
   text-decoration:none;
 }
 
 .status{
   display:flex;
-
   align-items:center;
 
   gap:10px;
@@ -303,13 +294,11 @@ input{
 
 
 .profileHead::after{
-  content:
-    "TRACK TRANSMISSION ARCHIVE";
+  content:"TRACK TRANSMISSION ARCHIVE";
 
   position:absolute;
 
   right:32px;
-
   bottom:17px;
 
   color:
@@ -394,7 +383,6 @@ input{
   display:inline-flex;
 
   align-items:center;
-
   justify-content:center;
 
   text-decoration:none;
@@ -409,9 +397,9 @@ input{
   text-transform:uppercase;
 }
 
+
 .back:hover{
   background:var(--accent);
-
   color:#090b07;
 }
 
@@ -428,7 +416,6 @@ input{
     var(--border);
 
   display:flex;
-
   align-items:center;
 
   gap:28px;
@@ -442,7 +429,6 @@ input{
     700 10px/1 monospace;
 
   letter-spacing:.15em;
-
   text-transform:uppercase;
 }
 
@@ -451,7 +437,6 @@ input{
   height:54px;
 
   display:flex;
-
   align-items:center;
 
   position:relative;
@@ -490,9 +475,7 @@ input{
 
 .sectionTitle{
   display:flex;
-
   align-items:end;
-
   justify-content:space-between;
 
   gap:20px;
@@ -507,7 +490,6 @@ input{
   font-size:16px;
 
   letter-spacing:.15em;
-
   text-transform:uppercase;
 }
 
@@ -519,7 +501,6 @@ input{
     9px/1.5 monospace;
 
   letter-spacing:.14em;
-
   text-transform:uppercase;
 }
 
@@ -590,6 +571,16 @@ input{
 }
 
 
+.track.is-scratching{
+  border-color:
+    rgba(214,255,40,.5);
+
+  box-shadow:
+    inset 0 0 34px
+    rgba(214,255,40,.03);
+}
+
+
 /* =====================================================
    VINYL SCENE
 ===================================================== */
@@ -601,7 +592,6 @@ input{
   position:relative;
 
   display:flex;
-
   align-items:center;
 
   overflow:visible;
@@ -609,7 +599,7 @@ input{
 
 
 /* =====================================================
-   TONEARM COMPLETE MECHANISM
+   TONEARM MECHANISM
 ===================================================== */
 
 .tonearmMechanism{
@@ -620,10 +610,6 @@ input{
 
   width:40px;
   height:92px;
-
-  /*
-    initial hidden position
-  */
 
   transform:
     translate(-77px,25px)
@@ -643,8 +629,6 @@ input{
     opacity;
 }
 
-
-/* OPEN */
 
 .track.is-open .tonearmMechanism{
   animation:
@@ -666,7 +650,6 @@ input{
     opacity:.7;
   }
 
-
   72%{
     transform:
       translate(-42px,14px)
@@ -674,7 +657,6 @@ input{
 
     opacity:.88;
   }
-
 
   100%{
     transform:
@@ -687,18 +669,13 @@ input{
 }
 
 
-/*
-  after deploy:
-  tonearm becomes upper layer
-*/
-
 .track.arm-on-top .tonearmMechanism{
   z-index:5;
 }
 
 
 /* =====================================================
-   BASE / PIVOT
+   TONEARM BASE
 ===================================================== */
 
 .tonearmBase{
@@ -769,7 +746,7 @@ input{
 
 
 /* =====================================================
-   ARM
+   TONEARM ARM
 ===================================================== */
 
 .tonearmArm{
@@ -808,10 +785,6 @@ input{
     transform;
 }
 
-
-/* =====================================================
-   CARTRIDGE + NEEDLE
-===================================================== */
 
 .cartridge{
   position:absolute;
@@ -885,7 +858,7 @@ input{
 
   z-index:2;
 
-  pointer-events:none;
+  pointer-events:auto;
 
   will-change:
     transform;
@@ -934,6 +907,38 @@ input{
 
   will-change:
     transform;
+
+  cursor:default;
+
+  user-select:none;
+
+  -webkit-user-select:none;
+
+  touch-action:none;
+}
+
+
+.track.arm-on-top .recordDisc{
+  cursor:grab;
+}
+
+
+.track.is-scratching .recordDisc{
+  cursor:grabbing;
+
+  box-shadow:
+    0 0 18px
+    rgba(214,255,40,.22),
+
+    0 0 44px
+    rgba(214,255,40,.08),
+
+    0 4px 24px
+    rgba(0,0,0,.45),
+
+    inset
+    0 0 0 1px
+    rgba(255,255,255,.05);
 }
 
 
@@ -1006,6 +1011,8 @@ input{
   background:#111;
 
   z-index:2;
+
+  pointer-events:none;
 }
 
 
@@ -1016,6 +1023,8 @@ input{
   object-fit:cover;
 
   display:block;
+
+  pointer-events:none;
 }
 
 
@@ -1040,6 +1049,8 @@ input{
     rgba(0,0,0,.45);
 
   z-index:3;
+
+  pointer-events:none;
 }
 
 
@@ -1137,18 +1148,15 @@ input{
       translate(0,-50%);
   }
 
-
   36%{
     transform:
       translate(44px,-50%);
   }
 
-
   55%{
     transform:
       translate(44px,-50%);
   }
-
 
   100%{
     transform:
@@ -1168,14 +1176,12 @@ input{
     opacity:1;
   }
 
-
   52%{
     transform:
       translateX(-12px);
 
     opacity:1;
   }
-
 
   100%{
     transform:
@@ -1189,12 +1195,6 @@ input{
 
 /* =====================================================
    CLOSING / REPACK
-
-   Reverse sequence:
-   tonearm mechanism hides
-   record goes right
-   sleeve returns
-   record goes back inside sleeve
 ===================================================== */
 
 .track.is-closing .tonearmMechanism{
@@ -1234,7 +1234,6 @@ input{
     opacity:1;
   }
 
-
   28%{
     transform:
       translate(-20px,7px)
@@ -1243,7 +1242,6 @@ input{
     opacity:.95;
   }
 
-
   48%{
     transform:
       translate(-42px,14px)
@@ -1251,7 +1249,6 @@ input{
 
     opacity:.86;
   }
-
 
   100%{
     transform:
@@ -1266,35 +1263,20 @@ input{
 
 @keyframes recordPack{
 
-  /*
-    record starts on its playback position
-  */
-
   0%{
     transform:
       translate(0,-50%);
   }
-
-
-  /*
-    moves right so sleeve can return
-  */
 
   34%{
     transform:
       translate(44px,-50%);
   }
 
-
   58%{
     transform:
       translate(44px,-50%);
   }
-
-
-  /*
-    slides back under sleeve
-  */
 
   100%{
     transform:
@@ -1306,10 +1288,6 @@ input{
 
 @keyframes sleeveReturn{
 
-  /*
-    sleeve starts outside left
-  */
-
   0%{
     transform:
       translateX(-190px);
@@ -1317,16 +1295,9 @@ input{
     opacity:0;
   }
 
-
   20%{
     opacity:1;
   }
-
-
-  /*
-    sleeve reaches its original position
-    while vinyl is still out to the right
-  */
 
   55%{
     transform:
@@ -1334,7 +1305,6 @@ input{
 
     opacity:1;
   }
-
 
   100%{
     transform:
@@ -1378,9 +1348,7 @@ input{
 
 .topline{
   display:flex;
-
   align-items:flex-start;
-
   justify-content:space-between;
 
   gap:16px;
@@ -1395,7 +1363,6 @@ input{
   font-size:23px;
 
   letter-spacing:.12em;
-
   text-transform:uppercase;
 }
 
@@ -1409,7 +1376,6 @@ input{
     10px/1.4 monospace;
 
   letter-spacing:.14em;
-
   text-transform:uppercase;
 }
 
@@ -1600,7 +1566,6 @@ input{
     9px/1 monospace;
 
   letter-spacing:.12em;
-
   text-transform:uppercase;
 }
 
@@ -1639,7 +1604,6 @@ input{
   display:flex;
 
   align-items:center;
-
   justify-content:center;
 
   gap:9px;
@@ -1649,7 +1613,6 @@ input{
   font-weight:800;
 
   letter-spacing:.12em;
-
   text-transform:uppercase;
 }
 
@@ -1674,7 +1637,6 @@ input{
   display:flex;
 
   align-items:center;
-
   justify-content:center;
 
   color:var(--muted);
@@ -1683,7 +1645,6 @@ input{
     700 9px/1 monospace;
 
   letter-spacing:.12em;
-
   text-transform:uppercase;
 }
 
@@ -1723,7 +1684,6 @@ input{
     700 10px/1 monospace;
 
   letter-spacing:.17em;
-
   text-transform:uppercase;
 }
 
@@ -1737,7 +1697,6 @@ input{
     9px/1.6 monospace;
 
   letter-spacing:.09em;
-
   text-transform:uppercase;
 }
 
@@ -1770,7 +1729,6 @@ input{
     600 11px/1 monospace;
 
   letter-spacing:.15em;
-
   text-transform:uppercase;
 }
 
@@ -1795,7 +1753,6 @@ input{
     700 9px/1 monospace;
 
   letter-spacing:.12em;
-
   text-transform:uppercase;
 }
 
@@ -1837,7 +1794,6 @@ input{
   display:flex;
 
   align-items:center;
-
   justify-content:space-between;
 
   gap:20px;
@@ -1848,7 +1804,6 @@ input{
     9px/1.5 monospace;
 
   letter-spacing:.14em;
-
   text-transform:uppercase;
 }
 
@@ -1858,17 +1813,12 @@ input{
   0%,
   100%{
     opacity:.45;
-
-    transform:
-      scale(.9);
+    transform:scale(.9);
   }
-
 
   50%{
     opacity:1;
-
-    transform:
-      scale(1.15);
+    transform:scale(1.15);
   }
 
 }
@@ -1887,7 +1837,6 @@ input{
     );
   }
 
-
   .profileHead{
     grid-template-columns:
       auto
@@ -1897,29 +1846,24 @@ input{
       24px 20px;
   }
 
-
   .profileHead::after{
     display:none;
   }
-
 
   .avatar{
     width:88px;
     height:88px;
   }
 
-
   .back{
     grid-column:
       1 / -1;
   }
 
-
   .content{
     padding:
       22px 18px 30px;
   }
-
 
   .track{
     grid-template-columns:
@@ -1931,12 +1875,10 @@ input{
     padding:13px;
   }
 
-
   .vinylUnit{
     width:112px;
     height:86px;
   }
-
 
   .recordCarrier{
     width:76px;
@@ -1945,24 +1887,20 @@ input{
     left:4px;
   }
 
-
   .recordDisc{
     width:76px;
     height:76px;
   }
-
 
   .recordLabel{
     width:36px;
     height:36px;
   }
 
-
   .sleeve{
     width:86px;
     height:86px;
   }
-
 
   .tonearmMechanism{
     left:78px;
@@ -1976,7 +1914,6 @@ input{
       0 0;
   }
 
-
   .track.is-open .tonearmMechanism{
     animation:
       mechanismDeployMobile
@@ -1985,7 +1922,6 @@ input{
       both;
   }
 
-
   .track.is-closing .tonearmMechanism{
     animation:
       mechanismHideMobile
@@ -1993,7 +1929,6 @@ input{
       cubic-bezier(.22,.8,.22,1)
       both;
   }
-
 
   @keyframes mechanismDeployMobile{
 
@@ -2004,7 +1939,6 @@ input{
         scale(.63);
     }
 
-
     100%{
       transform:
         translate(0,0)
@@ -2012,7 +1946,6 @@ input{
     }
 
   }
-
 
   @keyframes mechanismHideMobile{
 
@@ -2022,7 +1955,6 @@ input{
         scale(.63);
     }
 
-
     100%{
       transform:
         translate(-49px,16px)
@@ -2031,7 +1963,6 @@ input{
 
   }
 
-
   @keyframes recordReveal{
 
     0%{
@@ -2039,13 +1970,11 @@ input{
         translate(0,-50%);
     }
 
-
     36%,
     55%{
       transform:
         translate(26px,-50%);
     }
-
 
     100%{
       transform:
@@ -2053,7 +1982,6 @@ input{
     }
 
   }
-
 
   @keyframes sleeveExit{
 
@@ -2065,7 +1993,6 @@ input{
       opacity:1;
     }
 
-
     100%{
       transform:
         translateX(-120px);
@@ -2075,7 +2002,6 @@ input{
 
   }
 
-
   @keyframes recordPack{
 
     0%{
@@ -2083,13 +2009,11 @@ input{
         translate(0,-50%);
     }
 
-
     34%,
     58%{
       transform:
         translate(26px,-50%);
     }
-
 
     100%{
       transform:
@@ -2097,7 +2021,6 @@ input{
     }
 
   }
-
 
   @keyframes sleeveReturn{
 
@@ -2108,11 +2031,9 @@ input{
       opacity:0;
     }
 
-
     20%{
       opacity:1;
     }
-
 
     55%,
     100%{
@@ -2124,7 +2045,6 @@ input{
 
   }
 
-
   .buyCol{
     grid-column:
       1 / -1;
@@ -2132,10 +2052,8 @@ input{
     display:grid;
 
     grid-template-columns:
-      1fr
-      1fr;
+      1fr 1fr;
   }
-
 
   .waveRow{
     grid-template-columns:
@@ -2143,11 +2061,9 @@ input{
       minmax(0,1fr);
   }
 
-
   .time{
     display:none;
   }
-
 
   .receiver{
     grid-template-columns:
@@ -2165,42 +2081,35 @@ input{
       minmax(0,1fr);
   }
 
-
   .vinylUnit{
     width:94px;
     height:70px;
   }
-
 
   .recordCarrier{
     width:62px;
     height:62px;
   }
 
-
   .recordDisc{
     width:62px;
     height:62px;
   }
-
 
   .recordLabel{
     width:30px;
     height:30px;
   }
 
-
   .sleeve{
     width:70px;
     height:70px;
   }
 
-
   .tonearmMechanism{
     left:65px;
     top:0;
   }
-
 
   .buyCol{
     grid-template-columns:
@@ -2451,7 +2360,6 @@ input{
         class="wave js-wave"
       ></div>
 
-
       <div
         class="waveProgress js-progress"
       >
@@ -2490,6 +2398,10 @@ input{
 
     <span>
       45 RPM
+    </span>
+
+    <span>
+      SCRATCH ENABLED
     </span>
 
     <span>
@@ -2642,21 +2554,9 @@ const recordDisc =
   );
 
 
-const tonearmMechanism =
-  document.getElementById(
-    "tonearmMechanism"
-  );
-
-
 const tonearmArm =
   document.getElementById(
     "tonearmArm"
-  );
-
-
-const sleeve =
-  document.getElementById(
-    "sleeve"
   );
 
 
@@ -2734,12 +2634,50 @@ let isPacking =
   false;
 
 
+let isScratching =
+  false;
+
+
 let vinylRAF =
   null;
 
 
+/* scratch */
+
+let scratchPointerId =
+  null;
+
+
+let scratchTime =
+  0;
+
+
+let scratchLastAngle =
+  0;
+
+
+let scratchLastPointerTime =
+  0;
+
+
+let scratchVelocity =
+  0;
+
+
+let scratchLastGrainTime =
+  0;
+
+
+let scratchWasPlaying =
+  false;
+
+
+let scratchReleaseRAF =
+  null;
+
+
 /* =====================================================
-   VINYL PHYSICS
+   VINYL
 ===================================================== */
 
 const VINYL_RPM =
@@ -2782,7 +2720,7 @@ function setVinylAngle(
 
 
 /* =====================================================
-   TONEARM GEOMETRY
+   TONEARM
 ===================================================== */
 
 const ARM_PARK_ANGLE =
@@ -2894,7 +2832,7 @@ function smootherStep(
 
 
 /* =====================================================
-   GENERIC ARM ANIMATION
+   TONEARM GENERIC ANIMATION
 ===================================================== */
 
 function animateTonearmTo(
@@ -2936,7 +2874,7 @@ function animateTonearmTo(
           );
 
 
-        const angle =
+        setTonearmAngle(
           startAngle
           +
           (
@@ -2945,11 +2883,7 @@ function animateTonearmTo(
             startAngle
           )
           *
-          eased;
-
-
-        setTonearmAngle(
-          angle
+          eased
         );
 
 
@@ -2962,6 +2896,7 @@ function animateTonearmTo(
           );
 
         }
+
         else{
 
           setTonearmAngle(
@@ -2987,7 +2922,7 @@ function animateTonearmTo(
 
 
 /* =====================================================
-   ENGAGE ARM
+   ENGAGE
 ===================================================== */
 
 async function engageTonearm(){
@@ -3005,14 +2940,10 @@ async function engageTonearm(){
     true;
 
 
-  const target =
+  await animateTonearmTo(
     armAngleFromTime(
       audio.currentTime
-    );
-
-
-  await animateTonearmTo(
-    target,
+    ),
     680
   );
 
@@ -3020,7 +2951,7 @@ async function engageTonearm(){
 
 
 /* =====================================================
-   PLAYBACK SYNC
+   NORMAL PLAYBACK
 ===================================================== */
 
 function startVinylSync(){
@@ -3044,6 +2975,8 @@ function startVinylSync(){
       !isSeeking
       &&
       !isPacking
+      &&
+      !isScratching
     ){
 
       setVinylAngle(
@@ -3492,7 +3425,979 @@ loadTrackData(
 
 
 /* =====================================================
-   SCRUB AUDIO
+   SCRATCH AUDIO GRAIN
+===================================================== */
+
+async function playScratchGrain(
+  time,
+  velocity
+){
+
+  if(
+    !decodedTrack
+  ){
+
+    return;
+
+  }
+
+
+  if(
+    Math.abs(
+      velocity
+    )
+    <
+    .035
+  ){
+
+    return;
+
+  }
+
+
+  const context =
+    getAudioContext();
+
+
+  if(
+    context.state ===
+    "suspended"
+  ){
+
+    try{
+
+      await context.resume();
+
+    }
+    catch(_){}
+
+  }
+
+
+  const direction =
+    velocity >= 0
+    ?
+    1
+    :
+    -1;
+
+
+  const source =
+    context.createBufferSource();
+
+
+  source.buffer =
+    direction > 0
+    ?
+    decodedTrack
+    :
+    reversedTrack;
+
+
+  /*
+    1 = natural speed
+    2 = twice speed
+    etc.
+  */
+
+  const rate =
+    Math.max(
+      .18,
+      Math.min(
+        10,
+        Math.abs(
+          velocity
+        )
+      )
+    );
+
+
+  source.playbackRate.value =
+    rate;
+
+
+  const filter =
+    context.createBiquadFilter();
+
+
+  filter.type =
+    "lowpass";
+
+
+  filter.frequency.value =
+    Math.min(
+      12500,
+      2600
+      +
+      rate
+      *
+      1700
+    );
+
+
+  filter.Q.value =
+    .25;
+
+
+  const gain =
+    context.createGain();
+
+
+  source.connect(
+    filter
+  );
+
+
+  filter.connect(
+    gain
+  );
+
+
+  gain.connect(
+    context.destination
+  );
+
+
+  const now =
+    context.currentTime;
+
+
+  const grainDuration =
+    .052;
+
+
+  gain.gain.setValueAtTime(
+    .001,
+    now
+  );
+
+
+  gain.gain.linearRampToValueAtTime(
+    .32,
+    now
+    +
+    .007
+  );
+
+
+  gain.gain.exponentialRampToValueAtTime(
+    .001,
+    now
+    +
+    grainDuration
+  );
+
+
+  let offset;
+
+
+  if(
+    direction > 0
+  ){
+
+    offset =
+      Math.max(
+        0,
+        Math.min(
+          decodedTrack.duration
+          -
+          .1,
+          time
+        )
+      );
+
+  }
+
+  else{
+
+    offset =
+      Math.max(
+        0,
+        Math.min(
+          reversedTrack.duration
+          -
+          .1,
+          reversedTrack.duration
+          -
+          time
+        )
+      );
+
+  }
+
+
+  try{
+
+    source.start(
+      now,
+      offset
+    );
+
+
+    source.stop(
+      now
+      +
+      grainDuration
+    );
+
+  }
+
+  catch(error){
+
+    console.warn(
+      "scratch grain:",
+      error
+    );
+
+  }
+
+
+  setTimeout(
+    () => {
+
+      try{
+
+        source.disconnect();
+        filter.disconnect();
+        gain.disconnect();
+
+      }
+      catch(_){}
+
+    },
+    100
+  );
+
+}
+
+
+/* =====================================================
+   POINTER ANGLE
+===================================================== */
+
+function pointerAngle(
+  event
+){
+
+  const rect =
+    recordDisc.getBoundingClientRect();
+
+
+  const cx =
+    rect.left
+    +
+    rect.width
+    /
+    2;
+
+
+  const cy =
+    rect.top
+    +
+    rect.height
+    /
+    2;
+
+
+  return Math.atan2(
+    event.clientY
+    -
+    cy,
+
+    event.clientX
+    -
+    cx
+  );
+
+}
+
+
+/* =====================================================
+   SCRATCH START
+===================================================== */
+
+recordDisc.addEventListener(
+  "pointerdown",
+  async event => {
+
+    /*
+      Scratch only when physical
+      record is fully opened.
+    */
+
+    if(
+      !vinylOpened
+      ||
+      !mechanismDeployed
+      ||
+      isPacking
+      ||
+      isSeeking
+    ){
+
+      return;
+
+    }
+
+
+    if(
+      !decodedTrack
+    ){
+
+      return;
+
+    }
+
+
+    event.preventDefault();
+
+
+    if(
+      scratchReleaseRAF
+    ){
+
+      cancelAnimationFrame(
+        scratchReleaseRAF
+      );
+
+
+      scratchReleaseRAF =
+        null;
+
+    }
+
+
+    isScratching =
+      true;
+
+
+    scratchPointerId =
+      event.pointerId;
+
+
+    recordDisc.setPointerCapture(
+      event.pointerId
+    );
+
+
+    scratchWasPlaying =
+      !audio.paused;
+
+
+    scratchTime =
+      audio.currentTime;
+
+
+    scratchLastAngle =
+      pointerAngle(
+        event
+      );
+
+
+    scratchLastPointerTime =
+      performance.now();
+
+
+    scratchVelocity =
+      0;
+
+
+    scratchLastGrainTime =
+      0;
+
+
+    stopVinylSync();
+
+
+    if(
+      !audio.paused
+    ){
+
+      audio.pause();
+
+    }
+
+
+    track.classList.add(
+      "is-scratching"
+    );
+
+
+    microstatus.textContent =
+      "SCRATCH // MANUAL SIGNAL";
+
+
+    const context =
+      getAudioContext();
+
+
+    if(
+      context.state ===
+      "suspended"
+    ){
+
+      try{
+
+        await context.resume();
+
+      }
+      catch(_){}
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   SCRATCH MOVE
+===================================================== */
+
+recordDisc.addEventListener(
+  "pointermove",
+  event => {
+
+    if(
+      !isScratching
+      ||
+      event.pointerId !== scratchPointerId
+    ){
+
+      return;
+
+    }
+
+
+    event.preventDefault();
+
+
+    const now =
+      performance.now();
+
+
+    const angle =
+      pointerAngle(
+        event
+      );
+
+
+    let delta =
+      angle
+      -
+      scratchLastAngle;
+
+
+    /*
+      fix wrap:
+      +PI <-> -PI
+    */
+
+    if(
+      delta > Math.PI
+    ){
+
+      delta -=
+        Math.PI
+        *
+        2;
+
+    }
+
+
+    if(
+      delta < -Math.PI
+    ){
+
+      delta +=
+        Math.PI
+        *
+        2;
+
+    }
+
+
+    const deltaDegrees =
+      delta
+      *
+      180
+      /
+      Math.PI;
+
+
+    /*
+      How much audio time corresponds
+      to manual vinyl movement.
+    */
+
+    const deltaTrackSeconds =
+      deltaDegrees
+      /
+      DEGREES_PER_SECOND;
+
+
+    scratchTime +=
+      deltaTrackSeconds;
+
+
+    scratchTime =
+      Math.max(
+        0,
+        Math.min(
+          audio.duration,
+          scratchTime
+        )
+      );
+
+
+    const elapsed =
+      Math.max(
+        .001,
+        (
+          now
+          -
+          scratchLastPointerTime
+        )
+        /
+        1000
+      );
+
+
+    /*
+      scratchVelocity:
+      1.0 = natural record speed
+      -1.0 = natural speed backwards
+    */
+
+    const instantVelocity =
+      deltaTrackSeconds
+      /
+      elapsed;
+
+
+    /*
+      Smooth velocity a little.
+      Still responsive enough for
+      short forward/back scratches.
+    */
+
+    scratchVelocity =
+      scratchVelocity
+      *
+      .32
+      +
+      instantVelocity
+      *
+      .68;
+
+
+    scratchLastAngle =
+      angle;
+
+
+    scratchLastPointerTime =
+      now;
+
+
+    /*
+      Plate position follows actual
+      audio-time position.
+    */
+
+    setVinylAngle(
+      angleFromAudioTime(
+        scratchTime
+      )
+    );
+
+
+    if(
+      tonearmEngaged
+    ){
+
+      setTonearmAngle(
+        armAngleFromTime(
+          scratchTime
+        )
+      );
+
+    }
+
+
+    updateProgressUI(
+      scratchTime
+    );
+
+
+    /*
+      Granular sound.
+      Limit trigger frequency
+      to avoid hundreds of sources.
+    */
+
+    if(
+      now
+      -
+      scratchLastGrainTime
+      >
+      18
+    ){
+
+      scratchLastGrainTime =
+        now;
+
+
+      playScratchGrain(
+        scratchTime,
+        scratchVelocity
+      );
+
+    }
+
+
+    microstatus.textContent =
+      "SCRATCH // "
+      +
+      (
+        scratchVelocity >= 0
+        ?
+        "+"
+        :
+        "−"
+      )
+      +
+      Math.abs(
+        scratchVelocity
+      )
+      .toFixed(
+        2
+      )
+      +
+      "×";
+
+  }
+);
+
+
+/* =====================================================
+   SCRATCH RELEASE / INERTIA
+===================================================== */
+
+async function finishScratch(
+  event
+){
+
+  if(
+    !isScratching
+  ){
+
+    return;
+
+  }
+
+
+  if(
+    event
+    &&
+    event.pointerId !== scratchPointerId
+  ){
+
+    return;
+
+  }
+
+
+  isScratching =
+    false;
+
+
+  track.classList.remove(
+    "is-scratching"
+  );
+
+
+  if(
+    event
+    &&
+    recordDisc.hasPointerCapture(
+      event.pointerId
+    )
+  ){
+
+    recordDisc.releasePointerCapture(
+      event.pointerId
+    );
+
+  }
+
+
+  scratchPointerId =
+    null;
+
+
+  /*
+    SHORT INERTIA
+
+    We don't let it coast forever.
+    Velocity smoothly collapses
+    toward zero, after which regular
+    playback takes over.
+  */
+
+  const initialVelocity =
+    scratchVelocity;
+
+
+  const initialTime =
+    scratchTime;
+
+
+  const inertiaDuration =
+    Math.min(
+      320,
+      Math.max(
+        90,
+        Math.abs(
+          initialVelocity
+        )
+        *
+        55
+      )
+    );
+
+
+  const started =
+    performance.now();
+
+
+  await new Promise(
+    resolve => {
+
+      function frame(
+        now
+      ){
+
+        const raw =
+          Math.min(
+            1,
+            (
+              now
+              -
+              started
+            )
+            /
+            inertiaDuration
+          );
+
+
+        /*
+          velocity decays very quickly
+        */
+
+        const decay =
+          Math.pow(
+            1
+            -
+            raw,
+            2.8
+          );
+
+
+        const velocity =
+          initialVelocity
+          *
+          decay;
+
+
+        const elapsed =
+          Math.min(
+            inertiaDuration,
+            now
+            -
+            started
+          )
+          /
+          1000;
+
+
+        /*
+          approximate travel during inertia
+        */
+
+        scratchTime =
+          initialTime
+          +
+          initialVelocity
+          *
+          elapsed
+          *
+          .34
+          *
+          decay;
+
+
+        scratchTime =
+          Math.max(
+            0,
+            Math.min(
+              audio.duration,
+              scratchTime
+            )
+          );
+
+
+        setVinylAngle(
+          angleFromAudioTime(
+            scratchTime
+          )
+        );
+
+
+        if(
+          tonearmEngaged
+        ){
+
+          setTonearmAngle(
+            armAngleFromTime(
+              scratchTime
+            )
+          );
+
+        }
+
+
+        updateProgressUI(
+          scratchTime
+        );
+
+
+        if(
+          Math.abs(
+            velocity
+          )
+          >
+          .08
+        ){
+
+          playScratchGrain(
+            scratchTime,
+            velocity
+          );
+
+        }
+
+
+        if(
+          raw < 1
+        ){
+
+          scratchReleaseRAF =
+            requestAnimationFrame(
+              frame
+            );
+
+        }
+
+        else{
+
+          scratchReleaseRAF =
+            null;
+
+
+          resolve();
+
+        }
+
+      }
+
+
+      scratchReleaseRAF =
+        requestAnimationFrame(
+          frame
+        );
+
+    }
+  );
+
+
+  audio.currentTime =
+    scratchTime;
+
+
+  setVinylAngle(
+    angleFromAudioTime(
+      scratchTime
+    )
+  );
+
+
+  if(
+    tonearmEngaged
+  ){
+
+    setTonearmAngle(
+      armAngleFromTime(
+        scratchTime
+      )
+    );
+
+  }
+
+
+  updateProgressUI(
+    scratchTime
+  );
+
+
+  microstatus.textContent =
+    "Connection stable // 01 signal detected";
+
+
+  /*
+    If it was playing when grabbed,
+    continue automatically.
+  */
+
+  if(
+    scratchWasPlaying
+    &&
+    scratchTime
+    <
+    audio.duration
+  ){
+
+    try{
+
+      await audio.play();
+
+    }
+
+    catch(error){
+
+      console.warn(
+        error
+      );
+
+    }
+
+  }
+
+}
+
+
+recordDisc.addEventListener(
+  "pointerup",
+  finishScratch
+);
+
+
+recordDisc.addEventListener(
+  "pointercancel",
+  finishScratch
+);
+
+
+/* =====================================================
+   SEEK SCRUB SOUND
 ===================================================== */
 
 async function playScrubSound(
@@ -3612,32 +4517,28 @@ async function playScrubSound(
     duration;
 
 
-  source.playbackRate
-    .setValueAtTime(
-      minRate,
-      startAt
-    );
+  source.playbackRate.setValueAtTime(
+    minRate,
+    startAt
+  );
 
 
-  source.playbackRate
-    .exponentialRampToValueAtTime(
-      maxRate,
-      accelerationEnd
-    );
+  source.playbackRate.exponentialRampToValueAtTime(
+    maxRate,
+    accelerationEnd
+  );
 
 
-  source.playbackRate
-    .setValueAtTime(
-      maxRate,
-      decelerationStart
-    );
+  source.playbackRate.setValueAtTime(
+    maxRate,
+    decelerationStart
+  );
 
 
-  source.playbackRate
-    .exponentialRampToValueAtTime(
-      minRate,
-      endAt
-    );
+  source.playbackRate.exponentialRampToValueAtTime(
+    minRate,
+    endAt
+  );
 
 
   const filter =
@@ -3652,72 +4553,64 @@ async function playScrubSound(
     .55;
 
 
-  filter.frequency
-    .setValueAtTime(
-      850,
-      startAt
-    );
+  filter.frequency.setValueAtTime(
+    850,
+    startAt
+  );
 
 
-  filter.frequency
-    .exponentialRampToValueAtTime(
-      4200,
-      accelerationEnd
-    );
+  filter.frequency.exponentialRampToValueAtTime(
+    4200,
+    accelerationEnd
+  );
 
 
-  filter.frequency
-    .setValueAtTime(
-      4200,
-      decelerationStart
-    );
+  filter.frequency.setValueAtTime(
+    4200,
+    decelerationStart
+  );
 
 
-  filter.frequency
-    .exponentialRampToValueAtTime(
-      1100,
-      endAt
-    );
+  filter.frequency.exponentialRampToValueAtTime(
+    1100,
+    endAt
+  );
 
 
   const gain =
     context.createGain();
 
 
-  gain.gain
-    .setValueAtTime(
-      .001,
-      startAt
-    );
+  gain.gain.setValueAtTime(
+    .001,
+    startAt
+  );
 
 
-  gain.gain
-    .linearRampToValueAtTime(
-      .22,
-      startAt
-      +
-      duration
-      *
-      .18
-    );
+  gain.gain.linearRampToValueAtTime(
+    .22,
+    startAt
+    +
+    duration
+    *
+    .18
+  );
 
 
-  gain.gain
-    .setValueAtTime(
-      .22,
-      startAt
-      +
-      duration
-      *
-      .72
-    );
+  gain.gain.setValueAtTime(
+    .22,
+    startAt
+    +
+    duration
+    *
+    .72
+  );
 
 
-  gain.gain
-    .exponentialRampToValueAtTime(
-      .001,
-      endAt
-    );
+  gain.gain.exponentialRampToValueAtTime(
+    .001,
+    endAt
+  );
 
 
   source.connect(
@@ -3810,7 +4703,7 @@ async function playScrubSound(
 
 
 /* =====================================================
-   VINYL + ARM SEEK
+   SEEK ANIMATION
 ===================================================== */
 
 function animateVinylSeek(
@@ -4059,7 +4952,7 @@ function setPlayIcon(
 
 
 /* =====================================================
-   OPENING COMPLETE
+   OPEN COMPLETE
 ===================================================== */
 
 recordCarrier.addEventListener(
@@ -4129,6 +5022,8 @@ playButtons.forEach(
           isSeeking
           ||
           isPacking
+          ||
+          isScratching
         ){
 
           return;
@@ -4179,6 +5074,8 @@ audio.addEventListener(
 
     if(
       isPacking
+      ||
+      isScratching
     ){
 
       audio.pause();
@@ -4236,16 +5133,12 @@ audio.addEventListener(
     stopVinylSync();
 
 
-    /*
-      Important:
-      while packing we do NOT force
-      tonearm back to current track position
-    */
-
     if(
       !isSeeking
       &&
       !isPacking
+      &&
+      !isScratching
     ){
 
       setVinylAngle(
@@ -4274,12 +5167,7 @@ audio.addEventListener(
 
 
 /* =====================================================
-   STOP / REPACK
-
-   This is our universal STOP operation.
-
-   Ended track = STOP
-   Switching track = STOP
+   STOP / PACK
 ===================================================== */
 
 async function stopAndPack(){
@@ -4292,11 +5180,6 @@ async function stopAndPack(){
 
   }
 
-
-  /*
-    if vinyl was never opened
-    there is nothing to pack
-  */
 
   if(
     !vinylOpened
@@ -4317,6 +5200,21 @@ async function stopAndPack(){
 
 
     return;
+
+  }
+
+
+  if(
+    isScratching
+  ){
+
+    isScratching =
+      false;
+
+
+    track.classList.remove(
+      "is-scratching"
+    );
 
   }
 
@@ -4350,16 +5248,6 @@ async function stopAndPack(){
     "STOP // RETURNING SIGNAL";
 
 
-  /*
-    =========================================
-    PHASE 1
-
-    NEEDLE LEAVES RECORD
-    AND GOES TO PARK
-    =========================================
-  */
-
-
   if(
     tonearmEngaged
   ){
@@ -4372,12 +5260,6 @@ async function stopAndPack(){
   }
 
 
-  /*
-    Mechanism now moves BELOW record
-    before it retracts.
-  */
-
-
   track.classList.remove(
     "arm-on-top"
   );
@@ -4387,10 +5269,6 @@ async function stopAndPack(){
     false;
 
 
-  /*
-    Tiny mechanical delay.
-  */
-
   await new Promise(
     resolve =>
       setTimeout(
@@ -4398,19 +5276,6 @@ async function stopAndPack(){
         90
       )
   );
-
-
-  /*
-    =========================================
-    PHASE 2
-
-    Complete reverse choreography:
-    mechanism hides,
-    vinyl moves right,
-    sleeve returns,
-    vinyl enters sleeve.
-    =========================================
-  */
 
 
   track.classList.add(
@@ -4425,15 +5290,6 @@ async function stopAndPack(){
         1480
       )
   );
-
-
-  /*
-    =========================================
-    PHASE 3
-
-    RESET DOM STATE
-    =========================================
-  */
 
 
   track.classList.remove(
@@ -4493,7 +5349,7 @@ async function stopAndPack(){
 
 
 /* =====================================================
-   TRACK ENDED = STOP
+   ENDED
 ===================================================== */
 
 audio.addEventListener(
@@ -4575,6 +5431,8 @@ audio.addEventListener(
       !isSeeking
       &&
       !isPacking
+      &&
+      !isScratching
     ){
 
       updateProgressUI(
@@ -4599,6 +5457,8 @@ async function seekTo(
     isSeeking
     ||
     isPacking
+    ||
+    isScratching
     ||
     !audio.duration
   ){
@@ -4669,11 +5529,6 @@ async function seekTo(
 
   }
 
-
-  /*
-    If user seeks before first play,
-    open the physical object first.
-  */
 
   if(
     !vinylOpened
@@ -4933,6 +5788,8 @@ seek.addEventListener(
       isSeeking
       ||
       isPacking
+      ||
+      isScratching
       ||
       !audio.duration
     ){
