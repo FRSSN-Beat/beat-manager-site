@@ -2,12 +2,19 @@
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#050605">
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, viewport-fit=cover"
+>
+<meta
+  name="theme-color"
+  content="#050605"
+>
 
 <title>FRSSN // Tracks</title>
 
 <style>
+
 :root{
   --bg:#050605;
   --panel:rgba(11,13,11,.94);
@@ -62,8 +69,10 @@ body{
 
 body::before{
   content:"";
+
   position:fixed;
   inset:-18%;
+
   z-index:0;
   pointer-events:none;
 
@@ -95,8 +104,10 @@ body::before{
 
 body::after{
   content:"";
+
   position:fixed;
   inset:0;
+
   z-index:19;
   pointer-events:none;
 
@@ -117,6 +128,7 @@ body::after{
 }
 
 @keyframes ambientSweep{
+
   0%{
     transform:
       translate3d(-18%,0,0)
@@ -134,6 +146,7 @@ body::after{
       translate3d(18%,0,0)
       scale(1.02);
   }
+
 }
 
 a{
@@ -152,9 +165,12 @@ input{
   );
 
   margin:0 auto;
+
   position:relative;
   z-index:2;
-  padding:30px 0 28px;
+
+  padding:
+    30px 0 28px;
 }
 
 
@@ -164,13 +180,18 @@ input{
 
 .topbar{
   min-height:44px;
+
   display:flex;
   align-items:center;
   justify-content:space-between;
+
   gap:24px;
+
   color:var(--muted);
+
   font-family:monospace;
   font-size:11px;
+
   letter-spacing:.18em;
   text-transform:uppercase;
 }
@@ -183,16 +204,27 @@ input{
 .status{
   display:flex;
   align-items:center;
+
   gap:10px;
 }
 
 .dot{
   width:7px;
   height:7px;
+
   border-radius:50%;
+
   background:var(--accent);
-  box-shadow:0 0 12px var(--accent);
-  animation:pulse 1.8s ease-in-out infinite;
+
+  box-shadow:
+    0 0 12px
+    var(--accent);
+
+  animation:
+    pulse
+    1.8s
+    ease-in-out
+    infinite;
 }
 
 
@@ -202,7 +234,10 @@ input{
 
 .profile{
   margin-top:34px;
-  border:1px solid var(--border);
+
+  border:
+    1px solid
+    var(--border);
 
   background:
     linear-gradient(
@@ -227,68 +262,120 @@ input{
 
 .profileHead{
   min-height:188px;
-  padding:30px 34px;
+
+  padding:
+    30px 34px;
+
   display:grid;
-  grid-template-columns:auto 1fr auto;
+
+  grid-template-columns:
+    auto
+    1fr
+    auto;
+
   gap:26px;
+
   align-items:center;
+
   position:relative;
 }
 
 .profileHead::after{
   content:"TRACK TRANSMISSION ARCHIVE";
+
   position:absolute;
+
   right:32px;
   bottom:17px;
-  color:rgba(214,255,40,.34);
-  font:10px/1 monospace;
+
+  color:
+    rgba(214,255,40,.34);
+
+  font:
+    10px/1 monospace;
+
   letter-spacing:.26em;
 }
 
 .avatar{
   width:116px;
   height:116px;
+
   border-radius:50%;
+
   object-fit:cover;
-  border:1px solid var(--accent-line);
-  box-shadow:0 0 34px rgba(214,255,40,.08);
+
+  border:
+    1px solid
+    var(--accent-line);
+
+  box-shadow:
+    0 0 34px
+    rgba(214,255,40,.08);
 }
 
 .identity h1{
   margin:0;
+
   font-size:46px;
+
   letter-spacing:.08em;
+
   line-height:1;
 }
 
 .handle{
   margin-top:10px;
+
   color:var(--muted);
-  font:10px/1.5 monospace;
+
+  font:
+    10px/1.5 monospace;
+
   letter-spacing:.2em;
+
   text-transform:uppercase;
 }
 
 .microstatus{
   margin-top:18px;
+
   color:var(--accent);
-  font:10px/1.5 monospace;
+
+  font:
+    10px/1.5 monospace;
+
   letter-spacing:.14em;
+
   text-transform:uppercase;
+
   min-height:15px;
 }
 
 .back{
   min-height:42px;
-  padding:0 16px;
-  border:1px solid var(--accent-line);
+
+  padding:
+    0 16px;
+
+  border:
+    1px solid
+    var(--accent-line);
+
   display:inline-flex;
+
   align-items:center;
   justify-content:center;
+
   text-decoration:none;
+
   color:var(--accent);
-  font:700 10px/1 monospace;
+
+  font:
+    700 10px/1 monospace;
+
   letter-spacing:.14em;
+
   text-transform:uppercase;
 }
 
@@ -304,21 +391,35 @@ input{
 
 .tabs{
   height:54px;
-  border-top:1px solid var(--border);
+
+  border-top:
+    1px solid
+    var(--border);
+
   display:flex;
   align-items:center;
+
   gap:28px;
-  padding:0 34px;
+
+  padding:
+    0 34px;
+
   color:var(--muted);
-  font:700 10px/1 monospace;
+
+  font:
+    700 10px/1 monospace;
+
   letter-spacing:.15em;
+
   text-transform:uppercase;
 }
 
 .tab{
   height:54px;
+
   display:flex;
   align-items:center;
+
   position:relative;
 }
 
@@ -328,11 +429,15 @@ input{
 
 .tab.active::after{
   content:"";
+
   position:absolute;
+
   left:0;
   right:0;
   bottom:0;
+
   height:2px;
+
   background:var(--accent);
 }
 
@@ -342,28 +447,39 @@ input{
 ===================================================== */
 
 .content{
-  padding:30px 34px 38px;
+  padding:
+    30px 34px 38px;
 }
 
 .sectionTitle{
   display:flex;
+
   align-items:end;
   justify-content:space-between;
+
   gap:20px;
+
   margin-bottom:18px;
 }
 
 .sectionTitle h2{
   margin:0;
+
   font-size:16px;
+
   letter-spacing:.15em;
+
   text-transform:uppercase;
 }
 
 .sectionTitle span{
   color:var(--muted);
-  font:9px/1.5 monospace;
+
+  font:
+    9px/1.5 monospace;
+
   letter-spacing:.14em;
+
   text-transform:uppercase;
 }
 
@@ -373,18 +489,28 @@ input{
 ===================================================== */
 
 .track{
-  border:1px solid var(--border);
-  background:rgba(7,9,7,.74);
+  border:
+    1px solid
+    var(--border);
+
+  background:
+    rgba(7,9,7,.74);
+
   display:grid;
+
   grid-template-columns:
     178px
     minmax(0,1fr)
     auto;
 
   gap:22px;
+
   padding:18px;
+
   align-items:center;
+
   position:relative;
+
   overflow:hidden;
 
   transition:
@@ -394,10 +520,13 @@ input{
 
 .track::before{
   content:"";
+
   position:absolute;
+
   left:0;
   top:0;
   bottom:0;
+
   width:2px;
 
   background:
@@ -410,7 +539,8 @@ input{
 }
 
 .track.is-scratching{
-  border-color:rgba(214,255,40,.50);
+  border-color:
+    rgba(214,255,40,.50);
 
   box-shadow:
     inset
@@ -419,18 +549,21 @@ input{
 }
 
 .track.is-seeking{
-  border-color:rgba(214,255,40,.34);
+  border-color:
+    rgba(214,255,40,.34);
 }
 
 .track.is-motor-recovering,
 .track.is-play-starting,
 .track.is-pause-braking,
 .track.is-free-spinning{
-  border-color:rgba(214,255,40,.30);
+  border-color:
+    rgba(214,255,40,.30);
 }
 
 .track.is-precue{
-  border-color:rgba(214,255,40,.24);
+  border-color:
+    rgba(214,255,40,.24);
 }
 
 
@@ -441,9 +574,12 @@ input{
 .vinylUnit{
   width:178px;
   height:132px;
+
   position:relative;
+
   display:flex;
   align-items:center;
+
   overflow:visible;
 }
 
@@ -454,8 +590,10 @@ input{
 
 .tonearmMechanism{
   position:absolute;
+
   left:126px;
   top:4px;
+
   width:40px;
   height:92px;
 
@@ -463,10 +601,13 @@ input{
     translate(-77px,25px)
     scale(.94);
 
-  transform-origin:14px 14px;
+  transform-origin:
+    14px 14px;
 
   z-index:1;
+
   pointer-events:none;
+
   opacity:.92;
 }
 
@@ -479,6 +620,7 @@ input{
 }
 
 @keyframes mechanismDeploy{
+
   0%,
   57%{
     transform:
@@ -511,10 +653,13 @@ input{
 
 .tonearmBase{
   position:absolute;
+
   left:1px;
   top:0;
+
   width:28px;
   height:28px;
+
   border-radius:50%;
 
   background:
@@ -525,7 +670,9 @@ input{
       #0c0e0c 80%
     );
 
-  border:1px solid rgba(255,255,255,.12);
+  border:
+    1px solid
+    rgba(255,255,255,.12);
 
   box-shadow:
     0 3px 11px
@@ -534,10 +681,13 @@ input{
 
 .tonearmPivot{
   position:absolute;
+
   left:6px;
   top:5px;
+
   width:18px;
   height:18px;
+
   border-radius:50%;
 
   background:
@@ -548,18 +698,27 @@ input{
       #101210 78%
     );
 
-  border:1px solid rgba(255,255,255,.17);
+  border:
+    1px solid
+    rgba(255,255,255,.17);
+
   z-index:2;
 }
 
 .tonearmArm{
   position:absolute;
+
   left:13px;
   top:14px;
+
   width:3px;
   height:68px;
-  transform-origin:50% 0;
-  transform:rotate(-8deg);
+
+  transform-origin:
+    50% 0;
+
+  transform:
+    rotate(-8deg);
 
   background:
     linear-gradient(
@@ -571,16 +730,21 @@ input{
     );
 
   border-radius:4px;
+
   z-index:3;
 }
 
 .cartridge{
   position:absolute;
+
   left:50%;
   bottom:-7px;
+
   width:13px;
   height:8px;
-  transform:translateX(-50%);
+
+  transform:
+    translateX(-50%);
 
   background:
     linear-gradient(
@@ -590,17 +754,25 @@ input{
       #121412
     );
 
-  border:1px solid rgba(255,255,255,.11);
+  border:
+    1px solid
+    rgba(255,255,255,.11);
 }
 
 .needle{
   position:absolute;
+
   left:50%;
   bottom:-7px;
+
   width:1px;
   height:8px;
-  transform:translateX(-50%);
-  background:var(--accent);
+
+  transform:
+    translateX(-50%);
+
+  background:
+    var(--accent);
 
   box-shadow:
     0 0 5px
@@ -614,19 +786,27 @@ input{
 
 .recordCarrier{
   position:absolute;
+
   left:7px;
   top:50%;
+
   width:118px;
   height:118px;
-  transform:translate(0,-50%);
+
+  transform:
+    translate(0,-50%);
+
   z-index:2;
+
   pointer-events:auto;
 }
 
 .recordDisc{
   width:118px;
   height:118px;
+
   border-radius:50%;
+
   position:relative;
 
   background:
@@ -642,17 +822,28 @@ input{
       #0d0e0e 4px 6px
     );
 
-  border:1px solid rgba(255,255,255,.06);
+  border:
+    1px solid
+    rgba(255,255,255,.06);
 
   box-shadow:
-    0 4px 24px rgba(0,0,0,.45),
-    inset 0 0 0 1px rgba(255,255,255,.04);
+    0 4px 24px
+    rgba(0,0,0,.45),
 
-  transform:rotate(0deg);
+    inset
+    0 0 0 1px
+    rgba(255,255,255,.04);
+
+  transform:
+    rotate(0deg);
+
   cursor:default;
+
   user-select:none;
   -webkit-user-select:none;
+
   touch-action:none;
+
   will-change:transform;
 }
 
@@ -664,9 +855,14 @@ input{
   cursor:grabbing;
 
   box-shadow:
-    0 0 20px rgba(214,255,40,.22),
-    0 0 50px rgba(214,255,40,.08),
-    0 4px 24px rgba(0,0,0,.45);
+    0 0 20px
+    rgba(214,255,40,.22),
+
+    0 0 50px
+    rgba(214,255,40,.08),
+
+    0 4px 24px
+    rgba(0,0,0,.45);
 }
 
 .track.is-motor-recovering .recordDisc,
@@ -674,15 +870,22 @@ input{
 .track.is-pause-braking .recordDisc,
 .track.is-free-spinning .recordDisc{
   box-shadow:
-    0 0 17px rgba(214,255,40,.14),
-    0 4px 24px rgba(0,0,0,.45);
+    0 0 17px
+    rgba(214,255,40,.14),
+
+    0 4px 24px
+    rgba(0,0,0,.45);
 }
 
 .recordDisc::after{
   content:"";
+
   position:absolute;
+
   inset:1px;
+
   border-radius:50%;
+
   pointer-events:none;
 
   background:
@@ -699,12 +902,18 @@ input{
 
 .recordLabel{
   position:absolute;
+
   left:50%;
   top:50%;
+
   width:54px;
   height:54px;
-  transform:translate(-50%,-50%);
+
+  transform:
+    translate(-50%,-50%);
+
   border-radius:50%;
+
   overflow:hidden;
 
   box-shadow:
@@ -712,26 +921,37 @@ input{
     rgba(214,255,40,.045);
 
   z-index:2;
+
   pointer-events:none;
 }
 
 .recordLabel img{
   width:100%;
   height:100%;
+
   object-fit:cover;
+
   display:block;
 }
 
 .recordHole{
   position:absolute;
+
   left:50%;
   top:50%;
+
   width:7px;
   height:7px;
-  transform:translate(-50%,-50%);
+
+  transform:
+    translate(-50%,-50%);
+
   border-radius:50%;
+
   background:#ddd;
+
   z-index:3;
+
   pointer-events:none;
 }
 
@@ -743,10 +963,17 @@ input{
 .sleeve{
   width:132px;
   height:132px;
+
   position:relative;
+
   z-index:6;
+
   overflow:hidden;
-  border:1px solid rgba(255,255,255,.08);
+
+  border:
+    1px solid
+    rgba(255,255,255,.08);
+
   background:#090a09;
 
   box-shadow:
@@ -757,7 +984,9 @@ input{
 .cover{
   width:100%;
   height:100%;
+
   object-fit:cover;
+
   display:block;
 }
 
@@ -783,34 +1012,45 @@ input{
 }
 
 @keyframes recordReveal{
+
   0%{
-    transform:translate(0,-50%);
+    transform:
+      translate(0,-50%);
   }
 
   36%,
   55%{
-    transform:translate(44px,-50%);
+    transform:
+      translate(44px,-50%);
   }
 
   100%{
-    transform:translate(0,-50%);
+    transform:
+      translate(0,-50%);
   }
 }
 
 @keyframes sleeveExit{
+
   0%,
   34%{
-    transform:translateX(0);
+    transform:
+      translateX(0);
+
     opacity:1;
   }
 
   52%{
-    transform:translateX(-12px);
+    transform:
+      translateX(-12px);
+
     opacity:1;
   }
 
   100%{
-    transform:translateX(-190px);
+    transform:
+      translateX(-190px);
+
     opacity:0;
   }
 }
@@ -845,6 +1085,7 @@ input{
 }
 
 @keyframes mechanismHide{
+
   0%{
     transform:
       translate(0,0)
@@ -863,23 +1104,30 @@ input{
 }
 
 @keyframes recordPack{
+
   0%{
-    transform:translate(0,-50%);
+    transform:
+      translate(0,-50%);
   }
 
   34%,
   58%{
-    transform:translate(44px,-50%);
+    transform:
+      translate(44px,-50%);
   }
 
   100%{
-    transform:translate(0,-50%);
+    transform:
+      translate(0,-50%);
   }
 }
 
 @keyframes sleeveReturn{
+
   0%{
-    transform:translateX(-190px);
+    transform:
+      translateX(-190px);
+
     opacity:0;
   }
 
@@ -889,7 +1137,9 @@ input{
 
   55%,
   100%{
-    transform:translateX(0);
+    transform:
+      translateX(0);
+
     opacity:1;
   }
 }
@@ -905,29 +1155,45 @@ input{
 
 .topline{
   display:flex;
+
   justify-content:space-between;
+
   gap:16px;
+
   margin-bottom:18px;
 }
 
 .trackTitle{
   margin:0;
+
   font-size:23px;
+
   letter-spacing:.12em;
+
   text-transform:uppercase;
 }
 
 .artist{
   margin-top:5px;
+
   color:var(--muted);
-  font:10px/1.4 monospace;
+
+  font:
+    10px/1.4 monospace;
 }
 
 .badge{
   color:var(--accent);
-  border:1px solid var(--accent-line);
-  padding:6px 8px;
-  font:9px/1 monospace;
+
+  border:
+    1px solid
+    var(--accent-line);
+
+  padding:
+    6px 8px;
+
+  font:
+    9px/1 monospace;
 }
 
 
@@ -937,73 +1203,107 @@ input{
 
 .waveRow{
   display:grid;
+
   grid-template-columns:
     auto
     minmax(0,1fr)
     auto;
 
   gap:12px;
+
   align-items:center;
 }
 
 .iconBtn{
   width:36px;
   height:36px;
+
   border-radius:50%;
-  border:1px solid var(--border);
+
+  border:
+    1px solid
+    var(--border);
+
   background:#070907;
+
   display:grid;
+
   place-items:center;
+
   color:var(--accent);
+
   cursor:pointer;
 }
 
 .iconBtn svg{
   width:13px;
   height:13px;
+
   fill:currentColor;
 }
 
 .waveBox{
   height:56px;
+
   position:relative;
+
   cursor:pointer;
+
   overflow:hidden;
+
   touch-action:none;
 }
 
 .wave{
   height:100%;
+
   display:flex;
+
   align-items:center;
+
   gap:2px;
 }
 
 .bar{
   flex:1;
+
   min-width:1px;
+
   background:#565a52;
+
   opacity:.76;
 }
 
 .waveProgress{
   position:absolute;
+
   left:0;
   top:0;
   bottom:0;
+
   width:100%;
-  transform:scaleX(0);
-  transform-origin:left center;
-  will-change:transform;
+
+  transform:
+    scaleX(0);
+
+  transform-origin:
+    left center;
+
+  will-change:
+    transform;
+
   pointer-events:none;
+
   overflow:hidden;
 }
 
 .waveProgress .wave{
   position:absolute;
+
   left:0;
   top:0;
   bottom:0;
+
   width:100%;
 }
 
@@ -1013,18 +1313,29 @@ input{
 
 .time{
   color:var(--muted);
-  font:600 10px/1 monospace;
+
+  font:
+    600 10px/1 monospace;
+
   white-space:nowrap;
 }
 
 .meta{
   margin-top:12px;
+
   display:flex;
+
   gap:15px;
+
   flex-wrap:wrap;
+
   color:var(--muted);
-  font:9px/1 monospace;
+
+  font:
+    9px/1 monospace;
+
   letter-spacing:.12em;
+
   text-transform:uppercase;
 }
 
@@ -1035,35 +1346,59 @@ input{
 
 .buyCol{
   display:flex;
+
   flex-direction:column;
+
   gap:8px;
+
   min-width:170px;
 }
 
 .license{
   min-height:50px;
-  padding:0 18px;
-  border:1px solid var(--accent);
+
+  padding:
+    0 18px;
+
+  border:
+    1px solid
+    var(--accent);
+
   background:var(--accent);
+
   color:#080a06;
+
   text-decoration:none;
+
   display:flex;
+
   align-items:center;
   justify-content:center;
+
   gap:9px;
+
   font-size:11px;
   font-weight:800;
 }
 
 .secondary{
   min-height:37px;
-  border:1px solid var(--border);
+
+  border:
+    1px solid
+    var(--border);
+
   text-decoration:none;
+
   display:flex;
+
   align-items:center;
   justify-content:center;
+
   color:var(--muted);
-  font:700 9px/1 monospace;
+
+  font:
+    700 9px/1 monospace;
 }
 
 
@@ -1073,223 +1408,119 @@ input{
 
 .receiver{
   margin-top:18px;
-  border:1px solid var(--accent-line);
-  padding:18px 20px;
+
+  border:
+    1px solid
+    var(--accent-line);
+
+  padding:
+    18px 20px;
+
   display:grid;
-  grid-template-columns:1fr auto;
+
+  grid-template-columns:
+    1fr
+    auto;
+
   gap:18px;
 }
 
 .receiverTitle{
   color:var(--accent);
-  font:700 10px/1 monospace;
+
+  font:
+    700 10px/1 monospace;
 }
 
 .receiverText{
   margin-top:7px;
+
   color:var(--muted);
-  font:9px/1.6 monospace;
+
+  font:
+    9px/1.6 monospace;
 }
 
 .codeForm{
   display:flex;
+
   gap:8px;
 }
 
 .codeInput{
   width:180px;
   height:40px;
+
   background:#050705;
-  border:1px solid var(--border);
+
+  border:
+    1px solid
+    var(--border);
+
   color:var(--accent);
-  padding:0 10px;
+
+  padding:
+    0 10px;
 }
 
 .codeBtn{
   height:40px;
-  border:1px solid var(--accent);
+
+  border:
+    1px solid
+    var(--accent);
+
   background:transparent;
+
   color:var(--accent);
-  padding:0 14px;
+
+  padding:
+    0 14px;
 }
 
 .codeResult{
-  grid-column:1/-1;
+  grid-column:
+    1/-1;
+
   display:none;
+
   color:var(--accent);
 }
 
 
 /* =====================================================
-   VU DEBUG FLOATING BLOCK
+   FIXED VU
 ===================================================== */
 
-.vuDebugObject{
-  --vu-scale:.72;
-
+.vuFixedObject{
   position:fixed;
 
-  left:58vw;
-  top:110px;
+  left:827px;
+  top:162px;
 
   z-index:90;
 
   width:430px;
 
   transform:
-    scale(var(--vu-scale));
+    scale(.61);
 
   transform-origin:
     top left;
 
-  touch-action:none;
+  pointer-events:none;
 
   user-select:none;
   -webkit-user-select:none;
 }
 
-.vuDebugObject.is-debug{
-  outline:
-    1px dashed
-    rgba(214,255,40,.72);
-
-  outline-offset:5px;
-}
-
-.vuDebugBar{
-  min-height:32px;
-
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-
-  gap:12px;
-
-  margin-bottom:7px;
-
-  padding:0 8px;
-
-  background:
-    rgba(4,6,4,.96);
-
-  border:
-    1px solid
-    rgba(214,255,40,.40);
-
-  color:
-    var(--accent);
-
-  font:
-    9px/1 monospace;
-
-  letter-spacing:.11em;
-
-  cursor:move;
-}
-
-.vuDebugObject:not(.is-debug) .vuDebugBar{
+.vuFixedObject.is-hidden{
   display:none;
-}
-
-.vuDebugBarLeft{
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-
-.vuDragIcon{
-  font-size:14px;
-  line-height:1;
-}
-
-.vuDebugCoords{
-  color:
-    rgba(255,255,255,.45);
-
-  letter-spacing:.04em;
-}
-
-.vuDebugOffBtn{
-  min-height:22px;
-
-  border:
-    1px solid
-    rgba(214,255,40,.5);
-
-  padding:
-    0 8px;
-
-  background:
-    transparent;
-
-  color:
-    var(--accent);
-
-  cursor:pointer;
-
-  font:
-    8px/1 monospace;
-
-  letter-spacing:.08em;
-}
-
-.vuDebugOffBtn:hover{
-  background:
-    var(--accent);
-
-  color:#050605;
-}
-
-.vuScalePanel{
-  display:flex;
-  align-items:center;
-  gap:9px;
-
-  padding:
-    7px 9px;
-
-  margin-bottom:7px;
-
-  background:
-    rgba(4,6,4,.94);
-
-  border:
-    1px solid
-    rgba(255,255,255,.12);
-
-  color:
-    var(--muted);
-
-  font:
-    8px/1 monospace;
-
-  letter-spacing:.08em;
-}
-
-.vuDebugObject:not(.is-debug) .vuScalePanel{
-  display:none;
-}
-
-.vuScalePanel input[type="range"]{
-  flex:1;
-  min-width:0;
-
-  accent-color:
-    var(--accent);
-}
-
-.vuScaleValue{
-  width:43px;
-
-  text-align:right;
-
-  color:
-    var(--text);
 }
 
 
 /* =====================================================
-   ACTUAL VU
+   VU RACK
 ===================================================== */
 
 .vuRack{
@@ -1310,9 +1541,16 @@ input{
     );
 
   box-shadow:
-    inset 0 0 0 4px rgba(255,255,255,.018),
-    inset 0 0 22px rgba(0,0,0,.9),
-    0 12px 28px rgba(0,0,0,.32);
+    inset
+    0 0 0 4px
+    rgba(255,255,255,.018),
+
+    inset
+    0 0 22px
+    rgba(0,0,0,.9),
+
+    0 12px 28px
+    rgba(0,0,0,.32);
 
   position:relative;
 
@@ -1323,6 +1561,7 @@ input{
   content:"";
 
   position:absolute;
+
   inset:5px;
 
   border:
@@ -1363,9 +1602,16 @@ input{
     );
 
   box-shadow:
-    inset 0 0 14px rgba(75,42,10,.42),
-    inset 0 0 38px rgba(255,197,91,.24),
-    0 2px 5px rgba(0,0,0,.65);
+    inset
+    0 0 14px
+    rgba(75,42,10,.42),
+
+    inset
+    0 0 38px
+    rgba(255,197,91,.24),
+
+    0 2px 5px
+    rgba(0,0,0,.65);
 
   overflow:hidden;
 
@@ -1410,6 +1656,7 @@ input{
 }
 
 @keyframes vuLampFloat{
+
   0%{
     opacity:.67;
 
@@ -1467,8 +1714,13 @@ input{
     );
 
   box-shadow:
-    inset 0 0 8px rgba(255,255,255,.13),
-    inset 0 -10px 18px rgba(42,24,5,.15);
+    inset
+    0 0 8px
+    rgba(255,255,255,.13),
+
+    inset
+    0 -10px 18px
+    rgba(42,24,5,.15);
 }
 
 .vuLabel{
@@ -1566,8 +1818,11 @@ input{
     );
 
   box-shadow:
-    1px 0 1px rgba(255,255,255,.16),
-    0 0 2px rgba(0,0,0,.45);
+    1px 0 1px
+    rgba(255,255,255,.16),
+
+    0 0 2px
+    rgba(0,0,0,.45);
 
   border-radius:
     1px 1px 0 0;
@@ -1630,145 +1885,6 @@ input{
 
 
 /* =====================================================
-   DEBUG RE-ENABLE BUTTON
-===================================================== */
-
-.vuDebugEnable{
-  position:fixed;
-
-  right:12px;
-  top:12px;
-
-  z-index:100;
-
-  display:none;
-
-  min-height:28px;
-
-  padding:
-    0 10px;
-
-  border:
-    1px solid
-    rgba(214,255,40,.42);
-
-  background:
-    rgba(4,6,4,.94);
-
-  color:
-    var(--accent);
-
-  font:
-    8px/1 monospace;
-
-  letter-spacing:.10em;
-
-  cursor:pointer;
-}
-
-.vuDebugEnable.visible{
-  display:block;
-}
-
-
-/* =====================================================
-   TONEARM DEBUG
-===================================================== */
-
-.tonearmDebug{
-  position:fixed;
-
-  right:14px;
-  bottom:14px;
-
-  z-index:100;
-
-  width:260px;
-
-  padding:12px 13px;
-
-  border:
-    1px solid
-    rgba(214,255,40,.40);
-
-  background:
-    rgba(4,6,4,.94);
-
-  box-shadow:
-    0 0 26px
-    rgba(0,0,0,.62);
-
-  backdrop-filter:
-    blur(8px);
-
-  color:
-    var(--accent);
-
-  font:
-    9px/1.4 monospace;
-
-  letter-spacing:.07em;
-}
-
-.tonearmDebugTitle{
-  margin-bottom:10px;
-
-  font-weight:700;
-
-  letter-spacing:.12em;
-}
-
-.tonearmDebugRow{
-  margin-top:10px;
-}
-
-.tonearmDebugHead{
-  display:flex;
-
-  align-items:center;
-  justify-content:space-between;
-
-  gap:10px;
-
-  margin-bottom:5px;
-}
-
-.tonearmDebugLabel{
-  color:
-    var(--muted);
-}
-
-.tonearmDebugValue{
-  color:
-    var(--text);
-
-  min-width:62px;
-
-  text-align:right;
-}
-
-.tonearmDebug input[type="range"]{
-  width:100%;
-
-  margin:0;
-
-  accent-color:
-    var(--accent);
-}
-
-.tonearmDebugHint{
-  margin-top:9px;
-
-  color:
-    rgba(255,255,255,.35);
-
-  font-size:8px;
-
-  line-height:1.5;
-}
-
-
-/* =====================================================
    FOOTER
 ===================================================== */
 
@@ -1789,6 +1905,7 @@ input{
 }
 
 @keyframes pulse{
+
   0%,
   100%{
     opacity:.45;
@@ -1902,6 +2019,7 @@ input{
   }
 
   @keyframes mechanismDeployMobile{
+
     0%,
     57%{
       transform:
@@ -1917,6 +2035,7 @@ input{
   }
 
   @keyframes mechanismHideMobile{
+
     0%{
       transform:
         translate(0,0)
@@ -1931,6 +2050,7 @@ input{
   }
 
   @keyframes recordReveal{
+
     0%{
       transform:
         translate(0,-50%);
@@ -1949,6 +2069,7 @@ input{
   }
 
   @keyframes sleeveExit{
+
     0%{
       transform:
         translateX(0);
@@ -1965,6 +2086,7 @@ input{
   }
 
   @keyframes recordPack{
+
     0%{
       transform:
         translate(0,-50%);
@@ -1983,6 +2105,7 @@ input{
   }
 
   @keyframes sleeveReturn{
+
     0%{
       transform:
         translateX(-120px);
@@ -2011,14 +2134,8 @@ input{
   .time{
     display:none;
   }
-
-  .tonearmDebug{
-    right:8px;
-    bottom:8px;
-
-    width:238px;
-  }
 }
+
 </style>
 </head>
 
@@ -2037,6 +2154,7 @@ input{
   >
     FRSSN SIGNAL // TRACK NODE
   </a>
+
 
   <span class="status">
 
@@ -2330,7 +2448,10 @@ input{
     rel="noopener noreferrer"
   >
     License
-    <small>// checkout ↗</small>
+
+    <small>
+      // checkout ↗
+    </small>
   </a>
 
 
@@ -2353,6 +2474,7 @@ input{
   class="receiver"
   id="receiver"
 >
+
 
 <div>
 
@@ -2395,6 +2517,7 @@ input{
   id="codeResult"
 ></div>
 
+
 </section>
 
 
@@ -2426,11 +2549,13 @@ input{
   src="old.mp3"
 ></audio>
 
+
 <audio
   id="paperInSfx"
   preload="auto"
   src="Paper in.mp3"
 ></audio>
+
 
 <audio
   id="paperOutSfx"
@@ -2440,76 +2565,16 @@ input{
 
 
 <!-- ===================================================
-     FLOATING VU DEBUG OBJECT
+     FIXED DESKTOP VU
 =================================================== -->
 
 <div
-  class="vuDebugObject is-debug"
-  id="vuDebugObject"
+  class="vuFixedObject"
+  id="vuFixedObject"
 >
 
-  <div
-    class="vuDebugBar"
-    id="vuDragHandle"
-  >
-
-    <div class="vuDebugBarLeft">
-
-      <span class="vuDragIcon">
-        ✥
-      </span>
-
-      <span>
-        VU POSITION
-      </span>
-
-      <span
-        class="vuDebugCoords"
-        id="vuDebugCoords"
-      >
-        X 0 // Y 0
-      </span>
-
-    </div>
-
-
-    <button
-      class="vuDebugOffBtn"
-      id="vuDebugOffBtn"
-      type="button"
-    >
-      DEBUG OFF
-    </button>
-
-  </div>
-
-
-  <div class="vuScalePanel">
-
-    <span>
-      SCALE
-    </span>
-
-    <input
-      id="vuScaleSlider"
-      type="range"
-      min="35"
-      max="130"
-      step="1"
-      value="72"
-    >
-
-    <span
-      class="vuScaleValue"
-      id="vuScaleValue"
-    >
-      72%
-    </span>
-
-  </div>
-
-
   <div class="vuRack">
+
 
     <div class="vuMeters">
 
@@ -2536,6 +2601,7 @@ input{
             stroke-width="1.6"
           />
 
+
           <path
             d="M279 54 Q327 72 365 123"
             fill="none"
@@ -2550,15 +2616,25 @@ input{
           >
 
             <line x1="64" y1="119" x2="75" y2="111"/>
+
             <line x1="89" y1="97" x2="98" y2="90"/>
+
             <line x1="118" y1="77" x2="125" y2="68"/>
+
             <line x1="151" y1="61" x2="156" y2="50"/>
+
             <line x1="186" y1="52" x2="188" y2="40"/>
+
             <line x1="220" y1="49" x2="220" y2="36"/>
+
             <line x1="253" y1="52" x2="251" y2="40"/>
+
             <line x1="282" y1="61" x2="278" y2="50"/>
+
             <line x1="312" y1="77" x2="305" y2="68"/>
+
             <line x1="338" y1="97" x2="329" y2="90"/>
+
             <line x1="359" y1="119" x2="348" y2="111"/>
 
           </g>
@@ -2572,12 +2648,19 @@ input{
           >
 
             <text x="64" y="101">20</text>
+
             <text x="92" y="80">10</text>
+
             <text x="121" y="62">7</text>
+
             <text x="153" y="47">5</text>
+
             <text x="187" y="37">3</text>
+
             <text x="220" y="33">2</text>
+
             <text x="250" y="37">1</text>
+
             <text x="280" y="48">0</text>
 
           </g>
@@ -2592,7 +2675,9 @@ input{
           >
 
             <text x="309" y="62">1</text>
+
             <text x="337" y="82">2</text>
+
             <text x="360" y="104">3</text>
 
           </g>
@@ -2607,15 +2692,25 @@ input{
           >
 
             <text x="61" y="135">.01</text>
+
             <text x="91" y="115">.03</text>
+
             <text x="121" y="96">.05</text>
+
             <text x="151" y="82">.1</text>
+
             <text x="184" y="72">.3</text>
+
             <text x="220" y="68">.5</text>
+
             <text x="250" y="72">1</text>
+
             <text x="280" y="83">3</text>
+
             <text x="312" y="98">5</text>
+
             <text x="338" y="116">10</text>
+
             <text x="359" y="136">100</text>
 
           </g>
@@ -2672,6 +2767,7 @@ input{
             stroke-width="1.6"
           />
 
+
           <path
             d="M279 54 Q327 72 365 123"
             fill="none"
@@ -2686,15 +2782,25 @@ input{
           >
 
             <line x1="64" y1="119" x2="75" y2="111"/>
+
             <line x1="89" y1="97" x2="98" y2="90"/>
+
             <line x1="118" y1="77" x2="125" y2="68"/>
+
             <line x1="151" y1="61" x2="156" y2="50"/>
+
             <line x1="186" y1="52" x2="188" y2="40"/>
+
             <line x1="220" y1="49" x2="220" y2="36"/>
+
             <line x1="253" y1="52" x2="251" y2="40"/>
+
             <line x1="282" y1="61" x2="278" y2="50"/>
+
             <line x1="312" y1="77" x2="305" y2="68"/>
+
             <line x1="338" y1="97" x2="329" y2="90"/>
+
             <line x1="359" y1="119" x2="348" y2="111"/>
 
           </g>
@@ -2708,12 +2814,19 @@ input{
           >
 
             <text x="64" y="101">20</text>
+
             <text x="92" y="80">10</text>
+
             <text x="121" y="62">7</text>
+
             <text x="153" y="47">5</text>
+
             <text x="187" y="37">3</text>
+
             <text x="220" y="33">2</text>
+
             <text x="250" y="37">1</text>
+
             <text x="280" y="48">0</text>
 
           </g>
@@ -2728,7 +2841,9 @@ input{
           >
 
             <text x="309" y="62">1</text>
+
             <text x="337" y="82">2</text>
+
             <text x="360" y="104">3</text>
 
           </g>
@@ -2743,15 +2858,25 @@ input{
           >
 
             <text x="61" y="135">.01</text>
+
             <text x="91" y="115">.03</text>
+
             <text x="121" y="96">.05</text>
+
             <text x="151" y="82">.1</text>
+
             <text x="184" y="72">.3</text>
+
             <text x="220" y="68">.5</text>
+
             <text x="250" y="72">1</text>
+
             <text x="280" y="83">3</text>
+
             <text x="312" y="98">5</text>
+
             <text x="338" y="116">10</text>
+
             <text x="359" y="136">100</text>
 
           </g>
@@ -2785,96 +2910,9 @@ input{
 
       </div>
 
-    </div>
-
-  </div>
-
-</div>
-
-
-<button
-  class="vuDebugEnable"
-  id="vuDebugEnable"
-  type="button"
->
-  VU DEBUG
-</button>
-
-
-<!-- ===================================================
-     TONEARM DEBUG
-=================================================== -->
-
-<div class="tonearmDebug">
-
-  <div class="tonearmDebugTitle">
-    DEBUG // TONEARM TIMING
-  </div>
-
-
-  <div class="tonearmDebugRow">
-
-    <div class="tonearmDebugHead">
-
-      <span class="tonearmDebugLabel">
-        ARM START OFFSET
-      </span>
-
-      <span
-        class="tonearmDebugValue"
-        id="armStartOffsetValue"
-      >
-        0 ms
-      </span>
 
     </div>
 
-
-    <input
-      id="armStartOffsetSlider"
-      type="range"
-      min="-600"
-      max="1000"
-      step="10"
-      value="0"
-    >
-
-  </div>
-
-
-  <div class="tonearmDebugRow">
-
-    <div class="tonearmDebugHead">
-
-      <span class="tonearmDebugLabel">
-        ARM MOVE TIME
-      </span>
-
-      <span
-        class="tonearmDebugValue"
-        id="armMoveTimeValue"
-      >
-        680 ms
-      </span>
-
-    </div>
-
-
-    <input
-      id="armMoveTimeSlider"
-      type="range"
-      min="150"
-      max="1800"
-      step="10"
-      value="680"
-    >
-
-  </div>
-
-
-  <div class="tonearmDebugHint">
-    OFFSET 0 = mechanism fully locked.<br>
-    − = arm starts earlier // + = later.
   </div>
 
 </div>
@@ -2882,6 +2920,17 @@ input{
 
 <script>
 "use strict";
+
+
+/* =====================================================
+   PLATFORM
+===================================================== */
+
+const IS_ANDROID =
+  /Android/i.test(
+    navigator.userAgent ||
+    ""
+  );
 
 
 /* =====================================================
@@ -2893,10 +2942,12 @@ const audio =
     "trackAudio"
   );
 
+
 const paperInSfx =
   document.getElementById(
     "paperInSfx"
   );
+
 
 const paperOutSfx =
   document.getElementById(
@@ -2909,25 +2960,30 @@ const track =
     "trackOLD"
   );
 
+
 const recordCarrier =
   document.getElementById(
     "recordCarrier"
   );
+
 
 const recordDisc =
   document.getElementById(
     "recordDisc"
   );
 
+
 const tonearmArm =
   document.getElementById(
     "tonearmArm"
   );
 
+
 const microstatus =
   document.getElementById(
     "microstatus"
   );
+
 
 const playButtons =
   [
@@ -2936,30 +2992,36 @@ const playButtons =
     )
   ];
 
+
 const wave =
   document.querySelector(
     ".js-wave"
   );
+
 
 const waveClone =
   document.querySelector(
     ".js-wave-clone"
   );
 
+
 const progress =
   document.querySelector(
     ".js-progress"
   );
+
 
 const seek =
   document.querySelector(
     ".js-seek"
   );
 
+
 const current =
   document.querySelector(
     ".js-current"
   );
+
 
 const total =
   document.querySelector(
@@ -2968,58 +3030,32 @@ const total =
 
 
 /* =====================================================
-   VU DEBUG ELEMENTS
+   FIXED VU ELEMENTS
 ===================================================== */
 
-const vuDebugObject =
+const vuFixedObject =
   document.getElementById(
-    "vuDebugObject"
+    "vuFixedObject"
   );
 
-const vuDragHandle =
-  document.getElementById(
-    "vuDragHandle"
-  );
-
-const vuDebugCoords =
-  document.getElementById(
-    "vuDebugCoords"
-  );
-
-const vuDebugOffBtn =
-  document.getElementById(
-    "vuDebugOffBtn"
-  );
-
-const vuDebugEnable =
-  document.getElementById(
-    "vuDebugEnable"
-  );
-
-const vuScaleSlider =
-  document.getElementById(
-    "vuScaleSlider"
-  );
-
-const vuScaleValue =
-  document.getElementById(
-    "vuScaleValue"
-  );
 
 const vuNeedleL =
   document.getElementById(
     "vuNeedleL"
   );
 
+
 const vuNeedleR =
   document.getElementById(
     "vuNeedleR"
   );
 
+
 const vuLampL =
   document.getElementById(
     "vuLampL"
   );
+
 
 const vuLampR =
   document.getElementById(
@@ -3027,489 +3063,17 @@ const vuLampR =
   );
 
 
-/* =====================================================
-   VU DEBUG POSITION / SCALE
-===================================================== */
-
-let vuDebugMode =
-  true;
-
-let vuX =
-  window.innerWidth *
-  .58;
-
-let vuY =
-  110;
-
-let vuScaleAmount =
-  .72;
-
-
-let vuDragging =
-  false;
-
-let vuDragPointerId =
-  null;
-
-let vuDragOffsetX =
-  0;
-
-let vuDragOffsetY =
-  0;
-
-
-function saveVuDebugState(){
-
-  try{
-
-    localStorage.setItem(
-      "frssnVuX",
-      String(
-        vuX
-      )
-    );
-
-
-    localStorage.setItem(
-      "frssnVuY",
-      String(
-        vuY
-      )
-    );
-
-
-    localStorage.setItem(
-      "frssnVuScale",
-      String(
-        vuScaleAmount
-      )
-    );
-
-  }
-
-  catch(_){}
-
-}
-
-
-function loadVuDebugState(){
-
-  try{
-
-    const x =
-      Number(
-        localStorage.getItem(
-          "frssnVuX"
-        )
-      );
-
-
-    const y =
-      Number(
-        localStorage.getItem(
-          "frssnVuY"
-        )
-      );
-
-
-    const scale =
-      Number(
-        localStorage.getItem(
-          "frssnVuScale"
-        )
-      );
-
-
-    if(
-      Number.isFinite(
-        x
-      )
-    ){
-
-      vuX =
-        x;
-
-    }
-
-
-    if(
-      Number.isFinite(
-        y
-      )
-    ){
-
-      vuY =
-        y;
-
-    }
-
-
-    if(
-      Number.isFinite(
-        scale
-      )
-      &&
-      scale >=
-      .35
-      &&
-      scale <=
-      1.30
-    ){
-
-      vuScaleAmount =
-        scale;
-
-    }
-
-  }
-
-  catch(_){}
-
-}
-
-
-function clampVuPosition(){
-
-  const visibleWidth =
-    430 *
-    vuScaleAmount;
-
-
-  const margin =
-    8;
-
-
-  vuX =
-    Math.max(
-      margin,
-      Math.min(
-        window.innerWidth -
-        Math.min(
-          visibleWidth,
-          window.innerWidth -
-          margin *
-          2
-        )
-        -
-        margin,
-        vuX
-      )
-    );
-
-
-  vuY =
-    Math.max(
-      margin,
-      Math.min(
-        window.innerHeight -
-        50,
-        vuY
-      )
-    );
-
-}
-
-
-function applyVuDebugTransform(){
-
-  clampVuPosition();
-
-
-  vuDebugObject.style.left =
-    vuX +
-    "px";
-
-
-  vuDebugObject.style.top =
-    vuY +
-    "px";
-
-
-  vuDebugObject.style.setProperty(
-    "--vu-scale",
-    vuScaleAmount
-  );
-
-
-  const percent =
-    Math.round(
-      vuScaleAmount *
-      100
-    );
-
-
-  vuScaleSlider.value =
-    String(
-      percent
-    );
-
-
-  vuScaleValue.textContent =
-    percent +
-    "%";
-
-
-  vuDebugCoords.textContent =
-    "X "
-    +
-    Math.round(
-      vuX
-    )
-    +
-    " // Y "
-    +
-    Math.round(
-      vuY
-    );
-
-}
-
-
-function setVuDebugMode(
-  enabled
+if(
+  IS_ANDROID
+  &&
+  vuFixedObject
 ){
 
-  vuDebugMode =
-    enabled;
-
-
-  vuDebugObject.classList.toggle(
-    "is-debug",
-    enabled
-  );
-
-
-  vuDebugEnable.classList.toggle(
-    "visible",
-    !enabled
+  vuFixedObject.classList.add(
+    "is-hidden"
   );
 
 }
-
-
-loadVuDebugState();
-
-applyVuDebugTransform();
-
-
-/* =====================================================
-   VU SCALE
-===================================================== */
-
-vuScaleSlider.addEventListener(
-  "input",
-  event => {
-
-    vuScaleAmount =
-      Number(
-        event.target.value
-      )
-      /
-      100;
-
-
-    applyVuDebugTransform();
-
-    saveVuDebugState();
-
-  }
-);
-
-
-/* =====================================================
-   VU DRAG
-===================================================== */
-
-vuDragHandle.addEventListener(
-  "pointerdown",
-  event => {
-
-    if(
-      !vuDebugMode
-    ){
-
-      return;
-
-    }
-
-
-    /*
-      Do not start drag if user clicked
-      DEBUG OFF button.
-    */
-
-    if(
-      event.target.closest(
-        "button"
-      )
-    ){
-
-      return;
-
-    }
-
-
-    event.preventDefault();
-
-
-    vuDragging =
-      true;
-
-
-    vuDragPointerId =
-      event.pointerId;
-
-
-    const rect =
-      vuDebugObject.getBoundingClientRect();
-
-
-    vuDragOffsetX =
-      event.clientX -
-      rect.left;
-
-
-    vuDragOffsetY =
-      event.clientY -
-      rect.top;
-
-
-    vuDragHandle.setPointerCapture(
-      event.pointerId
-    );
-
-  }
-);
-
-
-vuDragHandle.addEventListener(
-  "pointermove",
-  event => {
-
-    if(
-      !vuDragging
-      ||
-      event.pointerId !==
-      vuDragPointerId
-    ){
-
-      return;
-
-    }
-
-
-    event.preventDefault();
-
-
-    vuX =
-      event.clientX -
-      vuDragOffsetX;
-
-
-    vuY =
-      event.clientY -
-      vuDragOffsetY;
-
-
-    applyVuDebugTransform();
-
-  }
-);
-
-
-function stopVuDrag(
-  event
-){
-
-  if(
-    !vuDragging
-    ||
-    event.pointerId !==
-    vuDragPointerId
-  ){
-
-    return;
-
-  }
-
-
-  vuDragging =
-    false;
-
-
-  if(
-    vuDragHandle.hasPointerCapture(
-      event.pointerId
-    )
-  ){
-
-    vuDragHandle.releasePointerCapture(
-      event.pointerId
-    );
-
-  }
-
-
-  vuDragPointerId =
-    null;
-
-
-  saveVuDebugState();
-
-}
-
-
-vuDragHandle.addEventListener(
-  "pointerup",
-  stopVuDrag
-);
-
-
-vuDragHandle.addEventListener(
-  "pointercancel",
-  stopVuDrag
-);
-
-
-/* =====================================================
-   VU DEBUG ON / OFF
-===================================================== */
-
-vuDebugOffBtn.addEventListener(
-  "click",
-  event => {
-
-    event.stopPropagation();
-
-
-    setVuDebugMode(
-      false
-    );
-
-  }
-);
-
-
-vuDebugEnable.addEventListener(
-  "click",
-  () => {
-
-    setVuDebugMode(
-      true
-    );
-
-  }
-);
-
-
-window.addEventListener(
-  "resize",
-  () => {
-
-    applyVuDebugTransform();
-
-  }
-);
 
 
 /* =====================================================
@@ -3517,7 +3081,7 @@ window.addEventListener(
 ===================================================== */
 
 const PAPER_SFX_VOLUME =
-  0.36;
+  .36;
 
 
 paperInSfx.volume =
@@ -3609,225 +3173,19 @@ function playPaperOut(){
 
 
 /* =====================================================
-   TONEARM DEBUG
+   FIXED TONEARM SETTINGS
 ===================================================== */
-
-const armStartOffsetSlider =
-  document.getElementById(
-    "armStartOffsetSlider"
-  );
-
-const armStartOffsetValue =
-  document.getElementById(
-    "armStartOffsetValue"
-  );
-
-const armMoveTimeSlider =
-  document.getElementById(
-    "armMoveTimeSlider"
-  );
-
-const armMoveTimeValue =
-  document.getElementById(
-    "armMoveTimeValue"
-  );
-
 
 const MECHANISM_DEPLOY_DURATION =
   1450;
 
 
-let ARM_START_OFFSET_MS =
-  0;
+const ARM_START_OFFSET_MS =
+  -240;
 
 
-let ARM_MOVE_DURATION_MS =
-  680;
-
-
-function loadTonearmDebug(){
-
-  try{
-
-    const storedOffset =
-      localStorage.getItem(
-        "frssnArmStartOffset"
-      );
-
-
-    const storedMoveTime =
-      localStorage.getItem(
-        "frssnArmMoveTime"
-      );
-
-
-    if(
-      storedOffset !== null
-    ){
-
-      const parsed =
-        Number(
-          storedOffset
-        );
-
-
-      if(
-        Number.isFinite(
-          parsed
-        )
-      ){
-
-        ARM_START_OFFSET_MS =
-          Math.max(
-            -600,
-            Math.min(
-              1000,
-              parsed
-            )
-          );
-
-      }
-
-    }
-
-
-    if(
-      storedMoveTime !== null
-    ){
-
-      const parsed =
-        Number(
-          storedMoveTime
-        );
-
-
-      if(
-        Number.isFinite(
-          parsed
-        )
-      ){
-
-        ARM_MOVE_DURATION_MS =
-          Math.max(
-            150,
-            Math.min(
-              1800,
-              parsed
-            )
-          );
-
-      }
-
-    }
-
-  }
-
-  catch(_){}
-
-
-  armStartOffsetSlider.value =
-    String(
-      ARM_START_OFFSET_MS
-    );
-
-
-  armMoveTimeSlider.value =
-    String(
-      ARM_MOVE_DURATION_MS
-    );
-
-
-  updateTonearmDebugLabels();
-
-}
-
-
-function updateTonearmDebugLabels(){
-
-  armStartOffsetValue.textContent =
-    (
-      ARM_START_OFFSET_MS >
-      0
-      ?
-      "+"
-      :
-      ""
-    )
-    +
-    ARM_START_OFFSET_MS
-    +
-    " ms";
-
-
-  armMoveTimeValue.textContent =
-    ARM_MOVE_DURATION_MS
-    +
-    " ms";
-
-}
-
-
-armStartOffsetSlider.addEventListener(
-  "input",
-  () => {
-
-    ARM_START_OFFSET_MS =
-      Number(
-        armStartOffsetSlider.value
-      );
-
-
-    updateTonearmDebugLabels();
-
-
-    try{
-
-      localStorage.setItem(
-        "frssnArmStartOffset",
-        String(
-          ARM_START_OFFSET_MS
-        )
-      );
-
-    }
-
-    catch(_){}
-
-  }
-);
-
-
-armMoveTimeSlider.addEventListener(
-  "input",
-  () => {
-
-    ARM_MOVE_DURATION_MS =
-      Number(
-        armMoveTimeSlider.value
-      );
-
-
-    updateTonearmDebugLabels();
-
-
-    try{
-
-      localStorage.setItem(
-        "frssnArmMoveTime",
-        String(
-          ARM_MOVE_DURATION_MS
-        )
-      );
-
-    }
-
-    catch(_){}
-
-  }
-);
-
-
-loadTonearmDebug();
+const ARM_MOVE_DURATION_MS =
+  380;
 
 
 /* =====================================================
@@ -3835,22 +3193,28 @@ loadTonearmDebug();
 ===================================================== */
 
 const SCRATCH_TIME_SCALE =
-  0.54;
+  .54;
+
 
 const MOTOR_RECOVERY_SPEED =
   3.00;
 
+
 const SEEK_START_SPEED =
-  0.45;
+  .45;
+
 
 const SEEK_STOP_SPEED =
   1.00;
 
+
 const PLAY_START_SPEED =
   3.55;
 
+
 const PAUSE_BRAKE_SPEED =
   2.30;
+
 
 const SEEK_FULL_VOLUME =
   false;
@@ -3859,6 +3223,7 @@ const SEEK_FULL_VOLUME =
 const GRAB_BRAKE_DURATION =
   820;
 
+
 const GRAB_BRAKE_CURVE =
   2.35;
 
@@ -3866,8 +3231,10 @@ const GRAB_BRAKE_CURVE =
 const MOTOR_RECOVERY_MIN_DURATION =
   420;
 
+
 const MOTOR_RECOVERY_MAX_DURATION =
   1300;
+
 
 const MOTOR_PULL_STRENGTH =
   2.65;
@@ -3876,8 +3243,10 @@ const MOTOR_PULL_STRENGTH =
 const PLAY_START_BASE_DURATION =
   950;
 
+
 const PLAY_START_MIN_RATE =
-  0.16;
+  .16;
+
 
 const PLAY_START_CURVE =
   2.25;
@@ -3886,6 +3255,7 @@ const PLAY_START_CURVE =
 const PAUSE_BRAKE_BASE_DURATION =
   1150;
 
+
 const PAUSE_BRAKE_CURVE =
   2.20;
 
@@ -3893,18 +3263,22 @@ const PAUSE_BRAKE_CURVE =
 const FREE_SPIN_FRICTION =
   2.55;
 
+
 const FREE_SPIN_MIN_VELOCITY =
-  0.018;
+  .018;
+
 
 const FREE_SPIN_RELEASE_THRESHOLD =
-  0.055;
+  .055;
+
 
 const FREE_SPIN_RELEASE_WINDOW =
   115;
 
 
 const SEEK_REDUCED_GAIN =
-  0.28;
+  .28;
+
 
 const SEEK_FULL_GAIN =
   1.0;
@@ -3917,9 +3291,11 @@ const SEEK_FULL_GAIN =
 const VINYL_RPM =
   45;
 
+
 const REVOLUTIONS_PER_SECOND =
   VINYL_RPM /
   60;
+
 
 const DEGREES_PER_SECOND =
   REVOLUTIONS_PER_SECOND *
@@ -3955,26 +3331,34 @@ function setVinylAngle(
 let playIntent =
   false;
 
+
 let hasPlaybackEverStarted =
   false;
+
 
 let vinylOpened =
   false;
 
+
 let mechanismDeployed =
   false;
+
 
 let tonearmEngaged =
   false;
 
+
 let isPacking =
   false;
+
 
 let isSeeking =
   false;
 
+
 let isPreCueing =
   false;
+
 
 let isScratching =
   false;
@@ -3983,23 +3367,30 @@ let isScratching =
 let scratchPointerId =
   null;
 
+
 let scratchLastAngle =
   0;
+
 
 let scratchLastEventTime =
   0;
 
+
 let scratchVelocity =
   0;
+
 
 let scratchVisualTime =
   0;
 
+
 let lastManualMoveAt =
   0;
 
+
 let manualMovementStarted =
   false;
+
 
 let manualIdleTimer =
   null;
@@ -4008,11 +3399,14 @@ let manualIdleTimer =
 let visualRAF =
   null;
 
+
 let openingPromise =
   null;
 
+
 let armDeployTimer =
   null;
+
 
 let armEngageGeneration =
   0;
@@ -4054,11 +3448,14 @@ function smootherStep(
 ){
 
   return (
-    t*t*t *
+    t *
+    t *
+    t *
     (
       t *
       (
-        t*6 -
+        t *
+        6 -
         15
       )
       +
@@ -4119,11 +3516,14 @@ function fmt(
 let audioContext =
   null;
 
+
 let decodedTrack =
   null;
 
+
 let reversedTrack =
   null;
+
 
 let trackDuration =
   0;
@@ -4310,8 +3710,10 @@ function createReversedBuffer(
 const ARM_PARK_ANGLE =
   -8;
 
+
 const ARM_START_ANGLE =
   19.5;
+
 
 const ARM_END_ANGLE =
   32.5;
@@ -4635,11 +4037,14 @@ function updateProgressUI(
 let workletNode =
   null;
 
+
 let workletOutputGain =
   null;
 
+
 let workletLimiter =
   null;
+
 
 let manualSpeedParam =
   null;
@@ -4648,20 +4053,26 @@ let manualSpeedParam =
 let engineReady =
   false;
 
+
 let engineMode =
   "paused";
+
 
 let engineActive =
   false;
 
+
 let enginePositionSec =
   0;
+
 
 let engineSpeed =
   0;
 
+
 let engineReportPerf =
   performance.now();
+
 
 let engineEndedLock =
   false;
@@ -4674,29 +4085,38 @@ let engineEndedLock =
 let vuSplitter =
   null;
 
+
 let vuAnalyserL =
   null;
+
 
 let vuAnalyserR =
   null;
 
+
 let vuDataL =
   null;
+
 
 let vuDataR =
   null;
 
+
 let vuRAF =
   null;
+
 
 let vuNeedleValueL =
   0;
 
+
 let vuNeedleValueR =
   0;
 
+
 let vuPeakL =
   0;
+
 
 let vuPeakR =
   0;
@@ -4729,46 +4149,94 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
     super();
 
+
     this.channels=[];
     this.sourceRate=sampleRate;
     this.length=0;
     this.position=0;
+
     this.active=false;
     this.mode="paused";
+
     this.currentSpeed=0;
     this.modeStartSpeed=0;
+
     this.modeElapsedSamples=0;
     this.modeDurationSamples=1;
+
     this.targetGain=0;
     this.currentGain=0;
+
     this.motionGain=0;
     this.motionTarget=0;
     this.motionMoving=false;
+
     this.motionStartThreshold=.0022;
     this.motionStopThreshold=.0010;
     this.motionSmoothing=.0046;
+
     this.reportCounter=0;
     this.endedSent=false;
 
-    this.PLAY_START_SPEED=${PLAY_START_SPEED};
-    this.PLAY_START_BASE_DURATION=${PLAY_START_BASE_DURATION};
-    this.PLAY_START_MIN_RATE=${PLAY_START_MIN_RATE};
-    this.PLAY_START_CURVE=${PLAY_START_CURVE};
 
-    this.PAUSE_BRAKE_SPEED=${PAUSE_BRAKE_SPEED};
-    this.PAUSE_BRAKE_BASE_DURATION=${PAUSE_BRAKE_BASE_DURATION};
-    this.PAUSE_BRAKE_CURVE=${PAUSE_BRAKE_CURVE};
+    this.PLAY_START_SPEED=
+      ${PLAY_START_SPEED};
 
-    this.GRAB_BRAKE_DURATION=${GRAB_BRAKE_DURATION};
-    this.GRAB_BRAKE_CURVE=${GRAB_BRAKE_CURVE};
 
-    this.MOTOR_RECOVERY_SPEED=${MOTOR_RECOVERY_SPEED};
-    this.MOTOR_RECOVERY_MIN_DURATION=${MOTOR_RECOVERY_MIN_DURATION};
-    this.MOTOR_RECOVERY_MAX_DURATION=${MOTOR_RECOVERY_MAX_DURATION};
-    this.MOTOR_PULL_STRENGTH=${MOTOR_PULL_STRENGTH};
+    this.PLAY_START_BASE_DURATION=
+      ${PLAY_START_BASE_DURATION};
 
-    this.FREE_SPIN_FRICTION=${FREE_SPIN_FRICTION};
-    this.FREE_SPIN_MIN_VELOCITY=${FREE_SPIN_MIN_VELOCITY};
+
+    this.PLAY_START_MIN_RATE=
+      ${PLAY_START_MIN_RATE};
+
+
+    this.PLAY_START_CURVE=
+      ${PLAY_START_CURVE};
+
+
+    this.PAUSE_BRAKE_SPEED=
+      ${PAUSE_BRAKE_SPEED};
+
+
+    this.PAUSE_BRAKE_BASE_DURATION=
+      ${PAUSE_BRAKE_BASE_DURATION};
+
+
+    this.PAUSE_BRAKE_CURVE=
+      ${PAUSE_BRAKE_CURVE};
+
+
+    this.GRAB_BRAKE_DURATION=
+      ${GRAB_BRAKE_DURATION};
+
+
+    this.GRAB_BRAKE_CURVE=
+      ${GRAB_BRAKE_CURVE};
+
+
+    this.MOTOR_RECOVERY_SPEED=
+      ${MOTOR_RECOVERY_SPEED};
+
+
+    this.MOTOR_RECOVERY_MIN_DURATION=
+      ${MOTOR_RECOVERY_MIN_DURATION};
+
+
+    this.MOTOR_RECOVERY_MAX_DURATION=
+      ${MOTOR_RECOVERY_MAX_DURATION};
+
+
+    this.MOTOR_PULL_STRENGTH=
+      ${MOTOR_PULL_STRENGTH};
+
+
+    this.FREE_SPIN_FRICTION=
+      ${FREE_SPIN_FRICTION};
+
+
+    this.FREE_SPIN_MIN_VELOCITY=
+      ${FREE_SPIN_MIN_VELOCITY};
 
 
     this.port.onmessage =
@@ -4825,24 +4293,35 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
 
           this.currentSpeed=0;
+
           this.active=false;
+
           this.mode="paused";
+
           this.targetGain=0;
+
           this.currentGain=0;
+
           this.motionGain=0;
+
           this.motionTarget=0;
+
           this.motionMoving=false;
+
           this.endedSent=false;
 
 
           this.port.postMessage(
             {
               type:"ready",
+
               position:
                 this.position /
                 this.sourceRate,
+
               speed:
                 this.currentSpeed,
+
               mode:
                 this.mode
             }
@@ -4995,10 +4474,20 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
     data={}
   ){
 
-    this.mode=mode;
-    this.modeElapsedSamples=0;
-    this.modeStartSpeed=this.currentSpeed;
-    this.endedSent=false;
+    this.mode=
+      mode;
+
+
+    this.modeElapsedSamples=
+      0;
+
+
+    this.modeStartSpeed=
+      this.currentSpeed;
+
+
+    this.endedSent=
+      false;
 
 
     switch(
@@ -5007,8 +4496,13 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
       case "normal":
 
-        this.active=true;
-        this.targetGain=1;
+        this.active=
+          true;
+
+
+        this.targetGain=
+          1;
+
 
         this.currentSpeed=
           typeof data.speed ===
@@ -5018,19 +4512,27 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
           :
           1;
 
+
         break;
 
 
       case "play_start":
 
-        this.active=true;
-        this.targetGain=1;
+        this.active=
+          true;
+
+
+        this.targetGain=
+          1;
+
 
         this.modeStartSpeed=
           this.PLAY_START_MIN_RATE;
 
+
         this.currentSpeed=
           this.PLAY_START_MIN_RATE;
+
 
         this.modeDurationSamples=
           Math.max(
@@ -5046,19 +4548,26 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
             )
           );
 
+
         break;
 
 
       case "pause_brake":
 
-        this.active=true;
-        this.targetGain=1;
+        this.active=
+          true;
+
+
+        this.targetGain=
+          1;
+
 
         this.modeStartSpeed=
           Math.max(
             0,
             this.currentSpeed
           );
+
 
         this.modeDurationSamples=
           Math.max(
@@ -5074,16 +4583,23 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
             )
           );
 
+
         break;
 
 
       case "grab_brake":
 
-        this.active=true;
-        this.targetGain=1;
+        this.active=
+          true;
+
+
+        this.targetGain=
+          1;
+
 
         this.modeStartSpeed=
           this.currentSpeed;
+
 
         this.modeDurationSamples=
           Math.max(
@@ -5098,27 +4614,39 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
             )
           );
 
+
         break;
 
 
       case "manual":
 
-        this.active=true;
-        this.targetGain=1;
+        this.active=
+          true;
+
+
+        this.targetGain=
+          1;
+
 
         break;
 
 
       case "motor_recovery":
 
-        this.active=true;
-        this.targetGain=1;
+        this.active=
+          true;
+
+
+        this.targetGain=
+          1;
+
 
         this.modeStartSpeed=
           this.currentSpeed;
 
 
         {
+
           const distance=
             Math.abs(
               1 -
@@ -5161,8 +4689,12 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
       case "free_spin":
 
-        this.active=true;
-        this.targetGain=1;
+        this.active=
+          true;
+
+
+        this.targetGain=
+          1;
 
 
         if(
@@ -5183,18 +4715,34 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
       case "paused":
 
-        this.active=true;
-        this.targetGain=1;
-        this.currentSpeed=0;
+        this.active=
+          true;
+
+
+        this.targetGain=
+          1;
+
+
+        this.currentSpeed=
+          0;
+
 
         break;
 
 
       case "off":
 
-        this.active=false;
-        this.targetGain=0;
-        this.currentSpeed=0;
+        this.active=
+          false;
+
+
+        this.targetGain=
+          0;
+
+
+        this.currentSpeed=
+          0;
+
 
         break;
 
@@ -5204,10 +4752,14 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
     this.port.postMessage(
       {
         type:"mode",
-        mode:this.mode,
+
+        mode:
+          this.mode,
+
         position:
           this.position /
           this.sourceRate,
+
         speed:
           this.currentSpeed
       }
@@ -5224,8 +4776,10 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
     this.mode=
       nextMode;
 
+
     this.currentSpeed=
       speed;
+
 
     this.modeElapsedSamples=
       0;
@@ -5234,10 +4788,14 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
     this.port.postMessage(
       {
         type:"mode",
-        mode:this.mode,
+
+        mode:
+          this.mode,
+
         position:
           this.position /
           this.sourceRate,
+
         speed:
           this.currentSpeed
       }
@@ -5411,7 +4969,8 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
         if(
           Math.abs(
             speed
-          ) <
+          )
+          <
           .12
         ){
 
@@ -5447,7 +5006,8 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
           ||
           Math.abs(
             speed
-          ) <
+          )
+          <
           .0005
         ){
 
@@ -5562,7 +5122,8 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
         if(
           Math.abs(
             speed
-          ) <
+          )
+          <
           this.FREE_SPIN_MIN_VELOCITY
         ){
 
@@ -5829,11 +5390,15 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
               this.port.postMessage(
                 {
-                  type:"boundary",
+                  type:
+                    "boundary",
+
                   position:
                     this.position /
                     this.sourceRate,
-                  direction:1
+
+                  direction:
+                    1
                 }
               );
 
@@ -5863,14 +5428,19 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
       this.port.postMessage(
         {
-          type:"position",
+          type:
+            "position",
+
           position:
             this.position /
             this.sourceRate,
+
           speed:
             this.currentSpeed,
+
           mode:
             this.mode,
+
           active:
             this.active
         }
@@ -5956,8 +5526,11 @@ async function initWorkletFromBuffer(
       context,
       "frssn-varispeed",
       {
-        numberOfInputs:0,
-        numberOfOutputs:1,
+        numberOfInputs:
+          0,
+
+        numberOfOutputs:
+          1,
 
         outputChannelCount:
           [
@@ -5972,7 +5545,8 @@ async function initWorkletFromBuffer(
 
         parameterData:
           {
-            manualSpeed:0
+            manualSpeed:
+              0
           }
       }
     );
@@ -6031,73 +5605,81 @@ async function initWorkletFromBuffer(
 
 
   /* ===================================================
-     VU TAP
+     VU DESKTOP ONLY
   =================================================== */
 
-  vuSplitter =
-    context.createChannelSplitter(
-      2
+  if(
+    !IS_ANDROID
+    &&
+    vuFixedObject
+  ){
+
+    vuSplitter =
+      context.createChannelSplitter(
+        2
+      );
+
+
+    vuAnalyserL =
+      context.createAnalyser();
+
+
+    vuAnalyserR =
+      context.createAnalyser();
+
+
+    vuAnalyserL.fftSize =
+      1024;
+
+
+    vuAnalyserR.fftSize =
+      1024;
+
+
+    vuAnalyserL.smoothingTimeConstant =
+      0;
+
+
+    vuAnalyserR.smoothingTimeConstant =
+      0;
+
+
+    workletLimiter.connect(
+      vuSplitter
     );
 
 
-  vuAnalyserL =
-    context.createAnalyser();
-
-
-  vuAnalyserR =
-    context.createAnalyser();
-
-
-  vuAnalyserL.fftSize =
-    1024;
-
-
-  vuAnalyserR.fftSize =
-    1024;
-
-
-  vuAnalyserL.smoothingTimeConstant =
-    0;
-
-
-  vuAnalyserR.smoothingTimeConstant =
-    0;
-
-
-  workletLimiter.connect(
-    vuSplitter
-  );
-
-
-  vuSplitter.connect(
-    vuAnalyserL,
-    0
-  );
-
-
-  vuSplitter.connect(
-    vuAnalyserR,
-    Math.min(
-      1,
-      buffer.numberOfChannels -
-      1
-    )
-  );
-
-
-  vuDataL =
-    new Float32Array(
-      vuAnalyserL.fftSize
+    vuSplitter.connect(
+      vuAnalyserL,
+      0
     );
 
 
-  vuDataR =
-    new Float32Array(
-      vuAnalyserR.fftSize
+    vuSplitter.connect(
+      vuAnalyserR,
+      Math.min(
+        1,
+        buffer.numberOfChannels -
+        1
+      )
     );
 
 
-  startVuLoop();
+    vuDataL =
+      new Float32Array(
+        vuAnalyserL.fftSize
+      );
+
+
+    vuDataR =
+      new Float32Array(
+        vuAnalyserR.fftSize
+      );
+
+
+    startVuLoop();
+
+  }
 
 
   workletNode.port.onmessage =
@@ -6113,8 +5695,9 @@ async function initWorkletFromBuffer(
 
 
   for(
-    let c=0;
-    c<buffer.numberOfChannels;
+    let c = 0;
+    c <
+    buffer.numberOfChannels;
     c++
   ){
 
@@ -6140,13 +5723,19 @@ async function initWorkletFromBuffer(
 
   workletNode.port.postMessage(
     {
-      type:"init",
+      type:
+        "init",
+
       channels,
+
       sourceRate:
         buffer.sampleRate,
+
       length:
         buffer.length,
-      position:0
+
+      position:
+        0
     },
     transfer
   );
@@ -6184,8 +5773,9 @@ function getRms(
 
 
   for(
-    let i=0;
-    i<data.length;
+    let i = 0;
+    i <
+    data.length;
     i++
   ){
 
@@ -6322,6 +5912,19 @@ function updateVuBallistic(
 
 
 function startVuLoop(){
+
+  if(
+    IS_ANDROID
+    ||
+    !vuAnalyserL
+    ||
+    !vuAnalyserR
+  ){
+
+    return;
+
+  }
+
 
   if(
     vuRAF
@@ -6617,6 +6220,10 @@ function handleWorkletMessage(
 
 
     microstatus.textContent =
+      IS_ANDROID
+      ?
+      "ENGINE READY // ANDROID PERFORMANCE MODE"
+      :
       "ENGINE READY // MOBILE-SAFE VARISPEED";
 
 
@@ -6688,7 +6295,7 @@ function handleWorkletMessage(
 
 function sendMode(
   mode,
-  extra={}
+  extra = {}
 ){
 
   if(
@@ -6704,8 +6311,11 @@ function sendMode(
 
   workletNode.port.postMessage(
     {
-      type:"mode",
+      type:
+        "mode",
+
       mode,
+
       ...extra
     }
   );
@@ -6740,7 +6350,9 @@ function seekEngine(
 
   workletNode.port.postMessage(
     {
-      type:"seek",
+      type:
+        "seek",
+
       position:
         clampTime(
           position
@@ -6910,6 +6522,11 @@ function updateStatusFromEngineMode(
       break;
 
 
+    case "manual":
+
+      break;
+
+
     case "motor_recovery":
 
       microstatus.textContent =
@@ -6962,6 +6579,11 @@ function startVisualLoop(){
 
 
   function frame(){
+
+    /*
+      Packing must NOT kill
+      the permanent visual RAF.
+    */
 
     if(
       isPacking
@@ -7235,8 +6857,9 @@ async function loadTrackData(
 
 
     for(
-      let c=0;
-      c<decodedTrack.numberOfChannels;
+      let c = 0;
+      c <
+      decodedTrack.numberOfChannels;
       c++
     ){
 
@@ -7264,8 +6887,9 @@ async function loadTrackData(
 
 
     for(
-      let i=0;
-      i<WAVE_BARS;
+      let i = 0;
+      i <
+      WAVE_BARS;
       i++
     ){
 
@@ -7301,15 +6925,16 @@ async function loadTrackData(
 
 
       for(
-        let c=0;
-        c<channels.length;
+        let c = 0;
+        c <
+        channels.length;
         c++
       ){
 
         for(
-          let s=start;
-          s<end;
-          s+=stride
+          let s = start;
+          s < end;
+          s += stride
         ){
 
           peak =
@@ -9289,6 +8914,7 @@ async function seekTo(
 
     isSeeking =
       false;
+
 
     return;
 
