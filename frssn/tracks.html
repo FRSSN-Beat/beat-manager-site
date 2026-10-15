@@ -2156,413 +2156,210 @@ input{
 <script>
 "use strict";
 
-
-/* =====================================================
-   ELEMENTS
-===================================================== */
-
-const audio =
-  document.getElementById(
-    "trackAudio"
-  );
-
-
-const track =
-  document.getElementById(
-    "trackOLD"
-  );
-
-
-const recordCarrier =
-  document.getElementById(
-    "recordCarrier"
-  );
-
-
-const recordDisc =
-  document.getElementById(
-    "recordDisc"
-  );
-
-
-const tonearmArm =
-  document.getElementById(
-    "tonearmArm"
-  );
-
-
-const microstatus =
-  document.getElementById(
-    "microstatus"
-  );
-
-
-const playButtons =
-  [
-    ...document.querySelectorAll(
-      ".js-play"
-    )
-  ];
-
-
-const wave =
-  document.querySelector(
-    ".js-wave"
-  );
-
-
-const waveClone =
-  document.querySelector(
-    ".js-wave-clone"
-  );
-
-
-const progress =
-  document.querySelector(
-    ".js-progress"
-  );
-
-
-const seek =
-  document.querySelector(
-    ".js-seek"
-  );
-
-
-const current =
-  document.querySelector(
-    ".js-current"
-  );
-
-
-const total =
-  document.querySelector(
-    ".js-total"
-  );
-
+const audio = document.getElementById("trackAudio");
+const track = document.getElementById("trackOLD");
+const recordCarrier = document.getElementById("recordCarrier");
+const recordDisc = document.getElementById("recordDisc");
+const tonearmArm = document.getElementById("tonearmArm");
+const microstatus = document.getElementById("microstatus");
+const playButtons = [...document.querySelectorAll(".js-play")];
+const wave = document.querySelector(".js-wave");
+const waveClone = document.querySelector(".js-wave-clone");
+const progress = document.querySelector(".js-progress");
+const seek = document.querySelector(".js-seek");
+const current = document.querySelector(".js-current");
+const total = document.querySelector(".js-total");
 
 /* =====================================================
    FINAL PHYSICS VALUES
 ===================================================== */
 
-const SCRATCH_TIME_SCALE =
-  0.54;
-
-
-const MOTOR_RECOVERY_SPEED =
-  3.00;
-
-
-const SEEK_START_SPEED =
-  0.45;
-
-
-const SEEK_STOP_SPEED =
-  1.00;
-
-
-const PLAY_START_SPEED =
-  3.55;
-
-
-const PAUSE_BRAKE_SPEED =
-  2.30;
-
-
-const SEEK_FULL_VOLUME =
-  false;
-
+const SCRATCH_TIME_SCALE = 0.54;
+const MOTOR_RECOVERY_SPEED = 3.00;
+const SEEK_START_SPEED = 0.45;
+const SEEK_STOP_SPEED = 1.00;
+const PLAY_START_SPEED = 3.55;
+const PAUSE_BRAKE_SPEED = 2.30;
+const SEEK_FULL_VOLUME = false;
 
 /* =====================================================
-   PLAYER / PHYSICAL STATE
+   STATE
 ===================================================== */
 
-let playIntent =
-  false;
+let playIntent = false;
+let hasPlaybackEverStarted = false;
 
+let vinylOpened = false;
+let mechanismDeployed = false;
+let tonearmEngaged = false;
+let isPacking = false;
+let isScratching = false;
+let isMotorRecovering = false;
+let isPlayStarting = false;
+let isPauseBraking = false;
+let isFreeSpinning = false;
+let isSeeking = false;
+let isPreCueing = false;
 
-let hasPlaybackEverStarted =
-  false;
+let vinylRAF = null;
 
+let scratchPointerId = null;
+let scratchTime = 0;
+let scratchLastAngle = 0;
+let scratchLastPointerTime = 0;
+let scratchVelocity = 0;
+let grabBrakeActive = false;
+let manualScratchStarted = false;
+let lastManualMoveAt = 0;
+let openingPromise = null;
 
-let vinylOpened =
-  false;
+let grabBrakeRAF = null;
+let motorRecoveryRAF = null;
+let playStartRAF = null;
+let pauseBrakeRAF = null;
+let freeSpinRAF = null;
 
+let playStartResolve = null;
+let pauseBrakeResolve = null;
+let motorRecoveryResolve = null;
+let freeSpinResolve = null;
 
-let mechanismDeployed =
-  false;
+let physicsGeneration = 0;
+let activeScratchGeneration = 0;
 
+function nextPhysicsGeneration(){
+  physicsGeneration += 1;
+  return physicsGeneration;
+}
 
-let tonearmEngaged =
-  false;
-
-
-let isPacking =
-  false;
-
-
-let isScratching =
-  false;
-
-
-let isMotorRecovering =
-  false;
-
-
-let isPlayStarting =
-  false;
-
-
-let isPauseBraking =
-  false;
-
-
-let isFreeSpinning =
-  false;
-
-
-let isSeeking =
-  false;
-
-
-let isPreCueing =
-  false;
-
-
-let vinylRAF =
-  null;
-
-
-/* =====================================================
-   SCRATCH / PHYSICS STATE
-===================================================== */
-
-let scratchPointerId =
-  null;
-
-
-let scratchTime =
-  0;
-
-
-let scratchLastAngle =
-  0;
-
-
-let scratchLastPointerTime =
-  0;
-
-
-let scratchVelocity =
-  0;
-
-
-let grabBrakeActive =
-  false;
-
-
-let manualScratchStarted =
-  false;
-
-
-let grabBrakeRAF =
-  null;
-
-
-let motorRecoveryRAF =
-  null;
-
-
-let playStartRAF =
-  null;
-
-
-let pauseBrakeRAF =
-  null;
-
-
-let freeSpinRAF =
-  null;
-
-
-let lastManualMoveAt =
-  0;
-
-
-let openingPromise =
-  null;
-
+function generationAlive(generation){
+  return generation === physicsGeneration;
+}
 
 /* =====================================================
    CONFIG
 ===================================================== */
 
-const SCRATCH_RATE_SCALE =
-  0.42;
+const SEEK_REDUCED_GAIN = 0.28;
+const SEEK_FULL_GAIN = 1.0;
 
+const GRAB_BRAKE_DURATION = 820;
+const GRAB_BRAKE_CURVE = 2.35;
 
-const SEEK_REDUCED_GAIN =
-  0.28;
+const MOTOR_RECOVERY_MIN_DURATION = 420;
+const MOTOR_RECOVERY_MAX_DURATION = 1300;
+const MOTOR_PULL_STRENGTH = 2.65;
 
+const PLAY_START_BASE_DURATION = 950;
+const PLAY_START_MIN_RATE = 0.16;
+const PLAY_START_CURVE = 2.25;
 
-const SEEK_FULL_GAIN =
-  1.0;
+const PAUSE_BRAKE_BASE_DURATION = 1150;
+const PAUSE_BRAKE_CURVE = 2.20;
 
+const FREE_SPIN_FRICTION = 2.55;
+const FREE_SPIN_MIN_VELOCITY = 0.018;
+const FREE_SPIN_RELEASE_THRESHOLD = 0.055;
+const FREE_SPIN_RELEASE_WINDOW = 115;
 
-const GRAB_BRAKE_DURATION =
-  820;
+const SCRATCH_SERVO_GAIN = 2.4;
+const SCRATCH_SERVO_LIMIT = 0.10;
 
-
-const GRAB_BRAKE_CURVE =
-  2.35;
-
-
-const MOTOR_RECOVERY_MIN_DURATION =
-  420;
-
-
-const MOTOR_RECOVERY_MAX_DURATION =
-  1300;
-
-
-const MOTOR_PULL_STRENGTH =
-  2.65;
-
-
-const PLAY_START_BASE_DURATION =
-  950;
-
-
-const PLAY_START_MIN_RATE =
-  0.16;
-
-
-const PLAY_START_CURVE =
-  2.25;
-
-
-const PAUSE_BRAKE_BASE_DURATION =
-  1150;
-
-
-const PAUSE_BRAKE_CURVE =
-  2.20;
-
-
-const FREE_SPIN_FRICTION =
-  2.55;
-
-
-const FREE_SPIN_MIN_VELOCITY =
-  0.018;
-
-
-const FREE_SPIN_RELEASE_THRESHOLD =
-  0.055;
-
-
-const FREE_SPIN_RELEASE_WINDOW =
-  115;
-
+const WATCHDOG_INTERVAL_MS = 220;
+const WATCHDOG_MIN_SPEED = 0.50;
 
 /* =====================================================
-   VINYL PHYSICS
+   VINYL / HELPERS
 ===================================================== */
 
-const VINYL_RPM =
-  45;
+const VINYL_RPM = 45;
+const REVOLUTIONS_PER_SECOND = VINYL_RPM / 60;
+const DEGREES_PER_SECOND = REVOLUTIONS_PER_SECOND * 360;
 
+function angleFromAudioTime(seconds){
+  return seconds * DEGREES_PER_SECOND;
+}
 
-const REVOLUTIONS_PER_SECOND =
-  VINYL_RPM
-  /
-  60;
+function setVinylAngle(angle){
+  recordDisc.style.transform = `rotate(${angle}deg)`;
+}
 
+function smootherStep(t){
+  return t*t*t * (t * (t*6 - 15) + 10);
+}
 
-const DEGREES_PER_SECOND =
-  REVOLUTIONS_PER_SECOND
-  *
-  360;
+function fmt(seconds){
+  if(!Number.isFinite(seconds)) return "0:00";
 
+  const minutes =
+    Math.floor(
+      seconds /
+      60
+    );
 
-function angleFromAudioTime(
-  seconds
-){
+  const sec =
+    Math.floor(
+      seconds %
+      60
+    );
 
   return (
-    seconds
-    *
-    DEGREES_PER_SECOND
+    minutes +
+    ":" +
+    String(sec).padStart(
+      2,
+      "0"
+    )
   );
-
 }
 
+/* =====================================================
+   SOURCE DATA
+===================================================== */
 
-function setVinylAngle(
-  angle
-){
+let audioContext = null;
+let decodedTrack = null;
+let reversedTrack = null;
+let trackDuration = 0;
 
-  recordDisc.style.transform =
-    `rotate(${angle}deg)`;
+function getAudioContext(){
+  if(!audioContext){
 
+    const AC =
+      window.AudioContext ||
+      window.webkitAudioContext;
+
+    audioContext =
+      new AC({
+        latencyHint:"interactive"
+      });
+
+  }
+
+  return audioContext;
 }
 
+async function resumeAudioContext(){
 
-/* =====================================================
-   AUDIO DATA
-===================================================== */
+  const context =
+    getAudioContext();
 
-let audioContext =
-  null;
+  if(
+    context.state ===
+    "suspended"
+  ){
 
+    try{
 
-let decodedTrack =
-  null;
+      await context.resume();
 
+    }
 
-let reversedTrack =
-  null;
+    catch(_){}
 
+  }
 
-let trackDuration =
-  0;
-
-
-/* =====================================================
-   AUDIOWORKLET ENGINE STATE
-===================================================== */
-
-let workletNode =
-  null;
-
-
-let engineReady =
-  false;
-
-
-let engineActive =
-  false;
-
-
-let engineTargetSpeed =
-  0;
-
-
-let enginePositionSec =
-  0;
-
-
-let engineReportPerf =
-  performance.now();
-
-
-let engineEndedLock =
-  false;
-
-
-/* =====================================================
-   GENERAL HELPERS
-===================================================== */
+}
 
 function getDuration(){
 
@@ -2578,7 +2375,6 @@ function getDuration(){
 
   }
 
-
   if(
     Number.isFinite(
       audio.duration
@@ -2591,19 +2387,13 @@ function getDuration(){
 
   }
 
-
   return 0;
-
 }
 
-
-function clampTime(
-  time
-){
+function clampTime(time){
 
   const duration =
     getDuration();
-
 
   if(
     !duration
@@ -2611,13 +2401,10 @@ function clampTime(
 
     return Math.max(
       0,
-      time
-      ||
-      0
+      time || 0
     );
 
   }
-
 
   return Math.max(
     0,
@@ -2626,77 +2413,57 @@ function clampTime(
       time
     )
   );
-
 }
 
-
-function smootherStep(
-  t
+function createReversedBuffer(
+  original,
+  context
 ){
 
-  return (
-    t*t*t
-    *
-    (
-      t
-      *
-      (
-        t*6
-        -
-        15
-      )
-      +
-      10
-    )
-  );
-
-}
+  const reversed =
+    context.createBuffer(
+      original.numberOfChannels,
+      original.length,
+      original.sampleRate
+    );
 
 
-function fmt(
-  seconds
-){
-
-  if(
-    !Number.isFinite(
-      seconds
-    )
+  for(
+    let channel=0;
+    channel<original.numberOfChannels;
+    channel++
   ){
 
-    return "0:00";
+    const source =
+      original.getChannelData(
+        channel
+      );
+
+    const target =
+      reversed.getChannelData(
+        channel
+      );
+
+
+    for(
+      let i=0;
+      i<source.length;
+      i++
+    ){
+
+      target[i] =
+        source[
+          source.length -
+          1 -
+          i
+        ];
+
+    }
 
   }
 
 
-  const minutes =
-    Math.floor(
-      seconds
-      /
-      60
-    );
-
-
-  const sec =
-    Math.floor(
-      seconds
-      %
-      60
-    );
-
-
-  return (
-    minutes
-    +
-    ":"
-    +
-    String(
-      sec
-    ).padStart(
-      2,
-      "0"
-    )
-  );
-
+  return reversed;
 }
 
 
@@ -2707,14 +2474,11 @@ function fmt(
 const ARM_PARK_ANGLE =
   -8;
 
-
 const ARM_START_ANGLE =
   19.5;
 
-
 const ARM_END_ANGLE =
   32.5;
-
 
 let currentTonearmAngle =
   ARM_PARK_ANGLE;
@@ -2742,8 +2506,7 @@ function armAngleFromTime(
       0,
       Math.min(
         1,
-        time
-        /
+        time /
         duration
       )
     );
@@ -2753,8 +2516,7 @@ function armAngleFromTime(
     ARM_START_ANGLE
     +
     (
-      ARM_END_ANGLE
-      -
+      ARM_END_ANGLE -
       ARM_START_ANGLE
     )
     *
@@ -2783,82 +2545,9 @@ setTonearmAngle(
 );
 
 
-/* =====================================================
-   UI
-===================================================== */
-
-function updateProgressUI(
-  time
-){
-
-  const duration =
-    getDuration();
-
-
-  const ratio =
-    duration
-    ?
-    Math.max(
-      0,
-      Math.min(
-        1,
-        time
-        /
-        duration
-      )
-    )
-    :
-    0;
-
-
-  progress.style.transform =
-    `scaleX(${ratio})`;
-
-
-  current.textContent =
-    fmt(
-      time
-    );
-
-}
-
-
-function updateScratchVisuals(){
-
-  setVinylAngle(
-    angleFromAudioTime(
-      scratchTime
-    )
-  );
-
-
-  if(
-    tonearmEngaged
-  ){
-
-    setTonearmAngle(
-      armAngleFromTime(
-        scratchTime
-      )
-    );
-
-  }
-
-
-  updateProgressUI(
-    scratchTime
-  );
-
-}
-
-
-/* =====================================================
-   ARM
-===================================================== */
-
 function animateTonearmTo(
   targetAngle,
-  duration = 600
+  duration=600
 ){
 
   return new Promise(
@@ -2880,11 +2569,9 @@ function animateTonearmTo(
           Math.min(
             1,
             (
-              now
-              -
+              now -
               started
-            )
-            /
+            ) /
             duration
           );
 
@@ -2899,8 +2586,7 @@ function animateTonearmTo(
           startAngle
           +
           (
-            targetAngle
-            -
+            targetAngle -
             startAngle
           )
           *
@@ -2968,124 +2654,112 @@ async function engageTonearm(){
 
 
 /* =====================================================
-   AUDIO CONTEXT
+   UI
 ===================================================== */
 
-function getAudioContext(){
-
-  if(
-    !audioContext
-  ){
-
-    const AudioContextClass =
-      window.AudioContext
-      ||
-      window.webkitAudioContext;
-
-
-    audioContext =
-      new AudioContextClass(
-        {
-          latencyHint:
-            "interactive"
-        }
-      );
-
-  }
-
-
-  return audioContext;
-
-}
-
-
-async function resumeAudioContext(){
-
-  const context =
-    getAudioContext();
-
-
-  if(
-    context.state ===
-    "suspended"
-  ){
-
-    try{
-
-      await context.resume();
-
-    }
-
-    catch(_){}
-
-  }
-
-}
-
-
-/* =====================================================
-   REVERSE BUFFER
-===================================================== */
-
-function createReversedBuffer(
-  original,
-  context
+function updateProgressUI(
+  time
 ){
 
-  const reversed =
-    context.createBuffer(
-      original.numberOfChannels,
-      original.length,
-      original.sampleRate
+  const duration =
+    getDuration();
+
+
+  const ratio =
+    duration
+    ?
+    Math.max(
+      0,
+      Math.min(
+        1,
+        time /
+        duration
+      )
+    )
+    :
+    0;
+
+
+  progress.style.transform =
+    `scaleX(${ratio})`;
+
+
+  current.textContent =
+    fmt(
+      time
     );
 
+}
 
-  for(
-    let channel = 0;
-    channel < original.numberOfChannels;
-    channel++
+
+function updateScratchVisuals(){
+
+  setVinylAngle(
+    angleFromAudioTime(
+      scratchTime
+    )
+  );
+
+
+  if(
+    tonearmEngaged
   ){
 
-    const source =
-      original.getChannelData(
-        channel
-      );
-
-
-    const target =
-      reversed.getChannelData(
-        channel
-      );
-
-
-    for(
-      let i = 0;
-      i < source.length;
-      i++
-    ){
-
-      target[i] =
-        source[
-          source.length
-          -
-          1
-          -
-          i
-        ];
-
-    }
+    setTonearmAngle(
+      armAngleFromTime(
+        scratchTime
+      )
+    );
 
   }
 
 
-  return reversed;
+  updateProgressUI(
+    scratchTime
+  );
 
 }
 
 
 /* =====================================================
-   AUDIOWORKLET VARISPEED PROCESSOR
+   AUDIOWORKLET VARISPEED ENGINE
 ===================================================== */
+
+let workletNode =
+  null;
+
+
+let workletOutputGain =
+  null;
+
+
+let workletLimiter =
+  null;
+
+
+let engineReady =
+  false;
+
+
+let engineActive =
+  false;
+
+
+let engineTargetSpeed =
+  0;
+
+
+let enginePositionSec =
+  0;
+
+
+let engineReportPerf =
+  performance.now();
+
+
+let engineEndedLock =
+  false;
+
 
 const WORKLET_PROCESSOR_CODE =
 `
@@ -3132,6 +2806,10 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
       0;
 
 
+    this.responseMode =
+      "smooth";
+
+
     this.reportCounter =
       0;
 
@@ -3144,8 +2822,7 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
       event => {
 
         const data =
-          event.data
-          ||
+          event.data ||
           {};
 
 
@@ -3156,8 +2833,7 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
           this.channels =
             (
-              data.channels
-              ||
+              data.channels ||
               []
             )
             .map(
@@ -3169,14 +2845,12 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
 
           this.sourceRate =
-            data.sourceRate
-            ||
+            data.sourceRate ||
             sampleRate;
 
 
           this.length =
-            data.length
-            ||
+            data.length ||
             (
               this.channels[0]
               ?
@@ -3190,12 +2864,14 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
             Math.max(
               0,
               Math.min(
-                this.length
-                -
-                1,
+                Math.max(
+                  0,
+                  this.length -
+                  1
+                ),
+
                 (
-                  data.position
-                  ||
+                  data.position ||
                   0
                 )
                 *
@@ -3205,8 +2881,7 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
 
           this.targetSpeed =
-            data.speed
-            ||
+            data.speed ||
             0;
 
 
@@ -3230,6 +2905,11 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
             this.targetGain;
 
 
+          this.responseMode =
+            data.response ||
+            "smooth";
+
+
           this.endedSent =
             false;
 
@@ -3240,8 +2920,7 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
                 "ready",
 
               position:
-                this.position
-                /
+                this.position /
                 this.sourceRate
             }
           );
@@ -3258,6 +2937,17 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
         ){
 
           if(
+            typeof data.response ===
+            "string"
+          ){
+
+            this.responseMode =
+              data.response;
+
+          }
+
+
+          if(
             typeof data.position ===
             "number"
           ){
@@ -3268,12 +2958,11 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
                 Math.min(
                   Math.max(
                     0,
-                    this.length
-                    -
+                    this.length -
                     1
                   ),
-                  data.position
-                  *
+
+                  data.position *
                   this.sourceRate
                 )
               );
@@ -3360,8 +3049,7 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
       Math.max(
         0,
         Math.min(
-          this.length
-          -
+          this.length -
           1.001,
           position
         )
@@ -3376,18 +3064,16 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
     const i1 =
       Math.min(
-        this.length
-        -
+        this.length -
         1,
-        i0
-        +
+
+        i0 +
         1
       );
 
 
     const frac =
-      p
-      -
+      p -
       i0;
 
 
@@ -3431,13 +3117,22 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
 
     /*
-      Very short smoothing only.
+      MANUAL:
+      дуже швидка реакція руки.
 
-      This removes clicks but does not
-      create the old sluggish granular feel.
+      SMOOTH:
+      motor / brake / inertia.
+
+      Навіть при reverse напрямок проходить
+      через нуль sample-by-sample.
     */
 
     const speedSmoothing =
+      this.responseMode ===
+      "manual"
+      ?
+      0.018
+      :
       0.0035;
 
 
@@ -3446,15 +3141,14 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
 
     for(
-      let i = 0;
-      i < frames;
+      let i=0;
+      i<frames;
       i++
     ){
 
       this.currentSpeed +=
         (
-          this.targetSpeed
-          -
+          this.targetSpeed -
           this.currentSpeed
         )
         *
@@ -3463,8 +3157,7 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
       this.currentGain +=
         (
-          this.targetGain
-          -
+          this.targetGain -
           this.currentGain
         )
         *
@@ -3484,8 +3177,8 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
 
       for(
-        let ch = 0;
-        ch < output.length;
+        let ch=0;
+        ch<output.length;
         ch++
       ){
 
@@ -3495,8 +3188,7 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
           this.sampleAt(
             Math.min(
               ch,
-              this.channels.length
-              -
+              this.channels.length -
               1
             ),
             this.position
@@ -3576,14 +3268,12 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
         if(
           this.position
           >=
-          this.length
-          -
+          this.length -
           1
         ){
 
           this.position =
-            this.length
-            -
+            this.length -
             1;
 
 
@@ -3613,8 +3303,7 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
                     "boundary",
 
                   position:
-                    this.position
-                    /
+                    this.position /
                     this.sourceRate,
 
                   direction:
@@ -3640,7 +3329,7 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
     if(
       this.reportCounter
       >=
-      1024
+      512
     ){
 
       this.reportCounter =
@@ -3653,8 +3342,7 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
             "position",
 
           position:
-            this.position
-            /
+            this.position /
             this.sourceRate,
 
           speed:
@@ -3683,7 +3371,7 @@ registerProcessor(
 
 
 /* =====================================================
-   INIT WORKLET
+   WORKLET INIT
 ===================================================== */
 
 async function initWorkletFromBuffer(
@@ -3765,7 +3453,51 @@ async function initWorkletFromBuffer(
     );
 
 
-  workletNode.connect(
+  /*
+    Невеликий запас по рівню +
+    limiter як страховка від агресивних піків.
+  */
+
+  workletOutputGain =
+    context.createGain();
+
+
+  workletOutputGain.gain.value =
+    0.92;
+
+
+  workletLimiter =
+    context.createDynamicsCompressor();
+
+
+  workletLimiter.threshold.value =
+    -2;
+
+
+  workletLimiter.knee.value =
+    0;
+
+
+  workletLimiter.ratio.value =
+    20;
+
+
+  workletLimiter.attack.value =
+    0.001;
+
+
+  workletLimiter.release.value =
+    0.05;
+
+
+  workletNode
+  .connect(
+    workletOutputGain
+  )
+  .connect(
+    workletLimiter
+  )
+  .connect(
     context.destination
   );
 
@@ -3774,8 +3506,7 @@ async function initWorkletFromBuffer(
     event => {
 
       const data =
-        event.data
-        ||
+        event.data ||
         {};
 
 
@@ -3789,8 +3520,7 @@ async function initWorkletFromBuffer(
 
 
         enginePositionSec =
-          data.position
-          ||
+          data.position ||
           0;
 
 
@@ -3814,8 +3544,7 @@ async function initWorkletFromBuffer(
 
         enginePositionSec =
           clampTime(
-            data.position
-            ||
+            data.position ||
             0
           );
 
@@ -3849,8 +3578,7 @@ async function initWorkletFromBuffer(
 
         enginePositionSec =
           clampTime(
-            data.position
-            ||
+            data.position ||
             0
           );
 
@@ -3860,7 +3588,8 @@ async function initWorkletFromBuffer(
 
 
         if(
-          data.direction === 1
+          data.direction ===
+          1
           &&
           playIntent
           &&
@@ -3922,8 +3651,8 @@ async function initWorkletFromBuffer(
 
 
   for(
-    let c = 0;
-    c < buffer.numberOfChannels;
+    let c=0;
+    c<buffer.numberOfChannels;
     c++
   ){
 
@@ -3967,7 +3696,10 @@ async function initWorkletFromBuffer(
         0,
 
       active:
-        false
+        false,
+
+      response:
+        "smooth"
     },
     transfer
   );
@@ -3984,7 +3716,8 @@ function engineControl(
     position,
     speed,
     active,
-    hardSpeed = false
+    hardSpeed=false,
+    response
   }
   =
   {}
@@ -4084,6 +3817,17 @@ function engineControl(
   }
 
 
+  if(
+    typeof response ===
+    "string"
+  ){
+
+    payload.response =
+      response;
+
+  }
+
+
   workletNode.port.postMessage(
     payload
   );
@@ -4092,7 +3836,7 @@ function engineControl(
 
 
 /* =====================================================
-   ESTIMATED ENGINE POSITION
+   ENGINE POSITION
 ===================================================== */
 
 function getEstimatedEnginePosition(){
@@ -4130,7 +3874,7 @@ function getEstimatedEnginePosition(){
       engineTargetSpeed
       *
       Math.min(
-        .08,
+        .05,
         elapsed
       );
 
@@ -4145,7 +3889,7 @@ function getEstimatedEnginePosition(){
 
 
 /* =====================================================
-   WAVEFORM
+   WAVEFORM / LOAD
 ===================================================== */
 
 const WAVE_BARS =
@@ -4193,10 +3937,6 @@ function renderBars(
 }
 
 
-/* =====================================================
-   LOAD TRACK
-===================================================== */
-
 async function loadTrackData(
   url
 ){
@@ -4234,7 +3974,9 @@ async function loadTrackData(
 
     decodedTrack =
       await context.decodeAudioData(
-        arrayBuffer.slice(0)
+        arrayBuffer.slice(
+          0
+        )
       );
 
 
@@ -4253,8 +3995,8 @@ async function loadTrackData(
 
 
     for(
-      let c = 0;
-      c < decodedTrack.numberOfChannels;
+      let c=0;
+      c<decodedTrack.numberOfChannels;
       c++
     ){
 
@@ -4283,22 +4025,20 @@ async function loadTrackData(
 
 
     for(
-      let i = 0;
-      i < WAVE_BARS;
+      let i=0;
+      i<WAVE_BARS;
       i++
     ){
 
       const start =
-        i
-        *
+        i *
         blockSize;
 
 
       const end =
         Math.min(
           decodedTrack.length,
-          start
-          +
+          start +
           blockSize
         );
 
@@ -4307,20 +4047,12 @@ async function loadTrackData(
         0;
 
 
-      /*
-        Sampling stride.
-
-        We do not need to inspect every sample
-        just to build the tiny visual waveform.
-      */
-
       const stride =
         Math.max(
           1,
           Math.floor(
             (
-              end
-              -
+              end -
               start
             )
             /
@@ -4330,15 +4062,15 @@ async function loadTrackData(
 
 
       for(
-        let c = 0;
-        c < channels.length;
+        let c=0;
+        c<channels.length;
         c++
       ){
 
         for(
-          let s = start;
-          s < end;
-          s += stride
+          let s=start;
+          s<end;
+          s+=stride
         ){
 
           peak =
@@ -4372,10 +4104,8 @@ async function loadTrackData(
     const heights =
       peaks.map(
         peak =>
-          peak
-          /
-          maxPeak
-          *
+          peak /
+          maxPeak *
           100
       );
 
@@ -4391,11 +4121,6 @@ async function loadTrackData(
       heights
     );
 
-
-    /*
-      Reverse buffer is retained only
-      for the existing seek sound.
-    */
 
     reversedTrack =
       createReversedBuffer(
@@ -4424,11 +4149,9 @@ async function loadTrackData(
             WAVE_BARS
         },
         (_,i) =>
-          16
-          +
+          16 +
           (
-            i
-            *
+            i *
             37
           )
           %
@@ -4466,6 +4189,25 @@ loadTrackData(
 /* =====================================================
    NORMAL PLAY SYNC
 ===================================================== */
+
+function stopVinylSync(){
+
+  if(
+    vinylRAF
+  ){
+
+    cancelAnimationFrame(
+      vinylRAF
+    );
+
+
+    vinylRAF =
+      null;
+
+  }
+
+}
+
 
 function startVinylSync(){
 
@@ -4547,28 +4289,32 @@ function startVinylSync(){
 }
 
 
-function stopVinylSync(){
+/* =====================================================
+   CANCEL HELPERS
+===================================================== */
+
+function cancelGrabBrake(){
+
+  grabBrakeActive =
+    false;
+
 
   if(
-    vinylRAF
+    grabBrakeRAF
   ){
 
     cancelAnimationFrame(
-      vinylRAF
+      grabBrakeRAF
     );
 
 
-    vinylRAF =
+    grabBrakeRAF =
       null;
 
   }
 
 }
 
-
-/* =====================================================
-   PLAY START
-===================================================== */
 
 function cancelPlayStart(){
 
@@ -4595,15 +4341,200 @@ function cancelPlayStart(){
 
   }
 
+
+  if(
+    playStartResolve
+  ){
+
+    const resolve =
+      playStartResolve;
+
+
+    playStartResolve =
+      null;
+
+
+    resolve(
+      false
+    );
+
+  }
+
 }
 
 
-function startPlayAcceleration(){
+function cancelPauseBrake(){
+
+  isPauseBraking =
+    false;
+
+
+  track.classList.remove(
+    "is-pause-braking"
+  );
+
+
+  if(
+    pauseBrakeRAF
+  ){
+
+    cancelAnimationFrame(
+      pauseBrakeRAF
+    );
+
+
+    pauseBrakeRAF =
+      null;
+
+  }
+
+
+  if(
+    pauseBrakeResolve
+  ){
+
+    const resolve =
+      pauseBrakeResolve;
+
+
+    pauseBrakeResolve =
+      null;
+
+
+    resolve(
+      false
+    );
+
+  }
+
+}
+
+
+function cancelMotorRecovery(){
+
+  isMotorRecovering =
+    false;
+
+
+  track.classList.remove(
+    "is-motor-recovering"
+  );
+
+
+  if(
+    motorRecoveryRAF
+  ){
+
+    cancelAnimationFrame(
+      motorRecoveryRAF
+    );
+
+
+    motorRecoveryRAF =
+      null;
+
+  }
+
+
+  if(
+    motorRecoveryResolve
+  ){
+
+    const resolve =
+      motorRecoveryResolve;
+
+
+    motorRecoveryResolve =
+      null;
+
+
+    resolve(
+      false
+    );
+
+  }
+
+}
+
+
+function cancelFreeSpin(){
+
+  isFreeSpinning =
+    false;
+
+
+  track.classList.remove(
+    "is-free-spinning"
+  );
+
+
+  if(
+    freeSpinRAF
+  ){
+
+    cancelAnimationFrame(
+      freeSpinRAF
+    );
+
+
+    freeSpinRAF =
+      null;
+
+  }
+
+
+  if(
+    freeSpinResolve
+  ){
+
+    const resolve =
+      freeSpinResolve;
+
+
+    freeSpinResolve =
+      null;
+
+
+    resolve(
+      false
+    );
+
+  }
+
+}
+
+
+function cancelAllTransientPhysics(){
+
+  cancelGrabBrake();
+
+  cancelMotorRecovery();
+
+  cancelPlayStart();
+
+  cancelPauseBrake();
+
+  cancelFreeSpin();
+
+}
+
+
+/* =====================================================
+   PLAY START
+===================================================== */
+
+function startPlayAcceleration(
+  generation
+){
 
   return new Promise(
     resolve => {
 
       cancelPlayStart();
+
+
+      playStartResolve =
+        resolve;
 
 
       isPlayStarting =
@@ -4627,17 +4558,14 @@ function startPlayAcceleration(){
 
       engineControl(
         {
-          position:
-            scratchTime,
-
           speed:
             scratchVelocity,
 
           active:
             true,
 
-          hardSpeed:
-            true
+          response:
+            "smooth"
         }
       );
 
@@ -4656,11 +4584,40 @@ function startPlayAcceleration(){
         started;
 
 
+      function finish(
+        result
+      ){
+
+        if(
+          playStartResolve
+        ){
+
+          const resolver =
+            playStartResolve;
+
+
+          playStartResolve =
+            null;
+
+
+          resolver(
+            result
+          );
+
+        }
+
+      }
+
+
       function frame(
         now
       ){
 
         if(
+          !generationAlive(
+            generation
+          )
+          ||
           !isPlayStarting
           ||
           !playIntent
@@ -4670,10 +4627,22 @@ function startPlayAcceleration(){
           isScratching
         ){
 
-          cancelPlayStart();
+          isPlayStarting =
+            false;
 
 
-          resolve();
+          track.classList.remove(
+            "is-play-starting"
+          );
+
+
+          playStartRAF =
+            null;
+
+
+          finish(
+            false
+          );
 
 
           return;
@@ -4685,8 +4654,7 @@ function startPlayAcceleration(){
           Math.min(
             .035,
             (
-              now
-              -
+              now -
               previous
             )
             /
@@ -4702,8 +4670,7 @@ function startPlayAcceleration(){
           Math.min(
             1,
             (
-              now
-              -
+              now -
               started
             )
             /
@@ -4715,8 +4682,7 @@ function startPlayAcceleration(){
           1
           -
           Math.pow(
-            1
-            -
+            1 -
             t,
             PLAY_START_CURVE
           );
@@ -4726,8 +4692,7 @@ function startPlayAcceleration(){
           PLAY_START_MIN_RATE
           +
           (
-            1
-            -
+            1 -
             PLAY_START_MIN_RATE
           )
           *
@@ -4738,8 +4703,7 @@ function startPlayAcceleration(){
           clampTime(
             scratchTime
             +
-            scratchVelocity
-            *
+            scratchVelocity *
             dt
           );
 
@@ -4750,7 +4714,10 @@ function startPlayAcceleration(){
               scratchVelocity,
 
             active:
-              true
+              true,
+
+            response:
+              "smooth"
           }
         );
 
@@ -4808,12 +4775,17 @@ function startPlayAcceleration(){
                 1,
 
               active:
-                true
+                true,
+
+              response:
+                "smooth"
             }
           );
 
 
-          resolve();
+          finish(
+            true
+          );
 
         }
 
@@ -4835,21 +4807,37 @@ function startPlayAcceleration(){
    START PHYSICAL PLAY
 ===================================================== */
 
-async function startPhysicalPlay(){
+async function startPhysicalPlay(
+  generation
+){
 
   if(
+    !generationAlive(
+      generation
+    )
+    ||
     !playIntent
   ){
 
-    return;
+    return false;
 
   }
 
 
-  cancelFreeSpin();
-
-
   await resumeAudioContext();
+
+
+  if(
+    !generationAlive(
+      generation
+    )
+    ||
+    !playIntent
+  ){
+
+    return false;
+
+  }
 
 
   if(
@@ -4867,21 +4855,54 @@ async function startPhysicalPlay(){
   }
 
 
+  /*
+    Один atomic resync при вході в Play.
+
+    Після цього PCM cursor не телепортується.
+  */
+
+  const position =
+    clampTime(
+      getEstimatedEnginePosition()
+    );
+
+
+  scratchTime =
+    position;
+
+
   engineControl(
     {
-      position:
-        scratchTime,
+      position,
+
+      speed:
+        PLAY_START_MIN_RATE,
 
       active:
-        true
+        true,
+
+      hardSpeed:
+        false,
+
+      response:
+        "smooth"
     }
   );
 
 
-  await startPlayAcceleration();
+  const completed =
+    await startPlayAcceleration(
+      generation
+    );
 
 
   if(
+    !completed
+    ||
+    !generationAlive(
+      generation
+    )
+    ||
     !playIntent
     ||
     isPacking
@@ -4889,7 +4910,7 @@ async function startPhysicalPlay(){
     isScratching
   ){
 
-    return;
+    return false;
 
   }
 
@@ -4898,16 +4919,22 @@ async function startPhysicalPlay(){
     1;
 
 
+  scratchTime =
+    clampTime(
+      getEstimatedEnginePosition()
+    );
+
+
   engineControl(
     {
-      position:
-        scratchTime,
-
       speed:
         1,
 
       active:
-        true
+        true,
+
+      response:
+        "smooth"
     }
   );
 
@@ -4918,6 +4945,9 @@ async function startPhysicalPlay(){
 
   startVinylSync();
 
+
+  return true;
+
 }
 
 
@@ -4925,40 +4955,18 @@ async function startPhysicalPlay(){
    PAUSE BRAKE
 ===================================================== */
 
-function cancelPauseBrake(){
-
-  isPauseBraking =
-    false;
-
-
-  track.classList.remove(
-    "is-pause-braking"
-  );
-
-
-  if(
-    pauseBrakeRAF
-  ){
-
-    cancelAnimationFrame(
-      pauseBrakeRAF
-    );
-
-
-    pauseBrakeRAF =
-      null;
-
-  }
-
-}
-
-
-function startPauseBrake(){
+function startPauseBrake(
+  generation
+){
 
   return new Promise(
     resolve => {
 
       cancelPauseBrake();
+
+
+      pauseBrakeResolve =
+        resolve;
 
 
       isPauseBraking =
@@ -4980,19 +4988,23 @@ function startPauseBrake(){
         1;
 
 
+      /*
+        Не записуємо position.
+
+        Worklet вже знаходиться на
+        безперервному PCM cursor.
+      */
+
       engineControl(
         {
-          position:
-            scratchTime,
-
           speed:
             1,
 
           active:
             true,
 
-          hardSpeed:
-            true
+          response:
+            "smooth"
         }
       );
 
@@ -5011,21 +5023,61 @@ function startPauseBrake(){
         started;
 
 
+      function finish(
+        result
+      ){
+
+        if(
+          pauseBrakeResolve
+        ){
+
+          const resolver =
+            pauseBrakeResolve;
+
+
+          pauseBrakeResolve =
+            null;
+
+
+          resolver(
+            result
+          );
+
+        }
+
+      }
+
+
       function frame(
         now
       ){
 
         if(
+          !generationAlive(
+            generation
+          )
+          ||
           !isPauseBraking
           ||
           isPacking
         ){
 
+          isPauseBraking =
+            false;
+
+
+          track.classList.remove(
+            "is-pause-braking"
+          );
+
+
           pauseBrakeRAF =
             null;
 
 
-          resolve();
+          finish(
+            false
+          );
 
 
           return;
@@ -5037,8 +5089,7 @@ function startPauseBrake(){
           Math.min(
             .035,
             (
-              now
-              -
+              now -
               previous
             )
             /
@@ -5054,8 +5105,7 @@ function startPauseBrake(){
           Math.min(
             1,
             (
-              now
-              -
+              now -
               started
             )
             /
@@ -5073,8 +5123,7 @@ function startPauseBrake(){
         scratchVelocity =
           Math.max(
             0,
-            1
-            -
+            1 -
             braking
           );
 
@@ -5117,7 +5166,10 @@ function startPauseBrake(){
               scratchVelocity,
 
             active:
-              true
+              true,
+
+            response:
+              "smooth"
           }
         );
 
@@ -5138,7 +5190,9 @@ function startPauseBrake(){
         if(
           t < 1
           &&
-          scratchVelocity > .002
+          scratchVelocity
+          >
+          .002
         ){
 
           pauseBrakeRAF =
@@ -5149,6 +5203,22 @@ function startPauseBrake(){
         }
 
         else{
+
+          if(
+            !generationAlive(
+              generation
+            )
+          ){
+
+            finish(
+              false
+            );
+
+
+            return;
+
+          }
+
 
           scratchVelocity =
             0;
@@ -5175,9 +5245,6 @@ function startPauseBrake(){
 
           engineControl(
             {
-              position:
-                scratchTime,
-
               speed:
                 0,
 
@@ -5185,7 +5252,10 @@ function startPauseBrake(){
                 true,
 
               hardSpeed:
-                true
+                false,
+
+              response:
+                "smooth"
             }
           );
 
@@ -5197,7 +5267,9 @@ function startPauseBrake(){
             "PLAYBACK // PAUSED";
 
 
-          resolve();
+          finish(
+            true
+          );
 
         }
 
@@ -5216,113 +5288,383 @@ function startPauseBrake(){
 
 
 /* =====================================================
-   FREE SPIN / INERTIA
+   FREE SPIN
 ===================================================== */
 
-function cancelFreeSpin(){
+function startFreeSpin(
+  initialVelocity,
+  generation
+){
 
-  isFreeSpinning =
-    false;
+  return new Promise(
+    resolve => {
+
+      cancelFreeSpin();
 
 
-  track.classList.remove(
-    "is-free-spinning"
+      freeSpinResolve =
+        resolve;
+
+
+      if(
+        Math.abs(
+          initialVelocity
+        )
+        <
+        FREE_SPIN_RELEASE_THRESHOLD
+      ){
+
+        scratchVelocity =
+          0;
+
+
+        engineControl(
+          {
+            speed:
+              0,
+
+            active:
+              true,
+
+            response:
+              "smooth"
+          }
+        );
+
+
+        updateScratchVisuals();
+
+
+        const resolver =
+          freeSpinResolve;
+
+
+        freeSpinResolve =
+          null;
+
+
+        resolver(
+          true
+        );
+
+
+        return;
+
+      }
+
+
+      isFreeSpinning =
+        true;
+
+
+      track.classList.add(
+        "is-free-spinning"
+      );
+
+
+      scratchVelocity =
+        initialVelocity;
+
+
+      engineControl(
+        {
+          speed:
+            scratchVelocity,
+
+          active:
+            true,
+
+          response:
+            "smooth"
+        }
+      );
+
+
+      let previous =
+        performance.now();
+
+
+      function finish(
+        result
+      ){
+
+        if(
+          freeSpinResolve
+        ){
+
+          const resolver =
+            freeSpinResolve;
+
+
+          freeSpinResolve =
+            null;
+
+
+          resolver(
+            result
+          );
+
+        }
+
+      }
+
+
+      function frame(
+        now
+      ){
+
+        if(
+          !generationAlive(
+            generation
+          )
+          ||
+          !isFreeSpinning
+          ||
+          playIntent
+          ||
+          isPacking
+          ||
+          isScratching
+        ){
+
+          isFreeSpinning =
+            false;
+
+
+          track.classList.remove(
+            "is-free-spinning"
+          );
+
+
+          freeSpinRAF =
+            null;
+
+
+          finish(
+            false
+          );
+
+
+          return;
+
+        }
+
+
+        const dt =
+          Math.min(
+            .035,
+            (
+              now -
+              previous
+            )
+            /
+            1000
+          );
+
+
+        previous =
+          now;
+
+
+        scratchVelocity *=
+          Math.exp(
+            -FREE_SPIN_FRICTION
+            *
+            dt
+          );
+
+
+        scratchTime =
+          clampTime(
+            scratchTime
+            +
+            scratchVelocity
+            *
+            dt
+          );
+
+
+        engineControl(
+          {
+            speed:
+              scratchVelocity,
+
+            active:
+              true,
+
+            response:
+              "smooth"
+          }
+        );
+
+
+        updateScratchVisuals();
+
+
+        microstatus.textContent =
+          "FREE SPIN // "
+          +
+          (
+            scratchVelocity >= 0
+            ?
+            "+"
+            :
+            "−"
+          )
+          +
+          Math.abs(
+            scratchVelocity
+          )
+          .toFixed(
+            2
+          )
+          +
+          "×";
+
+
+        const duration =
+          getDuration();
+
+
+        const atBoundary =
+          scratchTime <= 0
+          ||
+          (
+            duration
+            &&
+            scratchTime >=
+            duration
+          );
+
+
+        if(
+          Math.abs(
+            scratchVelocity
+          )
+          >
+          FREE_SPIN_MIN_VELOCITY
+          &&
+          !atBoundary
+        ){
+
+          freeSpinRAF =
+            requestAnimationFrame(
+              frame
+            );
+
+        }
+
+        else{
+
+          if(
+            !generationAlive(
+              generation
+            )
+          ){
+
+            finish(
+              false
+            );
+
+
+            return;
+
+          }
+
+
+          scratchVelocity =
+            0;
+
+
+          isFreeSpinning =
+            false;
+
+
+          track.classList.remove(
+            "is-free-spinning"
+          );
+
+
+          freeSpinRAF =
+            null;
+
+
+          scratchTime =
+            clampTime(
+              getEstimatedEnginePosition()
+            );
+
+
+          engineControl(
+            {
+              speed:
+                0,
+
+              active:
+                true,
+
+              response:
+                "smooth"
+            }
+          );
+
+
+          updateScratchVisuals();
+
+
+          microstatus.textContent =
+            "PLAYBACK // PAUSED";
+
+
+          finish(
+            true
+          );
+
+        }
+
+      }
+
+
+      freeSpinRAF =
+        requestAnimationFrame(
+          frame
+        );
+
+    }
   );
-
-
-  if(
-    freeSpinRAF
-  ){
-
-    cancelAnimationFrame(
-      freeSpinRAF
-    );
-
-
-    freeSpinRAF =
-      null;
-
-  }
 
 }
 
 
-function startFreeSpin(
-  initialVelocity
+/* =====================================================
+   GRAB BRAKE
+===================================================== */
+
+function startGrabBrake(
+  initialVelocity,
+  generation
 ){
 
-  cancelFreeSpin();
+  cancelGrabBrake();
 
 
-  if(
-    Math.abs(
-      initialVelocity
-    )
-    <
-    FREE_SPIN_RELEASE_THRESHOLD
-  ){
-
-    scratchVelocity =
-      0;
-
-
-    engineControl(
-      {
-        position:
-          scratchTime,
-
-        speed:
-          0,
-
-        active:
-          true,
-
-        hardSpeed:
-          true
-      }
-    );
-
-
-    updateScratchVisuals();
-
-
-    return;
-
-  }
-
-
-  isFreeSpinning =
+  grabBrakeActive =
     true;
 
 
-  track.classList.add(
-    "is-free-spinning"
-  );
+  const startVelocity =
+    Math.max(
+      0,
+      initialVelocity
+    );
 
 
-  scratchVelocity =
-    initialVelocity;
-
-
-  engineControl(
-    {
-      position:
-        scratchTime,
-
-      speed:
-        scratchVelocity,
-
-      active:
-        true,
-
-      hardSpeed:
-        true
-    }
-  );
+  const started =
+    performance.now();
 
 
   let previous =
-    performance.now();
+    started;
 
 
   function frame(
@@ -5330,16 +5672,19 @@ function startFreeSpin(
   ){
 
     if(
-      !isFreeSpinning
+      !generationAlive(
+        generation
+      )
       ||
-      playIntent
+      !isScratching
       ||
-      isPacking
+      !grabBrakeActive
       ||
-      isScratching
+      manualScratchStarted
     ){
 
-      cancelFreeSpin();
+      grabBrakeRAF =
+        null;
 
 
       return;
@@ -5349,10 +5694,9 @@ function startFreeSpin(
 
     const dt =
       Math.min(
-        .035,
+        .04,
         (
-          now
-          -
+          now -
           previous
         )
         /
@@ -5364,16 +5708,57 @@ function startFreeSpin(
       now;
 
 
-    const damping =
-      Math.exp(
-        -FREE_SPIN_FRICTION
-        *
-        dt
+    const t =
+      Math.min(
+        1,
+        (
+          now -
+          started
+        )
+        /
+        GRAB_BRAKE_DURATION
       );
 
 
-    scratchVelocity *=
-      damping;
+    const braking =
+      Math.pow(
+        t,
+        GRAB_BRAKE_CURVE
+      );
+
+
+    scratchVelocity =
+      Math.max(
+        0,
+        startVelocity
+        *
+        (
+          1 -
+          braking
+        )
+      );
+
+
+    if(
+      scratchVelocity
+      <
+      .12
+    ){
+
+      const tail =
+        scratchVelocity
+        /
+        .12;
+
+
+      scratchVelocity =
+        .12
+        *
+        tail
+        *
+        tail;
+
+    }
 
 
     scratchTime =
@@ -5392,7 +5777,10 @@ function startFreeSpin(
           scratchVelocity,
 
         active:
-          true
+          true,
+
+        response:
+          "smooth"
       }
     );
 
@@ -5401,51 +5789,24 @@ function startFreeSpin(
 
 
     microstatus.textContent =
-      "FREE SPIN // "
+      "GRAB BRAKE // "
       +
-      (
-        scratchVelocity >= 0
-        ?
-        "+"
-        :
-        "−"
-      )
-      +
-      Math.abs(
-        scratchVelocity
-      )
-      .toFixed(
+      scratchVelocity.toFixed(
         2
       )
       +
       "×";
 
 
-    const duration =
-      getDuration();
-
-
-    const atBoundary =
-      scratchTime <= 0
-      ||
-      (
-        duration
-        &&
-        scratchTime >= duration
-      );
-
-
     if(
-      Math.abs(
-        scratchVelocity
-      )
-      >
-      FREE_SPIN_MIN_VELOCITY
+      t < 1
       &&
-      !atBoundary
+      scratchVelocity
+      >
+      .002
     ){
 
-      freeSpinRAF =
+      grabBrakeRAF =
         requestAnimationFrame(
           frame
         );
@@ -5458,57 +5819,365 @@ function startFreeSpin(
         0;
 
 
-      isFreeSpinning =
+      grabBrakeActive =
         false;
 
 
-      freeSpinRAF =
+      grabBrakeRAF =
         null;
-
-
-      track.classList.remove(
-        "is-free-spinning"
-      );
-
-
-      scratchTime =
-        clampTime(
-          getEstimatedEnginePosition()
-        );
 
 
       engineControl(
         {
-          position:
-            scratchTime,
-
           speed:
             0,
 
           active:
             true,
 
-          hardSpeed:
-            true
+          response:
+            "smooth"
         }
       );
 
 
-      updateScratchVisuals();
-
-
       microstatus.textContent =
-        "PLAYBACK // PAUSED";
+        "SCRATCH // HOLD";
 
     }
 
   }
 
 
-  freeSpinRAF =
+  grabBrakeRAF =
     requestAnimationFrame(
       frame
     );
+
+}
+
+
+/* =====================================================
+   MOTOR RECOVERY
+===================================================== */
+
+function startMotorRecovery(
+  generation
+){
+
+  return new Promise(
+    resolve => {
+
+      cancelMotorRecovery();
+
+
+      motorRecoveryResolve =
+        resolve;
+
+
+      isMotorRecovering =
+        true;
+
+
+      track.classList.add(
+        "is-motor-recovering"
+      );
+
+
+      const startVelocity =
+        scratchVelocity;
+
+
+      const distance =
+        Math.abs(
+          1 -
+          startVelocity
+        );
+
+
+      const baseDuration =
+        Math.min(
+          MOTOR_RECOVERY_MAX_DURATION,
+          Math.max(
+            MOTOR_RECOVERY_MIN_DURATION,
+            420
+            +
+            distance
+            *
+            520
+          )
+        );
+
+
+      const duration =
+        baseDuration
+        /
+        MOTOR_RECOVERY_SPEED;
+
+
+      const started =
+        performance.now();
+
+
+      let previous =
+        started;
+
+
+      /*
+        Продовжуємо з поточного
+        Worklet cursor.
+
+        position тут не пишемо.
+      */
+
+      engineControl(
+        {
+          speed:
+            startVelocity,
+
+          active:
+            true,
+
+          response:
+            "smooth"
+        }
+      );
+
+
+      function finish(
+        result
+      ){
+
+        if(
+          motorRecoveryResolve
+        ){
+
+          const resolver =
+            motorRecoveryResolve;
+
+
+          motorRecoveryResolve =
+            null;
+
+
+          resolver(
+            result
+          );
+
+        }
+
+      }
+
+
+      function frame(
+        now
+      ){
+
+        if(
+          !generationAlive(
+            generation
+          )
+          ||
+          !isMotorRecovering
+          ||
+          !playIntent
+          ||
+          isPacking
+          ||
+          isScratching
+        ){
+
+          isMotorRecovering =
+            false;
+
+
+          track.classList.remove(
+            "is-motor-recovering"
+          );
+
+
+          motorRecoveryRAF =
+            null;
+
+
+          finish(
+            false
+          );
+
+
+          return;
+
+        }
+
+
+        const dt =
+          Math.min(
+            .035,
+            (
+              now -
+              previous
+            )
+            /
+            1000
+          );
+
+
+        previous =
+          now;
+
+
+        const t =
+          Math.min(
+            1,
+            (
+              now -
+              started
+            )
+            /
+            duration
+          );
+
+
+        const curve =
+          1
+          -
+          Math.pow(
+            1 -
+            t,
+            MOTOR_PULL_STRENGTH
+          );
+
+
+        scratchVelocity =
+          startVelocity
+          +
+          (
+            1 -
+            startVelocity
+          )
+          *
+          curve;
+
+
+        scratchTime =
+          clampTime(
+            scratchTime
+            +
+            scratchVelocity
+            *
+            dt
+          );
+
+
+        engineControl(
+          {
+            speed:
+              scratchVelocity,
+
+            active:
+              true,
+
+            response:
+              "smooth"
+          }
+        );
+
+
+        updateScratchVisuals();
+
+
+        microstatus.textContent =
+          "MOTOR // "
+          +
+          scratchVelocity.toFixed(
+            2
+          )
+          +
+          "×";
+
+
+        if(
+          t < 1
+        ){
+
+          motorRecoveryRAF =
+            requestAnimationFrame(
+              frame
+            );
+
+        }
+
+        else{
+
+          if(
+            !generationAlive(
+              generation
+            )
+          ){
+
+            finish(
+              false
+            );
+
+
+            return;
+
+          }
+
+
+          scratchVelocity =
+            1;
+
+
+          isMotorRecovering =
+            false;
+
+
+          track.classList.remove(
+            "is-motor-recovering"
+          );
+
+
+          motorRecoveryRAF =
+            null;
+
+
+          scratchTime =
+            clampTime(
+              getEstimatedEnginePosition()
+            );
+
+
+          engineControl(
+            {
+              speed:
+                1,
+
+              active:
+                true,
+
+              response:
+                "smooth"
+            }
+          );
+
+
+          finish(
+            true
+          );
+
+        }
+
+      }
+
+
+      motorRecoveryRAF =
+        requestAnimationFrame(
+          frame
+        );
+
+    }
+  );
 
 }
 
@@ -5555,533 +6224,6 @@ function pointerAngle(
 
 
 /* =====================================================
-   GRAB BRAKE
-===================================================== */
-
-function cancelGrabBrake(){
-
-  grabBrakeActive =
-    false;
-
-
-  if(
-    grabBrakeRAF
-  ){
-
-    cancelAnimationFrame(
-      grabBrakeRAF
-    );
-
-
-    grabBrakeRAF =
-      null;
-
-  }
-
-}
-
-
-function startGrabBrake(
-  initialVelocity =
-    scratchVelocity
-){
-
-  cancelGrabBrake();
-
-
-  grabBrakeActive =
-    true;
-
-
-  const startVelocity =
-    Math.max(
-      0,
-      initialVelocity
-    );
-
-
-  const started =
-    performance.now();
-
-
-  let previous =
-    started;
-
-
-  function frame(
-    now
-  ){
-
-    if(
-      !isScratching
-      ||
-      !grabBrakeActive
-      ||
-      manualScratchStarted
-    ){
-
-      grabBrakeRAF =
-        null;
-
-
-      return;
-
-    }
-
-
-    const dt =
-      Math.min(
-        .04,
-        (
-          now
-          -
-          previous
-        )
-        /
-        1000
-      );
-
-
-    previous =
-      now;
-
-
-    const t =
-      Math.min(
-        1,
-        (
-          now
-          -
-          started
-        )
-        /
-        GRAB_BRAKE_DURATION
-      );
-
-
-    const braking =
-      Math.pow(
-        t,
-        GRAB_BRAKE_CURVE
-      );
-
-
-    scratchVelocity =
-      Math.max(
-        0,
-        startVelocity
-        *
-        (
-          1
-          -
-          braking
-        )
-      );
-
-
-    if(
-      scratchVelocity
-      <
-      .12
-    ){
-
-      const tail =
-        scratchVelocity
-        /
-        .12;
-
-
-      scratchVelocity =
-        .12
-        *
-        tail
-        *
-        tail;
-
-    }
-
-
-    scratchTime =
-      clampTime(
-        scratchTime
-        +
-        scratchVelocity
-        *
-        dt
-      );
-
-
-    engineControl(
-      {
-        speed:
-          scratchVelocity,
-
-        active:
-          true
-      }
-    );
-
-
-    updateScratchVisuals();
-
-
-    microstatus.textContent =
-      "GRAB BRAKE // "
-      +
-      scratchVelocity.toFixed(
-        2
-      )
-      +
-      "×";
-
-
-    if(
-      t < 1
-      &&
-      scratchVelocity > .002
-    ){
-
-      grabBrakeRAF =
-        requestAnimationFrame(
-          frame
-        );
-
-    }
-
-    else{
-
-      scratchVelocity =
-        0;
-
-
-      grabBrakeActive =
-        false;
-
-
-      grabBrakeRAF =
-        null;
-
-
-      engineControl(
-        {
-          position:
-            scratchTime,
-
-          speed:
-            0,
-
-          active:
-            true,
-
-          hardSpeed:
-            true
-        }
-      );
-
-
-      microstatus.textContent =
-        "SCRATCH // HOLD";
-
-    }
-
-  }
-
-
-  grabBrakeRAF =
-    requestAnimationFrame(
-      frame
-    );
-
-}
-
-
-/* =====================================================
-   MOTOR RECOVERY
-===================================================== */
-
-function cancelMotorRecovery(){
-
-  isMotorRecovering =
-    false;
-
-
-  track.classList.remove(
-    "is-motor-recovering"
-  );
-
-
-  if(
-    motorRecoveryRAF
-  ){
-
-    cancelAnimationFrame(
-      motorRecoveryRAF
-    );
-
-
-    motorRecoveryRAF =
-      null;
-
-  }
-
-}
-
-
-function startMotorRecovery(){
-
-  return new Promise(
-    resolve => {
-
-      cancelMotorRecovery();
-
-
-      isMotorRecovering =
-        true;
-
-
-      track.classList.add(
-        "is-motor-recovering"
-      );
-
-
-      const startVelocity =
-        scratchVelocity;
-
-
-      const distance =
-        Math.abs(
-          1
-          -
-          startVelocity
-        );
-
-
-      const baseDuration =
-        Math.min(
-          MOTOR_RECOVERY_MAX_DURATION,
-          Math.max(
-            MOTOR_RECOVERY_MIN_DURATION,
-            420
-            +
-            distance
-            *
-            520
-          )
-        );
-
-
-      const duration =
-        baseDuration
-        /
-        MOTOR_RECOVERY_SPEED;
-
-
-      const started =
-        performance.now();
-
-
-      let previous =
-        started;
-
-
-      engineControl(
-        {
-          position:
-            scratchTime,
-
-          speed:
-            startVelocity,
-
-          active:
-            true,
-
-          hardSpeed:
-            true
-        }
-      );
-
-
-      function frame(
-        now
-      ){
-
-        if(
-          !isMotorRecovering
-          ||
-          !playIntent
-          ||
-          isPacking
-          ||
-          isScratching
-        ){
-
-          cancelMotorRecovery();
-
-
-          resolve();
-
-
-          return;
-
-        }
-
-
-        const dt =
-          Math.min(
-            .035,
-            (
-              now
-              -
-              previous
-            )
-            /
-            1000
-          );
-
-
-        previous =
-          now;
-
-
-        const t =
-          Math.min(
-            1,
-            (
-              now
-              -
-              started
-            )
-            /
-            duration
-          );
-
-
-        const curve =
-          1
-          -
-          Math.pow(
-            1
-            -
-            t,
-            MOTOR_PULL_STRENGTH
-          );
-
-
-        scratchVelocity =
-          startVelocity
-          +
-          (
-            1
-            -
-            startVelocity
-          )
-          *
-          curve;
-
-
-        scratchTime =
-          clampTime(
-            scratchTime
-            +
-            scratchVelocity
-            *
-            dt
-          );
-
-
-        engineControl(
-          {
-            speed:
-              scratchVelocity,
-
-            active:
-              true
-          }
-        );
-
-
-        updateScratchVisuals();
-
-
-        microstatus.textContent =
-          "MOTOR // "
-          +
-          scratchVelocity.toFixed(
-            2
-          )
-          +
-          "×";
-
-
-        if(
-          t < 1
-        ){
-
-          motorRecoveryRAF =
-            requestAnimationFrame(
-              frame
-            );
-
-        }
-
-        else{
-
-          scratchVelocity =
-            1;
-
-
-          isMotorRecovering =
-            false;
-
-
-          motorRecoveryRAF =
-            null;
-
-
-          track.classList.remove(
-            "is-motor-recovering"
-          );
-
-
-          scratchTime =
-            clampTime(
-              getEstimatedEnginePosition()
-            );
-
-
-          engineControl(
-            {
-              position:
-                scratchTime,
-
-              speed:
-                1,
-
-              active:
-                true
-            }
-          );
-
-
-          resolve();
-
-        }
-
-      }
-
-
-      motorRecoveryRAF =
-        requestAnimationFrame(
-          frame
-        );
-
-    }
-  );
-
-}
-
-
-/* =====================================================
    SCRATCH START
 ===================================================== */
 
@@ -6100,8 +6242,6 @@ recordDisc.addEventListener(
       ||
       isPreCueing
       ||
-      isPauseBraking
-      ||
       !engineReady
     ){
 
@@ -6114,6 +6254,14 @@ recordDisc.addEventListener(
 
 
     await resumeAudioContext();
+
+
+    const generation =
+      nextPhysicsGeneration();
+
+
+    activeScratchGeneration =
+      generation;
 
 
     const previousPhysicalTime =
@@ -6138,13 +6286,7 @@ recordDisc.addEventListener(
       isFreeSpinning;
 
 
-    cancelMotorRecovery();
-
-
-    cancelPlayStart();
-
-
-    cancelFreeSpin();
+    cancelAllTransientPhysics();
 
 
     isScratching =
@@ -6159,6 +6301,13 @@ recordDisc.addEventListener(
       event.pointerId
     );
 
+
+    /*
+      ТІЛЬКИ ОДНА position синхронізація
+      при захваті платівки.
+
+      Далі pointermove position не пише.
+    */
 
     scratchTime =
       previousPhysicalTime;
@@ -6209,8 +6358,8 @@ recordDisc.addEventListener(
         active:
           true,
 
-        hardSpeed:
-          true
+        response:
+          "manual"
       }
     );
 
@@ -6251,7 +6400,8 @@ recordDisc.addEventListener(
     ){
 
       startGrabBrake(
-        scratchVelocity
+        scratchVelocity,
+        generation
       );
 
     }
@@ -6270,8 +6420,8 @@ recordDisc.addEventListener(
           active:
             true,
 
-          hardSpeed:
-            true
+          response:
+            "manual"
         }
       );
 
@@ -6296,7 +6446,19 @@ recordDisc.addEventListener(
     if(
       !isScratching
       ||
-      event.pointerId !== scratchPointerId
+      event.pointerId !==
+      scratchPointerId
+    ){
+
+      return;
+
+    }
+
+
+    if(
+      !generationAlive(
+        activeScratchGeneration
+      )
     ){
 
       return;
@@ -6441,25 +6603,59 @@ recordDisc.addEventListener(
 
 
     /*
-      Important:
+      ГОЛОВНА ПРАВКА ПРОТИ КЛІКІВ.
 
-      This is no longer a grain trigger.
+      НІЯКОГО:
 
-      The Worklet is continuously reading PCM.
-      We only change its continuous speed and
-      correct its physical position to the hand.
+      position:scratchTime
+
+      на pointermove.
+
+      Worklet сам безперервно рухає PCM cursor.
+
+      Якщо візуальна позиція і PCM трохи
+      розбіглися — підтягуємо speed невеликим
+      servo correction без стрибка по семплах.
     */
+
+    const enginePosition =
+      getEstimatedEnginePosition();
+
+
+    const positionError =
+      scratchTime
+      -
+      enginePosition;
+
+
+    const servoCorrection =
+      Math.max(
+        -SCRATCH_SERVO_LIMIT,
+        Math.min(
+          SCRATCH_SERVO_LIMIT,
+          positionError
+          *
+          SCRATCH_SERVO_GAIN
+        )
+      );
+
+
+    const commandedSpeed =
+      scratchVelocity
+      +
+      servoCorrection;
+
 
     engineControl(
       {
-        position:
-          scratchTime,
-
         speed:
-          scratchVelocity,
+          commandedSpeed,
 
         active:
-          true
+          true,
+
+        response:
+          "manual"
       }
     );
 
@@ -6511,7 +6707,23 @@ async function finishScratch(
   if(
     event
     &&
-    event.pointerId !== scratchPointerId
+    event.pointerId !==
+    scratchPointerId
+  ){
+
+    return;
+
+  }
+
+
+  const generation =
+    activeScratchGeneration;
+
+
+  if(
+    !generationAlive(
+      generation
+    )
   ){
 
     return;
@@ -6550,14 +6762,39 @@ async function finishScratch(
     null;
 
 
+  /*
+    На release саме AUDIO cursor стає
+    авторитетною позицією.
+
+    Тобто фінального teleport теж немає.
+  */
+
+  scratchTime =
+    clampTime(
+      getEstimatedEnginePosition()
+    );
+
+
+  updateScratchVisuals();
+
+
   if(
     playIntent
   ){
 
-    await startMotorRecovery();
+    const completed =
+      await startMotorRecovery(
+        generation
+      );
 
 
     if(
+      !completed
+      ||
+      !generationAlive(
+        generation
+      )
+      ||
       !playIntent
       ||
       isPacking
@@ -6582,14 +6819,14 @@ async function finishScratch(
 
     engineControl(
       {
-        position:
-          scratchTime,
-
         speed:
           1,
 
         active:
-          true
+          true,
+
+        response:
+          "smooth"
       }
     );
 
@@ -6628,8 +6865,9 @@ async function finishScratch(
     FREE_SPIN_RELEASE_THRESHOLD
   ){
 
-    startFreeSpin(
-      scratchVelocity
+    await startFreeSpin(
+      scratchVelocity,
+      generation
     );
 
   }
@@ -6642,17 +6880,14 @@ async function finishScratch(
 
     engineControl(
       {
-        position:
-          scratchTime,
-
         speed:
           0,
 
         active:
           true,
 
-        hardSpeed:
-          true
+        response:
+          "smooth"
       }
     );
 
@@ -6789,14 +7024,15 @@ async function ensureVinylOpen(){
 ===================================================== */
 
 async function prePlayCueTo(
-  targetTime
+  targetTime,
+  generation
 ){
 
   if(
     isPreCueing
   ){
 
-    return;
+    return false;
 
   }
 
@@ -6813,12 +7049,30 @@ async function prePlayCueTo(
   await ensureVinylOpen();
 
 
+  if(
+    !generationAlive(
+      generation
+    )
+    ||
+    isPacking
+  ){
+
+    isPreCueing =
+      false;
+
+
+    track.classList.remove(
+      "is-precue"
+    );
+
+
+    return false;
+
+  }
+
+
   const oldTime =
     getEstimatedEnginePosition();
-
-
-  const durationValue =
-    getDuration();
 
 
   const distanceRatio =
@@ -6830,7 +7084,7 @@ async function prePlayCueTo(
     /
     Math.max(
       1,
-      durationValue
+      getDuration()
     );
 
 
@@ -6863,12 +7117,25 @@ async function prePlayCueTo(
         now
       ){
 
+        if(
+          !generationAlive(
+            generation
+          )
+        ){
+
+          resolve();
+
+
+          return;
+
+        }
+
+
         const raw =
           Math.min(
             1,
             (
-              now
-              -
+              now -
               started
             )
             /
@@ -6886,8 +7153,7 @@ async function prePlayCueTo(
           startArm
           +
           (
-            targetArm
-            -
+            targetArm -
             startArm
           )
           *
@@ -6899,8 +7165,7 @@ async function prePlayCueTo(
           oldTime
           +
           (
-            targetTime
-            -
+            targetTime -
             oldTime
           )
           *
@@ -6935,6 +7200,26 @@ async function prePlayCueTo(
   );
 
 
+  if(
+    !generationAlive(
+      generation
+    )
+  ){
+
+    isPreCueing =
+      false;
+
+
+    track.classList.remove(
+      "is-precue"
+    );
+
+
+    return false;
+
+  }
+
+
   scratchTime =
     clampTime(
       targetTime
@@ -6957,7 +7242,10 @@ async function prePlayCueTo(
         false,
 
       hardSpeed:
-        true
+        true,
+
+      response:
+        "smooth"
     }
   );
 
@@ -6997,6 +7285,9 @@ async function prePlayCueTo(
       scratchTime
     );
 
+
+  return true;
+
 }
 
 
@@ -7027,7 +7318,8 @@ async function playSeekSound(
 
 
   const forward =
-    toTime >= fromTime;
+    toTime >=
+    fromTime;
 
 
   const source =
@@ -7295,7 +7587,8 @@ async function playSeekSound(
 function animateVinylSeek(
   fromTime,
   toTime,
-  durationMs
+  durationMs,
+  generation
 ){
 
   return new Promise(
@@ -7372,6 +7665,22 @@ function animateVinylSeek(
       function frame(
         now
       ){
+
+        if(
+          !generationAlive(
+            generation
+          )
+        ){
+
+          resolve(
+            false
+          );
+
+
+          return;
+
+        }
+
 
         const elapsed =
           now
@@ -7531,7 +7840,9 @@ function animateVinylSeek(
 
         else{
 
-          resolve();
+          resolve(
+            true
+          );
 
         }
 
@@ -7557,28 +7868,7 @@ async function seekTo(
 ){
 
   if(
-    isFreeSpinning
-  ){
-
-    cancelFreeSpin();
-
-  }
-
-
-  if(
-    isScratching
-    ||
-    isMotorRecovering
-    ||
-    isPlayStarting
-    ||
-    isPauseBraking
-    ||
     isPacking
-    ||
-    isSeeking
-    ||
-    isPreCueing
     ||
     !getDuration()
     ||
@@ -7590,15 +7880,26 @@ async function seekTo(
   }
 
 
+  const generation =
+    nextPhysicsGeneration();
+
+
+  cancelAllTransientPhysics();
+
+
+  isScratching =
+    false;
+
+
+  scratchPointerId =
+    null;
+
+
   targetTime =
     clampTime(
       targetTime
     );
 
-
-  /*
-    FIRST CUE BEFORE FIRST PLAY.
-  */
 
   if(
     !hasPlaybackEverStarted
@@ -7608,9 +7909,24 @@ async function seekTo(
     targetTime > .5
   ){
 
-    await prePlayCueTo(
-      targetTime
-    );
+    const cueOkay =
+      await prePlayCueTo(
+        targetTime,
+        generation
+      );
+
+
+    if(
+      !cueOkay
+      ||
+      !generationAlive(
+        generation
+      )
+    ){
+
+      return;
+
+    }
 
 
     playIntent =
@@ -7626,17 +7942,15 @@ async function seekTo(
     );
 
 
-    await startPhysicalPlay();
+    await startPhysicalPlay(
+      generation
+    );
 
 
     return;
 
   }
 
-
-  /*
-    Beginning before first Play.
-  */
 
   if(
     !hasPlaybackEverStarted
@@ -7666,7 +7980,10 @@ async function seekTo(
           false,
 
         hardSpeed:
-          true
+          true,
+
+        response:
+          "smooth"
       }
     );
 
@@ -7680,10 +7997,6 @@ async function seekTo(
 
   }
 
-
-  /*
-    Paused + seek = automatically Play.
-  */
 
   if(
     !playIntent
@@ -7701,6 +8014,17 @@ async function seekTo(
 
 
   await ensureVinylOpen();
+
+
+  if(
+    !generationAlive(
+      generation
+    )
+  ){
+
+    return;
+
+  }
 
 
   const oldTime =
@@ -7743,7 +8067,10 @@ async function seekTo(
           true,
 
         hardSpeed:
-          true
+          true,
+
+        response:
+          "smooth"
       }
     );
 
@@ -7773,9 +8100,6 @@ async function seekTo(
 
   engineControl(
     {
-      position:
-        oldTime,
-
       speed:
         0,
 
@@ -7783,7 +8107,10 @@ async function seekTo(
         false,
 
       hardSpeed:
-        true
+        false,
+
+      response:
+        "smooth"
     }
   );
 
@@ -7846,7 +8173,8 @@ async function seekTo(
       animateVinylSeek(
         oldTime,
         targetTime,
-        duration
+        duration,
+        generation
       ),
 
       playSeekSound(
@@ -7857,6 +8185,26 @@ async function seekTo(
 
     ]
   );
+
+
+  if(
+    !generationAlive(
+      generation
+    )
+  ){
+
+    isSeeking =
+      false;
+
+
+    track.classList.remove(
+      "is-seeking"
+    );
+
+
+    return;
+
+  }
 
 
   scratchTime =
@@ -7879,7 +8227,10 @@ async function seekTo(
         true,
 
       hardSpeed:
-        true
+        true,
+
+      response:
+        "smooth"
     }
   );
 
@@ -8107,20 +8458,15 @@ playButtons.forEach(
           playIntent
         ){
 
+          const generation =
+            nextPhysicsGeneration();
+
+
+          cancelAllTransientPhysics();
+
+
           playIntent =
             false;
-
-
-          cancelGrabBrake();
-
-
-          cancelMotorRecovery();
-
-
-          cancelPlayStart();
-
-
-          cancelFreeSpin();
 
 
           stopVinylSync();
@@ -8137,7 +8483,9 @@ playButtons.forEach(
           );
 
 
-          await startPauseBrake();
+          await startPauseBrake(
+            generation
+          );
 
 
           return;
@@ -8149,10 +8497,11 @@ playButtons.forEach(
           PLAY
         */
 
-        cancelPauseBrake();
+        const generation =
+          nextPhysicsGeneration();
 
 
-        cancelFreeSpin();
+        cancelAllTransientPhysics();
 
 
         playIntent =
@@ -8168,31 +8517,144 @@ playButtons.forEach(
         );
 
 
-        if(
-          isScratching
-          ||
-          isMotorRecovering
-          ||
-          isPlayStarting
-        ){
-
-          return;
-
-        }
-
-
         scratchTime =
           clampTime(
             getEstimatedEnginePosition()
           );
 
 
-        await startPhysicalPlay();
+        /*
+          Atomic restart.
+
+          Старі режими вже мають
+          невалідний generation.
+        */
+
+        engineControl(
+          {
+            position:
+              scratchTime,
+
+            speed:
+              PLAY_START_MIN_RATE,
+
+            active:
+              true,
+
+            hardSpeed:
+              false,
+
+            response:
+              "smooth"
+          }
+        );
+
+
+        await startPhysicalPlay(
+          generation
+        );
 
       }
     );
 
   }
+);
+
+
+/* =====================================================
+   WATCHDOG
+===================================================== */
+
+setInterval(
+  () => {
+
+    if(
+      !engineReady
+      ||
+      !playIntent
+      ||
+      isPacking
+      ||
+      isScratching
+      ||
+      isMotorRecovering
+      ||
+      isPlayStarting
+      ||
+      isPauseBraking
+      ||
+      isFreeSpinning
+      ||
+      isSeeking
+      ||
+      isPreCueing
+    ){
+
+      return;
+
+    }
+
+
+    const duration =
+      getDuration();
+
+
+    const position =
+      getEstimatedEnginePosition();
+
+
+    if(
+      duration
+      &&
+      position
+      >=
+      duration -
+      .12
+    ){
+
+      return;
+
+    }
+
+
+    /*
+      Якщо Android залишив Worklet
+      у stale 0× стані — повертаємо 1×.
+
+      position не пишемо,
+      тому click не створюється.
+    */
+
+    if(
+      !engineActive
+      ||
+      Math.abs(
+        engineTargetSpeed
+      )
+      <
+      WATCHDOG_MIN_SPEED
+    ){
+
+      engineControl(
+        {
+          speed:
+            1,
+
+          active:
+            true,
+
+          response:
+            "smooth"
+        }
+      );
+
+
+      startVinylSync();
+
+    }
+
+  },
+  WATCHDOG_INTERVAL_MS
 );
 
 
@@ -8244,19 +8706,10 @@ async function stopAndPack(){
   }
 
 
-  cancelGrabBrake();
+  nextPhysicsGeneration();
 
 
-  cancelMotorRecovery();
-
-
-  cancelPlayStart();
-
-
-  cancelPauseBrake();
-
-
-  cancelFreeSpin();
+  cancelAllTransientPhysics();
 
 
   isPacking =
@@ -8287,7 +8740,10 @@ async function stopAndPack(){
         false,
 
       hardSpeed:
-        true
+        false,
+
+      response:
+        "smooth"
     }
   );
 
@@ -8389,14 +8845,6 @@ async function stopAndPack(){
     false;
 
 
-  /*
-    FULL RESET.
-
-    After natural end/repack the next
-    waveform click behaves exactly like
-    the first interaction again.
-  */
-
   playIntent =
     false;
 
@@ -8437,7 +8885,10 @@ async function stopAndPack(){
         false,
 
       hardSpeed:
-        true
+        true,
+
+      response:
+        "smooth"
     }
   );
 
