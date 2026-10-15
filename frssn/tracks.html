@@ -1,25 +1,12 @@
 <!doctype html>
 <html lang="uk">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1, viewport-fit=cover"
->
-
-<meta
-  name="theme-color"
-  content="#050605"
->
-
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#050605">
 <title>FRSSN // Tracks</title>
 
-
 <style>
-
 :root{
   --bg:#050605;
   --panel:rgba(11,13,11,.94);
@@ -31,20 +18,12 @@
   --content-width:1180px;
 }
 
-*{
-  box-sizing:border-box;
-}
-
-html{
-  color-scheme:dark;
-  scroll-behavior:smooth;
-}
+*{box-sizing:border-box}
+html{color-scheme:dark;scroll-behavior:smooth}
 
 body{
   margin:0;
-
   min-height:100svh;
-
   color:var(--text);
 
   background:
@@ -71,18 +50,14 @@ body{
     sans-serif;
 
   overflow-x:hidden;
-
   position:relative;
 }
 
 body::before{
   content:"";
-
   position:fixed;
   inset:-18%;
-
   z-index:0;
-
   pointer-events:none;
 
   background:
@@ -113,12 +88,9 @@ body::before{
 
 body::after{
   content:"";
-
   position:fixed;
   inset:0;
-
   z-index:19;
-
   pointer-events:none;
 
   background:
@@ -138,7 +110,6 @@ body::after{
 }
 
 @keyframes ambientSweep{
-
   0%{
     transform:
       translate3d(-18%,0,0)
@@ -156,7 +127,6 @@ body::after{
       translate3d(18%,0,0)
       scale(1.02);
   }
-
 }
 
 a{
@@ -175,9 +145,7 @@ input{
   );
 
   margin:0 auto;
-
   position:relative;
-
   z-index:2;
 
   padding:
@@ -201,24 +169,20 @@ input{
   color:var(--muted);
 
   font-family:monospace;
-
   font-size:11px;
 
   letter-spacing:.18em;
-
   text-transform:uppercase;
 }
 
 .brand{
   color:var(--accent);
-
   text-decoration:none;
 }
 
 .status{
   display:flex;
   align-items:center;
-
   gap:10px;
 }
 
@@ -289,9 +253,7 @@ input{
     auto;
 
   gap:26px;
-
   align-items:center;
-
   position:relative;
 }
 
@@ -318,7 +280,6 @@ input{
   height:116px;
 
   border-radius:50%;
-
   object-fit:cover;
 
   border:
@@ -332,11 +293,8 @@ input{
 
 .identity h1{
   margin:0;
-
   font-size:46px;
-
   letter-spacing:.08em;
-
   line-height:1;
 }
 
@@ -349,7 +307,6 @@ input{
     10px/1.5 monospace;
 
   letter-spacing:.2em;
-
   text-transform:uppercase;
 }
 
@@ -362,7 +319,6 @@ input{
     10px/1.5 monospace;
 
   letter-spacing:.14em;
-
   text-transform:uppercase;
 
   min-height:15px;
@@ -379,7 +335,6 @@ input{
     var(--accent-line);
 
   display:inline-flex;
-
   align-items:center;
   justify-content:center;
 
@@ -391,8 +346,10 @@ input{
     700 10px/1 monospace;
 
   letter-spacing:.14em;
-
   text-transform:uppercase;
+
+  position:relative;
+  z-index:6;
 }
 
 .back:hover{
@@ -428,7 +385,6 @@ input{
     700 10px/1 monospace;
 
   letter-spacing:.15em;
-
   text-transform:uppercase;
 }
 
@@ -487,7 +443,6 @@ input{
   font-size:16px;
 
   letter-spacing:.15em;
-
   text-transform:uppercase;
 }
 
@@ -498,13 +453,18 @@ input{
     9px/1.5 monospace;
 
   letter-spacing:.14em;
-
   text-transform:uppercase;
+}
+
+.trackList{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
 }
 
 
 /* =====================================================
-   TRACK
+   TRACK ROW
 ===================================================== */
 
 .track{
@@ -555,6 +515,11 @@ input{
       var(--accent),
       transparent
     );
+}
+
+.track.is-active{
+  border-color:
+    rgba(214,255,40,.26);
 }
 
 .track.is-scratching{
@@ -624,9 +589,7 @@ input{
     14px 14px;
 
   z-index:1;
-
   pointer-events:none;
-
   opacity:.92;
 }
 
@@ -664,7 +627,6 @@ input{
 
     opacity:1;
   }
-
 }
 
 .track.arm-on-top .tonearmMechanism{
@@ -889,7 +851,6 @@ input{
   content:"";
 
   position:absolute;
-
   inset:1px;
 
   border-radius:50%;
@@ -1036,7 +997,6 @@ input{
     transform:
       translate(0,-50%);
   }
-
 }
 
 @keyframes sleeveExit{
@@ -1062,7 +1022,6 @@ input{
 
     opacity:0;
   }
-
 }
 
 
@@ -1111,7 +1070,6 @@ input{
 
     opacity:.7;
   }
-
 }
 
 @keyframes recordPack{
@@ -1131,7 +1089,6 @@ input{
     transform:
       translate(0,-50%);
   }
-
 }
 
 @keyframes sleeveReturn{
@@ -1154,7 +1111,6 @@ input{
 
     opacity:1;
   }
-
 }
 
 
@@ -1505,30 +1461,25 @@ input{
 
 
 /* =====================================================
-   LAYERED VU MODULE
-   POSITION IS CALCULATED FROM PROFILE HEADER
+   VU MODULE
 ===================================================== */
 
 .vuModule{
 
-  --vu-module-scale:1.33;
+  --vu-module-scale:1.13;
 
   --needle-left-x:72px;
-
   --needle-gap:113.5px;
-
   --needle-pivot-y:100.5px;
-
   --needle-length:47.5px;
-
   --needle-width:1.2px;
 
-  --vu-front-brightness:.68;
+  --vu-front-brightness:.38;
 
   position:fixed;
 
-  left:947px;
-  top:126px;
+  left:0;
+  top:0;
 
   width:262px;
   height:147px;
@@ -1553,12 +1504,8 @@ input{
   display:none;
 }
 
-
-/* =====================================================
-   VU LOWER FACE LAYER
-===================================================== */
-
-.vuFaceLayer{
+.vuFaceLayer,
+.vuFrontLayer{
   position:absolute;
 
   inset:0;
@@ -1570,14 +1517,25 @@ input{
 
   display:block;
 
-  z-index:1;
-
   pointer-events:none;
+}
+
+.vuFaceLayer{
+  z-index:1;
+}
+
+.vuFrontLayer{
+  z-index:3;
+
+  filter:
+    brightness(
+      var(--vu-front-brightness)
+    );
 }
 
 
 /* =====================================================
-   LIVE NEEDLES
+   VU NEEDLES
 ===================================================== */
 
 .vuNeedlePivot{
@@ -1657,7 +1615,6 @@ input{
   position:absolute;
 
   left:50%;
-
   bottom:-3px;
 
   width:5px;
@@ -1679,35 +1636,7 @@ input{
 
 
 /* =====================================================
-   FRONT CASE LAYER
-   ONLY THIS PNG IS DARKENED
-===================================================== */
-
-.vuFrontLayer{
-  position:absolute;
-
-  inset:0;
-
-  width:262px;
-  height:147px;
-
-  object-fit:contain;
-
-  display:block;
-
-  z-index:3;
-
-  pointer-events:none;
-
-  filter:
-    brightness(
-      var(--vu-front-brightness)
-    );
-}
-
-
-/* =====================================================
-   VU DEBUG GUIDES
+   VU DEBUG
 ===================================================== */
 
 .vuDebugFrame{
@@ -1816,11 +1745,6 @@ input{
   display:none;
 }
 
-
-/* =====================================================
-   VU DEBUG DRAG BAR
-===================================================== */
-
 .vuDebugHandle{
   position:absolute;
 
@@ -1895,11 +1819,6 @@ input{
 
   color:#050605;
 }
-
-
-/* =====================================================
-   VU DEBUG PANEL
-===================================================== */
 
 .vuDebugPanel{
   position:fixed;
@@ -2034,11 +1953,6 @@ input{
   line-height:1.55;
 }
 
-
-/* =====================================================
-   VU DEBUG REOPEN
-===================================================== */
-
 .vuDebugReopen{
   position:fixed;
 
@@ -2107,7 +2021,6 @@ input{
   50%{
     opacity:1;
   }
-
 }
 
 
@@ -2227,7 +2140,6 @@ input{
         translate(0,0)
         scale(.63);
     }
-
   }
 
   @keyframes mechanismHideMobile{
@@ -2243,7 +2155,6 @@ input{
         translate(-49px,16px)
         scale(.63);
     }
-
   }
 
   @keyframes recordReveal{
@@ -2263,7 +2174,6 @@ input{
       transform:
         translate(0,-50%);
     }
-
   }
 
   @keyframes sleeveExit{
@@ -2281,7 +2191,6 @@ input{
 
       opacity:0;
     }
-
   }
 
   @keyframes recordPack{
@@ -2301,7 +2210,6 @@ input{
       transform:
         translate(0,-50%);
     }
-
   }
 
   @keyframes sleeveReturn{
@@ -2319,7 +2227,6 @@ input{
 
       opacity:1;
     }
-
   }
 
   .buyCol{
@@ -2335,11 +2242,9 @@ input{
   .time{
     display:none;
   }
-
 }
 
 </style>
-
 </head>
 
 
@@ -2401,7 +2306,7 @@ input{
       class="microstatus"
       id="microstatus"
     >
-      Connection stable // 01 signal detected
+      Connection stable // 02 signals detected
     </div>
 
   </div>
@@ -2454,35 +2359,37 @@ input{
 
 
   <span>
-    NODE 001 // DIRECT LICENSE CHANNEL
+    02 SIGNALS // DIRECT LICENSE CHANNEL
   </span>
 
 </div>
 
 
+<div class="trackList">
+
+
+<!-- =================================================
+     TRACK 01 // OLD
+================================================== -->
+
 <article
   class="track"
-  id="trackOLD"
+  data-track-id="old"
+  data-audio="old.mp3"
 >
 
 
 <div class="vinylUnit">
 
 
-  <div
-    class="tonearmMechanism"
-    id="tonearmMechanism"
-  >
+  <div class="tonearmMechanism">
 
     <div class="tonearmBase"></div>
 
     <div class="tonearmPivot"></div>
 
 
-    <div
-      class="tonearmArm"
-      id="tonearmArm"
-    >
+    <div class="tonearmArm">
 
       <div class="cartridge">
 
@@ -2495,15 +2402,9 @@ input{
   </div>
 
 
-  <div
-    class="recordCarrier"
-    id="recordCarrier"
-  >
+  <div class="recordCarrier">
 
-    <div
-      class="recordDisc"
-      id="recordDisc"
-    >
+    <div class="recordDisc">
 
       <div class="recordLabel">
 
@@ -2522,10 +2423,7 @@ input{
   </div>
 
 
-  <div
-    class="sleeve"
-    id="sleeve"
-  >
+  <div class="sleeve">
 
     <img
       class="cover"
@@ -2539,6 +2437,7 @@ input{
 
 
 <div class="trackInfo">
+
 
   <div class="topline">
 
@@ -2625,19 +2524,16 @@ input{
       Signal // 001
     </span>
 
-
     <span>
       45 RPM
     </span>
-
 
     <span>
       SCRATCH ENABLED
     </span>
 
-
     <span>
-      MP3 license
+      MP3 LICENSE
     </span>
 
   </div>
@@ -2653,7 +2549,6 @@ input{
     target="_blank"
     rel="noopener noreferrer"
   >
-
     License
 
     <small>
@@ -2676,6 +2571,216 @@ input{
 
 
 </article>
+
+
+<!-- =================================================
+     TRACK 02 // PLACEHOLDER
+
+     FILES:
+     track-02.mp3
+     track-02-cover.png
+================================================== -->
+
+<article
+  class="track"
+  data-track-id="track02"
+  data-audio="track-02.mp3"
+>
+
+
+<div class="vinylUnit">
+
+
+  <div class="tonearmMechanism">
+
+    <div class="tonearmBase"></div>
+
+    <div class="tonearmPivot"></div>
+
+
+    <div class="tonearmArm">
+
+      <div class="cartridge">
+
+        <div class="needle"></div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="recordCarrier">
+
+    <div class="recordDisc">
+
+      <div class="recordLabel">
+
+        <img
+          src="track-02-cover.png"
+          alt="TRACK 02"
+        >
+
+      </div>
+
+
+      <div class="recordHole"></div>
+
+    </div>
+
+  </div>
+
+
+  <div class="sleeve">
+
+    <img
+      class="cover"
+      src="track-02-cover.png"
+      alt="TRACK 02 cover"
+    >
+
+  </div>
+
+</div>
+
+
+<div class="trackInfo">
+
+
+  <div class="topline">
+
+    <div>
+
+      <h3 class="trackTitle">
+        TRACK 02
+      </h3>
+
+
+      <div class="artist">
+        FRSSN
+      </div>
+
+    </div>
+
+
+    <div class="badge">
+      NEW SIGNAL
+    </div>
+
+  </div>
+
+
+  <div class="waveRow">
+
+
+    <button
+      class="iconBtn js-play"
+      type="button"
+      aria-label="Play"
+    >
+
+      <svg viewBox="0 0 24 24">
+        <path d="M8 5v14l11-7z"/>
+      </svg>
+
+    </button>
+
+
+    <div
+      class="waveBox js-seek"
+      role="slider"
+    >
+
+      <div
+        class="wave js-wave"
+      ></div>
+
+
+      <div
+        class="waveProgress js-progress"
+      >
+
+        <div
+          class="wave js-wave-clone"
+        ></div>
+
+      </div>
+
+    </div>
+
+
+    <div class="time">
+
+      <span class="js-current">
+        0:00
+      </span>
+
+      /
+
+      <span class="js-total">
+        0:00
+      </span>
+
+    </div>
+
+  </div>
+
+
+  <div class="meta">
+
+    <span>
+      Signal // 002
+    </span>
+
+    <span>
+      45 RPM
+    </span>
+
+    <span>
+      SCRATCH ENABLED
+    </span>
+
+    <span>
+      MP3 LICENSE
+    </span>
+
+  </div>
+
+</div>
+
+
+<div class="buyCol">
+
+  <a
+    class="license"
+    href="#"
+    data-placeholder-checkout="1"
+  >
+    License
+
+    <small>
+      // checkout ↗
+    </small>
+
+  </a>
+
+
+  <a
+    class="secondary"
+    href="#"
+    data-placeholder-checkout="1"
+  >
+    TRAKTRAIN CHECKOUT
+  </a>
+
+</div>
+
+
+</article>
+
+
+</div>
 
 
 <section
@@ -2752,13 +2857,6 @@ input{
 
 
 <audio
-  id="trackAudio"
-  preload="metadata"
-  src="old.mp3"
-></audio>
-
-
-<audio
   id="paperInSfx"
   preload="auto"
   src="Paper in.mp3"
@@ -2772,9 +2870,10 @@ input{
 ></audio>
 
 
+
 <!-- ===================================================
-     VU MODULE
-     OLD FILE NAMES KEPT
+     VU
+     OLD PNG NAMES ARE INTENTIONALLY KEPT
 =================================================== -->
 
 <div
@@ -2849,10 +2948,8 @@ input{
     id="vuDebugHandle"
   >
 
-    <span
-      id="vuDebugCoords"
-    >
-      VU // HEADER
+    <span id="vuDebugCoords">
+      VU // HEADER X 576 // Y 17
     </span>
 
 
@@ -2868,9 +2965,6 @@ input{
 </div>
 
 
-<!-- ===================================================
-     VU DEBUG PANEL
-=================================================== -->
 
 <div
   class="vuDebugPanel"
@@ -2899,14 +2993,11 @@ input{
         HEADER X
       </span>
 
-      <span
-        id="vuXValue"
-      >
-        0 px
+      <span id="vuXValue">
+        576 px
       </span>
 
     </div>
-
 
     <input
       id="vuXSlider"
@@ -2914,7 +3005,7 @@ input{
       min="-300"
       max="1600"
       step="1"
-      value="0"
+      value="576"
     >
 
   </div>
@@ -2928,14 +3019,11 @@ input{
         HEADER Y
       </span>
 
-      <span
-        id="vuYValue"
-      >
-        0 px
+      <span id="vuYValue">
+        17 px
       </span>
 
     </div>
-
 
     <input
       id="vuYSlider"
@@ -2943,7 +3031,7 @@ input{
       min="-200"
       max="500"
       step="1"
-      value="0"
+      value="17"
     >
 
   </div>
@@ -2957,14 +3045,11 @@ input{
         MODULE SCALE
       </span>
 
-      <span
-        id="vuScaleValue"
-      >
-        133%
+      <span id="vuScaleValue">
+        113%
       </span>
 
     </div>
-
 
     <input
       id="vuScaleSlider"
@@ -2972,7 +3057,7 @@ input{
       min="40"
       max="180"
       step="1"
-      value="133"
+      value="113"
     >
 
   </div>
@@ -2986,22 +3071,19 @@ input{
         FRONT BRIGHTNESS
       </span>
 
-      <span
-        id="vuFrontBrightnessValue"
-      >
-        68%
+      <span id="vuFrontBrightnessValue">
+        38%
       </span>
 
     </div>
 
-
     <input
       id="vuFrontBrightnessSlider"
       type="range"
-      min="25"
+      min="20"
       max="100"
       step="1"
-      value="68"
+      value="38"
     >
 
   </div>
@@ -3015,14 +3097,11 @@ input{
         LEFT PIVOT X
       </span>
 
-      <span
-        id="vuPivotXValue"
-      >
+      <span id="vuPivotXValue">
         72.0 px
       </span>
 
     </div>
-
 
     <input
       id="vuPivotXSlider"
@@ -3044,14 +3123,11 @@ input{
         STEREO PIVOT GAP
       </span>
 
-      <span
-        id="vuGapValue"
-      >
+      <span id="vuGapValue">
         113.5 px
       </span>
 
     </div>
-
 
     <input
       id="vuGapSlider"
@@ -3073,14 +3149,11 @@ input{
         PIVOT Y
       </span>
 
-      <span
-        id="vuPivotYValue"
-      >
+      <span id="vuPivotYValue">
         100.5 px
       </span>
 
     </div>
-
 
     <input
       id="vuPivotYSlider"
@@ -3102,14 +3175,11 @@ input{
         NEEDLE UP LENGTH
       </span>
 
-      <span
-        id="vuNeedleLengthValue"
-      >
+      <span id="vuNeedleLengthValue">
         47.5 px
       </span>
 
     </div>
-
 
     <input
       id="vuNeedleLengthSlider"
@@ -3131,14 +3201,11 @@ input{
         NEEDLE WIDTH
       </span>
 
-      <span
-        id="vuNeedleWidthValue"
-      >
+      <span id="vuNeedleWidthValue">
         1.2 px
       </span>
 
     </div>
-
 
     <input
       id="vuNeedleWidthSlider"
@@ -3160,14 +3227,11 @@ input{
         LEFT LIMIT
       </span>
 
-      <span
-        id="vuMinAngleValue"
-      >
+      <span id="vuMinAngleValue">
         -53.0°
       </span>
 
     </div>
-
 
     <input
       id="vuMinAngleSlider"
@@ -3189,14 +3253,11 @@ input{
         RIGHT LIMIT
       </span>
 
-      <span
-        id="vuMaxAngleValue"
-      >
+      <span id="vuMaxAngleValue">
         25.5°
       </span>
 
     </div>
-
 
     <input
       id="vuMaxAngleSlider"
@@ -3259,12 +3320,9 @@ input{
 
 
   <div class="vuDebugHint">
-
-    X/Y тепер рахуються від рамки шапки.
-    При resize/zoom VU повторює положення profile header.
-    FRONT BRIGHTNESS затемнює лише PNG корпуса.
-    Під час scratch meter має окрему швидку release-фізику.
-
+    X/Y are anchored to the profile header.
+    FRONT BRIGHTNESS affects only the case PNG.
+    Scratch uses fast VU release without long peak hold.
   </div>
 
 </div>
@@ -3281,7 +3339,6 @@ input{
 
 
 <script>
-
 "use strict";
 
 
@@ -3297,12 +3354,18 @@ const IS_ANDROID =
 
 
 /* =====================================================
-   ELEMENTS
+   GLOBAL DOM
 ===================================================== */
 
-const audio =
+const profileHead =
   document.getElementById(
-    "trackAudio"
+    "profileHead"
+  );
+
+
+const microstatus =
+  document.getElementById(
+    "microstatus"
   );
 
 
@@ -3318,1783 +3381,128 @@ const paperOutSfx =
   );
 
 
-const track =
-  document.getElementById(
-    "trackOLD"
-  );
+/* =====================================================
+   TRACK OBJECTS
+===================================================== */
 
-
-const profileHead =
-  document.getElementById(
-    "profileHead"
-  );
-
-
-const recordCarrier =
-  document.getElementById(
-    "recordCarrier"
-  );
-
-
-const recordDisc =
-  document.getElementById(
-    "recordDisc"
-  );
-
-
-const tonearmArm =
-  document.getElementById(
-    "tonearmArm"
-  );
-
-
-const microstatus =
-  document.getElementById(
-    "microstatus"
-  );
-
-
-const playButtons =
+const tracks =
   [
     ...document.querySelectorAll(
-      ".js-play"
+      ".track"
     )
-  ];
+  ]
+  .map(
+    (
+      el,
+      index
+    ) => (
+      {
 
+        id:
+          el.dataset.trackId,
 
-const wave =
-  document.querySelector(
-    ".js-wave"
-  );
+        index,
 
+        el,
 
-const waveClone =
-  document.querySelector(
-    ".js-wave-clone"
-  );
+        audioUrl:
+          el.dataset.audio,
 
+        playButton:
+          el.querySelector(
+            ".js-play"
+          ),
 
-const progress =
-  document.querySelector(
-    ".js-progress"
-  );
+        seek:
+          el.querySelector(
+            ".js-seek"
+          ),
 
+        wave:
+          el.querySelector(
+            ".js-wave"
+          ),
 
-const seek =
-  document.querySelector(
-    ".js-seek"
-  );
+        waveClone:
+          el.querySelector(
+            ".js-wave-clone"
+          ),
 
+        progress:
+          el.querySelector(
+            ".js-progress"
+          ),
 
-const current =
-  document.querySelector(
-    ".js-current"
-  );
+        current:
+          el.querySelector(
+            ".js-current"
+          ),
 
+        total:
+          el.querySelector(
+            ".js-total"
+          ),
 
-const total =
-  document.querySelector(
-    ".js-total"
-  );
+        recordCarrier:
+          el.querySelector(
+            ".recordCarrier"
+          ),
 
+        recordDisc:
+          el.querySelector(
+            ".recordDisc"
+          ),
 
-/* =====================================================
-   VU ELEMENTS
-===================================================== */
+        tonearmArm:
+          el.querySelector(
+            ".tonearmArm"
+          ),
 
-const vuModule =
-  document.getElementById(
-    "vuModule"
-  );
+        decoded:
+          null,
 
+        reversed:
+          null,
 
-const vuNeedleL =
-  document.getElementById(
-    "vuNeedleL"
-  );
+        duration:
+          0,
 
+        loadError:
+          false,
 
-const vuNeedleR =
-  document.getElementById(
-    "vuNeedleR"
-  );
+        position:
+          0,
 
+        vinylOpened:
+          false,
 
-const vuDebugPanel =
-  document.getElementById(
-    "vuDebugPanel"
-  );
+        mechanismDeployed:
+          false,
 
+        tonearmEngaged:
+          false,
 
-const vuDebugHandle =
-  document.getElementById(
-    "vuDebugHandle"
-  );
+        isPacking:
+          false,
 
+        openingPromise:
+          null,
 
-const vuDebugCoords =
-  document.getElementById(
-    "vuDebugCoords"
-  );
+        armDeployTimer:
+          null,
 
+        armEngageGeneration:
+          0,
 
-const vuDebugOff =
-  document.getElementById(
-    "vuDebugOff"
-  );
+        currentTonearmAngle:
+          -8,
 
-
-const vuDebugReopen =
-  document.getElementById(
-    "vuDebugReopen"
-  );
-
-
-/* =====================================================
-   VU FIXED SETTINGS FROM SCREENSHOT
-===================================================== */
-
-const VU_DEFAULT_VIEWPORT_X =
-  947;
-
-
-const VU_DEFAULT_VIEWPORT_Y =
-  126;
-
-
-let vuDebugMode =
-  true;
-
-
-let vuManualTest =
-  false;
-
-
-/*
-  Position is no longer stored as viewport px.
-  It is stored as ratio inside profileHead.
-*/
-
-let vuAnchorXRatio =
-  .5;
-
-
-let vuAnchorYRatio =
-  .5;
-
-
-let vuModuleScale =
-  1.33;
-
-
-let vuFrontBrightness =
-  .68;
-
-
-let vuNeedleLeftX =
-  72.0;
-
-
-let vuNeedleGap =
-  113.5;
-
-
-let vuNeedlePivotY =
-  100.5;
-
-
-let vuNeedleLength =
-  47.5;
-
-
-let vuNeedleWidth =
-  1.2;
-
-
-let vuMinAngle =
-  -53.0;
-
-
-let vuMaxAngle =
-  25.5;
-
-
-let vuDragging =
-  false;
-
-
-let vuDragPointerId =
-  null;
-
-
-let vuDragOffsetX =
-  0;
-
-
-let vuDragOffsetY =
-  0;
-
-
-/* =====================================================
-   VU DEBUG CONTROLS
-===================================================== */
-
-const vuXSlider =
-  document.getElementById(
-    "vuXSlider"
-  );
-
-
-const vuYSlider =
-  document.getElementById(
-    "vuYSlider"
-  );
-
-
-const vuScaleSlider =
-  document.getElementById(
-    "vuScaleSlider"
-  );
-
-
-const vuFrontBrightnessSlider =
-  document.getElementById(
-    "vuFrontBrightnessSlider"
-  );
-
-
-const vuPivotXSlider =
-  document.getElementById(
-    "vuPivotXSlider"
-  );
-
-
-const vuGapSlider =
-  document.getElementById(
-    "vuGapSlider"
-  );
-
-
-const vuPivotYSlider =
-  document.getElementById(
-    "vuPivotYSlider"
-  );
-
-
-const vuNeedleLengthSlider =
-  document.getElementById(
-    "vuNeedleLengthSlider"
-  );
-
-
-const vuNeedleWidthSlider =
-  document.getElementById(
-    "vuNeedleWidthSlider"
-  );
-
-
-const vuMinAngleSlider =
-  document.getElementById(
-    "vuMinAngleSlider"
-  );
-
-
-const vuMaxAngleSlider =
-  document.getElementById(
-    "vuMaxAngleSlider"
-  );
-
-
-const vuXValue =
-  document.getElementById(
-    "vuXValue"
-  );
-
-
-const vuYValue =
-  document.getElementById(
-    "vuYValue"
-  );
-
-
-const vuScaleValue =
-  document.getElementById(
-    "vuScaleValue"
-  );
-
-
-const vuFrontBrightnessValue =
-  document.getElementById(
-    "vuFrontBrightnessValue"
-  );
-
-
-const vuPivotXValue =
-  document.getElementById(
-    "vuPivotXValue"
-  );
-
-
-const vuGapValue =
-  document.getElementById(
-    "vuGapValue"
-  );
-
-
-const vuPivotYValue =
-  document.getElementById(
-    "vuPivotYValue"
-  );
-
-
-const vuNeedleLengthValue =
-  document.getElementById(
-    "vuNeedleLengthValue"
-  );
-
-
-const vuNeedleWidthValue =
-  document.getElementById(
-    "vuNeedleWidthValue"
-  );
-
-
-const vuMinAngleValue =
-  document.getElementById(
-    "vuMinAngleValue"
-  );
-
-
-const vuMaxAngleValue =
-  document.getElementById(
-    "vuMaxAngleValue"
-  );
-
-
-const vuTestLeft =
-  document.getElementById(
-    "vuTestLeft"
-  );
-
-
-const vuTestCenter =
-  document.getElementById(
-    "vuTestCenter"
-  );
-
-
-const vuTestRight =
-  document.getElementById(
-    "vuTestRight"
-  );
-
-
-const vuTestAudio =
-  document.getElementById(
-    "vuTestAudio"
-  );
-
-
-const vuResetDebug =
-  document.getElementById(
-    "vuResetDebug"
-  );
-
-
-/* =====================================================
-   ANDROID VU OFF
-===================================================== */
-
-if(
-  IS_ANDROID
-){
-
-  vuModule.classList.add(
-    "is-hidden"
-  );
-
-
-  vuDebugPanel.classList.add(
-    "hidden"
-  );
-
-
-  vuDebugReopen.classList.remove(
-    "visible"
-  );
-
-}
-
-
-/* =====================================================
-   VU STORAGE
-===================================================== */
-
-const VU_STORAGE_KEY =
-  "frssnVuHeaderAnchoredV2";
-
-
-const VU_LEGACY_KEY =
-  "frssnVuLayeredConfig";
-
-
-function saveVuState(){
-
-  try{
-
-    localStorage.setItem(
-      VU_STORAGE_KEY,
-      JSON.stringify(
-        {
-
-          anchorXRatio:
-            vuAnchorXRatio,
-
-          anchorYRatio:
-            vuAnchorYRatio,
-
-          scale:
-            vuModuleScale,
-
-          frontBrightness:
-            vuFrontBrightness,
-
-          needleLeftX:
-            vuNeedleLeftX,
-
-          needleGap:
-            vuNeedleGap,
-
-          needlePivotY:
-            vuNeedlePivotY,
-
-          needleLength:
-            vuNeedleLength,
-
-          needleWidth:
-            vuNeedleWidth,
-
-          minAngle:
-            vuMinAngle,
-
-          maxAngle:
-            vuMaxAngle
-
-        }
-      )
-    );
-
-  }
-
-  catch(_){}
-
-}
-
-
-/* =====================================================
-   POSITION MIGRATION
-===================================================== */
-
-function initializeVuAnchorFromViewport(
-  viewportX,
-  viewportY
-){
-
-  const rect =
-    profileHead.getBoundingClientRect();
-
-
-  if(
-    !rect.width
-    ||
-    !rect.height
-  ){
-
-    vuAnchorXRatio =
-      .5;
-
-
-    vuAnchorYRatio =
-      .5;
-
-
-    return;
-
-  }
-
-
-  const localX =
-    viewportX -
-    rect.left;
-
-
-  const localY =
-    viewportY -
-    rect.top;
-
-
-  vuAnchorXRatio =
-    localX /
-    rect.width;
-
-
-  vuAnchorYRatio =
-    localY /
-    rect.height;
-
-}
-
-
-function loadVuState(){
-
-  try{
-
-    const raw =
-      localStorage.getItem(
-        VU_STORAGE_KEY
-      );
-
-
-    if(
-      raw
-    ){
-
-      const data =
-        JSON.parse(
-          raw
-        );
-
-
-      if(
-        Number.isFinite(
-          data.anchorXRatio
-        )
-      ){
-
-        vuAnchorXRatio =
-          data.anchorXRatio;
+        hasPlaybackEverStarted:
+          false
 
       }
-
-
-      if(
-        Number.isFinite(
-          data.anchorYRatio
-        )
-      ){
-
-        vuAnchorYRatio =
-          data.anchorYRatio;
-
-      }
-
-
-      if(
-        Number.isFinite(
-          data.scale
-        )
-      ){
-
-        vuModuleScale =
-          data.scale;
-
-      }
-
-
-      if(
-        Number.isFinite(
-          data.frontBrightness
-        )
-      ){
-
-        vuFrontBrightness =
-          data.frontBrightness;
-
-      }
-
-
-      if(
-        Number.isFinite(
-          data.needleLeftX
-        )
-      ){
-
-        vuNeedleLeftX =
-          data.needleLeftX;
-
-      }
-
-
-      if(
-        Number.isFinite(
-          data.needleGap
-        )
-      ){
-
-        vuNeedleGap =
-          data.needleGap;
-
-      }
-
-
-      if(
-        Number.isFinite(
-          data.needlePivotY
-        )
-      ){
-
-        vuNeedlePivotY =
-          data.needlePivotY;
-
-      }
-
-
-      if(
-        Number.isFinite(
-          data.needleLength
-        )
-      ){
-
-        vuNeedleLength =
-          data.needleLength;
-
-      }
-
-
-      if(
-        Number.isFinite(
-          data.needleWidth
-        )
-      ){
-
-        vuNeedleWidth =
-          data.needleWidth;
-
-      }
-
-
-      if(
-        Number.isFinite(
-          data.minAngle
-        )
-      ){
-
-        vuMinAngle =
-          data.minAngle;
-
-      }
-
-
-      if(
-        Number.isFinite(
-          data.maxAngle
-        )
-      ){
-
-        vuMaxAngle =
-          data.maxAngle;
-
-      }
-
-
-      return;
-
-    }
-
-
-    /*
-      First run of anchored version.
-
-      If old VU config exists, use its old viewport
-      X/Y to preserve current visual position.
-    */
-
-    let legacyX =
-      VU_DEFAULT_VIEWPORT_X;
-
-
-    let legacyY =
-      VU_DEFAULT_VIEWPORT_Y;
-
-
-    try{
-
-      const legacyRaw =
-        localStorage.getItem(
-          VU_LEGACY_KEY
-        );
-
-
-      if(
-        legacyRaw
-      ){
-
-        const legacy =
-          JSON.parse(
-            legacyRaw
-          );
-
-
-        if(
-          Number.isFinite(
-            legacy.x
-          )
-        ){
-
-          legacyX =
-            legacy.x;
-
-        }
-
-
-        if(
-          Number.isFinite(
-            legacy.y
-          )
-        ){
-
-          legacyY =
-            legacy.y;
-
-        }
-
-      }
-
-    }
-
-    catch(_){}
-
-
-    initializeVuAnchorFromViewport(
-      legacyX,
-      legacyY
-    );
-
-
-    /*
-      Other parameters deliberately use the
-      screenshot values requested by user.
-    */
-
-    vuModuleScale =
-      1.33;
-
-
-    vuNeedleLeftX =
-      72.0;
-
-
-    vuNeedleGap =
-      113.5;
-
-
-    vuNeedlePivotY =
-      100.5;
-
-
-    vuNeedleLength =
-      47.5;
-
-
-    vuNeedleWidth =
-      1.2;
-
-
-    vuMinAngle =
-      -53.0;
-
-
-    vuMaxAngle =
-      25.5;
-
-
-    vuFrontBrightness =
-      .68;
-
-
-    saveVuState();
-
-  }
-
-  catch(_){
-
-    initializeVuAnchorFromViewport(
-      VU_DEFAULT_VIEWPORT_X,
-      VU_DEFAULT_VIEWPORT_Y
-    );
-
-  }
-
-}
-
-
-/* =====================================================
-   VU POSITION FROM HEADER
-===================================================== */
-
-function getVuLocalPosition(){
-
-  const rect =
-    profileHead.getBoundingClientRect();
-
-
-  return {
-
-    x:
-      vuAnchorXRatio *
-      rect.width,
-
-    y:
-      vuAnchorYRatio *
-      rect.height
-
-  };
-
-}
-
-
-function applyVuPosition(){
-
-  if(
-    IS_ANDROID
-  ){
-
-    return;
-
-  }
-
-
-  const rect =
-    profileHead.getBoundingClientRect();
-
-
-  if(
-    !rect.width
-    ||
-    !rect.height
-  ){
-
-    return;
-
-  }
-
-
-  const local =
-    getVuLocalPosition();
-
-
-  const viewportX =
-    rect.left +
-    local.x;
-
-
-  const viewportY =
-    rect.top +
-    local.y;
-
-
-  vuModule.style.left =
-    viewportX +
-    "px";
-
-
-  vuModule.style.top =
-    viewportY +
-    "px";
-
-}
-
-
-/* =====================================================
-   APPLY VU DEBUG
-===================================================== */
-
-function applyVuDebug(){
-
-  vuModule.style.setProperty(
-    "--vu-module-scale",
-    vuModuleScale
+    )
   );
-
-
-  vuModule.style.setProperty(
-    "--needle-left-x",
-    vuNeedleLeftX +
-    "px"
-  );
-
-
-  vuModule.style.setProperty(
-    "--needle-gap",
-    vuNeedleGap +
-    "px"
-  );
-
-
-  vuModule.style.setProperty(
-    "--needle-pivot-y",
-    vuNeedlePivotY +
-    "px"
-  );
-
-
-  vuModule.style.setProperty(
-    "--needle-length",
-    vuNeedleLength +
-    "px"
-  );
-
-
-  vuModule.style.setProperty(
-    "--needle-width",
-    vuNeedleWidth +
-    "px"
-  );
-
-
-  vuModule.style.setProperty(
-    "--vu-front-brightness",
-    vuFrontBrightness
-  );
-
-
-  applyVuPosition();
-
-
-  const local =
-    getVuLocalPosition();
-
-
-  vuXSlider.value =
-    String(
-      Math.round(
-        local.x
-      )
-    );
-
-
-  vuYSlider.value =
-    String(
-      Math.round(
-        local.y
-      )
-    );
-
-
-  vuScaleSlider.value =
-    String(
-      Math.round(
-        vuModuleScale *
-        100
-      )
-    );
-
-
-  vuFrontBrightnessSlider.value =
-    String(
-      Math.round(
-        vuFrontBrightness *
-        100
-      )
-    );
-
-
-  vuPivotXSlider.value =
-    String(
-      vuNeedleLeftX
-    );
-
-
-  vuGapSlider.value =
-    String(
-      vuNeedleGap
-    );
-
-
-  vuPivotYSlider.value =
-    String(
-      vuNeedlePivotY
-    );
-
-
-  vuNeedleLengthSlider.value =
-    String(
-      vuNeedleLength
-    );
-
-
-  vuNeedleWidthSlider.value =
-    String(
-      vuNeedleWidth
-    );
-
-
-  vuMinAngleSlider.value =
-    String(
-      vuMinAngle
-    );
-
-
-  vuMaxAngleSlider.value =
-    String(
-      vuMaxAngle
-    );
-
-
-  vuXValue.textContent =
-    Math.round(
-      local.x
-    )
-    +
-    " px";
-
-
-  vuYValue.textContent =
-    Math.round(
-      local.y
-    )
-    +
-    " px";
-
-
-  vuScaleValue.textContent =
-    Math.round(
-      vuModuleScale *
-      100
-    )
-    +
-    "%";
-
-
-  vuFrontBrightnessValue.textContent =
-    Math.round(
-      vuFrontBrightness *
-      100
-    )
-    +
-    "%";
-
-
-  vuPivotXValue.textContent =
-    vuNeedleLeftX.toFixed(
-      1
-    )
-    +
-    " px";
-
-
-  vuGapValue.textContent =
-    vuNeedleGap.toFixed(
-      1
-    )
-    +
-    " px";
-
-
-  vuPivotYValue.textContent =
-    vuNeedlePivotY.toFixed(
-      1
-    )
-    +
-    " px";
-
-
-  vuNeedleLengthValue.textContent =
-    vuNeedleLength.toFixed(
-      1
-    )
-    +
-    " px";
-
-
-  vuNeedleWidthValue.textContent =
-    vuNeedleWidth.toFixed(
-      1
-    )
-    +
-    " px";
-
-
-  vuMinAngleValue.textContent =
-    vuMinAngle.toFixed(
-      1
-    )
-    +
-    "°";
-
-
-  vuMaxAngleValue.textContent =
-    vuMaxAngle.toFixed(
-      1
-    )
-    +
-    "°";
-
-
-  vuDebugCoords.textContent =
-    "VU // HEADER X "
-    +
-    Math.round(
-      local.x
-    )
-    +
-    " // Y "
-    +
-    Math.round(
-      local.y
-    );
-
-}
-
-
-/* =====================================================
-   POSITION SLIDERS
-===================================================== */
-
-vuXSlider.addEventListener(
-  "input",
-  () => {
-
-    const rect =
-      profileHead.getBoundingClientRect();
-
-
-    if(
-      !rect.width
-    ){
-
-      return;
-
-    }
-
-
-    vuAnchorXRatio =
-      Number(
-        vuXSlider.value
-      )
-      /
-      rect.width;
-
-
-    applyVuDebug();
-
-    saveVuState();
-
-  }
-);
-
-
-vuYSlider.addEventListener(
-  "input",
-  () => {
-
-    const rect =
-      profileHead.getBoundingClientRect();
-
-
-    if(
-      !rect.height
-    ){
-
-      return;
-
-    }
-
-
-    vuAnchorYRatio =
-      Number(
-        vuYSlider.value
-      )
-      /
-      rect.height;
-
-
-    applyVuDebug();
-
-    saveVuState();
-
-  }
-);
-
-
-vuScaleSlider.addEventListener(
-  "input",
-  () => {
-
-    vuModuleScale =
-      Number(
-        vuScaleSlider.value
-      )
-      /
-      100;
-
-
-    applyVuDebug();
-
-    saveVuState();
-
-  }
-);
-
-
-vuFrontBrightnessSlider.addEventListener(
-  "input",
-  () => {
-
-    vuFrontBrightness =
-      Number(
-        vuFrontBrightnessSlider.value
-      )
-      /
-      100;
-
-
-    applyVuDebug();
-
-    saveVuState();
-
-  }
-);
-
-
-vuPivotXSlider.addEventListener(
-  "input",
-  () => {
-
-    vuNeedleLeftX =
-      Number(
-        vuPivotXSlider.value
-      );
-
-
-    applyVuDebug();
-
-    saveVuState();
-
-  }
-);
-
-
-vuGapSlider.addEventListener(
-  "input",
-  () => {
-
-    vuNeedleGap =
-      Number(
-        vuGapSlider.value
-      );
-
-
-    applyVuDebug();
-
-    saveVuState();
-
-  }
-);
-
-
-vuPivotYSlider.addEventListener(
-  "input",
-  () => {
-
-    vuNeedlePivotY =
-      Number(
-        vuPivotYSlider.value
-      );
-
-
-    applyVuDebug();
-
-    saveVuState();
-
-  }
-);
-
-
-vuNeedleLengthSlider.addEventListener(
-  "input",
-  () => {
-
-    vuNeedleLength =
-      Number(
-        vuNeedleLengthSlider.value
-      );
-
-
-    applyVuDebug();
-
-    saveVuState();
-
-  }
-);
-
-
-vuNeedleWidthSlider.addEventListener(
-  "input",
-  () => {
-
-    vuNeedleWidth =
-      Number(
-        vuNeedleWidthSlider.value
-      );
-
-
-    applyVuDebug();
-
-    saveVuState();
-
-  }
-);
-
-
-vuMinAngleSlider.addEventListener(
-  "input",
-  () => {
-
-    vuMinAngle =
-      Number(
-        vuMinAngleSlider.value
-      );
-
-
-    applyVuDebug();
-
-    saveVuState();
-
-  }
-);
-
-
-vuMaxAngleSlider.addEventListener(
-  "input",
-  () => {
-
-    vuMaxAngle =
-      Number(
-        vuMaxAngleSlider.value
-      );
-
-
-    applyVuDebug();
-
-    saveVuState();
-
-  }
-);
-
-
-/* =====================================================
-   VU DRAG
-===================================================== */
-
-vuDebugHandle.addEventListener(
-  "pointerdown",
-  event => {
-
-    if(
-      event.target.closest(
-        "button"
-      )
-    ){
-
-      return;
-
-    }
-
-
-    event.preventDefault();
-
-
-    vuDragging =
-      true;
-
-
-    vuDragPointerId =
-      event.pointerId;
-
-
-    const moduleRect =
-      vuModule.getBoundingClientRect();
-
-
-    vuDragOffsetX =
-      event.clientX -
-      moduleRect.left;
-
-
-    vuDragOffsetY =
-      event.clientY -
-      moduleRect.top;
-
-
-    vuDebugHandle.setPointerCapture(
-      event.pointerId
-    );
-
-  }
-);
-
-
-vuDebugHandle.addEventListener(
-  "pointermove",
-  event => {
-
-    if(
-      !vuDragging
-      ||
-      event.pointerId !==
-      vuDragPointerId
-    ){
-
-      return;
-
-    }
-
-
-    event.preventDefault();
-
-
-    const anchorRect =
-      profileHead.getBoundingClientRect();
-
-
-    if(
-      !anchorRect.width
-      ||
-      !anchorRect.height
-    ){
-
-      return;
-
-    }
-
-
-    const localX =
-      event.clientX
-      -
-      anchorRect.left
-      -
-      vuDragOffsetX;
-
-
-    const localY =
-      event.clientY
-      -
-      anchorRect.top
-      -
-      vuDragOffsetY;
-
-
-    vuAnchorXRatio =
-      localX /
-      anchorRect.width;
-
-
-    vuAnchorYRatio =
-      localY /
-      anchorRect.height;
-
-
-    applyVuDebug();
-
-  }
-);
-
-
-function finishVuDrag(
-  event
-){
-
-  if(
-    !vuDragging
-    ||
-    event.pointerId !==
-    vuDragPointerId
-  ){
-
-    return;
-
-  }
-
-
-  vuDragging =
-    false;
-
-
-  if(
-    vuDebugHandle.hasPointerCapture(
-      event.pointerId
-    )
-  ){
-
-    vuDebugHandle.releasePointerCapture(
-      event.pointerId
-    );
-
-  }
-
-
-  vuDragPointerId =
-    null;
-
-
-  saveVuState();
-
-}
-
-
-vuDebugHandle.addEventListener(
-  "pointerup",
-  finishVuDrag
-);
-
-
-vuDebugHandle.addEventListener(
-  "pointercancel",
-  finishVuDrag
-);
-
-
-/* =====================================================
-   HEADER FOLLOW
-===================================================== */
-
-window.addEventListener(
-  "resize",
-  () => {
-
-    applyVuDebug();
-
-  }
-);
-
-
-window.addEventListener(
-  "scroll",
-  () => {
-
-    applyVuPosition();
-
-  },
-  {
-    passive:true
-  }
-);
-
-
-/* =====================================================
-   VU DEBUG MODE
-===================================================== */
-
-function setVuDebugMode(
-  enabled
-){
-
-  vuDebugMode =
-    enabled;
-
-
-  vuModule.classList.toggle(
-    "debug-on",
-    enabled
-  );
-
-
-  vuDebugPanel.classList.toggle(
-    "hidden",
-    !enabled
-  );
-
-
-  vuDebugReopen.classList.toggle(
-    "visible",
-    !enabled
-  );
-
-
-  if(
-    !enabled
-  ){
-
-    vuManualTest =
-      false;
-
-  }
-
-}
-
-
-vuDebugOff.addEventListener(
-  "click",
-  event => {
-
-    event.stopPropagation();
-
-
-    setVuDebugMode(
-      false
-    );
-
-  }
-);
-
-
-vuDebugReopen.addEventListener(
-  "click",
-  () => {
-
-    setVuDebugMode(
-      true
-    );
-
-  }
-);
-
-
-/* =====================================================
-   VU TEST
-===================================================== */
-
-function setNeedlesAngle(
-  angle
-){
-
-  vuNeedleL.style.transform =
-    `rotate(${angle}deg)`;
-
-
-  vuNeedleR.style.transform =
-    `rotate(${angle}deg)`;
-
-}
-
-
-vuTestLeft.addEventListener(
-  "click",
-  () => {
-
-    vuManualTest =
-      true;
-
-
-    setNeedlesAngle(
-      vuMinAngle
-    );
-
-  }
-);
-
-
-vuTestCenter.addEventListener(
-  "click",
-  () => {
-
-    vuManualTest =
-      true;
-
-
-    setNeedlesAngle(
-      0
-    );
-
-  }
-);
-
-
-vuTestRight.addEventListener(
-  "click",
-  () => {
-
-    vuManualTest =
-      true;
-
-
-    setNeedlesAngle(
-      vuMaxAngle
-    );
-
-  }
-);
-
-
-vuTestAudio.addEventListener(
-  "click",
-  () => {
-
-    vuManualTest =
-      false;
-
-  }
-);
-
-
-/* =====================================================
-   RESET VU
-===================================================== */
-
-vuResetDebug.addEventListener(
-  "click",
-  () => {
-
-    /*
-      Reset module placement to current
-      screenshot viewport position converted
-      into header-relative coordinates.
-    */
-
-    initializeVuAnchorFromViewport(
-      VU_DEFAULT_VIEWPORT_X,
-      VU_DEFAULT_VIEWPORT_Y
-    );
-
-
-    vuModuleScale =
-      1.33;
-
-
-    vuFrontBrightness =
-      .68;
-
-
-    vuNeedleLeftX =
-      72.0;
-
-
-    vuNeedleGap =
-      113.5;
-
-
-    vuNeedlePivotY =
-      100.5;
-
-
-    vuNeedleLength =
-      47.5;
-
-
-    vuNeedleWidth =
-      1.2;
-
-
-    vuMinAngle =
-      -53.0;
-
-
-    vuMaxAngle =
-      25.5;
-
-
-    applyVuDebug();
-
-    saveVuState();
-
-  }
-);
-
-
-loadVuState();
-
-applyVuDebug();
 
 
 /* =====================================================
@@ -5147,10 +3555,7 @@ function playPaperIn(){
 
 
   if(
-    promise
-    &&
-    typeof promise.catch ===
-    "function"
+    promise?.catch
   ){
 
     promise.catch(
@@ -5178,10 +3583,7 @@ function playPaperOut(){
 
 
   if(
-    promise
-    &&
-    typeof promise.catch ===
-    "function"
+    promise?.catch
   ){
 
     promise.catch(
@@ -5194,7 +3596,7 @@ function playPaperOut(){
 
 
 /* =====================================================
-   TONEARM SETTINGS
+   PHYSICS
 ===================================================== */
 
 const MECHANISM_DEPLOY_DURATION =
@@ -5209,9 +3611,17 @@ const ARM_MOVE_DURATION_MS =
   380;
 
 
-/* =====================================================
-   PHYSICS
-===================================================== */
+const ARM_PARK_ANGLE =
+  -8;
+
+
+const ARM_START_ANGLE =
+  19.5;
+
+
+const ARM_END_ANGLE =
+  32.5;
+
 
 const SCRATCH_TIME_SCALE =
   .54;
@@ -5305,10 +3715,6 @@ const SEEK_FULL_GAIN =
   1.0;
 
 
-/* =====================================================
-   VINYL
-===================================================== */
-
 const VINYL_RPM =
   45;
 
@@ -5335,41 +3741,19 @@ function angleFromAudioTime(
 }
 
 
-function setVinylAngle(
-  angle
-){
-
-  recordDisc.style.transform =
-    `rotate(${angle}deg)`;
-
-}
-
-
 /* =====================================================
-   STATE
+   GLOBAL PLAYBACK STATE
 ===================================================== */
+
+let activeTrack =
+  null;
+
 
 let playIntent =
   false;
 
 
-let hasPlaybackEverStarted =
-  false;
-
-
-let vinylOpened =
-  false;
-
-
-let mechanismDeployed =
-  false;
-
-
-let tonearmEngaged =
-  false;
-
-
-let isPacking =
+let switchInProgress =
   false;
 
 
@@ -5383,6 +3767,10 @@ let isPreCueing =
 
 let isScratching =
   false;
+
+
+let scratchTrack =
+  null;
 
 
 let scratchPointerId =
@@ -5421,20 +3809,12 @@ let visualRAF =
   null;
 
 
-let openingPromise =
-  null;
-
-
-let armDeployTimer =
-  null;
-
-
-let armEngageGeneration =
-  0;
-
-
 let operationGeneration =
   0;
+
+
+let engineEndedLock =
+  false;
 
 
 function nextOperationGeneration(){
@@ -5460,9 +3840,20 @@ function operationAlive(
 }
 
 
-/* =====================================================
-   HELPERS
-===================================================== */
+function wait(
+  ms
+){
+
+  return new Promise(
+    resolve =>
+      setTimeout(
+        resolve,
+        ms
+      )
+  );
+
+}
+
 
 function smootherStep(
   t
@@ -5531,23 +3922,201 @@ function fmt(
 
 
 /* =====================================================
-   AUDIO DATA
+   TRACK UI HELPERS
+===================================================== */
+
+function setPlayIcon(
+  state,
+  playing
+){
+
+  state.playButton.innerHTML =
+    playing
+    ?
+    `
+    <svg viewBox="0 0 24 24">
+      <path d="M7 5h4v14H7zm6 0h4v14h-4z"/>
+    </svg>
+    `
+    :
+    `
+    <svg viewBox="0 0 24 24">
+      <path d="M8 5v14l11-7z"/>
+    </svg>
+    `;
+
+}
+
+
+function setVinylAngle(
+  state,
+  angle
+){
+
+  state.recordDisc.style.transform =
+    `rotate(${angle}deg)`;
+
+}
+
+
+function getDuration(
+  state
+){
+
+  return (
+    state?.duration ||
+    0
+  );
+
+}
+
+
+function clampTime(
+  state,
+  time
+){
+
+  const duration =
+    getDuration(
+      state
+    );
+
+
+  return duration
+    ?
+    Math.max(
+      0,
+      Math.min(
+        duration,
+        time
+      )
+    )
+    :
+    Math.max(
+      0,
+      time ||
+      0
+    );
+
+}
+
+
+function updateProgressUI(
+  state,
+  time
+){
+
+  const duration =
+    getDuration(
+      state
+    );
+
+
+  const ratio =
+    duration
+    ?
+    Math.max(
+      0,
+      Math.min(
+        1,
+        time /
+        duration
+      )
+    )
+    :
+    0;
+
+
+  state.progress.style.transform =
+    `scaleX(${ratio})`;
+
+
+  state.current.textContent =
+    fmt(
+      time
+    );
+
+}
+
+
+function armAngleFromTime(
+  state,
+  time
+){
+
+  const duration =
+    getDuration(
+      state
+    );
+
+
+  if(
+    !duration
+  ){
+
+    return ARM_START_ANGLE;
+
+  }
+
+
+  const p =
+    Math.max(
+      0,
+      Math.min(
+        1,
+        time /
+        duration
+      )
+    );
+
+
+  return (
+    ARM_START_ANGLE
+    +
+    (
+      ARM_END_ANGLE -
+      ARM_START_ANGLE
+    )
+    *
+    p
+  );
+
+}
+
+
+function setTonearmAngle(
+  state,
+  angle
+){
+
+  state.currentTonearmAngle =
+    angle;
+
+
+  state.tonearmArm.style.transform =
+    `rotate(${angle}deg)`;
+
+}
+
+
+tracks.forEach(
+  state => {
+
+    setTonearmAngle(
+      state,
+      ARM_PARK_ANGLE
+    );
+
+  }
+);
+
+
+/* =====================================================
+   AUDIO CONTEXT
 ===================================================== */
 
 let audioContext =
   null;
-
-
-let decodedTrack =
-  null;
-
-
-let reversedTrack =
-  null;
-
-
-let trackDuration =
-  0;
 
 
 function getAudioContext(){
@@ -5597,73 +4166,6 @@ async function resumeAudioContext(){
     catch(_){}
 
   }
-
-}
-
-
-function getDuration(){
-
-  if(
-    Number.isFinite(
-      trackDuration
-    )
-    &&
-    trackDuration >
-    0
-  ){
-
-    return trackDuration;
-
-  }
-
-
-  if(
-    Number.isFinite(
-      audio.duration
-    )
-    &&
-    audio.duration >
-    0
-  ){
-
-    return audio.duration;
-
-  }
-
-
-  return 0;
-
-}
-
-
-function clampTime(
-  time
-){
-
-  const duration =
-    getDuration();
-
-
-  if(
-    !duration
-  ){
-
-    return Math.max(
-      0,
-      time ||
-      0
-    );
-
-  }
-
-
-  return Math.max(
-    0,
-    Math.min(
-      duration,
-      time
-    )
-  );
 
 }
 
@@ -5725,164 +4227,46 @@ function createReversedBuffer(
 
 
 /* =====================================================
-   TONEARM
+   WAVEFORM
 ===================================================== */
 
-const ARM_PARK_ANGLE =
-  -8;
+const WAVE_BARS =
+  96;
 
 
-const ARM_START_ANGLE =
-  19.5;
-
-
-const ARM_END_ANGLE =
-  32.5;
-
-
-let currentTonearmAngle =
-  ARM_PARK_ANGLE;
-
-
-function armAngleFromTime(
-  time
+function renderBars(
+  element,
+  heights
 ){
 
-  const duration =
-    getDuration();
+  element.innerHTML =
+    "";
 
 
-  if(
-    !duration
-  ){
+  heights.forEach(
+    height => {
 
-    return ARM_START_ANGLE;
-
-  }
-
-
-  const p =
-    Math.max(
-      0,
-      Math.min(
-        1,
-        time /
-        duration
-      )
-    );
-
-
-  return (
-    ARM_START_ANGLE
-    +
-    (
-      ARM_END_ANGLE -
-      ARM_START_ANGLE
-    )
-    *
-    p
-  );
-
-}
-
-
-function setTonearmAngle(
-  angle
-){
-
-  currentTonearmAngle =
-    angle;
-
-
-  tonearmArm.style.transform =
-    `rotate(${angle}deg)`;
-
-}
-
-
-setTonearmAngle(
-  ARM_PARK_ANGLE
-);
-
-
-function animateTonearmTo(
-  targetAngle,
-  duration =
-    ARM_MOVE_DURATION_MS
-){
-
-  return new Promise(
-    resolve => {
-
-      const startAngle =
-        currentTonearmAngle;
-
-
-      const started =
-        performance.now();
-
-
-      function frame(
-        now
-      ){
-
-        const raw =
-          Math.min(
-            1,
-            (
-              now -
-              started
-            )
-            /
-            duration
-          );
-
-
-        const smooth =
-          smootherStep(
-            raw
-          );
-
-
-        setTonearmAngle(
-          startAngle
-          +
-          (
-            targetAngle -
-            startAngle
-          )
-          *
-          smooth
+      const bar =
+        document.createElement(
+          "span"
         );
 
 
-        if(
-          raw <
-          1
-        ){
-
-          requestAnimationFrame(
-            frame
-          );
-
-        }
-
-        else{
-
-          setTonearmAngle(
-            targetAngle
-          );
+      bar.className =
+        "bar";
 
 
-          resolve();
+      bar.style.height =
+        Math.max(
+          4,
+          height
+        )
+        +
+        "%";
 
-        }
 
-      }
-
-
-      requestAnimationFrame(
-        frame
+      element.appendChild(
+        bar
       );
 
     }
@@ -5891,168 +4275,263 @@ function animateTonearmTo(
 }
 
 
-async function engageTonearm(){
+function fallbackWave(
+  state
+){
 
-  if(
-    tonearmEngaged
-    ||
-    isPacking
-    ||
-    !vinylOpened
-  ){
+  const fallback =
+    Array.from(
+      {
+        length:
+          WAVE_BARS
+      },
+      (_,i) =>
+        16
+        +
+        (
+          (
+            i *
+            37
+          )
+          +
+          (
+            state.index *
+            19
+          )
+        )
+        %
+        68
+    );
 
-    return;
 
-  }
-
-
-  tonearmEngaged =
-    true;
+  renderBars(
+    state.wave,
+    fallback
+  );
 
 
-  await animateTonearmTo(
-    armAngleFromTime(
-      getEstimatedEnginePosition()
-    ),
-    ARM_MOVE_DURATION_MS
+  renderBars(
+    state.waveClone,
+    fallback
   );
 
 }
 
 
-function cancelScheduledTonearmEngage(){
+async function loadTrackData(
+  state
+){
 
-  armEngageGeneration +=
-    1;
+  try{
+
+    const response =
+      await fetch(
+        state.audioUrl,
+        {
+          cache:
+            "force-cache"
+        }
+      );
 
 
-  if(
-    armDeployTimer
-  ){
+    if(
+      !response.ok
+    ){
 
-    clearTimeout(
-      armDeployTimer
+      throw new Error(
+        `Audio fetch failed: ${state.audioUrl}`
+      );
+
+    }
+
+
+    const arrayBuffer =
+      await response.arrayBuffer();
+
+
+    const context =
+      getAudioContext();
+
+
+    state.decoded =
+      await context.decodeAudioData(
+        arrayBuffer.slice(
+          0
+        )
+      );
+
+
+    state.duration =
+      state.decoded.duration;
+
+
+    state.total.textContent =
+      fmt(
+        state.duration
+      );
+
+
+    const channels =
+      [];
+
+
+    for(
+      let c = 0;
+      c <
+      state.decoded.numberOfChannels;
+      c++
+    ){
+
+      channels.push(
+        state.decoded.getChannelData(
+          c
+        )
+      );
+
+    }
+
+
+    const blockSize =
+      Math.max(
+        1,
+        Math.floor(
+          state.decoded.length /
+          WAVE_BARS
+        )
+      );
+
+
+    const peaks =
+      [];
+
+
+    for(
+      let i = 0;
+      i <
+      WAVE_BARS;
+      i++
+    ){
+
+      const start =
+        i *
+        blockSize;
+
+
+      const end =
+        Math.min(
+          state.decoded.length,
+          start +
+          blockSize
+        );
+
+
+      let peak =
+        0;
+
+
+      const stride =
+        Math.max(
+          1,
+          Math.floor(
+            (
+              end -
+              start
+            )
+            /
+            900
+          )
+        );
+
+
+      for(
+        let c = 0;
+        c <
+        channels.length;
+        c++
+      ){
+
+        for(
+          let s = start;
+          s < end;
+          s += stride
+        ){
+
+          peak =
+            Math.max(
+              peak,
+              Math.abs(
+                channels[c][s]
+              )
+            );
+
+        }
+
+      }
+
+
+      peaks.push(
+        peak
+      );
+
+    }
+
+
+    const maxPeak =
+      Math.max(
+        ...peaks
+      )
+      ||
+      1;
+
+
+    const heights =
+      peaks.map(
+        peak =>
+          peak /
+          maxPeak *
+          100
+      );
+
+
+    renderBars(
+      state.wave,
+      heights
     );
 
 
-    armDeployTimer =
-      null;
+    renderBars(
+      state.waveClone,
+      heights
+    );
+
+  }
+
+  catch(error){
+
+    console.warn(
+      error
+    );
+
+
+    state.loadError =
+      true;
+
+
+    fallbackWave(
+      state
+    );
+
+
+    state.total.textContent =
+      "--:--";
 
   }
 
 }
 
 
-function scheduleTonearmEngageFromOpenStart(){
-
-  cancelScheduledTonearmEngage();
-
-
-  const generation =
-    armEngageGeneration;
-
-
-  const startAt =
-    Math.max(
-      0,
-      MECHANISM_DEPLOY_DURATION
-      +
-      ARM_START_OFFSET_MS
-    );
-
-
-  armDeployTimer =
-    setTimeout(
-      async () => {
-
-        armDeployTimer =
-          null;
-
-
-        if(
-          generation !==
-          armEngageGeneration
-          ||
-          !vinylOpened
-          ||
-          isPacking
-          ||
-          tonearmEngaged
-        ){
-
-          return;
-
-        }
-
-
-        if(
-          !mechanismDeployed
-          &&
-          startAt >=
-          MECHANISM_DEPLOY_DURATION
-        ){
-
-          mechanismDeployed =
-            true;
-
-
-          track.classList.add(
-            "arm-on-top"
-          );
-
-        }
-
-
-        await engageTonearm();
-
-      },
-      startAt
-    );
-
-}
-
-
 /* =====================================================
-   PROGRESS
-===================================================== */
-
-function updateProgressUI(
-  time
-){
-
-  const duration =
-    getDuration();
-
-
-  const ratio =
-    duration
-    ?
-    Math.max(
-      0,
-      Math.min(
-        1,
-        time /
-        duration
-      )
-    )
-    :
-    0;
-
-
-  progress.style.transform =
-    `scaleX(${ratio})`;
-
-
-  current.textContent =
-    fmt(
-      time
-    );
-
-}
-
-
-/* =====================================================
-   AUDIOWORKLET STATE
+   SHARED AUDIOWORKLET
 ===================================================== */
 
 let workletNode =
@@ -6071,8 +4550,12 @@ let manualSpeedParam =
   null;
 
 
-let engineReady =
+let workletReady =
   false;
+
+
+let engineLoadedTrack =
+  null;
 
 
 let engineMode =
@@ -6095,99 +4578,30 @@ let engineReportPerf =
   performance.now();
 
 
-let engineEndedLock =
-  false;
-
-
-/* =====================================================
-   VU ANALYSER
-===================================================== */
-
-let vuSplitter =
-  null;
-
-
-let vuAnalyserL =
-  null;
-
-
-let vuAnalyserR =
-  null;
-
-
-let vuDataL =
-  null;
-
-
-let vuDataR =
-  null;
-
-
-let vuRAF =
-  null;
-
-
-let vuNeedleValueL =
+let engineLoadToken =
   0;
 
 
-let vuNeedleValueR =
-  0;
+let pendingEngineLoad =
+  null;
 
-
-let vuPeakL =
-  0;
-
-
-let vuPeakR =
-  0;
-
-
-/*
-  Scratch-specific VU release.
-
-  When the finger stops moving, scratch audio
-  drops quickly. The VU should follow it instead
-  of retaining normal musical peak inertia.
-*/
-
-const VU_SCRATCH_IDLE_MS =
-  72;
-
-
-/* =====================================================
-   AUDIOWORKLET PROCESSOR
-===================================================== */
 
 const WORKLET_PROCESSOR_CODE =
 `
 
-class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
+class FRSSNVarispeedProcessor extends AudioWorkletProcessor{
 
 
   static get parameterDescriptors(){
 
     return [
-
       {
-
-        name:
-          "manualSpeed",
-
-        defaultValue:
-          0,
-
-        minValue:
-          -8,
-
-        maxValue:
-          8,
-
-        automationRate:
-          "a-rate"
-
+        name:"manualSpeed",
+        defaultValue:0,
+        minValue:-8,
+        maxValue:8,
+        automationRate:"a-rate"
       }
-
     ];
 
   }
@@ -6335,7 +4749,7 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
         if(
           data.type ===
-          "init"
+          "load"
         ){
 
           this.channels =
@@ -6378,39 +4792,39 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
             );
 
 
-          this.currentSpeed=
+          this.currentSpeed =
             0;
 
 
-          this.active=
-            false;
+          this.active =
+            true;
 
 
-          this.mode=
+          this.mode =
             "paused";
 
 
-          this.targetGain=
+          this.targetGain =
+            1;
+
+
+          this.currentGain =
             0;
 
 
-          this.currentGain=
+          this.motionGain =
             0;
 
 
-          this.motionGain=
+          this.motionTarget =
             0;
 
 
-          this.motionTarget=
-            0;
-
-
-          this.motionMoving=
+          this.motionMoving =
             false;
 
 
-          this.endedSent=
+          this.endedSent =
             false;
 
 
@@ -6418,14 +4832,17 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
             {
 
               type:
-                "ready",
+                "loaded",
+
+              token:
+                data.token,
 
               position:
                 this.position /
                 this.sourceRate,
 
               speed:
-                this.currentSpeed,
+                0,
 
               mode:
                 this.mode
@@ -6580,19 +4997,19 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
     data={}
   ){
 
-    this.mode=
+    this.mode =
       mode;
 
 
-    this.modeElapsedSamples=
+    this.modeElapsedSamples =
       0;
 
 
-    this.modeStartSpeed=
+    this.modeStartSpeed =
       this.currentSpeed;
 
 
-    this.endedSent=
+    this.endedSent =
       false;
 
 
@@ -6603,15 +5020,15 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
       case "normal":
 
-        this.active=
+        this.active =
           true;
 
 
-        this.targetGain=
+        this.targetGain =
           1;
 
 
-        this.currentSpeed=
+        this.currentSpeed =
           typeof data.speed ===
           "number"
           ?
@@ -6625,23 +5042,23 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
       case "play_start":
 
-        this.active=
+        this.active =
           true;
 
 
-        this.targetGain=
+        this.targetGain =
           1;
 
 
-        this.modeStartSpeed=
+        this.modeStartSpeed =
           this.PLAY_START_MIN_RATE;
 
 
-        this.currentSpeed=
+        this.currentSpeed =
           this.PLAY_START_MIN_RATE;
 
 
-        this.modeDurationSamples=
+        this.modeDurationSamples =
           Math.max(
             1,
             Math.round(
@@ -6661,22 +5078,22 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
       case "pause_brake":
 
-        this.active=
+        this.active =
           true;
 
 
-        this.targetGain=
+        this.targetGain =
           1;
 
 
-        this.modeStartSpeed=
+        this.modeStartSpeed =
           Math.max(
             0,
             this.currentSpeed
           );
 
 
-        this.modeDurationSamples=
+        this.modeDurationSamples =
           Math.max(
             1,
             Math.round(
@@ -6696,19 +5113,19 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
       case "grab_brake":
 
-        this.active=
+        this.active =
           true;
 
 
-        this.targetGain=
+        this.targetGain =
           1;
 
 
-        this.modeStartSpeed=
+        this.modeStartSpeed =
           this.currentSpeed;
 
 
-        this.modeDurationSamples=
+        this.modeDurationSamples =
           Math.max(
             1,
             Math.round(
@@ -6727,11 +5144,11 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
       case "manual":
 
-        this.active=
+        this.active =
           true;
 
 
-        this.targetGain=
+        this.targetGain =
           1;
 
 
@@ -6739,68 +5156,66 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
 
       case "motor_recovery":
+      {
 
-        this.active=
+        this.active =
           true;
 
 
-        this.targetGain=
+        this.targetGain =
           1;
 
 
-        this.modeStartSpeed=
+        this.modeStartSpeed =
           this.currentSpeed;
 
 
-        {
-
-          const distance =
-            Math.abs(
-              1 -
-              this.modeStartSpeed
-            );
+        const distance =
+          Math.abs(
+            1 -
+            this.modeStartSpeed
+          );
 
 
-          const baseDuration =
-            Math.min(
-              this.MOTOR_RECOVERY_MAX_DURATION,
-              Math.max(
-                this.MOTOR_RECOVERY_MIN_DURATION,
-                420 +
-                distance *
-                520
-              )
-            );
-
-
-          const duration =
-            baseDuration /
-            this.MOTOR_RECOVERY_SPEED;
-
-
-          this.modeDurationSamples =
+        const baseDuration =
+          Math.min(
+            this.MOTOR_RECOVERY_MAX_DURATION,
             Math.max(
-              1,
-              Math.round(
-                duration /
-                1000 *
-                sampleRate
-              )
-            );
+              this.MOTOR_RECOVERY_MIN_DURATION,
+              420 +
+              distance *
+              520
+            )
+          );
 
-        }
+
+        this.modeDurationSamples =
+          Math.max(
+            1,
+            Math.round(
+              (
+                baseDuration /
+                this.MOTOR_RECOVERY_SPEED /
+                1000
+              )
+              *
+              sampleRate
+            )
+          );
 
 
         break;
 
+      }
+
 
       case "free_spin":
 
-        this.active=
+        this.active =
           true;
 
 
-        this.targetGain=
+        this.targetGain =
           1;
 
 
@@ -6822,15 +5237,15 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
       case "paused":
 
-        this.active=
+        this.active =
           true;
 
 
-        this.targetGain=
+        this.targetGain =
           1;
 
 
-        this.currentSpeed=
+        this.currentSpeed =
           0;
 
 
@@ -6839,15 +5254,15 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
       case "off":
 
-        this.active=
+        this.active =
           false;
 
 
-        this.targetGain=
+        this.targetGain =
           0;
 
 
-        this.currentSpeed=
+        this.currentSpeed =
           0;
 
 
@@ -6879,19 +5294,19 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
 
   finishMode(
-    nextMode,
+    mode,
     speed
   ){
 
-    this.mode=
-      nextMode;
+    this.mode =
+      mode;
 
 
-    this.currentSpeed=
+    this.currentSpeed =
       speed;
 
 
-    this.modeElapsedSamples=
+    this.modeElapsedSamples =
       0;
 
 
@@ -7142,28 +5557,17 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
 
       case "manual":
-      {
-
-        const target =
-          manualSpeed;
-
-
-        const coefficient =
-          .035;
-
 
         return (
           this.currentSpeed
           +
           (
-            target -
+            manualSpeed -
             this.currentSpeed
           )
           *
-          coefficient
+          .035
         );
-
-      }
 
 
       case "motor_recovery":
@@ -7221,16 +5625,12 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
       case "free_spin":
       {
 
-        const damping =
+        const speed =
+          this.currentSpeed *
           Math.exp(
             -this.FREE_SPIN_FRICTION /
             sampleRate
           );
-
-
-        const speed =
-          this.currentSpeed *
-          damping;
 
 
         if(
@@ -7256,12 +5656,6 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
       }
 
-
-      case "hold":
-
-      case "paused":
-
-      case "off":
 
       default:
 
@@ -7307,7 +5701,8 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
     for(
       let i = 0;
-      i < frames;
+      i <
+      frames;
       i++
     ){
 
@@ -7399,9 +5794,10 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
 
       for(
-        let ch = 0;
-        ch < output.length;
-        ch++
+        let channel = 0;
+        channel <
+        output.length;
+        channel++
       ){
 
         const sample =
@@ -7410,7 +5806,7 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
           ?
           this.sampleAt(
             Math.min(
-              ch,
+              channel,
               this.channels.length -
               1
             ),
@@ -7420,7 +5816,7 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
           0;
 
 
-        output[ch][i] =
+        output[channel][i] =
           sample
           *
           this.currentGain
@@ -7586,23 +5982,19 @@ registerProcessor(
    WORKLET INIT
 ===================================================== */
 
-async function initWorkletFromBuffer(
-  buffer
-){
+async function initWorklet(){
+
+  if(
+    workletReady
+  ){
+
+    return;
+
+  }
+
 
   const context =
     getAudioContext();
-
-
-  if(
-    !context.audioWorklet
-  ){
-
-    throw new Error(
-      "AudioWorklet is not supported"
-    );
-
-  }
 
 
   const blob =
@@ -7654,13 +6046,7 @@ async function initWorkletFromBuffer(
 
         outputChannelCount:
           [
-            Math.max(
-              1,
-              Math.min(
-                2,
-                buffer.numberOfChannels
-              )
-            )
+            2
           ],
 
         parameterData:
@@ -7725,86 +6111,327 @@ async function initWorkletFromBuffer(
   );
 
 
-  /* ===================================================
-     VU — DESKTOP ONLY
-  =================================================== */
+  workletNode.port.onmessage =
+    handleWorkletMessage;
+
+
+  workletReady =
+    true;
+
+
+  initVuAnalyser();
+
+}
+
+
+/* =====================================================
+   WORKLET MESSAGES
+===================================================== */
+
+function handleWorkletMessage(
+  event
+){
+
+  const data =
+    event.data ||
+    {};
+
 
   if(
-    !IS_ANDROID
-    &&
-    vuModule
+    typeof data.position ===
+    "number"
   ){
 
-    vuSplitter =
-      context.createChannelSplitter(
-        2
-      );
-
-
-    vuAnalyserL =
-      context.createAnalyser();
-
-
-    vuAnalyserR =
-      context.createAnalyser();
-
-
-    vuAnalyserL.fftSize =
-      512;
-
-
-    vuAnalyserR.fftSize =
-      512;
-
-
-    vuAnalyserL.smoothingTimeConstant =
-      0;
-
-
-    vuAnalyserR.smoothingTimeConstant =
-      0;
-
-
-    workletLimiter.connect(
-      vuSplitter
-    );
-
-
-    vuSplitter.connect(
-      vuAnalyserL,
-      0
-    );
-
-
-    vuSplitter.connect(
-      vuAnalyserR,
-      Math.min(
-        1,
-        buffer.numberOfChannels -
-        1
+    enginePositionSec =
+      activeTrack
+      ?
+      clampTime(
+        activeTrack,
+        data.position
       )
-    );
-
-
-    vuDataL =
-      new Float32Array(
-        vuAnalyserL.fftSize
+      :
+      Math.max(
+        0,
+        data.position
       );
 
 
-    vuDataR =
-      new Float32Array(
-        vuAnalyserR.fftSize
-      );
+    engineReportPerf =
+      performance.now();
 
 
-    startVuLoop();
+    if(
+      activeTrack
+    ){
+
+      activeTrack.position =
+        enginePositionSec;
+
+    }
 
   }
 
 
-  workletNode.port.onmessage =
-    handleWorkletMessage;
+  if(
+    typeof data.speed ===
+    "number"
+  ){
+
+    engineSpeed =
+      data.speed;
+
+  }
+
+
+  if(
+    typeof data.mode ===
+    "string"
+  ){
+
+    engineMode =
+      data.mode;
+
+
+    updateModeClasses(
+      data.mode
+    );
+
+
+    if(
+      data.type ===
+      "mode"
+    ){
+
+      updateStatusFromEngineMode(
+        data.mode
+      );
+
+    }
+
+  }
+
+
+  if(
+    typeof data.active ===
+    "boolean"
+  ){
+
+    engineActive =
+      data.active;
+
+  }
+
+
+  if(
+    data.type ===
+    "loaded"
+  ){
+
+    if(
+      pendingEngineLoad
+      &&
+      data.token ===
+      pendingEngineLoad.token
+    ){
+
+      enginePositionSec =
+        data.position ||
+        0;
+
+
+      engineSpeed =
+        0;
+
+
+      engineMode =
+        "paused";
+
+
+      engineActive =
+        true;
+
+
+      const resolve =
+        pendingEngineLoad.resolve;
+
+
+      pendingEngineLoad =
+        null;
+
+
+      resolve();
+
+    }
+
+
+    return;
+
+  }
+
+
+  if(
+    data.type ===
+    "boundary"
+    &&
+    data.direction ===
+    1
+    &&
+    playIntent
+    &&
+    activeTrack
+    &&
+    !activeTrack.isPacking
+    &&
+    !engineEndedLock
+  ){
+
+    engineEndedLock =
+      true;
+
+
+    stopAndPackActive()
+    .finally(
+      () => {
+
+        engineEndedLock =
+          false;
+
+      }
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   WORKLET COMMANDS
+===================================================== */
+
+function sendMode(
+  mode,
+  extra={}
+){
+
+  if(
+    !workletNode
+    ||
+    !workletReady
+  ){
+
+    return;
+
+  }
+
+
+  workletNode.port.postMessage(
+    {
+
+      type:
+        "mode",
+
+      mode,
+
+      ...extra
+
+    }
+  );
+
+}
+
+
+function setManualSpeed(
+  speed
+){
+
+  if(
+    !manualSpeedParam
+    ||
+    !audioContext
+  ){
+
+    return;
+
+  }
+
+
+  manualSpeedParam.setValueAtTime(
+    speed,
+    audioContext.currentTime
+  );
+
+}
+
+
+function seekEngine(
+  state,
+  position
+){
+
+  const p =
+    clampTime(
+      state,
+      position
+    );
+
+
+  enginePositionSec =
+    p;
+
+
+  engineReportPerf =
+    performance.now();
+
+
+  state.position =
+    p;
+
+
+  if(
+    workletNode
+    &&
+    workletReady
+  ){
+
+    workletNode.port.postMessage(
+      {
+
+        type:
+          "seek",
+
+        position:
+          p
+
+      }
+    );
+
+  }
+
+}
+
+
+async function loadBufferIntoEngine(
+  state,
+  position=0
+){
+
+  if(
+    !state.decoded
+  ){
+
+    throw new Error(
+      `Track not loaded: ${state.audioUrl}`
+    );
+
+  }
+
+
+  await initWorklet();
+
+
+  sendMode(
+    "off"
+  );
 
 
   const channels =
@@ -7818,13 +6445,13 @@ async function initWorkletFromBuffer(
   for(
     let c = 0;
     c <
-    buffer.numberOfChannels;
+    state.decoded.numberOfChannels;
     c++
   ){
 
     const copy =
       new Float32Array(
-        buffer.getChannelData(
+        state.decoded.getChannelData(
           c
         )
       );
@@ -7842,33 +6469,1685 @@ async function initWorkletFromBuffer(
   }
 
 
+  const token =
+    ++engineLoadToken;
+
+
+  const promise =
+    new Promise(
+      resolve => {
+
+        pendingEngineLoad =
+          {
+            token,
+            resolve
+          };
+
+      }
+    );
+
+
   workletNode.port.postMessage(
     {
 
       type:
-        "init",
+        "load",
+
+      token,
 
       channels,
 
       sourceRate:
-        buffer.sampleRate,
+        state.decoded.sampleRate,
 
       length:
-        buffer.length,
+        state.decoded.length,
 
       position:
-        0
+        clampTime(
+          state,
+          position
+        )
 
     },
     transfer
+  );
+
+
+  await promise;
+
+
+  engineLoadedTrack =
+    state;
+
+
+  state.position =
+    clampTime(
+      state,
+      position
+    );
+
+}
+
+
+function getEstimatedEnginePosition(){
+
+  if(
+    !activeTrack
+  ){
+
+    return 0;
+
+  }
+
+
+  let position =
+    enginePositionSec;
+
+
+  if(
+    engineLoadedTrack ===
+    activeTrack
+    &&
+    engineActive
+    &&
+    Math.abs(
+      engineSpeed
+    )
+    >
+    .00001
+  ){
+
+    const elapsed =
+      Math.max(
+        0,
+        (
+          performance.now()
+          -
+          engineReportPerf
+        )
+        /
+        1000
+      );
+
+
+    position +=
+      engineSpeed
+      *
+      Math.min(
+        .03,
+        elapsed
+      );
+
+  }
+
+
+  return clampTime(
+    activeTrack,
+    position
   );
 
 }
 
 
 /* =====================================================
-   VU ENGINE
+   VU DOM
 ===================================================== */
+
+const vuModule =
+  document.getElementById(
+    "vuModule"
+  );
+
+
+const vuNeedleL =
+  document.getElementById(
+    "vuNeedleL"
+  );
+
+
+const vuNeedleR =
+  document.getElementById(
+    "vuNeedleR"
+  );
+
+
+const vuDebugPanel =
+  document.getElementById(
+    "vuDebugPanel"
+  );
+
+
+const vuDebugHandle =
+  document.getElementById(
+    "vuDebugHandle"
+  );
+
+
+const vuDebugCoords =
+  document.getElementById(
+    "vuDebugCoords"
+  );
+
+
+const vuDebugOff =
+  document.getElementById(
+    "vuDebugOff"
+  );
+
+
+const vuDebugReopen =
+  document.getElementById(
+    "vuDebugReopen"
+  );
+
+
+/* =====================================================
+   VU DEFAULTS
+===================================================== */
+
+const VU_DEFAULT_X =
+  576;
+
+
+const VU_DEFAULT_Y =
+  17;
+
+
+let vuAnchorXRatio =
+  .5;
+
+
+let vuAnchorYRatio =
+  .1;
+
+
+let vuModuleScale =
+  1.13;
+
+
+let vuFrontBrightness =
+  .38;
+
+
+let vuNeedleLeftX =
+  72;
+
+
+let vuNeedleGap =
+  113.5;
+
+
+let vuNeedlePivotY =
+  100.5;
+
+
+let vuNeedleLength =
+  47.5;
+
+
+let vuNeedleWidth =
+  1.2;
+
+
+let vuMinAngle =
+  -53;
+
+
+let vuMaxAngle =
+  25.5;
+
+
+let vuDebugMode =
+  true;
+
+
+let vuManualTest =
+  false;
+
+
+let vuDragging =
+  false;
+
+
+let vuDragPointerId =
+  null;
+
+
+let vuDragOffsetX =
+  0;
+
+
+let vuDragOffsetY =
+  0;
+
+
+const VU_STORAGE_KEY =
+  "frssnVuHeaderAnchoredMultiV1";
+
+
+/* =====================================================
+   VU CONTROLS
+===================================================== */
+
+const vuXSlider =
+  document.getElementById(
+    "vuXSlider"
+  );
+
+
+const vuYSlider =
+  document.getElementById(
+    "vuYSlider"
+  );
+
+
+const vuScaleSlider =
+  document.getElementById(
+    "vuScaleSlider"
+  );
+
+
+const vuFrontBrightnessSlider =
+  document.getElementById(
+    "vuFrontBrightnessSlider"
+  );
+
+
+const vuPivotXSlider =
+  document.getElementById(
+    "vuPivotXSlider"
+  );
+
+
+const vuGapSlider =
+  document.getElementById(
+    "vuGapSlider"
+  );
+
+
+const vuPivotYSlider =
+  document.getElementById(
+    "vuPivotYSlider"
+  );
+
+
+const vuNeedleLengthSlider =
+  document.getElementById(
+    "vuNeedleLengthSlider"
+  );
+
+
+const vuNeedleWidthSlider =
+  document.getElementById(
+    "vuNeedleWidthSlider"
+  );
+
+
+const vuMinAngleSlider =
+  document.getElementById(
+    "vuMinAngleSlider"
+  );
+
+
+const vuMaxAngleSlider =
+  document.getElementById(
+    "vuMaxAngleSlider"
+  );
+
+
+const vuXValue =
+  document.getElementById(
+    "vuXValue"
+  );
+
+
+const vuYValue =
+  document.getElementById(
+    "vuYValue"
+  );
+
+
+const vuScaleValue =
+  document.getElementById(
+    "vuScaleValue"
+  );
+
+
+const vuFrontBrightnessValue =
+  document.getElementById(
+    "vuFrontBrightnessValue"
+  );
+
+
+const vuPivotXValue =
+  document.getElementById(
+    "vuPivotXValue"
+  );
+
+
+const vuGapValue =
+  document.getElementById(
+    "vuGapValue"
+  );
+
+
+const vuPivotYValue =
+  document.getElementById(
+    "vuPivotYValue"
+  );
+
+
+const vuNeedleLengthValue =
+  document.getElementById(
+    "vuNeedleLengthValue"
+  );
+
+
+const vuNeedleWidthValue =
+  document.getElementById(
+    "vuNeedleWidthValue"
+  );
+
+
+const vuMinAngleValue =
+  document.getElementById(
+    "vuMinAngleValue"
+  );
+
+
+const vuMaxAngleValue =
+  document.getElementById(
+    "vuMaxAngleValue"
+  );
+
+
+const vuTestLeft =
+  document.getElementById(
+    "vuTestLeft"
+  );
+
+
+const vuTestCenter =
+  document.getElementById(
+    "vuTestCenter"
+  );
+
+
+const vuTestRight =
+  document.getElementById(
+    "vuTestRight"
+  );
+
+
+const vuTestAudio =
+  document.getElementById(
+    "vuTestAudio"
+  );
+
+
+const vuResetDebug =
+  document.getElementById(
+    "vuResetDebug"
+  );
+
+
+if(
+  IS_ANDROID
+){
+
+  vuModule.classList.add(
+    "is-hidden"
+  );
+
+
+  vuDebugPanel.classList.add(
+    "hidden"
+  );
+
+
+  vuDebugReopen.classList.remove(
+    "visible"
+  );
+
+}
+
+
+/* =====================================================
+   VU POSITION
+===================================================== */
+
+function initializeVuAnchorFromLocal(
+  x,
+  y
+){
+
+  const rect =
+    profileHead.getBoundingClientRect();
+
+
+  vuAnchorXRatio =
+    rect.width
+    ?
+    x /
+    rect.width
+    :
+    .5;
+
+
+  vuAnchorYRatio =
+    rect.height
+    ?
+    y /
+    rect.height
+    :
+    .1;
+
+}
+
+
+function saveVuState(){
+
+  try{
+
+    localStorage.setItem(
+      VU_STORAGE_KEY,
+      JSON.stringify(
+        {
+
+          anchorXRatio:
+            vuAnchorXRatio,
+
+          anchorYRatio:
+            vuAnchorYRatio,
+
+          scale:
+            vuModuleScale,
+
+          frontBrightness:
+            vuFrontBrightness,
+
+          needleLeftX:
+            vuNeedleLeftX,
+
+          needleGap:
+            vuNeedleGap,
+
+          needlePivotY:
+            vuNeedlePivotY,
+
+          needleLength:
+            vuNeedleLength,
+
+          needleWidth:
+            vuNeedleWidth,
+
+          minAngle:
+            vuMinAngle,
+
+          maxAngle:
+            vuMaxAngle
+
+        }
+      )
+    );
+
+  }
+
+  catch(_){}
+
+}
+
+
+function loadVuState(){
+
+  try{
+
+    const raw =
+      localStorage.getItem(
+        VU_STORAGE_KEY
+      );
+
+
+    if(
+      !raw
+    ){
+
+      initializeVuAnchorFromLocal(
+        VU_DEFAULT_X,
+        VU_DEFAULT_Y
+      );
+
+
+      saveVuState();
+
+
+      return;
+
+    }
+
+
+    const data =
+      JSON.parse(
+        raw
+      );
+
+
+    if(
+      Number.isFinite(
+        data.anchorXRatio
+      )
+    ){
+
+      vuAnchorXRatio =
+        data.anchorXRatio;
+
+    }
+
+
+    if(
+      Number.isFinite(
+        data.anchorYRatio
+      )
+    ){
+
+      vuAnchorYRatio =
+        data.anchorYRatio;
+
+    }
+
+
+    if(
+      Number.isFinite(
+        data.scale
+      )
+    ){
+
+      vuModuleScale =
+        data.scale;
+
+    }
+
+
+    if(
+      Number.isFinite(
+        data.frontBrightness
+      )
+    ){
+
+      vuFrontBrightness =
+        data.frontBrightness;
+
+    }
+
+
+    if(
+      Number.isFinite(
+        data.needleLeftX
+      )
+    ){
+
+      vuNeedleLeftX =
+        data.needleLeftX;
+
+    }
+
+
+    if(
+      Number.isFinite(
+        data.needleGap
+      )
+    ){
+
+      vuNeedleGap =
+        data.needleGap;
+
+    }
+
+
+    if(
+      Number.isFinite(
+        data.needlePivotY
+      )
+    ){
+
+      vuNeedlePivotY =
+        data.needlePivotY;
+
+    }
+
+
+    if(
+      Number.isFinite(
+        data.needleLength
+      )
+    ){
+
+      vuNeedleLength =
+        data.needleLength;
+
+    }
+
+
+    if(
+      Number.isFinite(
+        data.needleWidth
+      )
+    ){
+
+      vuNeedleWidth =
+        data.needleWidth;
+
+    }
+
+
+    if(
+      Number.isFinite(
+        data.minAngle
+      )
+    ){
+
+      vuMinAngle =
+        data.minAngle;
+
+    }
+
+
+    if(
+      Number.isFinite(
+        data.maxAngle
+      )
+    ){
+
+      vuMaxAngle =
+        data.maxAngle;
+
+    }
+
+  }
+
+  catch(_){
+
+    initializeVuAnchorFromLocal(
+      VU_DEFAULT_X,
+      VU_DEFAULT_Y
+    );
+
+  }
+
+}
+
+
+function getVuLocalPosition(){
+
+  const rect =
+    profileHead.getBoundingClientRect();
+
+
+  return {
+
+    x:
+      vuAnchorXRatio *
+      rect.width,
+
+    y:
+      vuAnchorYRatio *
+      rect.height
+
+  };
+
+}
+
+
+function applyVuPosition(){
+
+  if(
+    IS_ANDROID
+  ){
+
+    return;
+
+  }
+
+
+  const rect =
+    profileHead.getBoundingClientRect();
+
+
+  const local =
+    getVuLocalPosition();
+
+
+  vuModule.style.left =
+    (
+      rect.left +
+      local.x
+    )
+    +
+    "px";
+
+
+  vuModule.style.top =
+    (
+      rect.top +
+      local.y
+    )
+    +
+    "px";
+
+}
+
+
+function applyVuDebug(){
+
+  vuModule.style.setProperty(
+    "--vu-module-scale",
+    vuModuleScale
+  );
+
+
+  vuModule.style.setProperty(
+    "--vu-front-brightness",
+    vuFrontBrightness
+  );
+
+
+  vuModule.style.setProperty(
+    "--needle-left-x",
+    vuNeedleLeftX +
+    "px"
+  );
+
+
+  vuModule.style.setProperty(
+    "--needle-gap",
+    vuNeedleGap +
+    "px"
+  );
+
+
+  vuModule.style.setProperty(
+    "--needle-pivot-y",
+    vuNeedlePivotY +
+    "px"
+  );
+
+
+  vuModule.style.setProperty(
+    "--needle-length",
+    vuNeedleLength +
+    "px"
+  );
+
+
+  vuModule.style.setProperty(
+    "--needle-width",
+    vuNeedleWidth +
+    "px"
+  );
+
+
+  applyVuPosition();
+
+
+  const position =
+    getVuLocalPosition();
+
+
+  vuXSlider.value =
+    Math.round(
+      position.x
+    );
+
+
+  vuYSlider.value =
+    Math.round(
+      position.y
+    );
+
+
+  vuScaleSlider.value =
+    Math.round(
+      vuModuleScale *
+      100
+    );
+
+
+  vuFrontBrightnessSlider.value =
+    Math.round(
+      vuFrontBrightness *
+      100
+    );
+
+
+  vuPivotXSlider.value =
+    vuNeedleLeftX;
+
+
+  vuGapSlider.value =
+    vuNeedleGap;
+
+
+  vuPivotYSlider.value =
+    vuNeedlePivotY;
+
+
+  vuNeedleLengthSlider.value =
+    vuNeedleLength;
+
+
+  vuNeedleWidthSlider.value =
+    vuNeedleWidth;
+
+
+  vuMinAngleSlider.value =
+    vuMinAngle;
+
+
+  vuMaxAngleSlider.value =
+    vuMaxAngle;
+
+
+  vuXValue.textContent =
+    Math.round(
+      position.x
+    )
+    +
+    " px";
+
+
+  vuYValue.textContent =
+    Math.round(
+      position.y
+    )
+    +
+    " px";
+
+
+  vuScaleValue.textContent =
+    Math.round(
+      vuModuleScale *
+      100
+    )
+    +
+    "%";
+
+
+  vuFrontBrightnessValue.textContent =
+    Math.round(
+      vuFrontBrightness *
+      100
+    )
+    +
+    "%";
+
+
+  vuPivotXValue.textContent =
+    vuNeedleLeftX.toFixed(
+      1
+    )
+    +
+    " px";
+
+
+  vuGapValue.textContent =
+    vuNeedleGap.toFixed(
+      1
+    )
+    +
+    " px";
+
+
+  vuPivotYValue.textContent =
+    vuNeedlePivotY.toFixed(
+      1
+    )
+    +
+    " px";
+
+
+  vuNeedleLengthValue.textContent =
+    vuNeedleLength.toFixed(
+      1
+    )
+    +
+    " px";
+
+
+  vuNeedleWidthValue.textContent =
+    vuNeedleWidth.toFixed(
+      1
+    )
+    +
+    " px";
+
+
+  vuMinAngleValue.textContent =
+    vuMinAngle.toFixed(
+      1
+    )
+    +
+    "°";
+
+
+  vuMaxAngleValue.textContent =
+    vuMaxAngle.toFixed(
+      1
+    )
+    +
+    "°";
+
+
+  vuDebugCoords.textContent =
+    "VU // HEADER X "
+    +
+    Math.round(
+      position.x
+    )
+    +
+    " // Y "
+    +
+    Math.round(
+      position.y
+    );
+
+}
+
+
+/* =====================================================
+   VU SLIDERS
+===================================================== */
+
+function bindVuSlider(
+  slider,
+  callback
+){
+
+  slider.addEventListener(
+    "input",
+    () => {
+
+      callback(
+        Number(
+          slider.value
+        )
+      );
+
+
+      applyVuDebug();
+
+      saveVuState();
+
+    }
+  );
+
+}
+
+
+bindVuSlider(
+  vuXSlider,
+  value => {
+
+    const rect =
+      profileHead.getBoundingClientRect();
+
+
+    if(
+      rect.width
+    ){
+
+      vuAnchorXRatio =
+        value /
+        rect.width;
+
+    }
+
+  }
+);
+
+
+bindVuSlider(
+  vuYSlider,
+  value => {
+
+    const rect =
+      profileHead.getBoundingClientRect();
+
+
+    if(
+      rect.height
+    ){
+
+      vuAnchorYRatio =
+        value /
+        rect.height;
+
+    }
+
+  }
+);
+
+
+bindVuSlider(
+  vuScaleSlider,
+  value => {
+
+    vuModuleScale =
+      value /
+      100;
+
+  }
+);
+
+
+bindVuSlider(
+  vuFrontBrightnessSlider,
+  value => {
+
+    vuFrontBrightness =
+      value /
+      100;
+
+  }
+);
+
+
+bindVuSlider(
+  vuPivotXSlider,
+  value => {
+
+    vuNeedleLeftX =
+      value;
+
+  }
+);
+
+
+bindVuSlider(
+  vuGapSlider,
+  value => {
+
+    vuNeedleGap =
+      value;
+
+  }
+);
+
+
+bindVuSlider(
+  vuPivotYSlider,
+  value => {
+
+    vuNeedlePivotY =
+      value;
+
+  }
+);
+
+
+bindVuSlider(
+  vuNeedleLengthSlider,
+  value => {
+
+    vuNeedleLength =
+      value;
+
+  }
+);
+
+
+bindVuSlider(
+  vuNeedleWidthSlider,
+  value => {
+
+    vuNeedleWidth =
+      value;
+
+  }
+);
+
+
+bindVuSlider(
+  vuMinAngleSlider,
+  value => {
+
+    vuMinAngle =
+      value;
+
+  }
+);
+
+
+bindVuSlider(
+  vuMaxAngleSlider,
+  value => {
+
+    vuMaxAngle =
+      value;
+
+  }
+);
+
+
+/* =====================================================
+   VU DRAG
+===================================================== */
+
+vuDebugHandle.addEventListener(
+  "pointerdown",
+  event => {
+
+    if(
+      event.target.closest(
+        "button"
+      )
+    ){
+
+      return;
+
+    }
+
+
+    event.preventDefault();
+
+
+    vuDragging =
+      true;
+
+
+    vuDragPointerId =
+      event.pointerId;
+
+
+    const rect =
+      vuModule.getBoundingClientRect();
+
+
+    vuDragOffsetX =
+      event.clientX -
+      rect.left;
+
+
+    vuDragOffsetY =
+      event.clientY -
+      rect.top;
+
+
+    vuDebugHandle.setPointerCapture(
+      event.pointerId
+    );
+
+  }
+);
+
+
+vuDebugHandle.addEventListener(
+  "pointermove",
+  event => {
+
+    if(
+      !vuDragging
+      ||
+      event.pointerId !==
+      vuDragPointerId
+    ){
+
+      return;
+
+    }
+
+
+    event.preventDefault();
+
+
+    const rect =
+      profileHead.getBoundingClientRect();
+
+
+    const x =
+      event.clientX
+      -
+      rect.left
+      -
+      vuDragOffsetX;
+
+
+    const y =
+      event.clientY
+      -
+      rect.top
+      -
+      vuDragOffsetY;
+
+
+    if(
+      rect.width
+    ){
+
+      vuAnchorXRatio =
+        x /
+        rect.width;
+
+    }
+
+
+    if(
+      rect.height
+    ){
+
+      vuAnchorYRatio =
+        y /
+        rect.height;
+
+    }
+
+
+    applyVuDebug();
+
+  }
+);
+
+
+function finishVuDrag(
+  event
+){
+
+  if(
+    !vuDragging
+    ||
+    event.pointerId !==
+    vuDragPointerId
+  ){
+
+    return;
+
+  }
+
+
+  vuDragging =
+    false;
+
+
+  if(
+    vuDebugHandle.hasPointerCapture(
+      event.pointerId
+    )
+  ){
+
+    vuDebugHandle.releasePointerCapture(
+      event.pointerId
+    );
+
+  }
+
+
+  vuDragPointerId =
+    null;
+
+
+  saveVuState();
+
+}
+
+
+vuDebugHandle.addEventListener(
+  "pointerup",
+  finishVuDrag
+);
+
+
+vuDebugHandle.addEventListener(
+  "pointercancel",
+  finishVuDrag
+);
+
+
+/* =====================================================
+   VU DEBUG MODE
+===================================================== */
+
+function setVuDebugMode(
+  enabled
+){
+
+  vuDebugMode =
+    enabled;
+
+
+  vuModule.classList.toggle(
+    "debug-on",
+    enabled
+  );
+
+
+  vuDebugPanel.classList.toggle(
+    "hidden",
+    !enabled
+  );
+
+
+  vuDebugReopen.classList.toggle(
+    "visible",
+    !enabled
+  );
+
+
+  if(
+    !enabled
+  ){
+
+    vuManualTest =
+      false;
+
+  }
+
+}
+
+
+vuDebugOff.addEventListener(
+  "click",
+  event => {
+
+    event.stopPropagation();
+
+
+    setVuDebugMode(
+      false
+    );
+
+  }
+);
+
+
+vuDebugReopen.addEventListener(
+  "click",
+  () => {
+
+    setVuDebugMode(
+      true
+    );
+
+  }
+);
+
+
+function setNeedlesAngle(
+  angle
+){
+
+  vuNeedleL.style.transform =
+    `rotate(${angle}deg)`;
+
+
+  vuNeedleR.style.transform =
+    `rotate(${angle}deg)`;
+
+}
+
+
+vuTestLeft.addEventListener(
+  "click",
+  () => {
+
+    vuManualTest =
+      true;
+
+
+    setNeedlesAngle(
+      vuMinAngle
+    );
+
+  }
+);
+
+
+vuTestCenter.addEventListener(
+  "click",
+  () => {
+
+    vuManualTest =
+      true;
+
+
+    setNeedlesAngle(
+      0
+    );
+
+  }
+);
+
+
+vuTestRight.addEventListener(
+  "click",
+  () => {
+
+    vuManualTest =
+      true;
+
+
+    setNeedlesAngle(
+      vuMaxAngle
+    );
+
+  }
+);
+
+
+vuTestAudio.addEventListener(
+  "click",
+  () => {
+
+    vuManualTest =
+      false;
+
+  }
+);
+
+
+vuResetDebug.addEventListener(
+  "click",
+  () => {
+
+    initializeVuAnchorFromLocal(
+      576,
+      17
+    );
+
+
+    vuModuleScale =
+      1.13;
+
+
+    vuFrontBrightness =
+      .38;
+
+
+    vuNeedleLeftX =
+      72;
+
+
+    vuNeedleGap =
+      113.5;
+
+
+    vuNeedlePivotY =
+      100.5;
+
+
+    vuNeedleLength =
+      47.5;
+
+
+    vuNeedleWidth =
+      1.2;
+
+
+    vuMinAngle =
+      -53;
+
+
+    vuMaxAngle =
+      25.5;
+
+
+    applyVuDebug();
+
+    saveVuState();
+
+  }
+);
+
+
+window.addEventListener(
+  "resize",
+  applyVuDebug
+);
+
+
+window.addEventListener(
+  "scroll",
+  applyVuPosition,
+  {
+    passive:true
+  }
+);
+
+
+loadVuState();
+
+applyVuDebug();
+
+
+/* =====================================================
+   VU ANALYSER
+===================================================== */
+
+let vuSplitter =
+  null;
+
+
+let vuAnalyserL =
+  null;
+
+
+let vuAnalyserR =
+  null;
+
+
+let vuDataL =
+  null;
+
+
+let vuDataR =
+  null;
+
+
+let vuRAF =
+  null;
+
+
+let vuNeedleValueL =
+  0;
+
+
+let vuNeedleValueR =
+  0;
+
+
+let vuPeakL =
+  0;
+
+
+let vuPeakR =
+  0;
+
+
+const VU_SCRATCH_IDLE_MS =
+  60;
+
+
+function initVuAnalyser(){
+
+  if(
+    IS_ANDROID
+    ||
+    !workletLimiter
+    ||
+    vuAnalyserL
+  ){
+
+    return;
+
+  }
+
+
+  const context =
+    getAudioContext();
+
+
+  vuSplitter =
+    context.createChannelSplitter(
+      2
+    );
+
+
+  vuAnalyserL =
+    context.createAnalyser();
+
+
+  vuAnalyserR =
+    context.createAnalyser();
+
+
+  vuAnalyserL.fftSize =
+    512;
+
+
+  vuAnalyserR.fftSize =
+    512;
+
+
+  vuAnalyserL.smoothingTimeConstant =
+    0;
+
+
+  vuAnalyserR.smoothingTimeConstant =
+    0;
+
+
+  workletLimiter.connect(
+    vuSplitter
+  );
+
+
+  vuSplitter.connect(
+    vuAnalyserL,
+    0
+  );
+
+
+  vuSplitter.connect(
+    vuAnalyserR,
+    1
+  );
+
+
+  vuDataL =
+    new Float32Array(
+      vuAnalyserL.fftSize
+    );
+
+
+  vuDataR =
+    new Float32Array(
+      vuAnalyserR.fftSize
+    );
+
+
+  startVuLoop();
+
+}
+
 
 function getRms(
   analyser,
@@ -7902,13 +8181,9 @@ function getRms(
     i++
   ){
 
-    const sample =
-      data[i];
-
-
     sum +=
-      sample *
-      sample;
+      data[i] *
+      data[i];
 
   }
 
@@ -7969,10 +8244,6 @@ function rmsToVu(
 }
 
 
-/* =====================================================
-   VU ANGLE
-===================================================== */
-
 function vuValueToAngle(
   value
 ){
@@ -7990,28 +8261,16 @@ function vuValueToAngle(
 }
 
 
-/* =====================================================
-   VU BALLISTICS
-
-   Normal playback:
-   slower analog return.
-
-   Scratch:
-   much faster release, because audio can
-   disappear almost instantly when hand stops.
-===================================================== */
-
 function updateVuBallistic(
   currentValue,
   targetValue,
-  scratchMode =
-    false
+  scratchMode
 ){
 
   const attack =
     scratchMode
     ?
-    .40
+    .42
     :
     .29;
 
@@ -8019,7 +8278,7 @@ function updateVuBallistic(
   const release =
     scratchMode
     ?
-    .30
+    .52
     :
     .060;
 
@@ -8046,10 +8305,6 @@ function updateVuBallistic(
 
 }
 
-
-/* =====================================================
-   VU LOOP
-===================================================== */
 
 function startVuLoop(){
 
@@ -8083,35 +8338,23 @@ function startVuLoop(){
       !vuManualTest
     ){
 
-      const rmsL =
-        getRms(
-          vuAnalyserL,
-          vuDataL
-        );
-
-
-      const rmsR =
-        getRms(
-          vuAnalyserR,
-          vuDataR
-        );
-
-
       let targetL =
         rmsToVu(
-          rmsL
+          getRms(
+            vuAnalyserL,
+            vuDataL
+          )
         );
 
 
       let targetR =
         rmsToVu(
-          rmsR
+          getRms(
+            vuAnalyserR,
+            vuDataR
+          )
         );
 
-
-      /*
-        Scratch mode gets a separate meter behaviour.
-      */
 
       const scratchMeterMode =
         (
@@ -8128,28 +8371,21 @@ function startVuLoop(){
         );
 
 
-      const scratchInputIdle =
+      const scratchIdle =
+        scratchMeterMode
+        &&
         (
-          isScratching
-          &&
-          (
-            performance.now()
-            -
-            lastManualMoveAt
-          )
-          >
-          VU_SCRATCH_IDLE_MS
-        );
+          performance.now()
+          -
+          lastManualMoveAt
+        )
+        >
+        VU_SCRATCH_IDLE_MS;
 
 
       if(
         scratchMeterMode
       ){
-
-        /*
-          Important:
-          no long peak-hold in scratch.
-        */
 
         vuPeakL =
           targetL;
@@ -8159,14 +8395,8 @@ function startVuLoop(){
           targetR;
 
 
-        /*
-          If the hand has stopped and scratch audio
-          has already gone silent, force the meter
-          target toward zero immediately.
-        */
-
         if(
-          scratchInputIdle
+          scratchIdle
         ){
 
           targetL =
@@ -8189,10 +8419,6 @@ function startVuLoop(){
       }
 
       else{
-
-        /*
-          Normal musical VU behaviour.
-        */
 
         vuPeakL =
           Math.max(
@@ -8244,11 +8470,6 @@ function startVuLoop(){
         );
 
 
-      /*
-        Tiny dead zone prevents micro twitching
-        after scratch sound is already gone.
-      */
-
       if(
         scratchMeterMode
         &&
@@ -8256,7 +8477,7 @@ function startVuLoop(){
         0
         &&
         vuNeedleValueL <
-        .004
+        .003
       ){
 
         vuNeedleValueL =
@@ -8272,7 +8493,7 @@ function startVuLoop(){
         0
         &&
         vuNeedleValueR <
-        .004
+        .003
       ){
 
         vuNeedleValueR =
@@ -8308,97 +8529,241 @@ function startVuLoop(){
 
 
 /* =====================================================
-   WORKLET MESSAGE
+   TONEARM
 ===================================================== */
 
-function handleWorkletMessage(
-  event
+function animateTonearmTo(
+  state,
+  targetAngle,
+  duration=
+    ARM_MOVE_DURATION_MS
 ){
 
-  const data =
-    event.data ||
-    {};
+  return new Promise(
+    resolve => {
+
+      const startAngle =
+        state.currentTonearmAngle;
 
 
-  if(
-    typeof data.position ===
-    "number"
-  ){
+      const started =
+        performance.now();
 
-    enginePositionSec =
-      clampTime(
-        data.position
+
+      function frame(
+        now
+      ){
+
+        const raw =
+          Math.min(
+            1,
+            (
+              now -
+              started
+            )
+            /
+            duration
+          );
+
+
+        const smooth =
+          smootherStep(
+            raw
+          );
+
+
+        setTonearmAngle(
+          state,
+          startAngle
+          +
+          (
+            targetAngle -
+            startAngle
+          )
+          *
+          smooth
+        );
+
+
+        if(
+          raw <
+          1
+        ){
+
+          requestAnimationFrame(
+            frame
+          );
+
+        }
+
+        else{
+
+          setTonearmAngle(
+            state,
+            targetAngle
+          );
+
+
+          resolve();
+
+        }
+
+      }
+
+
+      requestAnimationFrame(
+        frame
       );
 
+    }
+  );
 
-    engineReportPerf =
-      performance.now();
-
-  }
+}
 
 
-  if(
-    typeof data.speed ===
-    "number"
-  ){
+function cancelScheduledTonearmEngage(
+  state
+){
 
-    engineSpeed =
-      data.speed;
-
-  }
+  state.armEngageGeneration++;
 
 
   if(
-    typeof data.mode ===
-    "string"
+    state.armDeployTimer
   ){
 
-    engineMode =
-      data.mode;
-
-
-    updateModeClasses(
-      engineMode
+    clearTimeout(
+      state.armDeployTimer
     );
 
-  }
 
-
-  if(
-    typeof data.active ===
-    "boolean"
-  ){
-
-    engineActive =
-      data.active;
+    state.armDeployTimer =
+      null;
 
   }
 
+}
+
+
+function getTrackPosition(
+  state
+){
+
+  return state ===
+  activeTrack
+  ?
+  getEstimatedEnginePosition()
+  :
+  state.position;
+
+}
+
+
+async function engageTonearm(
+  state
+){
 
   if(
-    data.type ===
-    "ready"
+    state.tonearmEngaged
+    ||
+    state.isPacking
+    ||
+    !state.vinylOpened
   ){
 
-    engineReady =
-      true;
+    return;
+
+  }
 
 
-    engineMode =
-      "paused";
+  state.tonearmEngaged =
+    true;
 
 
-    engineActive =
-      true;
+  await animateTonearmTo(
+    state,
+    armAngleFromTime(
+      state,
+      getTrackPosition(
+        state
+      )
+    ),
+    ARM_MOVE_DURATION_MS
+  );
+
+}
 
 
-    microstatus.textContent =
-      IS_ANDROID
-      ?
-      "ENGINE READY // ANDROID PERFORMANCE MODE"
-      :
-      "ENGINE READY // MOBILE-SAFE VARISPEED";
+function scheduleTonearmEngageFromOpenStart(
+  state
+){
 
+  cancelScheduledTonearmEngage(
+    state
+  );
+
+
+  const generation =
+    state.armEngageGeneration;
+
+
+  const startAt =
+    Math.max(
+      0,
+      MECHANISM_DEPLOY_DURATION
+      +
+      ARM_START_OFFSET_MS
+    );
+
+
+  state.armDeployTimer =
+    setTimeout(
+      async () => {
+
+        state.armDeployTimer =
+          null;
+
+
+        if(
+          generation !==
+          state.armEngageGeneration
+          ||
+          !state.vinylOpened
+          ||
+          state.isPacking
+          ||
+          state.tonearmEngaged
+        ){
+
+          return;
+
+        }
+
+
+        await engageTonearm(
+          state
+        );
+
+      },
+      startAt
+    );
+
+}
+
+
+/* =====================================================
+   OPEN TRACK
+===================================================== */
+
+async function ensureVinylOpen(
+  state
+){
+
+  if(
+    state.vinylOpened
+    &&
+    state.mechanismDeployed
+  ){
 
     return;
 
@@ -8406,249 +8771,345 @@ function handleWorkletMessage(
 
 
   if(
-    data.type ===
-    "mode"
+    state.openingPromise
   ){
 
-    updateStatusFromEngineMode(
-      data.mode
-    );
-
+    await state.openingPromise;
 
     return;
 
   }
 
 
+  state.openingPromise =
+    (
+      async () => {
+
+
+        if(
+          !state.vinylOpened
+        ){
+
+          state.vinylOpened =
+            true;
+
+
+          state.tonearmEngaged =
+            false;
+
+
+          setTonearmAngle(
+            state,
+            ARM_PARK_ANGLE
+          );
+
+
+          playPaperIn();
+
+
+          state.el.classList.remove(
+            "is-closing"
+          );
+
+
+          state.el.classList.add(
+            "is-open"
+          );
+
+
+          scheduleTonearmEngageFromOpenStart(
+            state
+          );
+
+        }
+
+
+        await wait(
+          MECHANISM_DEPLOY_DURATION
+        );
+
+
+        if(
+          !state.mechanismDeployed
+        ){
+
+          state.mechanismDeployed =
+            true;
+
+
+          state.el.classList.add(
+            "arm-on-top"
+          );
+
+        }
+
+
+        if(
+          !state.tonearmEngaged
+          &&
+          !state.isPacking
+        ){
+
+          await engageTonearm(
+            state
+          );
+
+        }
+
+      }
+    )();
+
+
+  try{
+
+    await state.openingPromise;
+
+  }
+
+  finally{
+
+    state.openingPromise =
+      null;
+
+  }
+
+}
+
+
+/* =====================================================
+   PACK TRACK
+===================================================== */
+
+async function packTrack(
+  state,
+  {
+    reset=true
+  }={}
+){
+
   if(
-    data.type ===
-    "boundary"
-    &&
-    data.direction ===
-    1
-    &&
-    playIntent
-    &&
-    !isPacking
-    &&
-    !engineEndedLock
+    !state.vinylOpened
+    ||
+    state.isPacking
   ){
 
-    engineEndedLock =
-      true;
+    return;
+
+  }
 
 
-    playIntent =
+  cancelScheduledTonearmEngage(
+    state
+  );
+
+
+  state.isPacking =
+    true;
+
+
+  state.el.classList.remove(
+    "is-scratching",
+    "is-seeking",
+    "is-precue"
+  );
+
+
+  if(
+    state.tonearmEngaged
+  ){
+
+    await animateTonearmTo(
+      state,
+      ARM_PARK_ANGLE,
+      600
+    );
+
+  }
+
+
+  state.el.classList.remove(
+    "arm-on-top"
+  );
+
+
+  state.tonearmEngaged =
+    false;
+
+
+  await wait(
+    90
+  );
+
+
+  playPaperOut();
+
+
+  state.el.classList.add(
+    "is-closing"
+  );
+
+
+  await wait(
+    1480
+  );
+
+
+  state.el.classList.remove(
+    "is-open",
+    "is-closing",
+    "is-scratching",
+    "is-motor-recovering",
+    "is-play-starting",
+    "is-pause-braking",
+    "is-free-spinning",
+    "is-seeking",
+    "is-precue",
+    "is-active"
+  );
+
+
+  state.mechanismDeployed =
+    false;
+
+
+  state.vinylOpened =
+    false;
+
+
+  state.isPacking =
+    false;
+
+
+  setTonearmAngle(
+    state,
+    ARM_PARK_ANGLE
+  );
+
+
+  if(
+    reset
+  ){
+
+    state.position =
+      0;
+
+
+    state.hasPlaybackEverStarted =
       false;
 
 
-    setPlayIcon(
-      false
+    setVinylAngle(
+      state,
+      0
     );
 
 
-    stopAndPack()
-    .finally(
-      () => {
+    updateProgressUI(
+      state,
+      0
+    );
 
-        engineEndedLock =
-          false;
+
+    setPlayIcon(
+      state,
+      false
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   OPEN ANIMATION COMPLETE
+===================================================== */
+
+tracks.forEach(
+  state => {
+
+    state.recordCarrier.addEventListener(
+      "animationend",
+      event => {
+
+        if(
+          event.animationName !==
+          "recordReveal"
+          ||
+          state.isPacking
+        ){
+
+          return;
+
+        }
+
+
+        state.mechanismDeployed =
+          true;
+
+
+        state.el.classList.add(
+          "arm-on-top"
+        );
 
       }
     );
 
   }
-
-}
-
-
-/* =====================================================
-   WORKLET COMMANDS
-===================================================== */
-
-function sendMode(
-  mode,
-  extra = {}
-){
-
-  if(
-    !workletNode
-    ||
-    !engineReady
-  ){
-
-    return;
-
-  }
-
-
-  workletNode.port.postMessage(
-    {
-
-      type:
-        "mode",
-
-      mode,
-
-      ...extra
-
-    }
-  );
-
-}
-
-
-function seekEngine(
-  position
-){
-
-  enginePositionSec =
-    clampTime(
-      position
-    );
-
-
-  engineReportPerf =
-    performance.now();
-
-
-  if(
-    !workletNode
-    ||
-    !engineReady
-  ){
-
-    return;
-
-  }
-
-
-  workletNode.port.postMessage(
-    {
-
-      type:
-        "seek",
-
-      position:
-        clampTime(
-          position
-        )
-
-    }
-  );
-
-}
-
-
-function setManualSpeed(
-  speed
-){
-
-  if(
-    !manualSpeedParam
-    ||
-    !audioContext
-  ){
-
-    return;
-
-  }
-
-
-  manualSpeedParam.setValueAtTime(
-    speed,
-    audioContext.currentTime
-  );
-
-}
+);
 
 
 /* =====================================================
-   ENGINE POSITION
-===================================================== */
-
-function getEstimatedEnginePosition(){
-
-  let position =
-    enginePositionSec;
-
-
-  if(
-    engineReady
-    &&
-    engineActive
-    &&
-    Math.abs(
-      engineSpeed
-    )
-    >
-    .00001
-  ){
-
-    const elapsed =
-      Math.max(
-        0,
-        (
-          performance.now()
-          -
-          engineReportPerf
-        )
-        /
-        1000
-      );
-
-
-    position +=
-      engineSpeed
-      *
-      Math.min(
-        .03,
-        elapsed
-      );
-
-  }
-
-
-  return clampTime(
-    position
-  );
-
-}
-
-
-/* =====================================================
-   MODE UI
+   ENGINE UI
 ===================================================== */
 
 function updateModeClasses(
   mode
 ){
 
-  track.classList.toggle(
-    "is-play-starting",
-    mode ===
-    "play_start"
-  );
+  tracks.forEach(
+    state => {
+
+      const active =
+        state ===
+        activeTrack;
 
 
-  track.classList.toggle(
-    "is-pause-braking",
-    mode ===
-    "pause_brake"
-  );
+      state.el.classList.toggle(
+        "is-play-starting",
+        active
+        &&
+        mode ===
+        "play_start"
+      );
 
 
-  track.classList.toggle(
-    "is-motor-recovering",
-    mode ===
-    "motor_recovery"
-  );
+      state.el.classList.toggle(
+        "is-pause-braking",
+        active
+        &&
+        mode ===
+        "pause_brake"
+      );
 
 
-  track.classList.toggle(
-    "is-free-spinning",
-    mode ===
-    "free_spin"
+      state.el.classList.toggle(
+        "is-motor-recovering",
+        active
+        &&
+        mode ===
+        "motor_recovery"
+      );
+
+
+      state.el.classList.toggle(
+        "is-free-spinning",
+        active
+        &&
+        mode ===
+        "free_spin"
+      );
+
+    }
   );
 
 }
@@ -8657,6 +9118,26 @@ function updateModeClasses(
 function updateStatusFromEngineMode(
   mode
 ){
+
+  if(
+    !activeTrack
+  ){
+
+    return;
+
+  }
+
+
+  const name =
+    activeTrack.el
+    .querySelector(
+      ".trackTitle"
+    )
+    ?.textContent
+    ?.trim()
+    ||
+    activeTrack.id;
+
 
   switch(
     mode
@@ -8670,7 +9151,7 @@ function updateStatusFromEngineMode(
       ){
 
         microstatus.textContent =
-          "MOTOR LOCK // 45 RPM";
+          `${name} // MOTOR LOCK // 45 RPM`;
 
       }
 
@@ -8680,7 +9161,7 @@ function updateStatusFromEngineMode(
     case "play_start":
 
       microstatus.textContent =
-        "MOTOR START";
+        `${name} // MOTOR START`;
 
       break;
 
@@ -8688,7 +9169,7 @@ function updateStatusFromEngineMode(
     case "pause_brake":
 
       microstatus.textContent =
-        "PAUSE BRAKE";
+        `${name} // PAUSE BRAKE`;
 
       break;
 
@@ -8696,7 +9177,7 @@ function updateStatusFromEngineMode(
     case "grab_brake":
 
       microstatus.textContent =
-        "GRAB BRAKE";
+        `${name} // GRAB BRAKE`;
 
       break;
 
@@ -8704,7 +9185,7 @@ function updateStatusFromEngineMode(
     case "motor_recovery":
 
       microstatus.textContent =
-        "MOTOR RECOVERY";
+        `${name} // MOTOR RECOVERY`;
 
       break;
 
@@ -8712,7 +9193,7 @@ function updateStatusFromEngineMode(
     case "free_spin":
 
       microstatus.textContent =
-        "FREE SPIN";
+        `${name} // FREE SPIN`;
 
       break;
 
@@ -8720,7 +9201,7 @@ function updateStatusFromEngineMode(
     case "hold":
 
       microstatus.textContent =
-        "SCRATCH // HOLD";
+        `${name} // SCRATCH HOLD`;
 
       break;
 
@@ -8732,7 +9213,7 @@ function updateStatusFromEngineMode(
       ){
 
         microstatus.textContent =
-          "PLAYBACK // PAUSED";
+          `${name} // PLAYBACK PAUSED`;
 
       }
 
@@ -8749,138 +9230,89 @@ function updateStatusFromEngineMode(
 
 function startVisualLoop(){
 
-  stopVisualLoop();
+  if(
+    visualRAF
+  ){
+
+    cancelAnimationFrame(
+      visualRAF
+    );
+
+  }
 
 
   function frame(){
 
-
-    if(
-      isPacking
-      ||
-      isSeeking
-      ||
-      isPreCueing
-    ){
-
-      visualRAF =
-        requestAnimationFrame(
-          frame
-        );
-
-
-      return;
-
-    }
-
-
-    let position;
+    const state =
+      activeTrack;
 
 
     if(
-      isScratching
+      state
       &&
-      manualMovementStarted
+      !state.isPacking
+      &&
+      !isSeeking
+      &&
+      !isPreCueing
     ){
 
-      position =
-        scratchVisualTime;
-
-    }
-
-    else{
-
-      position =
-        getEstimatedEnginePosition();
-
-    }
+      let position;
 
 
-    setVinylAngle(
-      angleFromAudioTime(
-        position
-      )
-    );
+      if(
+        isScratching
+        &&
+        scratchTrack ===
+        state
+        &&
+        manualMovementStarted
+      ){
+
+        position =
+          scratchVisualTime;
+
+      }
+
+      else{
+
+        position =
+          getEstimatedEnginePosition();
+
+      }
 
 
-    if(
-      tonearmEngaged
-    ){
+      state.position =
+        position;
 
-      setTonearmAngle(
-        armAngleFromTime(
+
+      setVinylAngle(
+        state,
+        angleFromAudioTime(
           position
         )
       );
 
-    }
+
+      if(
+        state.tonearmEngaged
+      ){
+
+        setTonearmAngle(
+          state,
+          armAngleFromTime(
+            state,
+            position
+          )
+        );
+
+      }
 
 
-    updateProgressUI(
-      position
-    );
-
-
-    if(
-      engineMode ===
-      "pause_brake"
-    ){
-
-      microstatus.textContent =
-        "PAUSE BRAKE // "
-        +
-        Math.abs(
-          engineSpeed
-        ).toFixed(
-          2
-        )
-        +
-        "×";
-
-    }
-
-
-    if(
-      engineMode ===
-      "motor_recovery"
-    ){
-
-      microstatus.textContent =
-        "MOTOR // "
-        +
-        engineSpeed.toFixed(
-          2
-        )
-        +
-        "×";
-
-    }
-
-
-    if(
-      engineMode ===
-      "free_spin"
-    ){
-
-      microstatus.textContent =
-        "FREE SPIN // "
-        +
-        (
-          engineSpeed >=
-          0
-          ?
-          "+"
-          :
-          "−"
-        )
-        +
-        Math.abs(
-          engineSpeed
-        ).toFixed(
-          2
-        )
-        +
-        "×";
+      updateProgressUI(
+        state,
+        position
+      );
 
     }
 
@@ -8901,278 +9333,400 @@ function startVisualLoop(){
 }
 
 
-function stopVisualLoop(){
+/* =====================================================
+   ACTIVATE BUFFER
+===================================================== */
+
+async function activateTrackBuffer(
+  state,
+  position=0
+){
 
   if(
-    visualRAF
+    state.loadError
+    ||
+    !state.decoded
   ){
 
-    cancelAnimationFrame(
-      visualRAF
+    microstatus.textContent =
+      `MISSING AUDIO // ${state.audioUrl}`;
+
+
+    throw new Error(
+      `Missing audio: ${state.audioUrl}`
     );
-
-
-    visualRAF =
-      null;
 
   }
 
-}
+
+  await loadBufferIntoEngine(
+    state,
+    position
+  );
 
 
-/* =====================================================
-   WAVEFORM
-===================================================== */
-
-const WAVE_BARS =
-  96;
-
-
-function renderBars(
-  element,
-  heights
-){
-
-  element.innerHTML =
-    "";
+  state.position =
+    clampTime(
+      state,
+      position
+    );
 
 
-  heights.forEach(
-    height => {
-
-      const bar =
-        document.createElement(
-          "span"
-        );
+  updateProgressUI(
+    state,
+    state.position
+  );
 
 
-      bar.className =
-        "bar";
-
-
-      bar.style.height =
-        Math.max(
-          4,
-          height
-        )
-        +
-        "%";
-
-
-      element.appendChild(
-        bar
-      );
-
-    }
+  setVinylAngle(
+    state,
+    angleFromAudioTime(
+      state.position
+    )
   );
 
 }
 
 
 /* =====================================================
-   LOAD TRACK
+   SWITCH TRACK
 ===================================================== */
 
-async function loadTrackData(
-  url
+async function switchToTrack(
+  next,
+  {
+    startTime=0,
+    cue=false
+  }={}
 ){
 
-  try{
+  if(
+    switchInProgress
+    ||
+    next.isPacking
+  ){
 
-    const response =
-      await fetch(
-        url,
-        {
-          cache:
-            "force-cache"
-        }
+    return;
+
+  }
+
+
+  if(
+    next.loadError
+    ||
+    !next.decoded
+  ){
+
+    microstatus.textContent =
+      `MISSING AUDIO // ${next.audioUrl}`;
+
+
+    return;
+
+  }
+
+
+  if(
+    next ===
+    activeTrack
+  ){
+
+    if(
+      cue
+    ){
+
+      return seekTo(
+        next,
+        startTime
       );
+
+    }
 
 
     if(
-      !response.ok
+      playIntent
     ){
 
-      throw new Error(
-        "Audio fetch failed"
+      playIntent =
+        false;
+
+
+      setPlayIcon(
+        next,
+        false
+      );
+
+
+      setManualSpeed(
+        0
+      );
+
+
+      sendMode(
+        "pause_brake"
+      );
+
+
+      return;
+
+    }
+
+
+    await resumeAudioContext();
+
+
+    playIntent =
+      true;
+
+
+    next.hasPlaybackEverStarted =
+      true;
+
+
+    setPlayIcon(
+      next,
+      true
+    );
+
+
+    await ensureVinylOpen(
+      next
+    );
+
+
+    sendMode(
+      "play_start"
+    );
+
+
+    return;
+
+  }
+
+
+  switchInProgress =
+    true;
+
+
+  const generation =
+    nextOperationGeneration();
+
+
+  try{
+
+    await resumeAudioContext();
+
+
+    const previous =
+      activeTrack;
+
+
+    playIntent =
+      false;
+
+
+    setManualSpeed(
+      0
+    );
+
+
+    sendMode(
+      "off"
+    );
+
+
+    if(
+      previous
+    ){
+
+      setPlayIcon(
+        previous,
+        false
+      );
+
+
+      previous.el.classList.remove(
+        "is-active"
       );
 
     }
 
 
-    const arrayBuffer =
-      await response.arrayBuffer();
+    const packPromise =
+      previous
+      ?
+      packTrack(
+        previous,
+        {
+          reset:true
+        }
+      )
+      :
+      Promise.resolve();
 
 
-    const context =
-      getAudioContext();
+    activeTrack =
+      next;
 
 
-    decodedTrack =
-      await context.decodeAudioData(
-        arrayBuffer.slice(
-          0
-        )
-      );
+    next.el.classList.add(
+      "is-active"
+    );
 
 
-    trackDuration =
-      decodedTrack.duration;
+    tracks.forEach(
+      state => {
 
-
-    total.textContent =
-      fmt(
-        trackDuration
-      );
-
-
-    const channels =
-      [];
-
-
-    for(
-      let c = 0;
-      c <
-      decodedTrack.numberOfChannels;
-      c++
-    ){
-
-      channels.push(
-        decodedTrack.getChannelData(
-          c
-        )
-      );
-
-    }
-
-
-    const blockSize =
-      Math.max(
-        1,
-        Math.floor(
-          decodedTrack.length /
-          WAVE_BARS
-        )
-      );
-
-
-    const peaks =
-      [];
-
-
-    for(
-      let i = 0;
-      i <
-      WAVE_BARS;
-      i++
-    ){
-
-      const start =
-        i *
-        blockSize;
-
-
-      const end =
-        Math.min(
-          decodedTrack.length,
-          start +
-          blockSize
-        );
-
-
-      let peak =
-        0;
-
-
-      const stride =
-        Math.max(
-          1,
-          Math.floor(
-            (
-              end -
-              start
-            )
-            /
-            900
-          )
-        );
-
-
-      for(
-        let c = 0;
-        c <
-        channels.length;
-        c++
-      ){
-
-        for(
-          let s = start;
-          s < end;
-          s += stride
+        if(
+          state !==
+          next
         ){
 
-          peak =
-            Math.max(
-              peak,
-              Math.abs(
-                channels[c][s]
-              )
-            );
+          setPlayIcon(
+            state,
+            false
+          );
 
         }
 
       }
+    );
 
 
-      peaks.push(
-        peak
+    await activateTrackBuffer(
+      next,
+      0
+    );
+
+
+    if(
+      !operationAlive(
+        generation
+      )
+    ){
+
+      return;
+
+    }
+
+
+    const openPromise =
+      ensureVinylOpen(
+        next
+      );
+
+
+    await openPromise;
+
+
+    if(
+      !operationAlive(
+        generation
+      )
+    ){
+
+      return;
+
+    }
+
+
+    if(
+      cue
+      &&
+      startTime >
+      .5
+    ){
+
+      await prePlayCueTo(
+        next,
+        startTime,
+        generation
+      );
+
+
+      if(
+        !operationAlive(
+          generation
+        )
+      ){
+
+        return;
+
+      }
+
+    }
+
+    else if(
+      startTime >
+      .001
+    ){
+
+      seekEngine(
+        next,
+        startTime
+      );
+
+
+      next.position =
+        startTime;
+
+
+      setVinylAngle(
+        next,
+        angleFromAudioTime(
+          startTime
+        )
+      );
+
+
+      if(
+        next.tonearmEngaged
+      ){
+
+        setTonearmAngle(
+          next,
+          armAngleFromTime(
+            next,
+            startTime
+          )
+        );
+
+      }
+
+
+      updateProgressUI(
+        next,
+        startTime
       );
 
     }
 
 
-    const maxPeak =
-      Math.max(
-        ...peaks
-      )
-      ||
-      1;
+    next.hasPlaybackEverStarted =
+      true;
 
 
-    const heights =
-      peaks.map(
-        peak =>
-          peak /
-          maxPeak *
-          100
-      );
+    playIntent =
+      true;
 
 
-    renderBars(
-      wave,
-      heights
+    setPlayIcon(
+      next,
+      true
     );
 
 
-    renderBars(
-      waveClone,
-      heights
+    sendMode(
+      "play_start"
     );
 
 
-    reversedTrack =
-      createReversedBuffer(
-        decodedTrack,
-        context
-      );
+    /*
+      The previous row continues packing
+      while the new row is already running.
+    */
 
-
-    await initWorkletFromBuffer(
-      decodedTrack
-    );
-
-
-    startVisualLoop();
+    await packPromise;
 
   }
 
@@ -9183,189 +9737,28 @@ async function loadTrackData(
     );
 
 
-    const fallback =
-      Array.from(
-        {
-          length:
-            WAVE_BARS
-        },
-        (_,i) =>
-          16
-          +
-          (
-            i *
-            37
-          )
-          %
-          68
+    playIntent =
+      false;
+
+
+    if(
+      activeTrack ===
+      next
+    ){
+
+      setPlayIcon(
+        next,
+        false
       );
 
-
-    renderBars(
-      wave,
-      fallback
-    );
-
-
-    renderBars(
-      waveClone,
-      fallback
-    );
-
-
-    microstatus.textContent =
-      "ENGINE ERROR // AUDIO INIT FAILED";
-
-  }
-
-}
-
-
-loadTrackData(
-  audio.currentSrc ||
-  audio.src
-);
-
-
-/* =====================================================
-   OPEN VINYL
-===================================================== */
-
-async function ensureVinylOpen(){
-
-  if(
-    vinylOpened
-    &&
-    mechanismDeployed
-  ){
-
-    return;
-
-  }
-
-
-  if(
-    openingPromise
-  ){
-
-    await openingPromise;
-
-
-    return;
-
-  }
-
-
-  openingPromise =
-    (
-      async () => {
-
-
-        if(
-          !vinylOpened
-        ){
-
-          vinylOpened =
-            true;
-
-
-          tonearmEngaged =
-            false;
-
-
-          setTonearmAngle(
-            ARM_PARK_ANGLE
-          );
-
-
-          playPaperIn();
-
-
-          track.classList.add(
-            "is-open"
-          );
-
-
-          scheduleTonearmEngageFromOpenStart();
-
-
-          microstatus.textContent =
-            "LOADING SIGNAL // OPENING MEDIA";
-
-        }
-
-
-        await new Promise(
-          resolve =>
-            setTimeout(
-              resolve,
-              MECHANISM_DEPLOY_DURATION
-            )
-        );
-
-
-        if(
-          !mechanismDeployed
-        ){
-
-          mechanismDeployed =
-            true;
-
-
-          track.classList.add(
-            "arm-on-top"
-          );
-
-        }
-
-
-        const positiveExtra =
-          Math.max(
-            0,
-            ARM_START_OFFSET_MS
-          );
-
-
-        if(
-          positiveExtra >
-          0
-        ){
-
-          await new Promise(
-            resolve =>
-              setTimeout(
-                resolve,
-                positiveExtra
-              )
-          );
-
-        }
-
-
-        if(
-          !tonearmEngaged
-          &&
-          !isPacking
-        ){
-
-          await engageTonearm();
-
-        }
-
-      }
-    )();
-
-
-  try{
-
-    await openingPromise;
+    }
 
   }
 
   finally{
 
-    openingPromise =
-      null;
+    switchInProgress =
+      false;
 
   }
 
@@ -9373,144 +9766,131 @@ async function ensureVinylOpen(){
 
 
 /* =====================================================
-   OPEN COMPLETE
+   STOP ACTIVE
 ===================================================== */
 
-recordCarrier.addEventListener(
-  "animationend",
-  event => {
+async function stopAndPackActive(){
 
-    if(
-      event.animationName !==
-      "recordReveal"
-      ||
-      isPacking
-    ){
-
-      return;
-
-    }
+  const state =
+    activeTrack;
 
 
-    mechanismDeployed =
-      true;
+  if(
+    !state
+  ){
 
-
-    track.classList.add(
-      "arm-on-top"
-    );
+    return;
 
   }
-);
 
 
-/* =====================================================
-   PLAY ICON
-===================================================== */
+  nextOperationGeneration();
 
-function setPlayIcon(
-  playing
-){
 
-  playButtons.forEach(
-    button => {
+  playIntent =
+    false;
 
-      button.innerHTML =
-        playing
-        ?
-        `
-        <svg viewBox="0 0 24 24">
-          <path d="M7 5h4v14H7zm6 0h4v14h-4z"/>
-        </svg>
-        `
-        :
-        `
-        <svg viewBox="0 0 24 24">
-          <path d="M8 5v14l11-7z"/>
-        </svg>
-        `;
 
+  setPlayIcon(
+    state,
+    false
+  );
+
+
+  setManualSpeed(
+    0
+  );
+
+
+  sendMode(
+    "off"
+  );
+
+
+  microstatus.textContent =
+    "STOP // RETURNING SIGNAL";
+
+
+  await packTrack(
+    state,
+    {
+      reset:true
     }
   );
 
+
+  if(
+    activeTrack ===
+    state
+  ){
+
+    activeTrack =
+      null;
+
+
+    engineLoadedTrack =
+      null;
+
+
+    enginePositionSec =
+      0;
+
+
+    engineSpeed =
+      0;
+
+
+    engineMode =
+      "paused";
+
+
+    engineActive =
+      false;
+
+  }
+
+
+  vuPeakL =
+    0;
+
+
+  vuPeakR =
+    0;
+
+
+  vuNeedleValueL =
+    0;
+
+
+  vuNeedleValueR =
+    0;
+
+
+  microstatus.textContent =
+    "Connection stable // 02 signals detected";
+
 }
 
 
 /* =====================================================
-   PLAY / PAUSE
+   PLAY BUTTONS
 ===================================================== */
 
-playButtons.forEach(
-  button => {
+tracks.forEach(
+  state => {
 
-    button.addEventListener(
+    state.playButton.addEventListener(
       "click",
       async () => {
 
         if(
-          isPacking
-          ||
           isSeeking
           ||
           isPreCueing
           ||
-          !engineReady
-        ){
-
-          return;
-
-        }
-
-
-        await resumeAudioContext();
-
-
-        if(
-          playIntent
-        ){
-
-          playIntent =
-            false;
-
-
-          setPlayIcon(
-            false
-          );
-
-
-          setManualSpeed(
-            0
-          );
-
-
-          sendMode(
-            "pause_brake"
-          );
-
-
-          return;
-
-        }
-
-
-        playIntent =
-          true;
-
-
-        hasPlaybackEverStarted =
-          true;
-
-
-        setPlayIcon(
-          true
-        );
-
-
-        await ensureVinylOpen();
-
-
-        if(
           isScratching
+          ||
+          switchInProgress
         ){
 
           return;
@@ -9518,8 +9898,20 @@ playButtons.forEach(
         }
 
 
-        sendMode(
-          "play_start"
+        await switchToTrack(
+          state,
+          {
+            startTime:
+              state ===
+              activeTrack
+              ?
+              state.position
+              :
+              0,
+
+            cue:
+              false
+          }
         );
 
       }
@@ -9530,15 +9922,16 @@ playButtons.forEach(
 
 
 /* =====================================================
-   POINTER ANGLE
+   SCRATCH HELPERS
 ===================================================== */
 
 function pointerAngle(
+  state,
   event
 ){
 
   const rect =
-    recordDisc.getBoundingClientRect();
+    state.recordDisc.getBoundingClientRect();
 
 
   const cx =
@@ -9562,10 +9955,6 @@ function pointerAngle(
 
 }
 
-
-/* =====================================================
-   MANUAL IDLE
-===================================================== */
 
 function clearManualIdle(){
 
@@ -9619,125 +10008,19 @@ function scheduleManualIdle(){
 
 
 /* =====================================================
-   SCRATCH START
-===================================================== */
-
-recordDisc.addEventListener(
-  "pointerdown",
-  async event => {
-
-    if(
-      !vinylOpened
-      ||
-      !mechanismDeployed
-      ||
-      isPacking
-      ||
-      isSeeking
-      ||
-      isPreCueing
-      ||
-      !engineReady
-    ){
-
-      return;
-
-    }
-
-
-    event.preventDefault();
-
-
-    await resumeAudioContext();
-
-
-    isScratching =
-      true;
-
-
-    manualMovementStarted =
-      false;
-
-
-    scratchPointerId =
-      event.pointerId;
-
-
-    scratchVisualTime =
-      getEstimatedEnginePosition();
-
-
-    scratchVelocity =
-      engineSpeed;
-
-
-    scratchLastAngle =
-      pointerAngle(
-        event
-      );
-
-
-    scratchLastEventTime =
-      Number.isFinite(
-        event.timeStamp
-      )
-      ?
-      event.timeStamp
-      :
-      performance.now();
-
-
-    lastManualMoveAt =
-      performance.now();
-
-
-    recordDisc.setPointerCapture(
-      event.pointerId
-    );
-
-
-    track.classList.add(
-      "is-scratching"
-    );
-
-
-    if(
-      playIntent
-    ){
-
-      sendMode(
-        "grab_brake"
-      );
-
-    }
-
-    else{
-
-      setManualSpeed(
-        0
-      );
-
-
-      sendMode(
-        "hold"
-      );
-
-    }
-
-  }
-);
-
-
-/* =====================================================
    SCRATCH MOVE
 ===================================================== */
 
 function processScratchSample(
+  state,
   event
 ){
 
   if(
     !isScratching
+    ||
+    scratchTrack !==
+    state
     ||
     event.pointerId !==
     scratchPointerId
@@ -9750,6 +10033,7 @@ function processScratchSample(
 
   const angle =
     pointerAngle(
+      state,
       event
     );
 
@@ -9856,6 +10140,7 @@ function processScratchSample(
 
   scratchVisualTime =
     clampTime(
+      state,
       scratchVisualTime
       +
       deltaTrackSeconds
@@ -9913,15 +10198,19 @@ function processScratchSample(
 
 
 /* =====================================================
-   RAW POINTER
+   SCRATCH RAW POINTER
 ===================================================== */
 
 function handleScratchMotion(
+  state,
   event
 ){
 
   if(
     !isScratching
+    ||
+    scratchTrack !==
+    state
     ||
     event.pointerId !==
     scratchPointerId
@@ -9982,6 +10271,7 @@ function handleScratchMotion(
   ){
 
     processScratchSample(
+      state,
       sample
     );
 
@@ -9998,163 +10288,293 @@ const scratchMoveEvent =
   "pointermove";
 
 
-recordDisc.addEventListener(
-  scratchMoveEvent,
-  handleScratchMotion,
-  {
-    passive:false
-  }
-);
-
-
 /* =====================================================
-   SCRATCH RELEASE
+   SCRATCH EVENTS
 ===================================================== */
 
-function finishScratch(
-  event
-){
-
-  if(
-    !isScratching
-  ){
-
-    return;
-
-  }
+tracks.forEach(
+  state => {
 
 
-  if(
-    event
-    &&
-    event.pointerId !==
-    scratchPointerId
-  ){
+    state.recordDisc.addEventListener(
+      "pointerdown",
+      async event => {
 
-    return;
+        if(
+          state !==
+          activeTrack
+          ||
+          !state.vinylOpened
+          ||
+          !state.mechanismDeployed
+          ||
+          state.isPacking
+          ||
+          isSeeking
+          ||
+          isPreCueing
+          ||
+          switchInProgress
+          ||
+          !workletReady
+        ){
 
-  }
+          return;
 
-
-  clearManualIdle();
-
-
-  isScratching =
-    false;
-
-
-  track.classList.remove(
-    "is-scratching"
-  );
-
-
-  if(
-    event
-    &&
-    recordDisc.hasPointerCapture(
-      event.pointerId
-    )
-  ){
-
-    recordDisc.releasePointerCapture(
-      event.pointerId
-    );
-
-  }
+        }
 
 
-  scratchPointerId =
-    null;
+        event.preventDefault();
 
 
-  const releaseNow =
-    performance.now();
+        await resumeAudioContext();
 
 
-  const recentMovement =
-    (
-      releaseNow -
-      lastManualMoveAt
-    )
-    <
-    FREE_SPIN_RELEASE_WINDOW;
+        isScratching =
+          true;
 
 
-  if(
-    playIntent
-  ){
-
-    sendMode(
-      "motor_recovery"
-    );
+        scratchTrack =
+          state;
 
 
-    return;
+        manualMovementStarted =
+          false;
 
-  }
+
+        scratchPointerId =
+          event.pointerId;
 
 
-  if(
-    manualMovementStarted
-    &&
-    recentMovement
-    &&
-    Math.abs(
-      scratchVelocity
-    )
-    >=
-    FREE_SPIN_RELEASE_THRESHOLD
-  ){
+        scratchVisualTime =
+          getEstimatedEnginePosition();
 
-    sendMode(
-      "free_spin",
-      {
 
-        speed:
-          scratchVelocity
+        scratchVelocity =
+          engineSpeed;
+
+
+        scratchLastAngle =
+          pointerAngle(
+            state,
+            event
+          );
+
+
+        scratchLastEventTime =
+          Number.isFinite(
+            event.timeStamp
+          )
+          ?
+          event.timeStamp
+          :
+          performance.now();
+
+
+        lastManualMoveAt =
+          performance.now();
+
+
+        state.recordDisc.setPointerCapture(
+          event.pointerId
+        );
+
+
+        state.el.classList.add(
+          "is-scratching"
+        );
+
+
+        if(
+          playIntent
+        ){
+
+          sendMode(
+            "grab_brake"
+          );
+
+        }
+
+        else{
+
+          setManualSpeed(
+            0
+          );
+
+
+          sendMode(
+            "hold"
+          );
+
+        }
 
       }
     );
 
-  }
 
-  else{
-
-    setManualSpeed(
-      0
+    state.recordDisc.addEventListener(
+      scratchMoveEvent,
+      event =>
+        handleScratchMotion(
+          state,
+          event
+        ),
+      {
+        passive:false
+      }
     );
 
 
-    sendMode(
-      "paused"
+    function finishScratch(
+      event
+    ){
+
+      if(
+        !isScratching
+        ||
+        scratchTrack !==
+        state
+      ){
+
+        return;
+
+      }
+
+
+      if(
+        event
+        &&
+        event.pointerId !==
+        scratchPointerId
+      ){
+
+        return;
+
+      }
+
+
+      clearManualIdle();
+
+
+      isScratching =
+        false;
+
+
+      state.el.classList.remove(
+        "is-scratching"
+      );
+
+
+      if(
+        event
+        &&
+        state.recordDisc.hasPointerCapture(
+          event.pointerId
+        )
+      ){
+
+        state.recordDisc.releasePointerCapture(
+          event.pointerId
+        );
+
+      }
+
+
+      scratchPointerId =
+        null;
+
+
+      scratchTrack =
+        null;
+
+
+      const recentMovement =
+        (
+          performance.now()
+          -
+          lastManualMoveAt
+        )
+        <
+        FREE_SPIN_RELEASE_WINDOW;
+
+
+      if(
+        playIntent
+      ){
+
+        sendMode(
+          "motor_recovery"
+        );
+
+
+        return;
+
+      }
+
+
+      if(
+        manualMovementStarted
+        &&
+        recentMovement
+        &&
+        Math.abs(
+          scratchVelocity
+        )
+        >=
+        FREE_SPIN_RELEASE_THRESHOLD
+      ){
+
+        sendMode(
+          "free_spin",
+          {
+            speed:
+              scratchVelocity
+          }
+        );
+
+      }
+
+      else{
+
+        setManualSpeed(
+          0
+        );
+
+
+        sendMode(
+          "paused"
+        );
+
+      }
+
+
+      manualMovementStarted =
+        false;
+
+    }
+
+
+    state.recordDisc.addEventListener(
+      "pointerup",
+      finishScratch
+    );
+
+
+    state.recordDisc.addEventListener(
+      "pointercancel",
+      finishScratch
     );
 
   }
-
-
-  manualMovementStarted =
-    false;
-
-}
-
-
-recordDisc.addEventListener(
-  "pointerup",
-  finishScratch
-);
-
-
-recordDisc.addEventListener(
-  "pointercancel",
-  finishScratch
 );
 
 
 /* =====================================================
-   FIRST PRE-PLAY CUE
+   PRE-PLAY CUE
 ===================================================== */
 
 async function prePlayCueTo(
+  state,
   targetTime,
   generation
 ){
@@ -10172,12 +10592,14 @@ async function prePlayCueTo(
     true;
 
 
-  track.classList.add(
+  state.el.classList.add(
     "is-precue"
   );
 
 
-  await ensureVinylOpen();
+  await ensureVinylOpen(
+    state
+  );
 
 
   if(
@@ -10185,14 +10607,14 @@ async function prePlayCueTo(
       generation
     )
     ||
-    isPacking
+    state.isPacking
   ){
 
     isPreCueing =
       false;
 
 
-    track.classList.remove(
+    state.el.classList.remove(
       "is-precue"
     );
 
@@ -10214,7 +10636,9 @@ async function prePlayCueTo(
     /
     Math.max(
       1,
-      getDuration()
+      getDuration(
+        state
+      )
     );
 
 
@@ -10226,11 +10650,12 @@ async function prePlayCueTo(
 
 
   const startArm =
-    currentTonearmAngle;
+    state.currentTonearmAngle;
 
 
   const targetArm =
     armAngleFromTime(
+      state,
       targetTime
     );
 
@@ -10241,6 +10666,7 @@ async function prePlayCueTo(
 
   await new Promise(
     resolve => {
+
 
       function frame(
         now
@@ -10278,6 +10704,7 @@ async function prePlayCueTo(
 
 
         setTonearmAngle(
+          state,
           startArm
           +
           (
@@ -10290,6 +10717,7 @@ async function prePlayCueTo(
 
 
         updateProgressUI(
+          state,
           oldTime
           +
           (
@@ -10339,7 +10767,7 @@ async function prePlayCueTo(
       false;
 
 
-    track.classList.remove(
+    state.el.classList.remove(
       "is-precue"
     );
 
@@ -10350,6 +10778,7 @@ async function prePlayCueTo(
 
 
   seekEngine(
+    state,
     targetTime
   );
 
@@ -10359,6 +10788,7 @@ async function prePlayCueTo(
 
 
   setVinylAngle(
+    state,
     angleFromAudioTime(
       targetTime
     )
@@ -10368,11 +10798,13 @@ async function prePlayCueTo(
 
 
   setTonearmAngle(
+    state,
     targetArm
   );
 
 
   updateProgressUI(
+    state,
     targetTime
   );
 
@@ -10382,7 +10814,7 @@ async function prePlayCueTo(
   );
 
 
-  track.classList.remove(
+  state.el.classList.remove(
     "is-precue"
   );
 
@@ -10409,13 +10841,14 @@ async function prePlayCueTo(
 ===================================================== */
 
 async function playSeekSound(
+  state,
   fromTime,
   toTime,
   durationMs
 ){
 
   if(
-    !decodedTrack
+    !state.decoded
   ){
 
     return;
@@ -10430,6 +10863,19 @@ async function playSeekSound(
   await resumeAudioContext();
 
 
+  if(
+    !state.reversed
+  ){
+
+    state.reversed =
+      createReversedBuffer(
+        state.decoded,
+        context
+      );
+
+  }
+
+
   const forward =
     toTime >=
     fromTime;
@@ -10442,9 +10888,9 @@ async function playSeekSound(
   source.buffer =
     forward
     ?
-    decodedTrack
+    state.decoded
     :
-    reversedTrack;
+    state.reversed;
 
 
   const distance =
@@ -10599,43 +11045,32 @@ async function playSeekSound(
 
 
   gain.connect(
+    workletLimiter ||
     context.destination
   );
 
 
-  let offset;
-
-
-  if(
+  const offset =
     forward
-  ){
-
-    offset =
-      Math.max(
-        0,
-        Math.min(
-          decodedTrack.duration -
-          .2,
-          fromTime
-        )
-      );
-
-  }
-
-  else{
-
-    offset =
-      Math.max(
-        0,
-        Math.min(
-          reversedTrack.duration -
-          .2,
-          reversedTrack.duration -
-          fromTime
-        )
-      );
-
-  }
+    ?
+    Math.max(
+      0,
+      Math.min(
+        state.decoded.duration -
+        .2,
+        fromTime
+      )
+    )
+    :
+    Math.max(
+      0,
+      Math.min(
+        state.reversed.duration -
+        .2,
+        state.reversed.duration -
+        fromTime
+      )
+    );
 
 
   try{
@@ -10662,12 +11097,8 @@ async function playSeekSound(
   }
 
 
-  await new Promise(
-    resolve =>
-      setTimeout(
-        resolve,
-        durationMs
-      )
+  await wait(
+    durationMs
   );
 
 }
@@ -10678,6 +11109,7 @@ async function playSeekSound(
 ===================================================== */
 
 function animateVinylSeek(
+  state,
   fromTime,
   toTime,
   durationMs,
@@ -10686,6 +11118,7 @@ function animateVinylSeek(
 
   return new Promise(
     resolve => {
+
 
       const delta =
         toTime -
@@ -10764,6 +11197,7 @@ function animateVinylSeek(
           resolve(
             false
           );
+
 
           return;
 
@@ -10880,6 +11314,7 @@ function animateVinylSeek(
 
 
         setVinylAngle(
+          state,
           angleFromAudioTime(
             visualTime
           )
@@ -10887,11 +11322,13 @@ function animateVinylSeek(
 
 
         if(
-          tonearmEngaged
+          state.tonearmEngaged
         ){
 
           setTonearmAngle(
+            state,
             armAngleFromTime(
+              state,
               visualTime
             )
           );
@@ -10900,6 +11337,7 @@ function animateVinylSeek(
 
 
         updateProgressUI(
+          state,
           visualTime
         );
 
@@ -10937,22 +11375,54 @@ function animateVinylSeek(
 
 
 /* =====================================================
-   FULL PHYSICAL SEEK
+   SEEK
 ===================================================== */
 
 async function seekTo(
+  state,
   targetTime
 ){
 
   if(
-    isPacking
+    state.isPacking
     ||
-    !getDuration()
-    ||
-    !engineReady
+    !getDuration(
+      state
+    )
     ||
     isScratching
+    ||
+    switchInProgress
   ){
+
+    return;
+
+  }
+
+
+  targetTime =
+    clampTime(
+      state,
+      targetTime
+    );
+
+
+  if(
+    state !==
+    activeTrack
+  ){
+
+    await switchToTrack(
+      state,
+      {
+        startTime:
+          targetTime,
+
+        cue:
+          true
+      }
+    );
+
 
     return;
 
@@ -10967,12 +11437,6 @@ async function seekTo(
     true;
 
 
-  targetTime =
-    clampTime(
-      targetTime
-    );
-
-
   clearManualIdle();
 
 
@@ -10982,7 +11446,7 @@ async function seekTo(
 
 
   if(
-    !hasPlaybackEverStarted
+    !state.hasPlaybackEverStarted
     &&
     !playIntent
     &&
@@ -10994,15 +11458,16 @@ async function seekTo(
       false;
 
 
-    const cueOkay =
+    const okay =
       await prePlayCueTo(
+        state,
         targetTime,
         generation
       );
 
 
     if(
-      !cueOkay
+      !okay
       ||
       !operationAlive(
         generation
@@ -11018,11 +11483,12 @@ async function seekTo(
       true;
 
 
-    hasPlaybackEverStarted =
+    state.hasPlaybackEverStarted =
       true;
 
 
     setPlayIcon(
+      state,
       true
     );
 
@@ -11038,7 +11504,7 @@ async function seekTo(
 
 
   if(
-    !hasPlaybackEverStarted
+    !state.hasPlaybackEverStarted
     &&
     !playIntent
     &&
@@ -11047,6 +11513,7 @@ async function seekTo(
   ){
 
     seekEngine(
+      state,
       0
     );
 
@@ -11057,6 +11524,7 @@ async function seekTo(
 
 
     updateProgressUI(
+      state,
       0
     );
 
@@ -11079,13 +11547,16 @@ async function seekTo(
 
 
     setPlayIcon(
+      state,
       true
     );
 
   }
 
 
-  await ensureVinylOpen();
+  await ensureVinylOpen(
+    state
+  );
 
 
   if(
@@ -11121,6 +11592,7 @@ async function seekTo(
   ){
 
     seekEngine(
+      state,
       targetTime
     );
 
@@ -11139,7 +11611,7 @@ async function seekTo(
   }
 
 
-  track.classList.add(
+  state.el.classList.add(
     "is-seeking"
   );
 
@@ -11206,6 +11678,7 @@ async function seekTo(
     [
 
       animateVinylSeek(
+        state,
         oldTime,
         targetTime,
         duration,
@@ -11213,6 +11686,7 @@ async function seekTo(
       ),
 
       playSeekSound(
+        state,
         oldTime,
         targetTime,
         duration
@@ -11228,7 +11702,7 @@ async function seekTo(
     )
   ){
 
-    track.classList.remove(
+    state.el.classList.remove(
       "is-seeking"
     );
 
@@ -11243,6 +11717,7 @@ async function seekTo(
 
 
   seekEngine(
+    state,
     targetTime
   );
 
@@ -11252,6 +11727,7 @@ async function seekTo(
 
 
   setVinylAngle(
+    state,
     angleFromAudioTime(
       targetTime
     )
@@ -11259,11 +11735,13 @@ async function seekTo(
 
 
   if(
-    tonearmEngaged
+    state.tonearmEngaged
   ){
 
     setTonearmAngle(
+      state,
       armAngleFromTime(
+        state,
         targetTime
       )
     );
@@ -11272,6 +11750,7 @@ async function seekTo(
 
 
   updateProgressUI(
+    state,
     targetTime
   );
 
@@ -11281,7 +11760,7 @@ async function seekTo(
   );
 
 
-  track.classList.remove(
+  state.el.classList.remove(
     "is-seeking"
   );
 
@@ -11297,48 +11776,59 @@ async function seekTo(
 
 
 /* =====================================================
-   WAVE CLICK
+   WAVEFORM CLICK
 ===================================================== */
 
-seek.addEventListener(
-  "click",
-  event => {
+tracks.forEach(
+  state => {
 
-    const duration =
-      getDuration();
+    state.seek.addEventListener(
+      "click",
+      event => {
 
-
-    if(
-      !duration
-    ){
-
-      return;
-
-    }
+        const duration =
+          getDuration(
+            state
+          );
 
 
-    const rect =
-      seek.getBoundingClientRect();
+        if(
+          !duration
+          ||
+          state.loadError
+        ){
+
+          return;
+
+        }
 
 
-    const ratio =
-      Math.max(
-        0,
-        Math.min(
-          1,
-          (
-            event.clientX -
-            rect.left
-          )
-          /
-          rect.width
-        )
-      );
+        const rect =
+          state.seek.getBoundingClientRect();
 
 
-    seekTo(
-      ratio *
-      duration
+        const ratio =
+          Math.max(
+            0,
+            Math.min(
+              1,
+              (
+                event.clientX -
+                rect.left
+              )
+              /
+              rect.width
+            )
+          );
+
+
+        seekTo(
+          state,
+          ratio *
+          duration
+        );
+
+      }
     );
 
   }
@@ -11346,274 +11836,31 @@ seek.addEventListener(
 
 
 /* =====================================================
-   METADATA
+   PLACEHOLDER CHECKOUT
 ===================================================== */
 
-audio.addEventListener(
-  "loadedmetadata",
-  () => {
+document
+.querySelectorAll(
+  "[data-placeholder-checkout]"
+)
+.forEach(
+  link => {
 
-    if(
-      !trackDuration
-      &&
-      Number.isFinite(
-        audio.duration
-      )
-    ){
+    link.addEventListener(
+      "click",
+      event => {
 
-      trackDuration =
-        audio.duration;
-
-    }
+        event.preventDefault();
 
 
-    total.textContent =
-      fmt(
-        getDuration()
-      );
+        microstatus.textContent =
+          "TRACK 02 // ADD TRAKTRAIN CHECKOUT URL";
 
-  }
-);
-
-
-/* =====================================================
-   STOP / PACK
-===================================================== */
-
-async function stopAndPack(){
-
-  if(
-    isPacking
-    ||
-    !vinylOpened
-  ){
-
-    return;
-
-  }
-
-
-  nextOperationGeneration();
-
-
-  cancelScheduledTonearmEngage();
-
-
-  clearManualIdle();
-
-
-  isPacking =
-    true;
-
-
-  isSeeking =
-    false;
-
-
-  isPreCueing =
-    false;
-
-
-  isScratching =
-    false;
-
-
-  track.classList.remove(
-    "is-scratching"
-  );
-
-
-  setManualSpeed(
-    0
-  );
-
-
-  sendMode(
-    "paused"
-  );
-
-
-  await new Promise(
-    resolve =>
-      setTimeout(
-        resolve,
-        18
-      )
-  );
-
-
-  sendMode(
-    "off"
-  );
-
-
-  microstatus.textContent =
-    "STOP // RETURNING SIGNAL";
-
-
-  if(
-    tonearmEngaged
-  ){
-
-    await animateTonearmTo(
-      ARM_PARK_ANGLE,
-      600
+      }
     );
 
   }
-
-
-  track.classList.remove(
-    "arm-on-top"
-  );
-
-
-  tonearmEngaged =
-    false;
-
-
-  await new Promise(
-    resolve =>
-      setTimeout(
-        resolve,
-        90
-      )
-  );
-
-
-  playPaperOut();
-
-
-  track.classList.add(
-    "is-closing"
-  );
-
-
-  await new Promise(
-    resolve =>
-      setTimeout(
-        resolve,
-        1480
-      )
-  );
-
-
-  track.classList.remove(
-    "is-open",
-    "is-closing",
-    "is-scratching",
-    "is-motor-recovering",
-    "is-play-starting",
-    "is-pause-braking",
-    "is-free-spinning",
-    "is-seeking",
-    "is-precue"
-  );
-
-
-  mechanismDeployed =
-    false;
-
-
-  vinylOpened =
-    false;
-
-
-  playIntent =
-    false;
-
-
-  hasPlaybackEverStarted =
-    false;
-
-
-  enginePositionSec =
-    0;
-
-
-  engineSpeed =
-    0;
-
-
-  engineMode =
-    "paused";
-
-
-  engineActive =
-    false;
-
-
-  scratchVelocity =
-    0;
-
-
-  scratchVisualTime =
-    0;
-
-
-  manualMovementStarted =
-    false;
-
-
-  /*
-    Reset VU peak memory too, so next session
-    cannot inherit previous scratch movement.
-  */
-
-  vuPeakL =
-    0;
-
-
-  vuPeakR =
-    0;
-
-
-  vuNeedleValueL =
-    0;
-
-
-  vuNeedleValueR =
-    0;
-
-
-  seekEngine(
-    0
-  );
-
-
-  sendMode(
-    "off"
-  );
-
-
-  setVinylAngle(
-    0
-  );
-
-
-  setTonearmAngle(
-    ARM_PARK_ANGLE
-  );
-
-
-  updateProgressUI(
-    0
-  );
-
-
-  setPlayIcon(
-    false
-  );
-
-
-  microstatus.textContent =
-    "Connection stable // 01 signal detected";
-
-
-  isPacking =
-    false;
-
-}
+);
 
 
 /* =====================================================
@@ -11622,10 +11869,8 @@ async function stopAndPack(){
 
 const ARG_CODES =
   {
-
     "∴∆Ξ":
       "SIGNAL ACCEPTED // NODE UNLOCKED"
-
   };
 
 
@@ -11684,9 +11929,60 @@ codeForm.addEventListener(
   }
 );
 
+
+/* =====================================================
+   BOOT
+===================================================== */
+
+(
+  async () => {
+
+
+    tracks.forEach(
+      fallbackWave
+    );
+
+
+    await Promise.all(
+      tracks.map(
+        loadTrackData
+      )
+    );
+
+
+    try{
+
+      await initWorklet();
+
+
+      microstatus.textContent =
+        IS_ANDROID
+        ?
+        "ENGINE READY // ANDROID PERFORMANCE MODE"
+        :
+        "Connection stable // 02 signals detected";
+
+    }
+
+    catch(error){
+
+      console.warn(
+        error
+      );
+
+
+      microstatus.textContent =
+        "ENGINE ERROR // AUDIOWORKLET INIT FAILED";
+
+    }
+
+
+    startVisualLoop();
+
+  }
+)();
+
 </script>
 
-
 </body>
-
 </html>
