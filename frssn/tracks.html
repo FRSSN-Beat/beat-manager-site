@@ -1480,87 +1480,6 @@ input{
 
 
 /* =====================================================
-   DEBUG SFX
-===================================================== */
-
-.sfxDebug{
-  position:fixed;
-
-  right:14px;
-  bottom:14px;
-
-  z-index:100;
-
-  width:210px;
-
-  padding:10px 12px;
-
-  border:
-    1px solid
-    rgba(214,255,40,.38);
-
-  background:
-    rgba(4,6,4,.92);
-
-  box-shadow:
-    0 0 22px
-    rgba(0,0,0,.55);
-
-  backdrop-filter:
-    blur(8px);
-
-  color:var(--accent);
-
-  font:
-    9px/1.4 monospace;
-
-  letter-spacing:.08em;
-}
-
-.sfxDebugTop{
-  display:flex;
-
-  align-items:center;
-  justify-content:space-between;
-
-  gap:10px;
-
-  margin-bottom:8px;
-}
-
-.sfxDebugTitle{
-  white-space:nowrap;
-}
-
-.sfxDebugValue{
-  color:var(--text);
-
-  min-width:35px;
-
-  text-align:right;
-}
-
-.sfxDebug input[type="range"]{
-  width:100%;
-
-  margin:0;
-
-  accent-color:
-    var(--accent);
-}
-
-.sfxDebugFiles{
-  margin-top:6px;
-
-  color:var(--muted);
-
-  font-size:8px;
-
-  line-height:1.5;
-}
-
-
-/* =====================================================
    FOOTER
 ===================================================== */
 
@@ -1809,15 +1728,6 @@ input{
 
   .time{
     display:none;
-  }
-
-  .sfxDebug{
-    right:8px;
-    bottom:8px;
-
-    width:185px;
-
-    padding:8px 10px;
   }
 }
 </style>
@@ -2197,10 +2107,6 @@ input{
 </div>
 
 
-<!-- ===================================================
-     AUDIO
-=================================================== -->
-
 <audio
   id="trackAudio"
   preload="metadata"
@@ -2218,44 +2124,6 @@ input{
   preload="auto"
   src="Paper out.mp3"
 ></audio>
-
-
-<!-- ===================================================
-     DEBUG PAPER SFX VOLUME
-=================================================== -->
-
-<div class="sfxDebug">
-
-  <div class="sfxDebugTop">
-
-    <span class="sfxDebugTitle">
-      DEBUG // PAPER SFX
-    </span>
-
-    <span
-      class="sfxDebugValue"
-      id="sfxVolumeValue"
-    >
-      70%
-    </span>
-
-  </div>
-
-  <input
-    id="sfxVolumeSlider"
-    type="range"
-    min="0"
-    max="100"
-    step="1"
-    value="70"
-  >
-
-  <div class="sfxDebugFiles">
-    IN // Paper in.mp3<br>
-    OUT // Paper out.mp3
-  </div>
-
-</div>
 
 
 <script>
@@ -2279,17 +2147,6 @@ const paperInSfx =
 const paperOutSfx =
   document.getElementById(
     "paperOutSfx"
-  );
-
-
-const sfxVolumeSlider =
-  document.getElementById(
-    "sfxVolumeSlider"
-  );
-
-const sfxVolumeValue =
-  document.getElementById(
-    "sfxVolumeValue"
   );
 
 
@@ -2360,150 +2217,16 @@ const total =
    PAPER SFX
 ===================================================== */
 
-const DEFAULT_PAPER_SFX_VOLUME =
-  0.70;
+const PAPER_SFX_VOLUME =
+  0.36;
 
 
-let paperSfxVolume =
-  DEFAULT_PAPER_SFX_VOLUME;
+paperInSfx.volume =
+  PAPER_SFX_VOLUME;
 
 
-function loadPaperSfxVolume(){
-
-  try{
-
-    const saved =
-      localStorage.getItem(
-        "frssnPaperSfxVolume"
-      );
-
-
-    if(
-      saved !== null
-    ){
-
-      const parsed =
-        Number(
-          saved
-        );
-
-
-      if(
-        Number.isFinite(
-          parsed
-        )
-      ){
-
-        paperSfxVolume =
-          Math.max(
-            0,
-            Math.min(
-              1,
-              parsed
-            )
-          );
-
-      }
-
-    }
-
-  }
-
-  catch(_){}
-
-
-  const percent =
-    Math.round(
-      paperSfxVolume *
-      100
-    );
-
-
-  sfxVolumeSlider.value =
-    String(
-      percent
-    );
-
-
-  sfxVolumeValue.textContent =
-    percent +
-    "%";
-
-
-  paperInSfx.volume =
-    paperSfxVolume;
-
-
-  paperOutSfx.volume =
-    paperSfxVolume;
-
-}
-
-
-function setPaperSfxVolume(
-  value
-){
-
-  paperSfxVolume =
-    Math.max(
-      0,
-      Math.min(
-        1,
-        value
-      )
-    );
-
-
-  paperInSfx.volume =
-    paperSfxVolume;
-
-
-  paperOutSfx.volume =
-    paperSfxVolume;
-
-
-  const percent =
-    Math.round(
-      paperSfxVolume *
-      100
-    );
-
-
-  sfxVolumeValue.textContent =
-    percent +
-    "%";
-
-
-  try{
-
-    localStorage.setItem(
-      "frssnPaperSfxVolume",
-      String(
-        paperSfxVolume
-      )
-    );
-
-  }
-
-  catch(_){}
-
-}
-
-
-sfxVolumeSlider.addEventListener(
-  "input",
-  () => {
-
-    setPaperSfxVolume(
-      Number(
-        sfxVolumeSlider.value
-      )
-      /
-      100
-    );
-
-  }
-);
+paperOutSfx.volume =
+  PAPER_SFX_VOLUME;
 
 
 function stopPaperSfx(
@@ -2532,7 +2255,7 @@ function playPaperIn(){
 
 
   paperInSfx.volume =
-    paperSfxVolume;
+    PAPER_SFX_VOLUME;
 
 
   const promise =
@@ -2563,7 +2286,7 @@ function playPaperOut(){
 
 
   paperOutSfx.volume =
-    paperSfxVolume;
+    PAPER_SFX_VOLUME;
 
 
   const promise =
@@ -2584,9 +2307,6 @@ function playPaperOut(){
   }
 
 }
-
-
-loadPaperSfxVolume();
 
 
 /* =====================================================
@@ -5369,9 +5089,20 @@ function startVisualLoop(){
 
   function frame(){
 
+    /*
+      IMPORTANT FIX:
+      packing must NOT kill the permanent RAF loop.
+    */
+
     if(
       isPacking
     ){
+
+      visualRAF =
+        requestAnimationFrame(
+          frame
+        );
+
 
       return;
 
@@ -5829,9 +5560,6 @@ loadTrackData(
 
 /* =====================================================
    OPEN
-
-   Paper in.mp3 starts exactly when
-   the unpack animation begins.
 ===================================================== */
 
 async function ensureVinylOpen(){
@@ -5870,10 +5598,6 @@ async function ensureVinylOpen(){
           vinylOpened =
             true;
 
-
-          /*
-            UNPACK SFX
-          */
 
           playPaperIn();
 
@@ -7958,9 +7682,6 @@ audio.addEventListener(
 
 /* =====================================================
    STOP / PACK
-
-   Paper out.mp3 starts exactly when
-   sleeve/record packing animation begins.
 ===================================================== */
 
 async function stopAndPack(){
@@ -8061,13 +7782,6 @@ async function stopAndPack(){
   );
 
 
-  /*
-    PACKING SFX
-
-    Exactly here the sleeve starts
-    returning into the frame.
-  */
-
   playPaperOut();
 
 
@@ -8124,6 +7838,10 @@ async function stopAndPack(){
 
   engineMode =
     "paused";
+
+
+  engineActive =
+    false;
 
 
   scratchVelocity =
