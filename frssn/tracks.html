@@ -204,7 +204,6 @@ input{
 .status{
   display:flex;
   align-items:center;
-
   gap:10px;
 }
 
@@ -1489,398 +1488,233 @@ input{
 
 
 /* =====================================================
-   FIXED VU
+   PNG VU MODULE
+   FINAL POSITION:
+   X 827 / Y 162
+   SIZE 262 x 157
 ===================================================== */
 
-.vuFixedObject{
+.vuPngModule{
   position:fixed;
 
   left:827px;
   top:162px;
 
+  width:262px;
+  height:157px;
+
   z-index:90;
-
-  width:430px;
-
-  transform:
-    scale(.61);
-
-  transform-origin:
-    top left;
 
   pointer-events:none;
 
   user-select:none;
   -webkit-user-select:none;
-}
-
-.vuFixedObject.is-hidden{
-  display:none;
-}
-
-
-/* =====================================================
-   VU RACK
-===================================================== */
-
-.vuRack{
-  width:430px;
-
-  padding:10px;
-
-  border:
-    1px solid
-    rgba(255,255,255,.18);
-
-  background:
-    linear-gradient(
-      180deg,
-      #1b1d1b 0%,
-      #080908 16%,
-      #050605 100%
-    );
-
-  box-shadow:
-    inset
-    0 0 0 4px
-    rgba(255,255,255,.018),
-
-    inset
-    0 0 22px
-    rgba(0,0,0,.9),
-
-    0 12px 28px
-    rgba(0,0,0,.32);
-
-  position:relative;
-
-  overflow:hidden;
-}
-
-.vuRack::before{
-  content:"";
-
-  position:absolute;
-
-  inset:5px;
-
-  border:
-    1px solid
-    rgba(255,255,255,.06);
-
-  pointer-events:none;
-}
-
-.vuMeters{
-  display:grid;
-
-  grid-template-columns:
-    1fr 1fr;
-
-  gap:9px;
-}
-
-.vuMeter{
-  position:relative;
-
-  height:150px;
-
-  border:
-    5px solid
-    #171817;
-
-  outline:
-    1px solid
-    rgba(255,255,255,.09);
-
-  background:
-    linear-gradient(
-      180deg,
-      #d9bf81 0%,
-      #f2dfa9 44%,
-      #ccb06f 100%
-    );
-
-  box-shadow:
-    inset
-    0 0 14px
-    rgba(75,42,10,.42),
-
-    inset
-    0 0 38px
-    rgba(255,197,91,.24),
-
-    0 2px 5px
-    rgba(0,0,0,.65);
-
-  overflow:hidden;
 
   isolation:isolate;
 }
 
-.vuLamp{
+.vuPngModule.is-hidden{
+  display:none;
+}
+
+.vuPngImage{
   position:absolute;
 
-  inset:-12%;
+  inset:0;
 
-  z-index:0;
+  width:262px;
+  height:157px;
+
+  object-fit:contain;
+
+  display:block;
+
+  z-index:1;
+}
+
+
+/* =====================================================
+   VU FACE LIGHT
+===================================================== */
+
+.vuFaceGlow{
+  position:absolute;
+
+  z-index:2;
 
   pointer-events:none;
 
-  background:
-    radial-gradient(
-      ellipse at 50% 33%,
-      rgba(255,242,181,.80) 0%,
-      rgba(255,210,113,.48) 34%,
-      rgba(232,162,59,.14) 64%,
-      transparent 82%
-    );
+  overflow:hidden;
+
+  opacity:.18;
 
   mix-blend-mode:screen;
 
-  opacity:.78;
+  background:
+    radial-gradient(
+      ellipse at 50% 74%,
+      rgba(255,195,77,.32) 0%,
+      rgba(255,175,45,.10) 45%,
+      transparent 74%
+    );
 
   filter:
-    blur(7px);
+    blur(4px);
 
   animation:
-    vuLampFloat
-    4.7s
+    vuPngGlowFloat
+    4.8s
     ease-in-out
     infinite
     alternate;
 }
 
-.vuMeter:nth-child(2) .vuLamp{
-  animation-delay:-1.85s;
+.vuFaceGlow.left{
+  left:25px;
+  top:39px;
+
+  width:94px;
+  height:66px;
 }
 
-@keyframes vuLampFloat{
+.vuFaceGlow.right{
+  left:143px;
+  top:39px;
+
+  width:94px;
+  height:66px;
+
+  animation-delay:
+    -1.7s;
+}
+
+@keyframes vuPngGlowFloat{
 
   0%{
-    opacity:.67;
+    opacity:.13;
 
     transform:
-      translate3d(-1%,1%,0)
+      translate3d(-1px,1px,0)
       scale(1);
   }
 
-  18%{
-    opacity:.76;
+  26%{
+    opacity:.20;
   }
 
-  42%{
-    opacity:.71;
+  51%{
+    opacity:.15;
 
     transform:
-      translate3d(1.5%,-.4%,0)
-      scale(1.018);
+      translate3d(1px,-1px,0)
+      scale(1.025);
   }
 
-  67%{
-    opacity:.83;
-  }
-
-  82%{
-    opacity:.74;
+  74%{
+    opacity:.23;
   }
 
   100%{
-    opacity:.79;
+    opacity:.17;
 
     transform:
-      translate3d(-.8%,-1.2%,0)
+      translate3d(0,0,0)
       scale(1.01);
   }
+
 }
 
-.vuGlass{
+
+/* =====================================================
+   NEEDLE WINDOWS
+
+   Needle is clipped to the illuminated
+   meter face, so it does not draw over
+   the metal housing.
+===================================================== */
+
+.vuNeedleWindow{
   position:absolute;
 
-  inset:0;
+  top:39px;
 
-  z-index:6;
+  width:94px;
+  height:66px;
 
-  pointer-events:none;
+  overflow:hidden;
 
-  background:
-    linear-gradient(
-      165deg,
-      rgba(255,255,255,.23) 0%,
-      rgba(255,255,255,.055) 16%,
-      transparent 39%,
-      rgba(255,255,255,.025) 60%,
-      transparent 100%
-    );
-
-  box-shadow:
-    inset
-    0 0 8px
-    rgba(255,255,255,.13),
-
-    inset
-    0 -10px 18px
-    rgba(42,24,5,.15);
-}
-
-.vuLabel{
-  position:absolute;
-
-  left:0;
-  right:0;
-  top:14px;
-
-  z-index:3;
-
-  text-align:center;
-
-  color:#3c2919;
-
-  font:
-    700 10px/1
-    Arial,
-    sans-serif;
-
-  letter-spacing:.08em;
-}
-
-.vuSubLabel{
-  position:absolute;
-
-  left:0;
-  right:0;
-  bottom:15px;
-
-  z-index:3;
-
-  text-align:center;
-
-  color:
-    rgba(55,39,25,.72);
-
-  font:
-    6px/1
-    Arial,
-    sans-serif;
-
-  letter-spacing:.10em;
-}
-
-.vuScale{
-  position:absolute;
-
-  inset:0;
-
-  z-index:2;
-
-  width:100%;
-  height:100%;
+  z-index:4;
 
   pointer-events:none;
 }
 
-.vuNeedleWrap{
-  position:absolute;
-
-  left:50%;
-  bottom:2px;
-
-  width:1px;
-  height:1px;
-
-  z-index:5;
-
-  transform:
-    translateX(-50%);
+.vuNeedleWindow.left{
+  left:25px;
 }
 
-.vuNeedle{
+.vuNeedleWindow.right{
+  left:143px;
+}
+
+
+/*
+  Physical pivot is below the visible face.
+  The lower part of the needle is clipped by
+  .vuNeedleWindow, matching a real meter.
+*/
+
+.vuPngNeedle{
   position:absolute;
 
-  left:-1px;
-  bottom:0;
+  left:56px;
+  bottom:-19px;
 
-  width:2px;
-  height:94px;
+  width:1.6px;
+  height:82px;
 
   transform-origin:
     50% 100%;
 
   transform:
-    rotate(-46deg);
+    rotate(-43deg);
 
   background:
     linear-gradient(
       180deg,
-      #352315 0%,
-      #1f150e 70%,
-      #070503 100%
+      #1a130d 0%,
+      #19120b 65%,
+      #050403 100%
     );
 
   box-shadow:
-    1px 0 1px
-    rgba(255,255,255,.16),
-
-    0 0 2px
-    rgba(0,0,0,.45);
-
-  border-radius:
-    1px 1px 0 0;
+    .5px 0 0 rgba(255,217,151,.10),
+    0 0 1px rgba(0,0,0,.55);
 
   will-change:
     transform;
 }
 
-.vuNeedle::before{
+
+/*
+  Tiny warm edge on the needle makes it
+  blend with the baked glass/light in PNG.
+*/
+
+.vuPngNeedle::after{
   content:"";
 
   position:absolute;
 
-  left:50%;
-  top:-2px;
+  left:1px;
+  top:0;
 
-  width:4px;
-  height:4px;
-
-  transform:
-    translateX(-50%);
-
-  border-radius:50%;
-
-  background:#362313;
-}
-
-.vuPivot{
-  position:absolute;
-
-  left:50%;
-  bottom:-5px;
-
-  z-index:7;
-
-  width:15px;
-  height:15px;
-
-  transform:
-    translateX(-50%);
-
-  border-radius:50%;
+  width:.5px;
+  height:100%;
 
   background:
-    radial-gradient(
-      circle at 35% 30%,
-      #70624d 0%,
-      #2d251d 38%,
-      #0c0a08 76%
-    );
+    rgba(255,186,93,.14);
 
-  border:
-    1px solid
-    rgba(0,0,0,.75);
-
-  box-shadow:
-    0 0 3px
-    rgba(0,0,0,.65);
+  pointer-events:none;
 }
 
 
@@ -1914,6 +1748,7 @@ input{
   50%{
     opacity:1;
   }
+
 }
 
 
@@ -2134,7 +1969,14 @@ input{
   .time{
     display:none;
   }
+
 }
+
+
+/*
+  Android VU is additionally removed in JS
+  before analyser creation.
+*/
 
 </style>
 </head>
@@ -2565,353 +2407,53 @@ input{
 
 
 <!-- ===================================================
-     FIXED DESKTOP VU
+     PNG VU MODULE
 =================================================== -->
 
 <div
-  class="vuFixedObject"
-  id="vuFixedObject"
+  class="vuPngModule"
+  id="vuPngModule"
 >
 
-  <div class="vuRack">
+  <img
+    class="vuPngImage"
+    src="vu-meter-module.png"
+    alt="Stereo VU meter"
+  >
 
 
-    <div class="vuMeters">
+  <div
+    class="vuFaceGlow left"
+    id="vuGlowL"
+  ></div>
 
 
-      <div class="vuMeter">
+  <div
+    class="vuFaceGlow right"
+    id="vuGlowR"
+  ></div>
 
-        <div
-          class="vuLamp"
-          id="vuLampL"
-        ></div>
 
+  <div
+    class="vuNeedleWindow left"
+  >
 
-        <svg
-          class="vuScale"
-          viewBox="0 0 420 180"
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        >
+    <div
+      class="vuPngNeedle"
+      id="vuNeedleL"
+    ></div>
 
-          <path
-            d="M55 123 Q210 20 365 123"
-            fill="none"
-            stroke="#4a3320"
-            stroke-width="1.6"
-          />
+  </div>
 
 
-          <path
-            d="M279 54 Q327 72 365 123"
-            fill="none"
-            stroke="#a52c1e"
-            stroke-width="2"
-          />
+  <div
+    class="vuNeedleWindow right"
+  >
 
-
-          <g
-            stroke="#4b3524"
-            stroke-width="1.5"
-          >
-
-            <line x1="64" y1="119" x2="75" y2="111"/>
-
-            <line x1="89" y1="97" x2="98" y2="90"/>
-
-            <line x1="118" y1="77" x2="125" y2="68"/>
-
-            <line x1="151" y1="61" x2="156" y2="50"/>
-
-            <line x1="186" y1="52" x2="188" y2="40"/>
-
-            <line x1="220" y1="49" x2="220" y2="36"/>
-
-            <line x1="253" y1="52" x2="251" y2="40"/>
-
-            <line x1="282" y1="61" x2="278" y2="50"/>
-
-            <line x1="312" y1="77" x2="305" y2="68"/>
-
-            <line x1="338" y1="97" x2="329" y2="90"/>
-
-            <line x1="359" y1="119" x2="348" y2="111"/>
-
-          </g>
-
-
-          <g
-            fill="#4a3320"
-            font-family="Arial, sans-serif"
-            font-size="15"
-            text-anchor="middle"
-          >
-
-            <text x="64" y="101">20</text>
-
-            <text x="92" y="80">10</text>
-
-            <text x="121" y="62">7</text>
-
-            <text x="153" y="47">5</text>
-
-            <text x="187" y="37">3</text>
-
-            <text x="220" y="33">2</text>
-
-            <text x="250" y="37">1</text>
-
-            <text x="280" y="48">0</text>
-
-          </g>
-
-
-          <g
-            fill="#a52c1e"
-            font-family="Arial, sans-serif"
-            font-size="16"
-            font-weight="700"
-            text-anchor="middle"
-          >
-
-            <text x="309" y="62">1</text>
-
-            <text x="337" y="82">2</text>
-
-            <text x="360" y="104">3</text>
-
-          </g>
-
-
-          <g
-            fill="#4d3423"
-            font-family="Arial, sans-serif"
-            font-size="10"
-            text-anchor="middle"
-            opacity=".78"
-          >
-
-            <text x="61" y="135">.01</text>
-
-            <text x="91" y="115">.03</text>
-
-            <text x="121" y="96">.05</text>
-
-            <text x="151" y="82">.1</text>
-
-            <text x="184" y="72">.3</text>
-
-            <text x="220" y="68">.5</text>
-
-            <text x="250" y="72">1</text>
-
-            <text x="280" y="83">3</text>
-
-            <text x="312" y="98">5</text>
-
-            <text x="338" y="116">10</text>
-
-            <text x="359" y="136">100</text>
-
-          </g>
-
-        </svg>
-
-
-        <div class="vuLabel">
-          VU
-        </div>
-
-
-        <div class="vuSubLabel">
-          WATTS
-        </div>
-
-
-        <div class="vuNeedleWrap">
-
-          <div
-            class="vuNeedle"
-            id="vuNeedleL"
-          ></div>
-
-        </div>
-
-
-        <div class="vuPivot"></div>
-
-        <div class="vuGlass"></div>
-
-      </div>
-
-
-      <div class="vuMeter">
-
-        <div
-          class="vuLamp"
-          id="vuLampR"
-        ></div>
-
-
-        <svg
-          class="vuScale"
-          viewBox="0 0 420 180"
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        >
-
-          <path
-            d="M55 123 Q210 20 365 123"
-            fill="none"
-            stroke="#4a3320"
-            stroke-width="1.6"
-          />
-
-
-          <path
-            d="M279 54 Q327 72 365 123"
-            fill="none"
-            stroke="#a52c1e"
-            stroke-width="2"
-          />
-
-
-          <g
-            stroke="#4b3524"
-            stroke-width="1.5"
-          >
-
-            <line x1="64" y1="119" x2="75" y2="111"/>
-
-            <line x1="89" y1="97" x2="98" y2="90"/>
-
-            <line x1="118" y1="77" x2="125" y2="68"/>
-
-            <line x1="151" y1="61" x2="156" y2="50"/>
-
-            <line x1="186" y1="52" x2="188" y2="40"/>
-
-            <line x1="220" y1="49" x2="220" y2="36"/>
-
-            <line x1="253" y1="52" x2="251" y2="40"/>
-
-            <line x1="282" y1="61" x2="278" y2="50"/>
-
-            <line x1="312" y1="77" x2="305" y2="68"/>
-
-            <line x1="338" y1="97" x2="329" y2="90"/>
-
-            <line x1="359" y1="119" x2="348" y2="111"/>
-
-          </g>
-
-
-          <g
-            fill="#4a3320"
-            font-family="Arial, sans-serif"
-            font-size="15"
-            text-anchor="middle"
-          >
-
-            <text x="64" y="101">20</text>
-
-            <text x="92" y="80">10</text>
-
-            <text x="121" y="62">7</text>
-
-            <text x="153" y="47">5</text>
-
-            <text x="187" y="37">3</text>
-
-            <text x="220" y="33">2</text>
-
-            <text x="250" y="37">1</text>
-
-            <text x="280" y="48">0</text>
-
-          </g>
-
-
-          <g
-            fill="#a52c1e"
-            font-family="Arial, sans-serif"
-            font-size="16"
-            font-weight="700"
-            text-anchor="middle"
-          >
-
-            <text x="309" y="62">1</text>
-
-            <text x="337" y="82">2</text>
-
-            <text x="360" y="104">3</text>
-
-          </g>
-
-
-          <g
-            fill="#4d3423"
-            font-family="Arial, sans-serif"
-            font-size="10"
-            text-anchor="middle"
-            opacity=".78"
-          >
-
-            <text x="61" y="135">.01</text>
-
-            <text x="91" y="115">.03</text>
-
-            <text x="121" y="96">.05</text>
-
-            <text x="151" y="82">.1</text>
-
-            <text x="184" y="72">.3</text>
-
-            <text x="220" y="68">.5</text>
-
-            <text x="250" y="72">1</text>
-
-            <text x="280" y="83">3</text>
-
-            <text x="312" y="98">5</text>
-
-            <text x="338" y="116">10</text>
-
-            <text x="359" y="136">100</text>
-
-          </g>
-
-        </svg>
-
-
-        <div class="vuLabel">
-          VU
-        </div>
-
-
-        <div class="vuSubLabel">
-          WATTS
-        </div>
-
-
-        <div class="vuNeedleWrap">
-
-          <div
-            class="vuNeedle"
-            id="vuNeedleR"
-          ></div>
-
-        </div>
-
-
-        <div class="vuPivot"></div>
-
-        <div class="vuGlass"></div>
-
-      </div>
-
-
-    </div>
+    <div
+      class="vuPngNeedle"
+      id="vuNeedleR"
+    ></div>
 
   </div>
 
@@ -3030,12 +2572,12 @@ const total =
 
 
 /* =====================================================
-   FIXED VU ELEMENTS
+   PNG VU ELEMENTS
 ===================================================== */
 
-const vuFixedObject =
+const vuPngModule =
   document.getElementById(
-    "vuFixedObject"
+    "vuPngModule"
   );
 
 
@@ -3051,25 +2593,25 @@ const vuNeedleR =
   );
 
 
-const vuLampL =
+const vuGlowL =
   document.getElementById(
-    "vuLampL"
+    "vuGlowL"
   );
 
 
-const vuLampR =
+const vuGlowR =
   document.getElementById(
-    "vuLampR"
+    "vuGlowR"
   );
 
 
 if(
   IS_ANDROID
   &&
-  vuFixedObject
+  vuPngModule
 ){
 
-  vuFixedObject.classList.add(
+  vuPngModule.classList.add(
     "is-hidden"
   );
 
@@ -3189,7 +2731,7 @@ const ARM_MOVE_DURATION_MS =
 
 
 /* =====================================================
-   PHYSICS VALUES
+   PHYSICS
 ===================================================== */
 
 const SCRATCH_TIME_SCALE =
@@ -3992,7 +3534,7 @@ function scheduleTonearmEngageFromOpenStart(){
 
 
 /* =====================================================
-   PROGRESS UI
+   PROGRESS
 ===================================================== */
 
 function updateProgressUI(
@@ -4079,7 +3621,7 @@ let engineEndedLock =
 
 
 /* =====================================================
-   VU ANALYSIS
+   DESKTOP VU STATE
 ===================================================== */
 
 let vuSplitter =
@@ -4123,7 +3665,7 @@ let vuPeakR =
 
 
 /* =====================================================
-   AUDIOWORKLET PROCESSOR
+   AUDIOWORKLET
 ===================================================== */
 
 const WORKLET_PROCESSOR_CODE =
@@ -4293,21 +3835,13 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
 
           this.currentSpeed=0;
-
           this.active=false;
-
           this.mode="paused";
-
           this.targetGain=0;
-
           this.currentGain=0;
-
           this.motionGain=0;
-
           this.motionTarget=0;
-
           this.motionMoving=false;
-
           this.endedSent=false;
 
 
@@ -5605,13 +5139,13 @@ async function initWorkletFromBuffer(
 
 
   /* ===================================================
-     VU DESKTOP ONLY
+     DESKTOP VU ONLY
   =================================================== */
 
   if(
     !IS_ANDROID
     &&
-    vuFixedObject
+    vuPngModule
   ){
 
     vuSplitter =
@@ -5628,12 +5162,17 @@ async function initWorkletFromBuffer(
       context.createAnalyser();
 
 
+    /*
+      512 is enough for meter RMS and lighter
+      than the previous 1024 analyser.
+    */
+
     vuAnalyserL.fftSize =
-      1024;
+      512;
 
 
     vuAnalyserR.fftSize =
-      1024;
+      512;
 
 
     vuAnalyserL.smoothingTimeConstant =
@@ -5819,12 +5358,17 @@ function rmsToVu(
     );
 
 
+  /*
+    Gives the meter a useful musical range.
+    Around -18 dBFS sits near the 0 VU region.
+  */
+
   const minDb =
     -42;
 
 
   const maxDb =
-    -10;
+    -9;
 
 
   const normalized =
@@ -5854,12 +5398,16 @@ function vuValueToAngle(
   value
 ){
 
+  /*
+    Needle travel fitted to the PNG scale.
+  */
+
   const minAngle =
-    -47;
+    -43;
 
 
   const maxAngle =
-    47;
+    43;
 
 
   return (
@@ -5880,12 +5428,17 @@ function updateVuBallistic(
   targetValue
 ){
 
+  /*
+    Mechanical meter:
+    fast attack, heavier return.
+  */
+
   const attack =
-    .34;
+    .29;
 
 
   const release =
-    .075;
+    .060;
 
 
   const coefficient =
@@ -5919,6 +5472,10 @@ function startVuLoop(){
     !vuAnalyserL
     ||
     !vuAnalyserR
+    ||
+    !vuNeedleL
+    ||
+    !vuNeedleR
   ){
 
     return;
@@ -5965,62 +5522,16 @@ function startVuLoop(){
       );
 
 
-    const time =
-      performance.now() *
-      .001;
-
-
-    if(
-      targetL <
-      .018
-    ){
-
-      targetL =
-        .004
-        +
-        (
-          Math.sin(
-            time *
-            1.37
-          )
-          +
-          1
-        )
-        *
-        .0022;
-
-    }
-
-
-    if(
-      targetR <
-      .018
-    ){
-
-      targetR =
-        .004
-        +
-        (
-          Math.sin(
-            time *
-            1.19
-            +
-            1.8
-          )
-          +
-          1
-        )
-        *
-        .0022;
-
-    }
-
+    /*
+      Small peak memory gives a real analog
+      little overshoot without digital jitter.
+    */
 
     vuPeakL =
       Math.max(
         targetL,
         vuPeakL *
-        .965
+        .955
       );
 
 
@@ -6028,24 +5539,24 @@ function startVuLoop(){
       Math.max(
         targetR,
         vuPeakR *
-        .965
+        .955
       );
 
 
     targetL =
       targetL *
-      .88
+      .89
       +
       vuPeakL *
-      .12;
+      .11;
 
 
     targetR =
       targetR *
-      .88
+      .89
       +
       vuPeakR *
-      .12;
+      .11;
 
 
     vuNeedleValueL =
@@ -6070,49 +5581,38 @@ function startVuLoop(){
       `rotate(${vuValueToAngle(vuNeedleValueR)}deg)`;
 
 
+    /*
+      Very soft audio-dependent lamp drift.
+      Main illumination is already baked into PNG.
+    */
+
     const lampL =
-      .69
+      .12
       +
       Math.min(
-        .13,
+        .12,
         vuNeedleValueL *
-        .13
-      )
-      +
-      Math.sin(
-        time *
-        2.1
-      )
-      *
-      .018;
+        .12
+      );
 
 
     const lampR =
-      .69
+      .12
       +
       Math.min(
-        .13,
+        .12,
         vuNeedleValueR *
-        .13
-      )
-      +
-      Math.sin(
-        time *
-        1.87
-        +
-        1.3
-      )
-      *
-      .018;
+        .12
+      );
 
 
-    vuLampL.style.opacity =
+    vuGlowL.style.opacity =
       String(
         lampL
       );
 
 
-    vuLampR.style.opacity =
+    vuGlowR.style.opacity =
       String(
         lampR
       );
@@ -6522,11 +6022,6 @@ function updateStatusFromEngineMode(
       break;
 
 
-    case "manual":
-
-      break;
-
-
     case "motor_recovery":
 
       microstatus.textContent =
@@ -6579,11 +6074,6 @@ function startVisualLoop(){
 
 
   function frame(){
-
-    /*
-      Packing must NOT kill
-      the permanent visual RAF.
-    */
 
     if(
       isPacking
@@ -6796,7 +6286,7 @@ function renderBars(
 
 
 /* =====================================================
-   LOAD
+   LOAD TRACK
 ===================================================== */
 
 async function loadTrackData(
@@ -7075,7 +6565,6 @@ async function ensureVinylOpen(){
   ){
 
     await openingPromise;
-
 
     return;
 
