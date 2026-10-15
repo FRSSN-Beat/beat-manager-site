@@ -2,7 +2,7 @@
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#050605">
 
 <title>FRSSN // Tracks</title>
@@ -19,7 +19,9 @@
   --content-width:1180px;
 }
 
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
 
 html{
   color-scheme:dark;
@@ -30,36 +32,78 @@ body{
   margin:0;
   min-height:100svh;
   color:var(--text);
+
   background:
-    linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px),
+    linear-gradient(
+      rgba(255,255,255,.018) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,.018) 1px,
+      transparent 1px
+    ),
     var(--bg);
-  background-size:48px 48px,48px 48px,auto;
-  font-family:"Arial Narrow","Roboto Condensed",Arial,sans-serif;
+
+  background-size:
+    48px 48px,
+    48px 48px,
+    auto;
+
+  font-family:
+    "Arial Narrow",
+    "Roboto Condensed",
+    Arial,
+    sans-serif;
+
   overflow-x:hidden;
   position:relative;
 }
 
 body::before{
   content:"";
+
   position:fixed;
   inset:-18%;
+
   z-index:0;
   pointer-events:none;
+
   background:
-    radial-gradient(circle at 50% 22%,rgba(214,255,40,.16),transparent 18%),
-    radial-gradient(circle at 50% 22%,rgba(214,255,40,.075),transparent 30%);
+    radial-gradient(
+      circle at 50% 22%,
+      rgba(214,255,40,.16),
+      transparent 18%
+    ),
+    radial-gradient(
+      circle at 50% 22%,
+      rgba(214,255,40,.075),
+      transparent 30%
+    );
+
   filter:blur(18px);
-  transform:translate3d(-18%,0,0) scale(1.02);
-  animation:ambientSweep 14s ease-in-out infinite alternate;
+
+  transform:
+    translate3d(-18%,0,0)
+    scale(1.02);
+
+  animation:
+    ambientSweep
+    14s
+    ease-in-out
+    infinite
+    alternate;
 }
 
 body::after{
   content:"";
+
   position:fixed;
   inset:0;
+
   z-index:19;
   pointer-events:none;
+
   background:
     repeating-linear-gradient(
       0deg,
@@ -67,38 +111,78 @@ body::after{
       transparent 3px,
       rgba(255,255,255,.012) 4px
     ),
-    radial-gradient(circle at center,transparent 45%,rgba(0,0,0,.66) 100%);
+    radial-gradient(
+      circle at center,
+      transparent 45%,
+      rgba(0,0,0,.66) 100%
+    );
+
   opacity:.72;
 }
 
 @keyframes ambientSweep{
-  0%{transform:translate3d(-18%,0,0) scale(1.02)}
-  50%{transform:translate3d(0,2%,0) scale(1.06)}
-  100%{transform:translate3d(18%,0,0) scale(1.02)}
+  0%{
+    transform:
+      translate3d(-18%,0,0)
+      scale(1.02);
+  }
+
+  50%{
+    transform:
+      translate3d(0,2%,0)
+      scale(1.06);
+  }
+
+  100%{
+    transform:
+      translate3d(18%,0,0)
+      scale(1.02);
+  }
 }
 
-a{color:inherit}
-button,input{font:inherit}
+a{
+  color:inherit;
+}
+
+button,
+input{
+  font:inherit;
+}
 
 .page{
-  width:min(var(--content-width),calc(100% - 56px));
+  width:min(
+    var(--content-width),
+    calc(100% - 56px)
+  );
+
   margin:0 auto;
+
   position:relative;
   z-index:2;
-  padding:30px 0 28px;
+
+  padding:
+    30px 0 28px;
 }
 
-/* TOP */
+
+/* =====================================================
+   TOP
+===================================================== */
 
 .topbar{
   min-height:44px;
+
   display:flex;
   align-items:center;
   justify-content:space-between;
+
   gap:24px;
+
   color:var(--muted);
+
   font-family:monospace;
   font-size:11px;
+
   letter-spacing:.18em;
   text-transform:uppercase;
 }
@@ -111,268 +195,465 @@ button,input{font:inherit}
 .status{
   display:flex;
   align-items:center;
+
   gap:10px;
 }
 
 .dot{
   width:7px;
   height:7px;
+
   border-radius:50%;
+
   background:var(--accent);
-  box-shadow:0 0 12px var(--accent);
-  animation:pulse 1.8s ease-in-out infinite;
+
+  box-shadow:
+    0 0 12px
+    var(--accent);
+
+  animation:
+    pulse
+    1.8s
+    ease-in-out
+    infinite;
 }
 
-/* PROFILE */
+
+/* =====================================================
+   PROFILE
+===================================================== */
 
 .profile{
   margin-top:34px;
-  border:1px solid var(--border);
+
+  border:
+    1px solid
+    var(--border);
+
   background:
-    linear-gradient(135deg,rgba(255,255,255,.035),transparent 42%),
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.035),
+      transparent 42%
+    ),
     var(--panel);
-  clip-path:polygon(
-    0 0,
-    calc(100% - 22px) 0,
-    100% 22px,
-    100% 100%,
-    22px 100%,
-    0 calc(100% - 22px)
-  );
+
+  clip-path:
+    polygon(
+      0 0,
+      calc(100% - 22px) 0,
+      100% 22px,
+      100% 100%,
+      22px 100%,
+      0 calc(100% - 22px)
+    );
+
   overflow:hidden;
 }
 
 .profileHead{
   min-height:188px;
-  padding:30px 34px;
+
+  padding:
+    30px 34px;
+
   display:grid;
-  grid-template-columns:auto 1fr auto;
+
+  grid-template-columns:
+    auto
+    1fr
+    auto;
+
   gap:26px;
+
   align-items:center;
+
   position:relative;
 }
 
 .profileHead::after{
   content:"TRACK TRANSMISSION ARCHIVE";
+
   position:absolute;
+
   right:32px;
   bottom:17px;
-  color:rgba(214,255,40,.34);
-  font:10px/1 monospace;
+
+  color:
+    rgba(214,255,40,.34);
+
+  font:
+    10px/1 monospace;
+
   letter-spacing:.26em;
 }
 
 .avatar{
   width:116px;
   height:116px;
+
   border-radius:50%;
+
   object-fit:cover;
-  border:1px solid var(--accent-line);
-  box-shadow:0 0 34px rgba(214,255,40,.08);
+
+  border:
+    1px solid
+    var(--accent-line);
+
+  box-shadow:
+    0 0 34px
+    rgba(214,255,40,.08);
 }
 
 .identity h1{
   margin:0;
+
   font-size:46px;
+
   letter-spacing:.08em;
+
   line-height:1;
 }
 
 .handle{
   margin-top:10px;
+
   color:var(--muted);
-  font:10px/1.5 monospace;
+
+  font:
+    10px/1.5 monospace;
+
   letter-spacing:.2em;
+
   text-transform:uppercase;
 }
 
 .microstatus{
   margin-top:18px;
+
   color:var(--accent);
-  font:10px/1.5 monospace;
+
+  font:
+    10px/1.5 monospace;
+
   letter-spacing:.14em;
+
   text-transform:uppercase;
+
   min-height:15px;
 }
 
 .back{
   min-height:42px;
-  padding:0 16px;
-  border:1px solid var(--accent-line);
+
+  padding:
+    0 16px;
+
+  border:
+    1px solid
+    var(--accent-line);
+
   display:inline-flex;
+
   align-items:center;
   justify-content:center;
+
   text-decoration:none;
+
   color:var(--accent);
-  font:700 10px/1 monospace;
+
+  font:
+    700 10px/1 monospace;
+
   letter-spacing:.14em;
+
   text-transform:uppercase;
 }
 
 .back:hover{
   background:var(--accent);
+
   color:#090b07;
 }
 
-/* TABS */
+
+/* =====================================================
+   TABS
+===================================================== */
 
 .tabs{
   height:54px;
-  border-top:1px solid var(--border);
+
+  border-top:
+    1px solid
+    var(--border);
+
   display:flex;
   align-items:center;
+
   gap:28px;
-  padding:0 34px;
+
+  padding:
+    0 34px;
+
   color:var(--muted);
-  font:700 10px/1 monospace;
+
+  font:
+    700 10px/1 monospace;
+
   letter-spacing:.15em;
+
   text-transform:uppercase;
 }
 
 .tab{
   height:54px;
+
   display:flex;
   align-items:center;
+
   position:relative;
 }
 
-.tab.active{color:var(--text)}
+.tab.active{
+  color:var(--text);
+}
 
 .tab.active::after{
   content:"";
+
   position:absolute;
+
   left:0;
   right:0;
   bottom:0;
+
   height:2px;
+
   background:var(--accent);
 }
 
-/* CONTENT */
 
-.content{padding:30px 34px 38px}
+/* =====================================================
+   CONTENT
+===================================================== */
+
+.content{
+  padding:
+    30px 34px 38px;
+}
 
 .sectionTitle{
   display:flex;
+
   align-items:end;
   justify-content:space-between;
+
   gap:20px;
+
   margin-bottom:18px;
 }
 
 .sectionTitle h2{
   margin:0;
+
   font-size:16px;
+
   letter-spacing:.15em;
+
   text-transform:uppercase;
 }
 
 .sectionTitle span{
   color:var(--muted);
-  font:9px/1.5 monospace;
+
+  font:
+    9px/1.5 monospace;
+
   letter-spacing:.14em;
+
   text-transform:uppercase;
 }
 
-/* TRACK */
+
+/* =====================================================
+   TRACK
+===================================================== */
 
 .track{
-  border:1px solid var(--border);
-  background:rgba(7,9,7,.74);
+  border:
+    1px solid
+    var(--border);
+
+  background:
+    rgba(7,9,7,.74);
+
   display:grid;
-  grid-template-columns:178px minmax(0,1fr) auto;
+
+  grid-template-columns:
+    178px
+    minmax(0,1fr)
+    auto;
+
   gap:22px;
+
   padding:18px;
+
   align-items:center;
+
   position:relative;
+
   overflow:hidden;
-  transition:border-color .25s ease,box-shadow .25s ease;
+
+  transition:
+    border-color .25s ease,
+    box-shadow .25s ease;
 }
 
 .track::before{
   content:"";
+
   position:absolute;
+
   left:0;
   top:0;
   bottom:0;
+
   width:2px;
-  background:linear-gradient(180deg,transparent,var(--accent),transparent);
+
+  background:
+    linear-gradient(
+      180deg,
+      transparent,
+      var(--accent),
+      transparent
+    );
 }
 
 .track.is-scratching{
-  border-color:rgba(214,255,40,.50);
-  box-shadow:inset 0 0 34px rgba(214,255,40,.03);
+  border-color:
+    rgba(214,255,40,.50);
+
+  box-shadow:
+    inset
+    0 0 34px
+    rgba(214,255,40,.03);
 }
 
 .track.is-seeking{
-  border-color:rgba(214,255,40,.34);
+  border-color:
+    rgba(214,255,40,.34);
 }
 
 .track.is-motor-recovering,
 .track.is-play-starting,
-.track.is-pause-braking,
-.track.is-free-spinning{
-  border-color:rgba(214,255,40,.30);
+.track.is-pause-braking{
+  border-color:
+    rgba(214,255,40,.30);
 }
 
 .track.is-precue{
-  border-color:rgba(214,255,40,.24);
+  border-color:
+    rgba(214,255,40,.24);
 }
 
-/* VINYL */
+
+/* =====================================================
+   VINYL
+===================================================== */
 
 .vinylUnit{
   width:178px;
   height:132px;
+
   position:relative;
+
   display:flex;
   align-items:center;
+
   overflow:visible;
 }
 
-/* TONEARM */
+
+/* =====================================================
+   TONEARM
+===================================================== */
 
 .tonearmMechanism{
   position:absolute;
+
   left:126px;
   top:4px;
+
   width:40px;
   height:92px;
-  transform:translate(-77px,25px) scale(.94);
-  transform-origin:14px 14px;
+
+  transform:
+    translate(-77px,25px)
+    scale(.94);
+
+  transform-origin:
+    14px 14px;
+
   z-index:1;
+
   pointer-events:none;
+
   opacity:.92;
 }
 
 .track.is-open .tonearmMechanism{
-  animation:mechanismDeploy 1.45s cubic-bezier(.22,.8,.22,1) both;
+  animation:
+    mechanismDeploy
+    1.45s
+    cubic-bezier(.22,.8,.22,1)
+    both;
 }
 
 @keyframes mechanismDeploy{
-  0%,57%{
-    transform:translate(-77px,25px) scale(.94);
+
+  0%,
+  57%{
+    transform:
+      translate(-77px,25px)
+      scale(.94);
+
     opacity:.7;
   }
+
   72%{
-    transform:translate(-42px,14px) scale(.97);
+    transform:
+      translate(-42px,14px)
+      scale(.97);
+
     opacity:.88;
   }
+
   100%{
-    transform:translate(0,0) scale(1);
+    transform:
+      translate(0,0)
+      scale(1);
+
     opacity:1;
   }
+
 }
 
-.track.arm-on-top .tonearmMechanism{z-index:5}
+.track.arm-on-top .tonearmMechanism{
+  z-index:5;
+}
 
 .tonearmBase{
   position:absolute;
+
   left:1px;
   top:0;
+
   width:28px;
   height:28px;
+
   border-radius:50%;
+
   background:
     radial-gradient(
       circle at 35% 28%,
@@ -380,17 +661,27 @@ button,input{font:inherit}
       #242724 46%,
       #0c0e0c 80%
     );
-  border:1px solid rgba(255,255,255,.12);
-  box-shadow:0 3px 11px rgba(0,0,0,.72);
+
+  border:
+    1px solid
+    rgba(255,255,255,.12);
+
+  box-shadow:
+    0 3px 11px
+    rgba(0,0,0,.72);
 }
 
 .tonearmPivot{
   position:absolute;
+
   left:6px;
   top:5px;
+
   width:18px;
   height:18px;
+
   border-radius:50%;
+
   background:
     radial-gradient(
       circle at 35% 30%,
@@ -398,18 +689,29 @@ button,input{font:inherit}
       #343833 45%,
       #101210 78%
     );
-  border:1px solid rgba(255,255,255,.17);
+
+  border:
+    1px solid
+    rgba(255,255,255,.17);
+
   z-index:2;
 }
 
 .tonearmArm{
   position:absolute;
+
   left:13px;
   top:14px;
+
   width:3px;
   height:68px;
-  transform-origin:50% 0;
-  transform:rotate(-8deg);
+
+  transform-origin:
+    50% 0;
+
+  transform:
+    rotate(-8deg);
+
   background:
     linear-gradient(
       90deg,
@@ -418,50 +720,87 @@ button,input{font:inherit}
       #757b73 57%,
       #30332f 100%
     );
+
   border-radius:4px;
+
   z-index:3;
 }
 
 .cartridge{
   position:absolute;
+
   left:50%;
   bottom:-7px;
+
   width:13px;
   height:8px;
-  transform:translateX(-50%);
-  background:linear-gradient(90deg,#161816,#3b3f3a,#121412);
-  border:1px solid rgba(255,255,255,.11);
+
+  transform:
+    translateX(-50%);
+
+  background:
+    linear-gradient(
+      90deg,
+      #161816,
+      #3b3f3a,
+      #121412
+    );
+
+  border:
+    1px solid
+    rgba(255,255,255,.11);
 }
 
 .needle{
   position:absolute;
+
   left:50%;
   bottom:-7px;
+
   width:1px;
   height:8px;
-  transform:translateX(-50%);
-  background:var(--accent);
-  box-shadow:0 0 5px rgba(214,255,40,.42);
+
+  transform:
+    translateX(-50%);
+
+  background:
+    var(--accent);
+
+  box-shadow:
+    0 0 5px
+    rgba(214,255,40,.42);
 }
 
-/* RECORD */
+
+/* =====================================================
+   RECORD
+===================================================== */
 
 .recordCarrier{
   position:absolute;
+
   left:7px;
   top:50%;
+
   width:118px;
   height:118px;
-  transform:translate(0,-50%);
+
+  transform:
+    translate(0,-50%);
+
   z-index:2;
+
   pointer-events:auto;
 }
 
 .recordDisc{
   width:118px;
   height:118px;
+
   border-radius:50%;
+
   position:relative;
+
   background:
     radial-gradient(
       circle at 50% 50%,
@@ -474,16 +813,28 @@ button,input{font:inherit}
       #111313 2px 4px,
       #0d0e0e 4px 6px
     );
-  border:1px solid rgba(255,255,255,.06);
+
+  border:
+    1px solid
+    rgba(255,255,255,.06);
+
   box-shadow:
-    0 4px 24px rgba(0,0,0,.45),
-    inset 0 0 0 1px rgba(255,255,255,.04);
-  transform:rotate(0deg);
+    0 4px 24px
+    rgba(0,0,0,.45),
+
+    inset
+    0 0 0 1px
+    rgba(255,255,255,.04);
+
+  transform:
+    rotate(0deg);
+
   cursor:default;
+
   user-select:none;
   -webkit-user-select:none;
+
   touch-action:none;
-  will-change:transform;
 }
 
 .track.arm-on-top .recordDisc{
@@ -492,10 +843,16 @@ button,input{font:inherit}
 
 .track.is-scratching .recordDisc{
   cursor:grabbing;
+
   box-shadow:
-    0 0 20px rgba(214,255,40,.22),
-    0 0 50px rgba(214,255,40,.08),
-    0 4px 24px rgba(0,0,0,.45);
+    0 0 20px
+    rgba(214,255,40,.22),
+
+    0 0 50px
+    rgba(214,255,40,.08),
+
+    0 4px 24px
+    rgba(0,0,0,.45);
 }
 
 .track.is-motor-recovering .recordDisc,
@@ -503,16 +860,24 @@ button,input{font:inherit}
 .track.is-pause-braking .recordDisc,
 .track.is-free-spinning .recordDisc{
   box-shadow:
-    0 0 17px rgba(214,255,40,.14),
-    0 4px 24px rgba(0,0,0,.45);
+    0 0 17px
+    rgba(214,255,40,.14),
+
+    0 4px 24px
+    rgba(0,0,0,.45);
 }
 
 .recordDisc::after{
   content:"";
+
   position:absolute;
+
   inset:1px;
+
   border-radius:50%;
+
   pointer-events:none;
+
   background:
     conic-gradient(
       from 10deg,
@@ -527,230 +892,413 @@ button,input{font:inherit}
 
 .recordLabel{
   position:absolute;
+
   left:50%;
   top:50%;
+
   width:54px;
   height:54px;
-  transform:translate(-50%,-50%);
+
+  transform:
+    translate(-50%,-50%);
+
   border-radius:50%;
+
   overflow:hidden;
-  box-shadow:0 0 0 6px rgba(214,255,40,.045);
+
+  box-shadow:
+    0 0 0 6px
+    rgba(214,255,40,.045);
+
   z-index:2;
+
   pointer-events:none;
 }
 
 .recordLabel img{
   width:100%;
   height:100%;
+
   object-fit:cover;
+
   display:block;
 }
 
 .recordHole{
   position:absolute;
+
   left:50%;
   top:50%;
+
   width:7px;
   height:7px;
-  transform:translate(-50%,-50%);
+
+  transform:
+    translate(-50%,-50%);
+
   border-radius:50%;
+
   background:#ddd;
+
   z-index:3;
+
   pointer-events:none;
 }
 
-/* SLEEVE */
+
+/* =====================================================
+   SLEEVE
+===================================================== */
 
 .sleeve{
   width:132px;
   height:132px;
+
   position:relative;
+
   z-index:6;
+
   overflow:hidden;
-  border:1px solid rgba(255,255,255,.08);
+
+  border:
+    1px solid
+    rgba(255,255,255,.08);
+
   background:#090a09;
-  box-shadow:0 8px 22px rgba(0,0,0,.28);
+
+  box-shadow:
+    0 8px 22px
+    rgba(0,0,0,.28);
 }
 
 .cover{
   width:100%;
   height:100%;
+
   object-fit:cover;
+
   display:block;
 }
 
-/* OPEN */
+
+/* =====================================================
+   OPEN
+===================================================== */
 
 .track.is-open .recordCarrier{
-  animation:recordReveal 1.45s cubic-bezier(.22,.8,.22,1) both;
+  animation:
+    recordReveal
+    1.45s
+    cubic-bezier(.22,.8,.22,1)
+    both;
 }
 
 .track.is-open .sleeve{
-  animation:sleeveExit 1.45s cubic-bezier(.22,.8,.22,1) both;
+  animation:
+    sleeveExit
+    1.45s
+    cubic-bezier(.22,.8,.22,1)
+    both;
 }
 
 @keyframes recordReveal{
-  0%{transform:translate(0,-50%)}
-  36%,55%{transform:translate(44px,-50%)}
-  100%{transform:translate(0,-50%)}
+
+  0%{
+    transform:
+      translate(0,-50%);
+  }
+
+  36%,
+  55%{
+    transform:
+      translate(44px,-50%);
+  }
+
+  100%{
+    transform:
+      translate(0,-50%);
+  }
+
 }
 
 @keyframes sleeveExit{
-  0%,34%{
-    transform:translateX(0);
+
+  0%,
+  34%{
+    transform:
+      translateX(0);
+
     opacity:1;
   }
+
   52%{
-    transform:translateX(-12px);
+    transform:
+      translateX(-12px);
+
     opacity:1;
   }
+
   100%{
-    transform:translateX(-190px);
+    transform:
+      translateX(-190px);
+
     opacity:0;
   }
+
 }
 
-/* CLOSE */
+
+/* =====================================================
+   CLOSE
+===================================================== */
 
 .track.is-closing .tonearmMechanism{
-  animation:mechanismHide 1.45s cubic-bezier(.22,.8,.22,1) both;
+  animation:
+    mechanismHide
+    1.45s
+    cubic-bezier(.22,.8,.22,1)
+    both;
 }
 
 .track.is-closing .recordCarrier{
-  animation:recordPack 1.45s cubic-bezier(.22,.8,.22,1) both;
+  animation:
+    recordPack
+    1.45s
+    cubic-bezier(.22,.8,.22,1)
+    both;
 }
 
 .track.is-closing .sleeve{
-  animation:sleeveReturn 1.45s cubic-bezier(.22,.8,.22,1) both;
+  animation:
+    sleeveReturn
+    1.45s
+    cubic-bezier(.22,.8,.22,1)
+    both;
 }
 
 @keyframes mechanismHide{
+
   0%{
-    transform:translate(0,0) scale(1);
+    transform:
+      translate(0,0)
+      scale(1);
+
     opacity:1;
   }
+
   100%{
-    transform:translate(-77px,25px) scale(.94);
+    transform:
+      translate(-77px,25px)
+      scale(.94);
+
     opacity:.7;
   }
+
 }
 
 @keyframes recordPack{
-  0%{transform:translate(0,-50%)}
-  34%,58%{transform:translate(44px,-50%)}
-  100%{transform:translate(0,-50%)}
+
+  0%{
+    transform:
+      translate(0,-50%);
+  }
+
+  34%,
+  58%{
+    transform:
+      translate(44px,-50%);
+  }
+
+  100%{
+    transform:
+      translate(0,-50%);
+  }
+
 }
 
 @keyframes sleeveReturn{
+
   0%{
-    transform:translateX(-190px);
+    transform:
+      translateX(-190px);
+
     opacity:0;
   }
-  20%{opacity:1}
-  55%,100%{
-    transform:translateX(0);
+
+  20%{
     opacity:1;
   }
+
+  55%,
+  100%{
+    transform:
+      translateX(0);
+
+    opacity:1;
+  }
+
 }
 
-/* INFO */
 
-.trackInfo{min-width:0}
+/* =====================================================
+   INFO
+===================================================== */
+
+.trackInfo{
+  min-width:0;
+}
 
 .topline{
   display:flex;
+
   justify-content:space-between;
+
   gap:16px;
+
   margin-bottom:18px;
 }
 
 .trackTitle{
   margin:0;
+
   font-size:23px;
+
   letter-spacing:.12em;
+
   text-transform:uppercase;
 }
 
 .artist{
   margin-top:5px;
+
   color:var(--muted);
-  font:10px/1.4 monospace;
+
+  font:
+    10px/1.4 monospace;
 }
 
 .badge{
   color:var(--accent);
-  border:1px solid var(--accent-line);
-  padding:6px 8px;
-  font:9px/1 monospace;
+
+  border:
+    1px solid
+    var(--accent-line);
+
+  padding:
+    6px 8px;
+
+  font:
+    9px/1 monospace;
 }
 
-/* WAVE */
+
+/* =====================================================
+   WAVE
+===================================================== */
 
 .waveRow{
   display:grid;
-  grid-template-columns:auto minmax(0,1fr) auto;
+
+  grid-template-columns:
+    auto
+    minmax(0,1fr)
+    auto;
+
   gap:12px;
+
   align-items:center;
 }
 
 .iconBtn{
   width:36px;
   height:36px;
+
   border-radius:50%;
-  border:1px solid var(--border);
+
+  border:
+    1px solid
+    var(--border);
+
   background:#070907;
+
   display:grid;
+
   place-items:center;
+
   color:var(--accent);
+
   cursor:pointer;
 }
 
 .iconBtn svg{
   width:13px;
   height:13px;
+
   fill:currentColor;
 }
 
 .waveBox{
   height:56px;
+
   position:relative;
+
   cursor:pointer;
+
   overflow:hidden;
+
   touch-action:none;
 }
 
 .wave{
   height:100%;
+
   display:flex;
+
   align-items:center;
+
   gap:2px;
 }
 
 .bar{
   flex:1;
+
   min-width:1px;
+
   background:#565a52;
+
   opacity:.76;
 }
 
 .waveProgress{
   position:absolute;
+
   left:0;
   top:0;
   bottom:0;
+
   width:100%;
-  transform:scaleX(0);
-  transform-origin:left center;
-  will-change:transform;
+
+  transform:
+    scaleX(0);
+
+  transform-origin:
+    left center;
+
+  will-change:
+    transform;
+
   pointer-events:none;
+
   overflow:hidden;
 }
 
 .waveProgress .wave{
   position:absolute;
+
   left:0;
   top:0;
   bottom:0;
+
   width:100%;
 }
 
@@ -760,134 +1308,233 @@ button,input{font:inherit}
 
 .time{
   color:var(--muted);
-  font:600 10px/1 monospace;
+
+  font:
+    600 10px/1 monospace;
+
   white-space:nowrap;
 }
 
 .meta{
   margin-top:12px;
+
   display:flex;
+
   gap:15px;
+
   flex-wrap:wrap;
+
   color:var(--muted);
-  font:9px/1 monospace;
+
+  font:
+    9px/1 monospace;
+
   letter-spacing:.12em;
+
   text-transform:uppercase;
 }
 
-/* BUY */
+
+/* =====================================================
+   BUY
+===================================================== */
 
 .buyCol{
   display:flex;
+
   flex-direction:column;
+
   gap:8px;
+
   min-width:170px;
 }
 
 .license{
   min-height:50px;
-  padding:0 18px;
-  border:1px solid var(--accent);
+
+  padding:
+    0 18px;
+
+  border:
+    1px solid
+    var(--accent);
+
   background:var(--accent);
+
   color:#080a06;
+
   text-decoration:none;
+
   display:flex;
+
   align-items:center;
   justify-content:center;
+
   gap:9px;
+
   font-size:11px;
   font-weight:800;
 }
 
 .secondary{
   min-height:37px;
-  border:1px solid var(--border);
+
+  border:
+    1px solid
+    var(--border);
+
   text-decoration:none;
+
   display:flex;
+
   align-items:center;
   justify-content:center;
+
   color:var(--muted);
-  font:700 9px/1 monospace;
+
+  font:
+    700 9px/1 monospace;
 }
 
-/* RECEIVER */
+
+/* =====================================================
+   RECEIVER
+===================================================== */
 
 .receiver{
   margin-top:18px;
-  border:1px solid var(--accent-line);
-  padding:18px 20px;
+
+  border:
+    1px solid
+    var(--accent-line);
+
+  padding:
+    18px 20px;
+
   display:grid;
-  grid-template-columns:1fr auto;
+
+  grid-template-columns:
+    1fr
+    auto;
+
   gap:18px;
 }
 
 .receiverTitle{
   color:var(--accent);
-  font:700 10px/1 monospace;
+
+  font:
+    700 10px/1 monospace;
 }
 
 .receiverText{
   margin-top:7px;
+
   color:var(--muted);
-  font:9px/1.6 monospace;
+
+  font:
+    9px/1.6 monospace;
 }
 
 .codeForm{
   display:flex;
+
   gap:8px;
 }
 
 .codeInput{
   width:180px;
   height:40px;
+
   background:#050705;
-  border:1px solid var(--border);
+
+  border:
+    1px solid
+    var(--border);
+
   color:var(--accent);
-  padding:0 10px;
+
+  padding:
+    0 10px;
 }
 
 .codeBtn{
   height:40px;
-  border:1px solid var(--accent);
+
+  border:
+    1px solid
+    var(--accent);
+
   background:transparent;
+
   color:var(--accent);
-  padding:0 14px;
+
+  padding:
+    0 14px;
 }
 
 .codeResult{
-  grid-column:1/-1;
+  grid-column:
+    1/-1;
+
   display:none;
+
   color:var(--accent);
 }
 
-/* FOOTER */
+
+/* =====================================================
+   FOOTER
+===================================================== */
 
 .footer{
   margin-top:20px;
+
   min-height:48px;
+
   display:flex;
+
   align-items:center;
   justify-content:space-between;
+
   color:var(--muted);
-  font:9px/1.5 monospace;
+
+  font:
+    9px/1.5 monospace;
 }
 
 @keyframes pulse{
-  0%,100%{opacity:.45}
-  50%{opacity:1}
+
+  0%,
+  100%{
+    opacity:.45;
+  }
+
+  50%{
+    opacity:1;
+  }
+
 }
 
-/* CURRENT RESPONSIVE */
+
+/* =====================================================
+   MOBILE
+===================================================== */
 
 @media(max-width:760px){
 
   .page{
-    width:calc(100% - 28px);
+    width:
+      calc(100% - 28px);
   }
 
   .profileHead{
-    grid-template-columns:auto 1fr;
-    padding:24px 20px;
+    grid-template-columns:
+      auto
+      1fr;
+
+    padding:
+      24px 20px;
   }
 
   .profileHead::after{
@@ -900,15 +1547,20 @@ button,input{font:inherit}
   }
 
   .back{
-    grid-column:1/-1;
+    grid-column:
+      1/-1;
   }
 
   .content{
-    padding:22px 18px 30px;
+    padding:
+      22px 18px 30px;
   }
 
   .track{
-    grid-template-columns:112px minmax(0,1fr);
+    grid-template-columns:
+      112px
+      minmax(0,1fr);
+
     gap:14px;
   }
 
@@ -920,6 +1572,7 @@ button,input{font:inherit}
   .recordCarrier{
     width:76px;
     height:76px;
+
     left:4px;
   }
 
@@ -941,101 +1594,186 @@ button,input{font:inherit}
   .tonearmMechanism{
     left:78px;
     top:1px;
-    transform:translate(-49px,16px) scale(.63);
+
+    transform:
+      translate(-49px,16px)
+      scale(.63);
+
     transform-origin:0 0;
   }
 
   .track.is-open .tonearmMechanism{
-    animation:mechanismDeployMobile 1.45s cubic-bezier(.22,.8,.22,1) both;
+    animation:
+      mechanismDeployMobile
+      1.45s
+      cubic-bezier(.22,.8,.22,1)
+      both;
   }
 
   .track.is-closing .tonearmMechanism{
-    animation:mechanismHideMobile 1.45s cubic-bezier(.22,.8,.22,1) both;
+    animation:
+      mechanismHideMobile
+      1.45s
+      cubic-bezier(.22,.8,.22,1)
+      both;
   }
 
   @keyframes mechanismDeployMobile{
-    0%,57%{
-      transform:translate(-49px,16px) scale(.63);
+
+    0%,
+    57%{
+      transform:
+        translate(-49px,16px)
+        scale(.63);
     }
+
     100%{
-      transform:translate(0,0) scale(.63);
+      transform:
+        translate(0,0)
+        scale(.63);
     }
+
   }
 
   @keyframes mechanismHideMobile{
+
     0%{
-      transform:translate(0,0) scale(.63);
+      transform:
+        translate(0,0)
+        scale(.63);
     }
+
     100%{
-      transform:translate(-49px,16px) scale(.63);
+      transform:
+        translate(-49px,16px)
+        scale(.63);
     }
+
   }
 
   @keyframes recordReveal{
-    0%{transform:translate(0,-50%)}
-    36%,55%{transform:translate(26px,-50%)}
-    100%{transform:translate(0,-50%)}
+
+    0%{
+      transform:
+        translate(0,-50%);
+    }
+
+    36%,
+    55%{
+      transform:
+        translate(26px,-50%);
+    }
+
+    100%{
+      transform:
+        translate(0,-50%);
+    }
+
   }
 
   @keyframes sleeveExit{
+
     0%{
-      transform:translateX(0);
+      transform:
+        translateX(0);
+
       opacity:1;
     }
+
     100%{
-      transform:translateX(-120px);
+      transform:
+        translateX(-120px);
+
       opacity:0;
     }
+
   }
 
   @keyframes recordPack{
-    0%{transform:translate(0,-50%)}
-    34%,58%{transform:translate(26px,-50%)}
-    100%{transform:translate(0,-50%)}
+
+    0%{
+      transform:
+        translate(0,-50%);
+    }
+
+    34%,
+    58%{
+      transform:
+        translate(26px,-50%);
+    }
+
+    100%{
+      transform:
+        translate(0,-50%);
+    }
+
   }
 
   @keyframes sleeveReturn{
+
     0%{
-      transform:translateX(-120px);
+      transform:
+        translateX(-120px);
+
       opacity:0;
     }
+
     100%{
-      transform:translateX(0);
+      transform:
+        translateX(0);
+
       opacity:1;
     }
+
   }
 
   .buyCol{
-    grid-column:1/-1;
+    grid-column:
+      1/-1;
+
     display:grid;
-    grid-template-columns:1fr 1fr;
+
+    grid-template-columns:
+      1fr 1fr;
   }
 
   .time{
     display:none;
   }
+
 }
 </style>
 </head>
 
+
 <body>
+
 
 <div class="page">
 
+
 <header class="topbar">
 
-  <a class="brand" href="index.html">
+  <a
+    class="brand"
+    href="index.html"
+  >
     FRSSN SIGNAL // TRACK NODE
   </a>
 
   <span class="status">
+
     <span class="dot"></span>
+
     Receiver online
+
   </span>
 
 </header>
 
+
 <main class="profile">
+
 
 <section class="profileHead">
 
@@ -1045,13 +1783,18 @@ button,input{font:inherit}
     alt="FRSSN"
   >
 
+
   <div class="identity">
 
-    <h1>FRSSN</h1>
+    <h1>
+      FRSSN
+    </h1>
+
 
     <div class="handle">
       Signal transmission archive
     </div>
+
 
     <div
       class="microstatus"
@@ -1062,6 +1805,7 @@ button,input{font:inherit}
 
   </div>
 
+
   <a
     class="back"
     href="index.html"
@@ -1071,11 +1815,13 @@ button,input{font:inherit}
 
 </section>
 
+
 <nav class="tabs">
 
   <span class="tab active">
     Tracks
   </span>
+
 
   <a
     class="tab"
@@ -1085,20 +1831,26 @@ button,input{font:inherit}
     Receiver
   </a>
 
+
   <span class="tab">
     Archive // locked
   </span>
 
 </nav>
 
+
 <section
   class="content"
   id="tracks"
 >
 
+
 <div class="sectionTitle">
 
-  <h2>Tracks</h2>
+  <h2>
+    Tracks
+  </h2>
+
 
   <span>
     NODE 001 // DIRECT LICENSE CHANNEL
@@ -1106,12 +1858,15 @@ button,input{font:inherit}
 
 </div>
 
+
 <article
   class="track"
   id="trackOLD"
 >
 
+
 <div class="vinylUnit">
+
 
   <div
     class="tonearmMechanism"
@@ -1122,18 +1877,22 @@ button,input{font:inherit}
 
     <div class="tonearmPivot"></div>
 
+
     <div
       class="tonearmArm"
       id="tonearmArm"
     >
 
       <div class="cartridge">
+
         <div class="needle"></div>
+
       </div>
 
     </div>
 
   </div>
+
 
   <div
     class="recordCarrier"
@@ -1146,17 +1905,21 @@ button,input{font:inherit}
     >
 
       <div class="recordLabel">
+
         <img
           src="old-cover.png"
           alt="OLD"
         >
+
       </div>
+
 
       <div class="recordHole"></div>
 
     </div>
 
   </div>
+
 
   <div
     class="sleeve"
@@ -1173,6 +1936,7 @@ button,input{font:inherit}
 
 </div>
 
+
 <div class="trackInfo">
 
   <div class="topline">
@@ -1183,11 +1947,13 @@ button,input{font:inherit}
         OLD
       </h3>
 
+
       <div class="artist">
         FRSSN
       </div>
 
     </div>
+
 
     <div class="badge">
       NEW SIGNAL
@@ -1195,49 +1961,88 @@ button,input{font:inherit}
 
   </div>
 
+
   <div class="waveRow">
+
 
     <button
       class="iconBtn js-play"
       type="button"
       aria-label="Play"
     >
+
       <svg viewBox="0 0 24 24">
         <path d="M8 5v14l11-7z"/>
       </svg>
+
     </button>
+
 
     <div
       class="waveBox js-seek"
       role="slider"
     >
 
-      <div class="wave js-wave"></div>
+      <div
+        class="wave js-wave"
+      ></div>
 
-      <div class="waveProgress js-progress">
-        <div class="wave js-wave-clone"></div>
+
+      <div
+        class="waveProgress js-progress"
+      >
+
+        <div
+          class="wave js-wave-clone"
+        ></div>
+
       </div>
 
     </div>
 
+
     <div class="time">
-      <span class="js-current">0:00</span>
+
+      <span class="js-current">
+        0:00
+      </span>
+
       /
-      <span class="js-total">0:00</span>
+
+      <span class="js-total">
+        0:00
+      </span>
+
     </div>
 
   </div>
 
+
   <div class="meta">
 
-    <span>Signal // 001</span>
-    <span>45 RPM</span>
-    <span>SCRATCH ENABLED</span>
-    <span>MP3 license</span>
+    <span>
+      Signal // 001
+    </span>
+
+
+    <span>
+      45 RPM
+    </span>
+
+
+    <span>
+      SCRATCH ENABLED
+    </span>
+
+
+    <span>
+      MP3 license
+    </span>
 
   </div>
 
 </div>
+
 
 <div class="buyCol">
 
@@ -1251,6 +2056,7 @@ button,input{font:inherit}
     <small>// checkout ↗</small>
   </a>
 
+
   <a
     class="secondary"
     href="https://traktrain.com/cart-single-track/1679177"
@@ -1262,7 +2068,9 @@ button,input{font:inherit}
 
 </div>
 
+
 </article>
+
 
 <section
   class="receiver"
@@ -1275,11 +2083,13 @@ button,input{font:inherit}
     Signal Receiver // Code Input
   </div>
 
+
   <div class="receiverText">
     Optional layer. Licensing remains open without a code.
   </div>
 
 </div>
+
 
 <form
   class="codeForm"
@@ -1292,6 +2102,7 @@ button,input{font:inherit}
     placeholder="//"
   >
 
+
   <button
     class="codeBtn"
     type="submit"
@@ -1301,6 +2112,7 @@ button,input{font:inherit}
 
 </form>
 
+
 <div
   class="codeResult"
   id="codeResult"
@@ -1308,8 +2120,11 @@ button,input{font:inherit}
 
 </section>
 
+
 </section>
+
 </main>
+
 
 <footer class="footer">
 
@@ -1317,13 +2132,16 @@ button,input{font:inherit}
     FRSSN // THAT'S YOUR SKIN TINGLING
   </span>
 
+
   <span>
     Independent signal source
   </span>
 
 </footer>
 
+
 </div>
+
 
 <audio
   id="trackAudio"
@@ -1331,51 +2149,93 @@ button,input{font:inherit}
   src="old.mp3"
 ></audio>
 
+
 <script>
 "use strict";
+
 
 /* =====================================================
    ELEMENTS
 ===================================================== */
 
 const audio =
-  document.getElementById("trackAudio");
+  document.getElementById(
+    "trackAudio"
+  );
+
 
 const track =
-  document.getElementById("trackOLD");
+  document.getElementById(
+    "trackOLD"
+  );
+
 
 const recordCarrier =
-  document.getElementById("recordCarrier");
+  document.getElementById(
+    "recordCarrier"
+  );
+
 
 const recordDisc =
-  document.getElementById("recordDisc");
+  document.getElementById(
+    "recordDisc"
+  );
+
 
 const tonearmArm =
-  document.getElementById("tonearmArm");
+  document.getElementById(
+    "tonearmArm"
+  );
+
 
 const microstatus =
-  document.getElementById("microstatus");
+  document.getElementById(
+    "microstatus"
+  );
+
 
 const playButtons =
-  [...document.querySelectorAll(".js-play")];
+  [
+    ...document.querySelectorAll(
+      ".js-play"
+    )
+  ];
+
 
 const wave =
-  document.querySelector(".js-wave");
+  document.querySelector(
+    ".js-wave"
+  );
+
 
 const waveClone =
-  document.querySelector(".js-wave-clone");
+  document.querySelector(
+    ".js-wave-clone"
+  );
+
 
 const progress =
-  document.querySelector(".js-progress");
+  document.querySelector(
+    ".js-progress"
+  );
+
 
 const seek =
-  document.querySelector(".js-seek");
+  document.querySelector(
+    ".js-seek"
+  );
+
 
 const current =
-  document.querySelector(".js-current");
+  document.querySelector(
+    ".js-current"
+  );
+
 
 const total =
-  document.querySelector(".js-total");
+  document.querySelector(
+    ".js-total"
+  );
 
 
 /* =====================================================
@@ -1385,20 +2245,26 @@ const total =
 const SCRATCH_TIME_SCALE =
   0.54;
 
+
 const MOTOR_RECOVERY_SPEED =
   3.00;
+
 
 const SEEK_START_SPEED =
   0.45;
 
+
 const SEEK_STOP_SPEED =
   1.00;
+
 
 const PLAY_START_SPEED =
   3.55;
 
+
 const PAUSE_BRAKE_SPEED =
   2.30;
+
 
 const SEEK_FULL_VOLUME =
   false;
@@ -1411,6 +2277,7 @@ const SEEK_FULL_VOLUME =
 let playIntent =
   false;
 
+
 let hasPlaybackEverStarted =
   false;
 
@@ -1422,35 +2289,46 @@ let hasPlaybackEverStarted =
 let vinylOpened =
   false;
 
+
 let mechanismDeployed =
   false;
+
 
 let tonearmEngaged =
   false;
 
+
 let isPacking =
   false;
+
 
 let isScratching =
   false;
 
+
 let isMotorRecovering =
   false;
+
 
 let isPlayStarting =
   false;
 
+
 let isPauseBraking =
   false;
+
 
 let isFreeSpinning =
   false;
 
+
 let isSeeking =
   false;
 
+
 let isPreCueing =
   false;
+
 
 let vinylRAF =
   null;
@@ -1463,130 +2341,224 @@ let vinylRAF =
 let scratchPointerId =
   null;
 
+
 let scratchTime =
   0;
+
 
 let scratchLastAngle =
   0;
 
+
 let scratchLastPointerTime =
   0;
+
 
 let scratchVelocity =
   0;
 
+
 let scratchLastGrainTime =
   0;
 
-let manualScratchStarted =
-  false;
 
 let grabBrakeActive =
   false;
 
+
+let manualScratchStarted =
+  false;
+
+
 let grabBrakeRAF =
   null;
+
 
 let motorRecoveryRAF =
   null;
 
+
 let playStartRAF =
   null;
+
 
 let pauseBrakeRAF =
   null;
 
+
 let freeSpinRAF =
   null;
+
+
+let lastPhysicsStatusTime =
+  0;
+
 
 let lastManualMoveAt =
   0;
 
 
 /* =====================================================
-   PHYSICS CONFIG
+   CONFIG
 ===================================================== */
 
 const SCRATCH_RATE_SCALE =
   0.42;
 
+
 const SCRATCH_MIN_RATE =
-  0.055;
+  0.045;
+
 
 const SCRATCH_MAX_RATE =
   4.0;
 
+
+/*
+  Adaptive granular engine.
+
+  At slow platter speeds we use longer,
+  more heavily overlapped grains instead
+  of repeating the same short 85 ms grain.
+  This removes the obvious stepping/judder
+  during slow scratch and pause braking.
+*/
+
+const SCRATCH_FAST_GRAIN_DURATION =
+  0.085;
+
+
+const SCRATCH_FAST_GRAIN_INTERVAL_MS =
+  24;
+
+
 const SCRATCH_GAIN =
   1.0;
+
+
+/*
+  Web Audio look-ahead scheduler.
+
+  Visual physics still follows requestAnimationFrame,
+  but grains are scheduled ahead on the Web Audio clock.
+  This prevents Android main-thread frame drops from
+  creating audible holes between slow-speed grains.
+*/
+
+const SCRATCH_SCHEDULER_TICK_MS =
+  12;
+
+
+const SCRATCH_LOOKAHEAD_MANUAL_SEC =
+  .065;
+
+
+const SCRATCH_LOOKAHEAD_PHYSICAL_SEC =
+  .100;
+
+
+const SCRATCH_SCHEDULER_START_LEAD_SEC =
+  .010;
+
+
+const SCRATCH_MANUAL_IDLE_MS =
+  72;
+
+
+const SCRATCH_MAX_GRAINS_PER_TICK =
+  10;
+
 
 const SEEK_REDUCED_GAIN =
   0.28;
 
+
 const SEEK_FULL_GAIN =
   1.0;
+
 
 const GRAB_BRAKE_DURATION =
   820;
 
+
 const GRAB_BRAKE_CURVE =
   2.35;
+
 
 const MOTOR_RECOVERY_MIN_DURATION =
   420;
 
+
 const MOTOR_RECOVERY_MAX_DURATION =
   1300;
+
 
 const MOTOR_PULL_STRENGTH =
   2.65;
 
+
 const PLAY_START_BASE_DURATION =
   950;
+
 
 const PLAY_START_MIN_RATE =
   0.16;
 
+
 const PLAY_START_CURVE =
   2.25;
 
+
 const PAUSE_BRAKE_BASE_DURATION =
   1150;
+
 
 const PAUSE_BRAKE_CURVE =
   2.20;
 
 
 /*
-  PAUSED FREE-SPIN.
+  Free platter inertia.
 
-  Smaller friction = longer inertia.
+  Used only when logical playback is paused:
+  spin the record by hand -> release ->
+  platter keeps moving and naturally loses energy.
 */
 
-const FREE_SPIN_FRICTION =
-  2.55;
+const FREE_SPIN_MIN_DURATION =
+  420;
 
-const FREE_SPIN_MIN_VELOCITY =
-  0.018;
 
-const FREE_SPIN_RELEASE_THRESHOLD =
-  0.055;
+const FREE_SPIN_MAX_DURATION =
+  1750;
 
-const FREE_SPIN_RELEASE_WINDOW =
-  115;
+
+const FREE_SPIN_DECAY_CURVE =
+  1.85;
+
+
+const FREE_SPIN_MAX_ABS_SPEED =
+  4.0;
 
 
 /* =====================================================
-   VINYL
+   VINYL PHYSICS
 ===================================================== */
 
 const VINYL_RPM =
   45;
 
+
 const REVOLUTIONS_PER_SECOND =
-  VINYL_RPM / 60;
+  VINYL_RPM
+  /
+  60;
+
 
 const DEGREES_PER_SECOND =
-  REVOLUTIONS_PER_SECOND * 360;
+  REVOLUTIONS_PER_SECOND
+  *
+  360;
 
 
 function angleFromAudioTime(
@@ -1594,7 +2566,8 @@ function angleFromAudioTime(
 ){
 
   return (
-    seconds *
+    seconds
+    *
     DEGREES_PER_SECOND
   );
 
@@ -1618,11 +2591,14 @@ function setVinylAngle(
 const ARM_PARK_ANGLE =
   -8;
 
+
 const ARM_START_ANGLE =
   19.5;
 
+
 const ARM_END_ANGLE =
   32.5;
+
 
 let currentTonearmAngle =
   ARM_PARK_ANGLE;
@@ -1640,21 +2616,28 @@ function armAngleFromTime(
 
   }
 
+
   const p =
     Math.max(
       0,
       Math.min(
         1,
-        time / audio.duration
+        time
+        /
+        audio.duration
       )
     );
 
+
   return (
-    ARM_START_ANGLE +
+    ARM_START_ANGLE
+    +
     (
-      ARM_END_ANGLE -
+      ARM_END_ANGLE
+      -
       ARM_START_ANGLE
-    ) *
+    )
+    *
     p
   );
 
@@ -1668,6 +2651,7 @@ function setTonearmAngle(
   currentTonearmAngle =
     angle;
 
+
   tonearmArm.style.transform =
     `rotate(${angle}deg)`;
 
@@ -1680,108 +2664,27 @@ setTonearmAngle(
 
 
 /* =====================================================
-   HELPERS
+   EASING
 ===================================================== */
 
-function smootherStep(t){
+function smootherStep(
+  t
+){
 
   return (
-    t*t*t *
+    t*t*t
+    *
     (
-      t *
+      t
+      *
       (
-        t*6 - 15
+        t*6
+        -
+        15
       )
       +
       10
     )
-  );
-
-}
-
-
-function fmt(seconds){
-
-  if(
-    !Number.isFinite(seconds)
-  ){
-
-    return "0:00";
-
-  }
-
-  const m =
-    Math.floor(seconds / 60);
-
-  const s =
-    Math.floor(seconds % 60);
-
-  return (
-    m +
-    ":" +
-    String(s).padStart(2,"0")
-  );
-
-}
-
-
-/* =====================================================
-   UI
-===================================================== */
-
-function updateProgressUI(
-  time
-){
-
-  const p =
-    audio.duration
-    ?
-    Math.max(
-      0,
-      Math.min(
-        1,
-        time / audio.duration
-      )
-    )
-    :
-    0;
-
-  /*
-    Transform instead of width.
-    Cheaper for compositor/GPU.
-  */
-
-  progress.style.transform =
-    `scaleX(${p})`;
-
-  current.textContent =
-    fmt(time);
-
-}
-
-
-function updateScratchVisuals(){
-
-  setVinylAngle(
-    angleFromAudioTime(
-      scratchTime
-    )
-  );
-
-  if(
-    tonearmEngaged
-  ){
-
-    setTonearmAngle(
-      armAngleFromTime(
-        scratchTime
-      )
-    );
-
-  }
-
-  updateProgressUI(
-    scratchTime
   );
 
 }
@@ -1799,45 +2702,66 @@ function animateTonearmTo(
   return new Promise(
     resolve => {
 
-      const start =
+      const startAngle =
         currentTonearmAngle;
+
 
       const started =
         performance.now();
 
-      function frame(now){
+
+      function frame(
+        now
+      ){
 
         const raw =
           Math.min(
             1,
             (
-              now -
+              now
+              -
               started
-            ) /
+            )
+            /
             duration
           );
 
-        const eased =
-          smootherStep(raw);
+
+        const smooth =
+          smootherStep(
+            raw
+          );
+
 
         setTonearmAngle(
-          start +
+          startAngle
+          +
           (
-            targetAngle -
-            start
-          ) *
-          eased
+            targetAngle
+            -
+            startAngle
+          )
+          *
+          smooth
         );
 
-        if(raw < 1){
 
-          requestAnimationFrame(frame);
+        if(
+          raw < 1
+        ){
 
-        }else{
+          requestAnimationFrame(
+            frame
+          );
+
+        }
+
+        else{
 
           setTonearmAngle(
             targetAngle
           );
+
 
           resolve();
 
@@ -1845,7 +2769,10 @@ function animateTonearmTo(
 
       }
 
-      requestAnimationFrame(frame);
+
+      requestAnimationFrame(
+        frame
+      );
 
     }
   );
@@ -1863,8 +2790,10 @@ async function engageTonearm(){
 
   }
 
+
   tonearmEngaged =
     true;
+
 
   await animateTonearmTo(
     armAngleFromTime(
@@ -1877,10 +2806,10 @@ async function engageTonearm(){
 
 
 /* =====================================================
-   NORMAL VINYL SYNC
+   NORMAL SYNC
 ===================================================== */
 
-function stopVinylSync(){
+function startVinylSync(){
 
   if(
     vinylRAF
@@ -1890,30 +2819,30 @@ function stopVinylSync(){
       vinylRAF
     );
 
-    vinylRAF =
-      null;
-
   }
 
-}
-
-
-function startVinylSync(){
-
-  stopVinylSync();
 
   function frame(){
 
     if(
-      playIntent &&
-      !audio.paused &&
-      !isScratching &&
-      !isMotorRecovering &&
-      !isPlayStarting &&
-      !isPauseBraking &&
-      !isFreeSpinning &&
-      !isSeeking &&
-      !isPreCueing &&
+      playIntent
+      &&
+      !audio.paused
+      &&
+      !isScratching
+      &&
+      !isMotorRecovering
+      &&
+      !isPlayStarting
+      &&
+      !isPauseBraking
+      &&
+      !isFreeSpinning
+      &&
+      !isSeeking
+      &&
+      !isPreCueing
+      &&
       !isPacking
     ){
 
@@ -1922,6 +2851,7 @@ function startVinylSync(){
           audio.currentTime
         )
       );
+
 
       if(
         tonearmEngaged
@@ -1935,6 +2865,7 @@ function startVinylSync(){
 
       }
 
+
       vinylRAF =
         requestAnimationFrame(
           frame
@@ -1944,10 +2875,30 @@ function startVinylSync(){
 
   }
 
+
   vinylRAF =
     requestAnimationFrame(
       frame
     );
+
+}
+
+
+function stopVinylSync(){
+
+  if(
+    vinylRAF
+  ){
+
+    cancelAnimationFrame(
+      vinylRAF
+    );
+
+
+    vinylRAF =
+      null;
+
+  }
 
 }
 
@@ -1959,16 +2910,12 @@ function startVinylSync(){
 let audioContext =
   null;
 
+
 let decodedTrack =
   null;
 
+
 let reversedTrack =
-  null;
-
-let sharedScratchFilter =
-  null;
-
-let sharedScratchBus =
   null;
 
 
@@ -1978,71 +2925,19 @@ function getAudioContext(){
     !audioContext
   ){
 
-    const AC =
-      window.AudioContext ||
+    const AudioContextClass =
+      window.AudioContext
+      ||
       window.webkitAudioContext;
 
+
     audioContext =
-      new AC();
-
-    /*
-      One shared filter instead of
-      creating a new BiquadFilter
-      for every grain.
-    */
-
-    sharedScratchFilter =
-      audioContext.createBiquadFilter();
-
-    sharedScratchFilter.type =
-      "lowpass";
-
-    sharedScratchFilter.frequency.value =
-      12000;
-
-    sharedScratchFilter.Q.value =
-      .1;
-
-
-    sharedScratchBus =
-      audioContext.createGain();
-
-    sharedScratchBus.gain.value =
-      1;
-
-
-    sharedScratchFilter.connect(
-      sharedScratchBus
-    );
-
-    sharedScratchBus.connect(
-      audioContext.destination
-    );
+      new AudioContextClass();
 
   }
+
 
   return audioContext;
-
-}
-
-
-async function resumeAudioContext(){
-
-  const context =
-    getAudioContext();
-
-  if(
-    context.state ===
-    "suspended"
-  ){
-
-    try{
-
-      await context.resume();
-
-    }catch(_){}
-
-  }
 
 }
 
@@ -2063,6 +2958,7 @@ function createReversedBuffer(
       original.sampleRate
     );
 
+
   for(
     let channel = 0;
     channel < original.numberOfChannels;
@@ -2074,10 +2970,12 @@ function createReversedBuffer(
         channel
       );
 
+
     const target =
       reversed.getChannelData(
         channel
       );
+
 
     for(
       let i = 0;
@@ -2087,14 +2985,17 @@ function createReversedBuffer(
 
       target[i] =
         source[
-          source.length -
-          1 -
+          source.length
+          -
+          1
+          -
           i
         ];
 
     }
 
   }
+
 
   return reversed;
 
@@ -2117,6 +3018,7 @@ function renderBars(
   element.innerHTML =
     "";
 
+
   heights.forEach(
     height => {
 
@@ -2125,15 +3027,19 @@ function renderBars(
           "span"
         );
 
+
       bar.className =
         "bar";
+
 
       bar.style.height =
         Math.max(
           4,
           height
-        ) +
+        )
+        +
         "%";
+
 
       element.appendChild(
         bar
@@ -2159,6 +3065,7 @@ async function loadTrackData(
         }
       );
 
+
     if(
       !response.ok
     ){
@@ -2169,16 +3076,20 @@ async function loadTrackData(
 
     }
 
-    const data =
+
+    const arrayBuffer =
       await response.arrayBuffer();
+
 
     const context =
       getAudioContext();
 
+
     decodedTrack =
       await context.decodeAudioData(
-        data.slice(0)
+        arrayBuffer.slice(0)
       );
+
 
     reversedTrack =
       createReversedBuffer(
@@ -2186,8 +3097,10 @@ async function loadTrackData(
         context
       );
 
+
     const channels =
       [];
+
 
     for(
       let c = 0;
@@ -2196,22 +3109,28 @@ async function loadTrackData(
     ){
 
       channels.push(
-        decodedTrack.getChannelData(c)
+        decodedTrack.getChannelData(
+          c
+        )
       );
 
     }
 
-    const block =
+
+    const blockSize =
       Math.max(
         1,
         Math.floor(
-          decodedTrack.length /
+          decodedTrack.length
+          /
           WAVE_BARS
         )
       );
 
+
     const peaks =
       [];
+
 
     for(
       let i = 0;
@@ -2220,16 +3139,23 @@ async function loadTrackData(
     ){
 
       const start =
-        i * block;
+        i
+        *
+        blockSize;
+
 
       const end =
         Math.min(
           decodedTrack.length,
-          start + block
+          start
+          +
+          blockSize
         );
+
 
       let peak =
         0;
+
 
       for(
         let c = 0;
@@ -2255,54 +3181,77 @@ async function loadTrackData(
 
       }
 
+
       peaks.push(
         peak
       );
 
     }
 
+
     const maxPeak =
-      Math.max(...peaks) || 1;
+      Math.max(
+        ...peaks
+      )
+      ||
+      1;
+
 
     const heights =
       peaks.map(
-        p =>
-          p /
-          maxPeak *
+        peak =>
+          peak
+          /
+          maxPeak
+          *
           100
       );
+
 
     renderBars(
       wave,
       heights
     );
+
 
     renderBars(
       waveClone,
       heights
     );
 
-  }catch(error){
+  }
 
-    console.warn(error);
+  catch(error){
+
+    console.warn(
+      error
+    );
+
 
     const fallback =
       Array.from(
         {
-          length:WAVE_BARS
+          length:
+            WAVE_BARS
         },
         (_,i) =>
-          16 +
+          16
+          +
           (
-            i * 37
-          ) %
+            i
+            *
+            37
+          )
+          %
           68
       );
+
 
     renderBars(
       wave,
       fallback
     );
+
 
     renderBars(
       waveClone,
@@ -2315,90 +3264,1109 @@ async function loadTrackData(
 
 
 loadTrackData(
-  audio.currentSrc ||
+  audio.currentSrc
+  ||
   audio.src
 );
 
 
 /* =====================================================
-   ADAPTIVE GRANULAR ENGINE
+   TIME / UI
 ===================================================== */
 
-/*
-  This is the important change.
-
-  At low speed the grains become longer
-  and overlap more densely.
-
-  This removes the obvious "chunks"
-  when vinyl is moving slowly.
-*/
-
-function getGrainProfile(
-  velocity
+function fmt(
+  seconds
 ){
 
-  const speed =
-    Math.abs(velocity);
-
   if(
-    speed >= .70
+    !Number.isFinite(
+      seconds
+    )
   ){
 
-    return {
-      duration:.085,
-      interval:24,
-      attack:.012,
-      releaseStart:.058
-    };
+    return "0:00";
 
   }
 
+
+  const minutes =
+    Math.floor(
+      seconds
+      /
+      60
+    );
+
+
+  const sec =
+    Math.floor(
+      seconds
+      %
+      60
+    );
+
+
+  return (
+    minutes
+    +
+    ":"
+    +
+    String(
+      sec
+    ).padStart(
+      2,
+      "0"
+    )
+  );
+
+}
+
+
+function updateProgressUI(
+  time
+){
+
+  const percentage =
+    audio.duration
+    ?
+    time
+    /
+    audio.duration
+    *
+    100
+    :
+    0;
+
+
+  progress.style.transform =
+    `scaleX(${Math.max(0,Math.min(1,percentage/100))})`;
+
+
+  current.textContent =
+    fmt(
+      time
+    );
+
+}
+
+
+function updateScratchVisuals(){
+
+  setVinylAngle(
+    angleFromAudioTime(
+      scratchTime
+    )
+  );
+
+
   if(
-    speed >= .35
+    tonearmEngaged
   ){
 
-    return {
-      duration:.120,
-      interval:22,
-      attack:.020,
-      releaseStart:.074
-    };
+    setTonearmAngle(
+      armAngleFromTime(
+        scratchTime
+      )
+    );
 
   }
 
-  if(
-    speed >= .16
-  ){
 
-    return {
-      duration:.170,
-      interval:20,
-      attack:.032,
-      releaseStart:.098
-    };
+  updateProgressUI(
+    scratchTime
+  );
 
-  }
+}
+
+
+/* =====================================================
+   SCRATCH AUDIO // WEB AUDIO LOOK-AHEAD SCHEDULER
+===================================================== */
+
+function getEffectiveScratchRate(
+  velocity,
+  naturalRate = false
+){
+
+  const multiplier =
+    naturalRate
+    ?
+    1
+    :
+    SCRATCH_RATE_SCALE;
+
+
+  return Math.max(
+    SCRATCH_MIN_RATE,
+    Math.min(
+      SCRATCH_MAX_RATE,
+      Math.abs(
+        velocity
+      )
+      *
+      multiplier
+    )
+  );
+
+}
+
+
+function getAdaptiveGrainProfile(
+  rate
+){
 
   /*
-    Ultra-slow section.
-
-    Much longer overlapping grains.
+    At low speed we use longer grains and
+    denser overlap. High speed keeps the
+    original short responsive grain.
   */
 
+  if(
+    rate >= .70
+  ){
+
+    return {
+      duration:
+        SCRATCH_FAST_GRAIN_DURATION,
+
+      intervalMs:
+        SCRATCH_FAST_GRAIN_INTERVAL_MS
+    };
+
+  }
+
+
+  if(
+    rate >= .35
+  ){
+
+    return {
+      duration:
+        .120,
+
+      intervalMs:
+        22
+    };
+
+  }
+
+
+  if(
+    rate >= .16
+  ){
+
+    return {
+      duration:
+        .170,
+
+      intervalMs:
+        20
+    };
+
+  }
+
+
   return {
-    duration:.230,
-    interval:18,
-    attack:.050,
-    releaseStart:.128
+    duration:
+      .230,
+
+    intervalMs:
+      18
   };
 
 }
 
 
-function playScratchGrain(
+function setPhysicsStatus(
+  text,
+  now = performance.now(),
+  interval = 80
+){
+
+  if(
+    now
+    -
+    lastPhysicsStatusTime
+    <
+    interval
+  ){
+
+    return;
+
+  }
+
+
+  lastPhysicsStatusTime =
+    now;
+
+
+  microstatus.textContent =
+    text;
+
+}
+
+
+let scratchSharedFilter =
+  null;
+
+
+function getScratchSharedFilter(){
+
+  const context =
+    getAudioContext();
+
+
+  if(
+    !scratchSharedFilter
+  ){
+
+    scratchSharedFilter =
+      context.createBiquadFilter();
+
+
+    scratchSharedFilter.type =
+      "lowpass";
+
+
+    scratchSharedFilter.Q.value =
+      .1;
+
+
+    scratchSharedFilter.connect(
+      context.destination
+    );
+
+  }
+
+
+  return scratchSharedFilter;
+
+}
+
+
+/*
+  Scheduler state.
+
+  requestAnimationFrame controls only the physical model.
+  The sound engine schedules grains on AudioContext time,
+  independently from frame delivery.
+*/
+
+let scratchSchedulerTimer =
+  null;
+
+
+let scratchSchedulerActive =
+  false;
+
+
+let scratchSchedulerNaturalRate =
+  false;
+
+
+let scratchSchedulerNextAudioTime =
+  0;
+
+
+let scratchSchedulerLastDirection =
+  0;
+
+
+const scheduledScratchGrains =
+  new Set();
+
+
+function scratchPhysicalSoundActive(){
+
+  return (
+    isPlayStarting
+    ||
+    isPauseBraking
+    ||
+    isMotorRecovering
+    ||
+    isFreeSpinning
+    ||
+    grabBrakeActive
+  );
+
+}
+
+
+function scratchManualSoundActive(){
+
+  return (
+    isScratching
+    &&
+    manualScratchStarted
+  );
+
+}
+
+
+function cancelFutureScratchGrains(
+  cutoffTime = null
+){
+
+  if(
+    !audioContext
+  ){
+
+    return;
+
+  }
+
+
+  const context =
+    audioContext;
+
+
+  const cutoff =
+    cutoffTime === null
+    ?
+    context.currentTime
+    :
+    cutoffTime;
+
+
+  for(
+    const grain
+    of
+    [...scheduledScratchGrains]
+  ){
+
+    if(
+      grain.startAt
+      >
+      cutoff
+    ){
+
+      try{
+
+        grain.source.stop();
+
+      }
+
+      catch(_){ }
+
+
+      scheduledScratchGrains.delete(
+        grain
+      );
+
+    }
+
+  }
+
+}
+
+
+function fadeOutScratchGrains(){
+
+  if(
+    !audioContext
+  ){
+
+    return;
+
+  }
+
+
+  const context =
+    audioContext;
+
+
+  const now =
+    context.currentTime;
+
+
+  for(
+    const grain
+    of
+    [...scheduledScratchGrains]
+  ){
+
+    if(
+      grain.startAt
+      >
+      now + .004
+    ){
+
+      try{
+
+        grain.source.stop();
+
+      }
+
+      catch(_){ }
+
+
+      scheduledScratchGrains.delete(
+        grain
+      );
+
+      continue;
+
+    }
+
+
+    try{
+
+      if(
+        typeof grain.gain.gain.cancelAndHoldAtTime
+        ===
+        "function"
+      ){
+
+        grain.gain.gain.cancelAndHoldAtTime(
+          now
+        );
+
+      }
+
+      else{
+
+        grain.gain.gain.cancelScheduledValues(
+          now
+        );
+
+      }
+
+
+      grain.gain.gain.linearRampToValueAtTime(
+        .001,
+        now + .024
+      );
+
+
+      grain.source.stop(
+        now + .030
+      );
+
+    }
+
+    catch(_){ }
+
+  }
+
+}
+
+
+function stopScratchScheduler(
+  fade = false
+){
+
+  scratchSchedulerActive =
+    false;
+
+
+  if(
+    scratchSchedulerTimer
+  ){
+
+    clearInterval(
+      scratchSchedulerTimer
+    );
+
+
+    scratchSchedulerTimer =
+      null;
+
+  }
+
+
+  scratchSchedulerNextAudioTime =
+    0;
+
+
+  scratchSchedulerLastDirection =
+    0;
+
+
+  if(
+    fade
+  ){
+
+    fadeOutScratchGrains();
+
+  }
+
+}
+
+
+function scheduleScratchGrainAt(
   time,
   velocity,
+  naturalRate,
+  startAt
+){
+
+  if(
+    !decodedTrack
+    ||
+    Math.abs(
+      velocity
+    )
+    <
+    .0035
+  ){
+
+    return null;
+
+  }
+
+
+  const context =
+    getAudioContext();
+
+
+  const forward =
+    velocity >= 0;
+
+
+  const source =
+    context.createBufferSource();
+
+
+  source.buffer =
+    forward
+    ?
+    decodedTrack
+    :
+    reversedTrack;
+
+
+  const rate =
+    getEffectiveScratchRate(
+      velocity,
+      naturalRate
+    );
+
+
+  const profile =
+    getAdaptiveGrainProfile(
+      rate
+    );
+
+
+  const grainDuration =
+    profile.duration;
+
+
+  const intervalSeconds =
+    profile.intervalMs
+    /
+    1000;
+
+
+  source.playbackRate.value =
+    rate;
+
+
+  const sharedFilter =
+    getScratchSharedFilter();
+
+
+  sharedFilter.frequency.setTargetAtTime(
+    Math.min(
+      14000,
+      2600
+      +
+      rate
+      *
+      3200
+    ),
+    Math.max(
+      context.currentTime,
+      startAt
+    ),
+    .008
+  );
+
+
+  const gain =
+    context.createGain();
+
+
+  source.connect(
+    gain
+  );
+
+
+  gain.connect(
+    sharedFilter
+  );
+
+
+  const overlapNormalization =
+    Math.max(
+      .18,
+      Math.min(
+        1,
+        (
+          intervalSeconds
+          /
+          grainDuration
+        )
+        *
+        2.45
+      )
+    );
+
+
+  const grainGain =
+    SCRATCH_GAIN
+    *
+    overlapNormalization;
+
+
+  const attack =
+    Math.max(
+      .008,
+      Math.min(
+        .055,
+        grainDuration
+        *
+        .24
+      )
+    );
+
+
+  const releaseStart =
+    grainDuration
+    *
+    .58;
+
+
+  gain.gain.setValueAtTime(
+    .001,
+    startAt
+  );
+
+
+  gain.gain.linearRampToValueAtTime(
+    grainGain,
+    startAt
+    +
+    attack
+  );
+
+
+  gain.gain.setValueAtTime(
+    grainGain,
+    startAt
+    +
+    releaseStart
+  );
+
+
+  gain.gain.exponentialRampToValueAtTime(
+    .001,
+    startAt
+    +
+    grainDuration
+  );
+
+
+  let offset;
+
+
+  if(
+    forward
+  ){
+
+    offset =
+      Math.max(
+        0,
+        Math.min(
+          decodedTrack.duration
+          -
+          .25,
+          time
+        )
+      );
+
+  }
+
+  else{
+
+    offset =
+      Math.max(
+        0,
+        Math.min(
+          reversedTrack.duration
+          -
+          .25,
+          reversedTrack.duration
+          -
+          time
+        )
+      );
+
+  }
+
+
+  const grain = {
+    source,
+    gain,
+    startAt
+  };
+
+
+  scheduledScratchGrains.add(
+    grain
+  );
+
+
+  source.onended =
+    () => {
+
+      scheduledScratchGrains.delete(
+        grain
+      );
+
+    };
+
+
+  try{
+
+    source.start(
+      startAt,
+      offset
+    );
+
+
+    source.stop(
+      startAt
+      +
+      grainDuration
+      +
+      .02
+    );
+
+  }
+
+  catch(error){
+
+    scheduledScratchGrains.delete(
+      grain
+    );
+
+
+    console.warn(
+      error
+    );
+
+  }
+
+
+  return profile;
+
+}
+
+
+function scratchSchedulerTick(){
+
+  if(
+    !scratchSchedulerActive
+    ||
+    !decodedTrack
+  ){
+
+    return;
+
+  }
+
+
+  const physicalActive =
+    scratchPhysicalSoundActive();
+
+
+  const manualActive =
+    scratchManualSoundActive();
+
+
+  if(
+    !physicalActive
+    &&
+    !manualActive
+  ){
+
+    stopScratchScheduler(
+      false
+    );
+
+
+    return;
+
+  }
+
+
+  const context =
+    getAudioContext();
+
+
+  if(
+    context.state
+    ===
+    "suspended"
+  ){
+
+    return;
+
+  }
+
+
+  const nowAudio =
+    context.currentTime;
+
+
+  const nowPerf =
+    performance.now();
+
+
+  let velocity =
+    scratchVelocity;
+
+
+  /*
+    When the hand stops while still holding the record,
+    manual scratch must become silent instead of replaying
+    the last measured velocity forever.
+  */
+
+  if(
+    !scratchSchedulerNaturalRate
+    &&
+    manualActive
+    &&
+    nowPerf
+    -
+    lastManualMoveAt
+    >
+    SCRATCH_MANUAL_IDLE_MS
+  ){
+
+    velocity =
+      0;
+
+  }
+
+
+  if(
+    Math.abs(
+      velocity
+    )
+    <
+    .0035
+  ){
+
+    scratchSchedulerNextAudioTime =
+      Math.max(
+        scratchSchedulerNextAudioTime,
+        nowAudio
+        +
+        SCRATCH_SCHEDULER_START_LEAD_SEC
+      );
+
+
+    return;
+
+  }
+
+
+  const direction =
+    velocity > 0
+    ?
+    1
+    :
+    -1;
+
+
+  /*
+    A direction reversal should feel immediate.
+    Drop only grains that have not started yet,
+    then rebuild the queue in the new direction.
+  */
+
+  if(
+    scratchSchedulerLastDirection
+    &&
+    direction
+    !==
+    scratchSchedulerLastDirection
+  ){
+
+    cancelFutureScratchGrains(
+      nowAudio + .004
+    );
+
+
+    scratchSchedulerNextAudioTime =
+      nowAudio
+      +
+      .007;
+
+  }
+
+
+  scratchSchedulerLastDirection =
+    direction;
+
+
+  if(
+    !scratchSchedulerNextAudioTime
+    ||
+    scratchSchedulerNextAudioTime
+    <
+    nowAudio + .002
+  ){
+
+    scratchSchedulerNextAudioTime =
+      nowAudio
+      +
+      SCRATCH_SCHEDULER_START_LEAD_SEC;
+
+  }
+
+
+  const lookAhead =
+    scratchSchedulerNaturalRate
+    ?
+    SCRATCH_LOOKAHEAD_PHYSICAL_SEC
+    :
+    SCRATCH_LOOKAHEAD_MANUAL_SEC;
+
+
+  const scheduleUntil =
+    nowAudio
+    +
+    lookAhead;
+
+
+  let grainsScheduled =
+    0;
+
+
+  while(
+    scratchSchedulerNextAudioTime
+    <
+    scheduleUntil
+    &&
+    grainsScheduled
+    <
+    SCRATCH_MAX_GRAINS_PER_TICK
+  ){
+
+    const lead =
+      Math.max(
+        0,
+        scratchSchedulerNextAudioTime
+        -
+        nowAudio
+      );
+
+
+    const projectedTime =
+      Math.max(
+        0,
+        Math.min(
+          decodedTrack.duration,
+          scratchTime
+          +
+          velocity
+          *
+          lead
+        )
+      );
+
+
+    const profile =
+      scheduleScratchGrainAt(
+        projectedTime,
+        velocity,
+        scratchSchedulerNaturalRate,
+        scratchSchedulerNextAudioTime
+      );
+
+
+    const intervalSeconds =
+      profile
+      ?
+      profile.intervalMs
+      /
+      1000
+      :
+      .020;
+
+
+    scratchSchedulerNextAudioTime +=
+      intervalSeconds;
+
+
+    grainsScheduled++;
+
+  }
+
+}
+
+
+function startScratchScheduler(
+  naturalRate = false
+){
+
+  scratchSchedulerNaturalRate =
+    naturalRate;
+
+
+  if(
+    scratchSchedulerActive
+  ){
+
+    return;
+
+  }
+
+
+  scratchSchedulerActive =
+    true;
+
+
+  const context =
+    getAudioContext();
+
+
+  scratchSchedulerNextAudioTime =
+    context.currentTime
+    +
+    SCRATCH_SCHEDULER_START_LEAD_SEC;
+
+
+  scratchSchedulerLastDirection =
+    0;
+
+
+  scratchSchedulerTimer =
+    setInterval(
+      scratchSchedulerTick,
+      SCRATCH_SCHEDULER_TICK_MS
+    );
+
+
+  scratchSchedulerTick();
+
+}
+
+
+/*
+  Keep the old call-site API.
+
+  Existing physics loops still call maybeEmitScratchGrain(),
+  but that call no longer creates sound immediately.
+  It only wakes/updates the independent audio scheduler.
+*/
+
+function maybeEmitScratchGrain(
+  now,
   naturalRate = false
 ){
 
@@ -2410,218 +4378,23 @@ function playScratchGrain(
 
   }
 
-  const absoluteVelocity =
-    Math.abs(velocity);
 
-  if(
-    absoluteVelocity <
-    .006
-  ){
+  scratchSchedulerNaturalRate =
+    naturalRate;
 
-    return;
 
-  }
-
-  const context =
-    getAudioContext();
-
-  const profile =
-    getGrainProfile(
-      velocity
-    );
-
-  const forward =
-    velocity >= 0;
-
-  const source =
-    context.createBufferSource();
-
-  source.buffer =
-    forward
-    ?
-    decodedTrack
-    :
-    reversedTrack;
-
-  /*
-    Motor/brake/free-spin use actual
-    physical rate.
-
-    Manual scratch retains existing
-    response scaling.
-  */
-
-  const multiplier =
+  startScratchScheduler(
     naturalRate
-    ?
-    1
-    :
-    SCRATCH_RATE_SCALE;
-
-  const rate =
-    Math.max(
-      SCRATCH_MIN_RATE,
-      Math.min(
-        SCRATCH_MAX_RATE,
-        absoluteVelocity *
-        multiplier
-      )
-    );
-
-  source.playbackRate.value =
-    rate;
-
-
-  /*
-    Gain is still per-grain.
-
-    Filter is shared.
-  */
-
-  const gain =
-    context.createGain();
-
-  source.connect(
-    gain
-  );
-
-  gain.connect(
-    sharedScratchFilter
   );
 
 
   /*
-    Filter becomes darker naturally
-    when speed drops.
+    Manual movement timestamp is updated in pointermove.
+    Physical modes don't need this gate.
   */
-
-  const targetFilter =
-    Math.min(
-      15000,
-      Math.max(
-        1800,
-        2200 +
-        rate * 4300
-      )
-    );
-
-  sharedScratchFilter.frequency
-    .setTargetAtTime(
-      targetFilter,
-      context.currentTime,
-      .015
-    );
-
-
-  const now =
-    context.currentTime;
-
-  gain.gain.setValueAtTime(
-    .001,
-    now
-  );
-
-  gain.gain.linearRampToValueAtTime(
-    SCRATCH_GAIN,
-    now +
-    profile.attack
-  );
-
-  gain.gain.setValueAtTime(
-    SCRATCH_GAIN,
-    now +
-    profile.releaseStart
-  );
-
-  gain.gain.exponentialRampToValueAtTime(
-    .001,
-    now +
-    profile.duration
-  );
-
-
-  let offset;
-
-  if(
-    forward
-  ){
-
-    offset =
-      Math.max(
-        0,
-        Math.min(
-          decodedTrack.duration -
-          .25,
-          time
-        )
-      );
-
-  }else{
-
-    offset =
-      Math.max(
-        0,
-        Math.min(
-          reversedTrack.duration -
-          .25,
-
-          reversedTrack.duration -
-          time
-        )
-      );
-
-  }
-
-  try{
-
-    source.start(
-      now,
-      offset
-    );
-
-    source.stop(
-      now +
-      profile.duration +
-      .02
-    );
-
-  }catch(error){
-
-    console.warn(error);
-
-  }
-
-}
-
-
-function maybeEmitScratchGrain(
-  now,
-  naturalRate = false
-){
-
-  const profile =
-    getGrainProfile(
-      scratchVelocity
-    );
-
-  if(
-    now -
-    scratchLastGrainTime <
-    profile.interval
-  ){
-
-    return;
-
-  }
 
   scratchLastGrainTime =
     now;
-
-  playScratchGrain(
-    scratchTime,
-    scratchVelocity,
-    naturalRate
-  );
 
 }
 
@@ -2635,9 +4408,11 @@ function cancelPlayStart(){
   isPlayStarting =
     false;
 
+
   track.classList.remove(
     "is-play-starting"
   );
+
 
   if(
     playStartRAF
@@ -2646,6 +4421,7 @@ function cancelPlayStart(){
     cancelAnimationFrame(
       playStartRAF
     );
+
 
     playStartRAF =
       null;
@@ -2662,90 +4438,125 @@ function startPlayAcceleration(){
 
       cancelPlayStart();
 
+
       isPlayStarting =
         true;
+
 
       track.classList.add(
         "is-play-starting"
       );
 
+
       scratchTime =
         audio.currentTime;
+
 
       scratchVelocity =
         PLAY_START_MIN_RATE;
 
+
       scratchLastGrainTime =
         0;
 
+
       const duration =
-        PLAY_START_BASE_DURATION /
+        PLAY_START_BASE_DURATION
+        /
         PLAY_START_SPEED;
+
 
       const started =
         performance.now();
 
+
       let previous =
         started;
 
-      function frame(now){
+
+      function frame(
+        now
+      ){
 
         if(
-          !isPlayStarting ||
-          !playIntent ||
-          isPacking ||
+          !isPlayStarting
+          ||
+          !playIntent
+          ||
+          isPacking
+          ||
           isScratching
         ){
 
           cancelPlayStart();
 
+
           resolve();
+
 
           return;
 
         }
 
+
         const dt =
           Math.min(
             .035,
             (
-              now -
+              now
+              -
               previous
-            ) /
+            )
+            /
             1000
           );
 
+
         previous =
           now;
+
 
         const t =
           Math.min(
             1,
             (
-              now -
+              now
+              -
               started
-            ) /
+            )
+            /
             duration
           );
 
+
         const curve =
-          1 -
+          1
+          -
           Math.pow(
-            1 - t,
+            1
+            -
+            t,
             PLAY_START_CURVE
           );
 
+
         scratchVelocity =
-          PLAY_START_MIN_RATE +
+          PLAY_START_MIN_RATE
+          +
           (
-            1 -
+            1
+            -
             PLAY_START_MIN_RATE
-          ) *
+          )
+          *
           curve;
 
+
         scratchTime +=
-          scratchVelocity *
+          scratchVelocity
+          *
           dt;
+
 
         scratchTime =
           Math.max(
@@ -2756,21 +4567,33 @@ function startPlayAcceleration(){
             )
           );
 
+
         updateScratchVisuals();
+
 
         maybeEmitScratchGrain(
           now,
           true
         );
 
-        microstatus.textContent =
-          "MOTOR START // " +
-          scratchVelocity.toFixed(2) +
-          "×";
+
+        setPhysicsStatus(
+          "MOTOR START // "
+          +
+          scratchVelocity.toFixed(
+            2
+          )
+          +
+          "×",
+          now
+        );
+
 
         if(
-          t < 1 &&
-          scratchTime <
+          t < 1
+          &&
+          scratchTime
+          <
           audio.duration
         ){
 
@@ -2779,26 +4602,33 @@ function startPlayAcceleration(){
               frame
             );
 
-        }else{
+        }
+
+        else{
 
           scratchVelocity =
             1;
 
+
           isPlayStarting =
             false;
+
 
           track.classList.remove(
             "is-play-starting"
           );
 
+
           playStartRAF =
             null;
+
 
           resolve();
 
         }
 
       }
+
 
       playStartRAF =
         requestAnimationFrame(
@@ -2821,7 +4651,9 @@ async function startPhysicalPlay(){
 
   }
 
+
   cancelFreeSpin();
+
 
   if(
     !vinylOpened
@@ -2830,11 +4662,13 @@ async function startPhysicalPlay(){
     vinylOpened =
       true;
 
+
     track.classList.add(
       "is-open"
     );
 
   }
+
 
   if(
     !audio.paused
@@ -2844,13 +4678,15 @@ async function startPhysicalPlay(){
 
   }
 
-  await resumeAudioContext();
 
   await startPlayAcceleration();
 
+
   if(
-    !playIntent ||
-    isPacking ||
+    !playIntent
+    ||
+    isPacking
+    ||
     isScratching
   ){
 
@@ -2858,21 +4694,34 @@ async function startPhysicalPlay(){
 
   }
 
+
   audio.currentTime =
     scratchTime;
 
+
   updateScratchVisuals();
+
 
   microstatus.textContent =
     "MOTOR LOCK // 45 RPM";
+
+
+  stopScratchScheduler(
+    true
+  );
+
 
   try{
 
     await audio.play();
 
-  }catch(error){
+  }
 
-    console.warn(error);
+  catch(error){
+
+    console.warn(
+      error
+    );
 
   }
 
@@ -2888,9 +4737,11 @@ function cancelPauseBrake(){
   isPauseBraking =
     false;
 
+
   track.classList.remove(
     "is-pause-braking"
   );
+
 
   if(
     pauseBrakeRAF
@@ -2899,6 +4750,7 @@ function cancelPauseBrake(){
     cancelAnimationFrame(
       pauseBrakeRAF
     );
+
 
     pauseBrakeRAF =
       null;
@@ -2911,73 +4763,93 @@ function cancelPauseBrake(){
 function startPauseBrake(){
 
   return new Promise(
-    async resolve => {
+    resolve => {
 
       cancelPauseBrake();
 
-      await resumeAudioContext();
 
       isPauseBraking =
         true;
+
 
       track.classList.add(
         "is-pause-braking"
       );
 
+
       scratchVelocity =
         1;
+
 
       scratchLastGrainTime =
         0;
 
+
       const duration =
-        PAUSE_BRAKE_BASE_DURATION /
+        PAUSE_BRAKE_BASE_DURATION
+        /
         PAUSE_BRAKE_SPEED;
+
 
       const started =
         performance.now();
 
+
       let previous =
         started;
 
-      function frame(now){
+
+      function frame(
+        now
+      ){
 
         if(
-          !isPauseBraking ||
+          !isPauseBraking
+          ||
           isPacking
         ){
 
           pauseBrakeRAF =
             null;
 
+
           resolve();
+
 
           return;
 
         }
 
+
         const dt =
           Math.min(
             .035,
             (
-              now -
+              now
+              -
               previous
-            ) /
+            )
+            /
             1000
           );
 
+
         previous =
           now;
+
 
         const t =
           Math.min(
             1,
             (
-              now -
+              now
+              -
               started
-            ) /
+            )
+            /
             duration
           );
+
 
         const braking =
           Math.pow(
@@ -2985,38 +4857,43 @@ function startPauseBrake(){
             PAUSE_BRAKE_CURVE
           );
 
+
         scratchVelocity =
           Math.max(
             0,
-            1 -
+            1
+            -
             braking
           );
 
-        /*
-          Final tail falls to zero physically,
-          but adaptive granular engine keeps
-          low speed much smoother.
-        */
 
         if(
-          scratchVelocity <
-          .08
+          scratchVelocity
+          <
+          .10
         ){
 
           const tail =
-            scratchVelocity /
-            .08;
+            scratchVelocity
+            /
+            .10;
+
 
           scratchVelocity =
-            .08 *
-            tail *
+            .10
+            *
+            tail
+            *
             tail;
 
         }
 
+
         scratchTime +=
-          scratchVelocity *
+          scratchVelocity
+          *
           dt;
+
 
         scratchTime =
           Math.max(
@@ -3027,36 +4904,32 @@ function startPauseBrake(){
             )
           );
 
+
         updateScratchVisuals();
 
-        /*
-          Stop creating grains at
-          extremely tiny velocity.
 
-          Visually the record still reaches zero.
-        */
+        maybeEmitScratchGrain(
+          now,
+          true
+        );
 
-        if(
-          scratchVelocity >
-          .012
-        ){
 
-          maybeEmitScratchGrain(
-            now,
-            true
-          );
+        setPhysicsStatus(
+          "PAUSE BRAKE // "
+          +
+          scratchVelocity.toFixed(
+            2
+          )
+          +
+          "×",
+          now
+        );
 
-        }
-
-        microstatus.textContent =
-          "PAUSE BRAKE // " +
-          scratchVelocity.toFixed(2) +
-          "×";
 
         if(
-          t < 1 &&
-          scratchVelocity >
-          .002
+          t < 1
+          &&
+          scratchVelocity > .002
         ){
 
           pauseBrakeRAF =
@@ -3064,34 +4937,49 @@ function startPauseBrake(){
               frame
             );
 
-        }else{
+        }
+
+        else{
 
           scratchVelocity =
             0;
 
+
           isPauseBraking =
             false;
+
 
           track.classList.remove(
             "is-pause-braking"
           );
 
+
           pauseBrakeRAF =
             null;
+
 
           audio.currentTime =
             scratchTime;
 
+
           updateScratchVisuals();
+
+
+          stopScratchScheduler(
+            true
+          );
+
 
           microstatus.textContent =
             "PLAYBACK // PAUSED";
+
 
           resolve();
 
         }
 
       }
+
 
       pauseBrakeRAF =
         requestAnimationFrame(
@@ -3104,8 +4992,16 @@ function startPauseBrake(){
 }
 
 
+
 /* =====================================================
-   PAUSED FREE-SPIN / INERTIA
+   FREE PLATTER INERTIA
+
+   Logical playback is PAUSED.
+
+   If the user spins the record by hand and releases it,
+   the platter keeps moving from the released velocity,
+   then gradually loses energy instead of stopping
+   instantly.
 ===================================================== */
 
 function cancelFreeSpin(){
@@ -3113,9 +5009,11 @@ function cancelFreeSpin(){
   isFreeSpinning =
     false;
 
+
   track.classList.remove(
     "is-free-spinning"
   );
+
 
   if(
     freeSpinRAF
@@ -3125,6 +5023,7 @@ function cancelFreeSpin(){
       freeSpinRAF
     );
 
+
     freeSpinRAF =
       null;
 
@@ -3133,198 +5032,297 @@ function cancelFreeSpin(){
 }
 
 
-function startFreeSpin(
-  initialVelocity
+function startFreeSpinInertia(
+  releasedVelocity
 ){
 
-  cancelFreeSpin();
-
-  if(
-    Math.abs(
-      initialVelocity
-    ) <
-    FREE_SPIN_RELEASE_THRESHOLD
-  ){
-
-    scratchVelocity =
-      0;
-
-    audio.currentTime =
-      scratchTime;
-
-    updateScratchVisuals();
-
-    return;
-
-  }
-
-  isFreeSpinning =
-    true;
-
-  track.classList.add(
-    "is-free-spinning"
-  );
-
-  scratchVelocity =
-    initialVelocity;
-
-  scratchLastGrainTime =
-    0;
-
-  let previous =
-    performance.now();
-
-  function frame(now){
-
-    if(
-      !isFreeSpinning ||
-      playIntent ||
-      isPacking ||
-      isScratching
-    ){
+  return new Promise(
+    resolve => {
 
       cancelFreeSpin();
 
-      return;
 
-    }
+      const startVelocity =
+        Math.max(
+          -FREE_SPIN_MAX_ABS_SPEED,
+          Math.min(
+            FREE_SPIN_MAX_ABS_SPEED,
+            releasedVelocity
+          )
+        );
 
-    const dt =
-      Math.min(
-        .035,
-        (
-          now -
-          previous
-        ) /
-        1000
+
+      const speed =
+        Math.abs(
+          startVelocity
+        );
+
+
+      if(
+        speed
+        <
+        .035
+      ){
+
+        scratchVelocity =
+          0;
+
+
+        audio.currentTime =
+          scratchTime;
+
+
+        updateScratchVisuals();
+
+
+        resolve();
+
+
+        return;
+
+      }
+
+
+      isFreeSpinning =
+        true;
+
+
+      track.classList.add(
+        "is-free-spinning"
       );
 
-    previous =
-      now;
-
-    /*
-      Exponential rolling friction.
-
-      Keeps direction.
-      Forward and backward both work.
-    */
-
-    const damping =
-      Math.exp(
-        -FREE_SPIN_FRICTION *
-        dt
-      );
-
-    scratchVelocity *=
-      damping;
-
-    scratchTime +=
-      scratchVelocity *
-      dt;
-
-    /*
-      Record can't physically move
-      outside track.
-    */
-
-    if(
-      scratchTime <= 0
-    ){
-
-      scratchTime =
-        0;
 
       scratchVelocity =
+        startVelocity;
+
+
+      scratchLastGrainTime =
         0;
 
-    }
 
-    if(
-      scratchTime >=
-      audio.duration
-    ){
+      const duration =
+        Math.min(
+          FREE_SPIN_MAX_DURATION,
+          Math.max(
+            FREE_SPIN_MIN_DURATION,
+            430
+            +
+            speed
+            *
+            390
+          )
+        );
 
-      scratchTime =
-        audio.duration;
 
-      scratchVelocity =
-        0;
+      const started =
+        performance.now();
 
-    }
 
-    updateScratchVisuals();
+      let previous =
+        started;
 
-    if(
-      Math.abs(
-        scratchVelocity
-      ) >
-      .012
-    ){
 
-      maybeEmitScratchGrain(
-        now,
-        true
-      );
+      function frame(
+        now
+      ){
 
-    }
+        if(
+          !isFreeSpinning
+          ||
+          playIntent
+          ||
+          isPacking
+          ||
+          isScratching
+        ){
 
-    microstatus.textContent =
-      "FREE SPIN // " +
-      (
-        scratchVelocity >= 0
-        ?
-        "+"
-        :
-        "−"
-      ) +
-      Math.abs(
-        scratchVelocity
-      ).toFixed(2) +
-      "×";
+          cancelFreeSpin();
 
-    if(
-      Math.abs(
-        scratchVelocity
-      ) >
-      FREE_SPIN_MIN_VELOCITY
-    ){
+
+          resolve();
+
+
+          return;
+
+        }
+
+
+        const dt =
+          Math.min(
+            .035,
+            (
+              now
+              -
+              previous
+            )
+            /
+            1000
+          );
+
+
+        previous =
+          now;
+
+
+        const t =
+          Math.min(
+            1,
+            (
+              now
+              -
+              started
+            )
+            /
+            duration
+          );
+
+
+        /*
+          Signed velocity is preserved.
+
+          Positive hand throw continues forward,
+          negative hand throw continues backward.
+        */
+
+        const remaining =
+          Math.pow(
+            1
+            -
+            t,
+            FREE_SPIN_DECAY_CURVE
+          );
+
+
+        scratchVelocity =
+          startVelocity
+          *
+          remaining;
+
+
+        scratchTime +=
+          scratchVelocity
+          *
+          dt;
+
+
+        const clampedTime =
+          Math.max(
+            0,
+            Math.min(
+              audio.duration,
+              scratchTime
+            )
+          );
+
+
+        const hitBoundary =
+          clampedTime !==
+          scratchTime;
+
+
+        scratchTime =
+          clampedTime;
+
+
+        updateScratchVisuals();
+
+
+        maybeEmitScratchGrain(
+          now,
+          false
+        );
+
+
+        setPhysicsStatus(
+          "FREE SPIN // "
+          +
+          (
+            scratchVelocity >= 0
+            ?
+            "+"
+            :
+            "−"
+          )
+          +
+          Math.abs(
+            scratchVelocity
+          ).toFixed(
+            2
+          )
+          +
+          "×",
+          now
+        );
+
+
+        if(
+          !hitBoundary
+          &&
+          t < 1
+          &&
+          Math.abs(
+            scratchVelocity
+          )
+          >
+          .006
+        ){
+
+          freeSpinRAF =
+            requestAnimationFrame(
+              frame
+            );
+
+        }
+
+        else{
+
+          scratchVelocity =
+            0;
+
+
+          isFreeSpinning =
+            false;
+
+
+          track.classList.remove(
+            "is-free-spinning"
+          );
+
+
+          freeSpinRAF =
+            null;
+
+
+          audio.currentTime =
+            scratchTime;
+
+
+          updateScratchVisuals();
+
+
+          stopScratchScheduler(
+            true
+          );
+
+
+          microstatus.textContent =
+            "PLAYBACK // PAUSED";
+
+
+          resolve();
+
+        }
+
+      }
+
 
       freeSpinRAF =
         requestAnimationFrame(
           frame
         );
 
-    }else{
-
-      scratchVelocity =
-        0;
-
-      isFreeSpinning =
-        false;
-
-      freeSpinRAF =
-        null;
-
-      track.classList.remove(
-        "is-free-spinning"
-      );
-
-      audio.currentTime =
-        scratchTime;
-
-      updateScratchVisuals();
-
-      microstatus.textContent =
-        "PLAYBACK // PAUSED";
-
     }
-
-  }
-
-  freeSpinRAF =
-    requestAnimationFrame(
-      frame
-    );
+  );
 
 }
 
@@ -3340,30 +5338,44 @@ function pointerAngle(
   const rect =
     recordDisc.getBoundingClientRect();
 
+
   const cx =
-    rect.left +
-    rect.width / 2;
+    rect.left
+    +
+    rect.width
+    /
+    2;
+
 
   const cy =
-    rect.top +
-    rect.height / 2;
+    rect.top
+    +
+    rect.height
+    /
+    2;
+
 
   return Math.atan2(
-    event.clientY - cy,
-    event.clientX - cx
+    event.clientY
+    -
+    cy,
+
+    event.clientX
+    -
+    cx
   );
 
 }
 
 
 /* =====================================================
-   GRAB BRAKE DURING PLAY
+   GRAB BRAKE
 ===================================================== */
 
-function cancelGrabBrake(){
-
-  grabBrakeActive =
-    false;
+function startGrabBrake(
+  initialVelocity =
+    scratchVelocity
+){
 
   if(
     grabBrakeRAF
@@ -3373,23 +5385,12 @@ function cancelGrabBrake(){
       grabBrakeRAF
     );
 
-    grabBrakeRAF =
-      null;
-
   }
 
-}
-
-
-function startGrabBrake(
-  initialVelocity =
-    scratchVelocity
-){
-
-  cancelGrabBrake();
 
   grabBrakeActive =
     true;
+
 
   const startVelocity =
     Math.max(
@@ -3397,49 +5398,65 @@ function startGrabBrake(
       initialVelocity
     );
 
+
   const started =
     performance.now();
+
 
   let previous =
     started;
 
-  function frame(now){
+
+  function frame(
+    now
+  ){
 
     if(
-      !isScratching ||
-      !grabBrakeActive ||
+      !isScratching
+      ||
+      !grabBrakeActive
+      ||
       manualScratchStarted
     ){
 
       grabBrakeRAF =
         null;
 
+
       return;
 
     }
+
 
     const dt =
       Math.min(
         .04,
         (
-          now -
+          now
+          -
           previous
-        ) /
+        )
+        /
         1000
       );
 
+
     previous =
       now;
+
 
     const t =
       Math.min(
         1,
         (
-          now -
+          now
+          -
           started
-        ) /
+        )
+        /
         GRAB_BRAKE_DURATION
       );
+
 
     const braking =
       Math.pow(
@@ -3447,35 +5464,47 @@ function startGrabBrake(
         GRAB_BRAKE_CURVE
       );
 
+
     scratchVelocity =
       Math.max(
         0,
-        startVelocity *
+        startVelocity
+        *
         (
-          1 -
+          1
+          -
           braking
         )
       );
 
+
     if(
-      scratchVelocity <
+      scratchVelocity
+      <
       .12
     ){
 
       const tail =
-        scratchVelocity /
+        scratchVelocity
+        /
         .12;
 
+
       scratchVelocity =
-        .12 *
-        tail *
+        .12
+        *
+        tail
+        *
         tail;
 
     }
 
+
     scratchTime +=
-      scratchVelocity *
+      scratchVelocity
+      *
       dt;
+
 
     scratchTime =
       Math.max(
@@ -3486,29 +5515,32 @@ function startGrabBrake(
         )
       );
 
+
     updateScratchVisuals();
 
+
+    maybeEmitScratchGrain(
+      now,
+      true
+    );
+
+
+    setPhysicsStatus(
+      "GRAB BRAKE // "
+      +
+      scratchVelocity.toFixed(
+        2
+      )
+      +
+      "×",
+      now
+    );
+
+
     if(
-      scratchVelocity >
-      .012
-    ){
-
-      maybeEmitScratchGrain(
-        now,
-        true
-      );
-
-    }
-
-    microstatus.textContent =
-      "GRAB BRAKE // " +
-      scratchVelocity.toFixed(2) +
-      "×";
-
-    if(
-      t < 1 &&
-      scratchVelocity >
-      .002
+      t < 1
+      &&
+      scratchVelocity > .002
     ){
 
       grabBrakeRAF =
@@ -3516,16 +5548,21 @@ function startGrabBrake(
           frame
         );
 
-    }else{
+    }
+
+    else{
 
       scratchVelocity =
         0;
 
+
       grabBrakeActive =
         false;
 
+
       grabBrakeRAF =
         null;
+
 
       microstatus.textContent =
         "SCRATCH // HOLD";
@@ -3533,6 +5570,7 @@ function startGrabBrake(
     }
 
   }
+
 
   grabBrakeRAF =
     requestAnimationFrame(
@@ -3542,8 +5580,31 @@ function startGrabBrake(
 }
 
 
+function cancelGrabBrake(){
+
+  grabBrakeActive =
+    false;
+
+
+  if(
+    grabBrakeRAF
+  ){
+
+    cancelAnimationFrame(
+      grabBrakeRAF
+    );
+
+
+    grabBrakeRAF =
+      null;
+
+  }
+
+}
+
+
 /* =====================================================
-   MOTOR RECOVERY AFTER SCRATCH
+   MOTOR RECOVERY
 ===================================================== */
 
 function cancelMotorRecovery(){
@@ -3551,9 +5612,11 @@ function cancelMotorRecovery(){
   isMotorRecovering =
     false;
 
+
   track.classList.remove(
     "is-motor-recovering"
   );
+
 
   if(
     motorRecoveryRAF
@@ -3562,6 +5625,7 @@ function cancelMotorRecovery(){
     cancelAnimationFrame(
       motorRecoveryRAF
     );
+
 
     motorRecoveryRAF =
       null;
@@ -3578,102 +5642,139 @@ function startMotorRecovery(){
 
       cancelMotorRecovery();
 
+
       isMotorRecovering =
         true;
+
 
       track.classList.add(
         "is-motor-recovering"
       );
 
+
       const startVelocity =
         scratchVelocity;
 
+
       const distance =
         Math.abs(
-          1 -
+          1
+          -
           startVelocity
         );
+
 
       const baseDuration =
         Math.min(
           MOTOR_RECOVERY_MAX_DURATION,
           Math.max(
             MOTOR_RECOVERY_MIN_DURATION,
-            420 +
-            distance *
+            420
+            +
+            distance
+            *
             520
           )
         );
 
+
       const duration =
-        baseDuration /
+        baseDuration
+        /
         MOTOR_RECOVERY_SPEED;
+
 
       const started =
         performance.now();
 
+
       let previous =
         started;
 
-      function frame(now){
+
+      function frame(
+        now
+      ){
 
         if(
-          !isMotorRecovering ||
-          !playIntent ||
-          isPacking ||
+          !isMotorRecovering
+          ||
+          !playIntent
+          ||
+          isPacking
+          ||
           isScratching
         ){
 
           cancelMotorRecovery();
 
+
           resolve();
+
 
           return;
 
         }
 
+
         const dt =
           Math.min(
             .035,
             (
-              now -
+              now
+              -
               previous
-            ) /
+            )
+            /
             1000
           );
 
+
         previous =
           now;
+
 
         const t =
           Math.min(
             1,
             (
-              now -
+              now
+              -
               started
-            ) /
+            )
+            /
             duration
           );
 
+
         const curve =
-          1 -
+          1
+          -
           Math.pow(
-            1 -
+            1
+            -
             t,
             MOTOR_PULL_STRENGTH
           );
 
+
         scratchVelocity =
-          startVelocity +
+          startVelocity
+          +
           (
-            1 -
+            1
+            -
             startVelocity
-          ) *
+          )
+          *
           curve;
 
+
         scratchTime +=
-          scratchVelocity *
+          scratchVelocity
+          *
           dt;
+
 
         scratchTime =
           Math.max(
@@ -3684,17 +5785,27 @@ function startMotorRecovery(){
             )
           );
 
+
         updateScratchVisuals();
+
 
         maybeEmitScratchGrain(
           now,
           true
         );
 
-        microstatus.textContent =
-          "MOTOR // " +
-          scratchVelocity.toFixed(2) +
-          "×";
+
+        setPhysicsStatus(
+          "MOTOR // "
+          +
+          scratchVelocity.toFixed(
+            2
+          )
+          +
+          "×",
+          now
+        );
+
 
         if(
           t < 1
@@ -3705,26 +5816,23 @@ function startMotorRecovery(){
               frame
             );
 
-        }else{
+        }
+
+        else{
 
           scratchVelocity =
             1;
 
-          isMotorRecovering =
-            false;
 
-          motorRecoveryRAF =
-            null;
+          cancelMotorRecovery();
 
-          track.classList.remove(
-            "is-motor-recovering"
-          );
 
           resolve();
 
         }
 
       }
+
 
       motorRecoveryRAF =
         requestAnimationFrame(
@@ -3746,12 +5854,18 @@ recordDisc.addEventListener(
   async event => {
 
     if(
-      !vinylOpened ||
-      !mechanismDeployed ||
-      isPacking ||
-      isSeeking ||
-      isPreCueing ||
-      isPauseBraking ||
+      !vinylOpened
+      ||
+      !mechanismDeployed
+      ||
+      isPacking
+      ||
+      isSeeking
+      ||
+      isPreCueing
+      ||
+      isPauseBraking
+      ||
       !decodedTrack
     ){
 
@@ -3759,49 +5873,51 @@ recordDisc.addEventListener(
 
     }
 
+
     event.preventDefault();
-
-    await resumeAudioContext();
-
-    /*
-      If record was already free-spinning
-      in Pause, grabbing it interrupts
-      inertia at its current position/speed.
-    */
-
-    const wasFreeSpinning =
-      isFreeSpinning;
-
-    const freeSpinVelocity =
-      scratchVelocity;
-
-    cancelFreeSpin();
 
 
     const previousPhysicalTime =
       scratchTime;
 
+
     const previousVelocity =
       scratchVelocity;
+
 
     const wasMotorRecovering =
       isMotorRecovering;
 
+
     const wasPlayStarting =
       isPlayStarting;
 
+
+    const wasFreeSpinning =
+      isFreeSpinning;
+
+
     cancelMotorRecovery();
+
+
     cancelPlayStart();
+
+
+    cancelFreeSpin();
+
 
     isScratching =
       true;
 
+
     scratchPointerId =
       event.pointerId;
+
 
     recordDisc.setPointerCapture(
       event.pointerId
     );
+
 
     if(
       !audio.paused
@@ -3810,56 +5926,54 @@ recordDisc.addEventListener(
       scratchTime =
         audio.currentTime;
 
+
       scratchVelocity =
         1;
 
-    }else if(
+    }
+
+    else if(
+      wasMotorRecovering
+      ||
+      wasPlayStarting
+      ||
       wasFreeSpinning
     ){
 
       scratchTime =
         previousPhysicalTime;
 
-      scratchVelocity =
-        freeSpinVelocity;
-
-    }else if(
-      wasMotorRecovering ||
-      wasPlayStarting
-    ){
-
-      scratchTime =
-        previousPhysicalTime;
 
       scratchVelocity =
         previousVelocity;
 
-    }else{
-
-      scratchTime =
-        audio.currentTime;
-
-      scratchVelocity =
-        0;
-
     }
 
+
     scratchLastAngle =
-      pointerAngle(event);
+      pointerAngle(
+        event
+      );
+
 
     scratchLastPointerTime =
       performance.now();
 
+
     lastManualMoveAt =
       scratchLastPointerTime;
+
 
     scratchLastGrainTime =
       0;
 
+
     manualScratchStarted =
       false;
 
+
     stopVinylSync();
+
 
     if(
       !audio.paused
@@ -3869,20 +5983,36 @@ recordDisc.addEventListener(
 
     }
 
+
     setPlayIcon(
       playIntent
     );
+
 
     track.classList.add(
       "is-scratching"
     );
 
-    /*
-      Playing platter has motor underneath it.
 
-      Paused platter has no automatic grab-brake.
-      User has total physical control.
-    */
+    const context =
+      getAudioContext();
+
+
+    if(
+      context.state ===
+      "suspended"
+    ){
+
+      try{
+
+        await context.resume();
+
+      }
+
+      catch(_){}
+
+    }
+
 
     if(
       playIntent
@@ -3892,7 +6022,13 @@ recordDisc.addEventListener(
         scratchVelocity
       );
 
-    }else{
+    }
+
+    else{
+
+      scratchVelocity =
+        0;
+
 
       microstatus.textContent =
         "SCRATCH // HOLD";
@@ -3904,7 +6040,7 @@ recordDisc.addEventListener(
 
 
 /* =====================================================
-   MANUAL SCRATCH MOVE
+   MANUAL SCRATCH
 ===================================================== */
 
 recordDisc.addEventListener(
@@ -3912,55 +6048,71 @@ recordDisc.addEventListener(
   event => {
 
     if(
-      !isScratching ||
-      event.pointerId !==
-      scratchPointerId
+      !isScratching
+      ||
+      event.pointerId !== scratchPointerId
     ){
 
       return;
 
     }
 
+
     event.preventDefault();
+
 
     const now =
       performance.now();
 
+
     const angle =
-      pointerAngle(event);
+      pointerAngle(
+        event
+      );
+
 
     let delta =
-      angle -
+      angle
+      -
       scratchLastAngle;
 
+
     if(
-      delta >
-      Math.PI
+      delta > Math.PI
     ){
 
       delta -=
-        Math.PI * 2;
+        Math.PI
+        *
+        2;
 
     }
 
+
     if(
-      delta <
-      -Math.PI
+      delta < -Math.PI
     ){
 
       delta +=
-        Math.PI * 2;
+        Math.PI
+        *
+        2;
 
     }
 
+
     if(
-      Math.abs(delta) <
+      Math.abs(
+        delta
+      )
+      <
       .0007
     ){
 
       return;
 
     }
+
 
     if(
       !manualScratchStarted
@@ -3969,48 +6121,62 @@ recordDisc.addEventListener(
       manualScratchStarted =
         true;
 
+
       cancelGrabBrake();
 
     }
 
+
     const deltaDegrees =
-      delta *
-      180 /
+      delta
+      *
+      180
+      /
       Math.PI;
+
 
     const deltaTrackSeconds =
       (
-        deltaDegrees /
+        deltaDegrees
+        /
         DEGREES_PER_SECOND
-      ) *
+      )
+      *
       SCRATCH_TIME_SCALE;
+
 
     const elapsed =
       Math.max(
         .002,
         (
-          now -
+          now
+          -
           scratchLastPointerTime
-        ) /
+        )
+        /
         1000
       );
 
+
     const instantVelocity =
-      deltaTrackSeconds /
+      deltaTrackSeconds
+      /
       elapsed;
 
-    /*
-      Slight smoothing of hand velocity.
-    */
 
     scratchVelocity =
-      scratchVelocity *
-      .30 +
-      instantVelocity *
-      .70;
+      scratchVelocity
+      *
+      .42
+      +
+      instantVelocity
+      *
+      .58;
+
 
     scratchTime +=
       deltaTrackSeconds;
+
 
     scratchTime =
       Math.max(
@@ -4021,34 +6187,46 @@ recordDisc.addEventListener(
         )
       );
 
+
     scratchLastAngle =
       angle;
+
 
     scratchLastPointerTime =
       now;
 
+
     lastManualMoveAt =
       now;
 
+
     updateScratchVisuals();
+
 
     maybeEmitScratchGrain(
       now,
       false
     );
 
+
     microstatus.textContent =
-      "SCRATCH // " +
+      "SCRATCH // "
+      +
       (
         scratchVelocity >= 0
         ?
         "+"
         :
         "−"
-      ) +
+      )
+      +
       Math.abs(
         scratchVelocity
-      ).toFixed(2) +
+      )
+      .toFixed(
+        2
+      )
+      +
       "×";
 
   }
@@ -4071,27 +6249,33 @@ async function finishScratch(
 
   }
 
+
   if(
-    event &&
-    event.pointerId !==
-    scratchPointerId
+    event
+    &&
+    event.pointerId !== scratchPointerId
   ){
 
     return;
 
   }
 
+
   cancelGrabBrake();
+
 
   isScratching =
     false;
+
 
   track.classList.remove(
     "is-scratching"
   );
 
+
   if(
-    event &&
+    event
+    &&
     recordDisc.hasPointerCapture(
       event.pointerId
     )
@@ -4103,14 +6287,10 @@ async function finishScratch(
 
   }
 
+
   scratchPointerId =
     null;
 
-
-  /*
-    PLAY MODE:
-    motor catches record and returns it to 45 RPM.
-  */
 
   if(
     playIntent
@@ -4118,9 +6298,12 @@ async function finishScratch(
 
     await startMotorRecovery();
 
+
     if(
-      !playIntent ||
-      isPacking ||
+      !playIntent
+      ||
+      isPacking
+      ||
       isScratching
     ){
 
@@ -4128,72 +6311,60 @@ async function finishScratch(
 
     }
 
+
     audio.currentTime =
       scratchTime;
+
+
+    stopScratchScheduler(
+      true
+    );
+
 
     try{
 
       await audio.play();
 
-    }catch(error){
+    }
 
-      console.warn(error);
+    catch(error){
+
+      console.warn(
+        error
+      );
 
     }
 
-    return;
-
   }
 
+  else{
 
-  /*
-    PAUSE MODE:
-    no motor.
+    /*
+      Paused platter release.
 
-    If the last actual hand movement happened
-    immediately before release and platter
-    still has velocity → inertia/free-spin.
+      Do not kill the hand velocity instantly.
+      Let the record coast naturally and only
+      write the final physical position back
+      to the HTML audio element when it stops.
+    */
 
-    If user held it still before release →
-    it remains stopped.
-  */
-
-  const releaseNow =
-    performance.now();
-
-  const releasedImmediatelyAfterMovement =
-    (
-      releaseNow -
-      lastManualMoveAt
-    ) <
-    FREE_SPIN_RELEASE_WINDOW;
+    const releaseIdleMs =
+      performance.now()
+      -
+      scratchLastPointerTime;
 
 
-  if(
-    manualScratchStarted &&
-    releasedImmediatelyAfterMovement &&
-    Math.abs(
-      scratchVelocity
-    ) >=
-    FREE_SPIN_RELEASE_THRESHOLD
-  ){
+    const releasedVelocity =
+      releaseIdleMs > 110
+      ?
+      0
+      :
+      scratchVelocity;
 
-    startFreeSpin(
-      scratchVelocity
+
+    await startFreeSpinInertia(
+      releasedVelocity
     );
-
-  }else{
-
-    scratchVelocity =
-      0;
-
-    audio.currentTime =
-      scratchTime;
-
-    updateScratchVisuals();
-
-    microstatus.textContent =
-      "PLAYBACK // PAUSED";
 
   }
 
@@ -4205,6 +6376,7 @@ recordDisc.addEventListener(
   finishScratch
 );
 
+
 recordDisc.addEventListener(
   "pointercancel",
   finishScratch
@@ -4212,95 +6384,56 @@ recordDisc.addEventListener(
 
 
 /* =====================================================
-   ENSURE VINYL OPEN
+   ENSURE OPEN
 ===================================================== */
-
-let openingPromise =
-  null;
-
 
 async function ensureVinylOpen(){
 
   if(
-    vinylOpened &&
-    mechanismDeployed
+    vinylOpened
   ){
 
     return;
 
   }
+
+
+  vinylOpened =
+    true;
+
+
+  track.classList.add(
+    "is-open"
+  );
+
+
+  microstatus.textContent =
+    "LOADING SIGNAL // OPENING MEDIA";
+
+
+  await new Promise(
+    resolve =>
+      setTimeout(
+        resolve,
+        1480
+      )
+  );
 
 
   if(
-    openingPromise
+    !mechanismDeployed
   ){
 
-    await openingPromise;
-
-    return;
-
-  }
+    mechanismDeployed =
+      true;
 
 
-  openingPromise =
-    (async () => {
-
-      if(
-        !vinylOpened
-      ){
-
-        vinylOpened =
-          true;
-
-        track.classList.add(
-          "is-open"
-        );
-
-        microstatus.textContent =
-          "LOADING SIGNAL // OPENING MEDIA";
-
-      }
-
-      await new Promise(
-        resolve =>
-          setTimeout(
-            resolve,
-            1480
-          )
-      );
-
-      if(
-        !mechanismDeployed
-      ){
-
-        mechanismDeployed =
-          true;
-
-        track.classList.add(
-          "arm-on-top"
-        );
-
-      }
-
-      if(
-        !tonearmEngaged
-      ){
-
-        await engageTonearm();
-
-      }
-
-    })();
+    track.classList.add(
+      "arm-on-top"
+    );
 
 
-  try{
-
-    await openingPromise;
-
-  }finally{
-
-    openingPromise =
-      null;
+    await engageTonearm();
 
   }
 
@@ -4316,110 +6449,116 @@ async function prePlayCueTo(
 ){
 
   if(
-    isPreCueing ||
-    isPacking
+    isPreCueing
   ){
 
     return;
 
   }
 
+
   isPreCueing =
     true;
+
 
   track.classList.add(
     "is-precue"
   );
 
+
   await ensureVinylOpen();
 
-  if(
-    isPacking
-  ){
-
-    isPreCueing =
-      false;
-
-    track.classList.remove(
-      "is-precue"
-    );
-
-    return;
-
-  }
 
   const oldTime =
     audio.currentTime;
 
+
   const distanceRatio =
-    audio.duration
-    ?
     Math.abs(
-      targetTime -
+      targetTime
+      -
       oldTime
-    ) /
-    audio.duration
-    :
-    0;
+    )
+    /
+    Math.max(
+      1,
+      audio.duration
+    );
+
 
   const duration =
-    220 +
-    distanceRatio *
+    220
+    +
+    distanceRatio
+    *
     260;
+
 
   const startArm =
     currentTonearmAngle;
+
 
   const targetArm =
     armAngleFromTime(
       targetTime
     );
 
+
   const started =
     performance.now();
+
 
   await new Promise(
     resolve => {
 
-      function frame(now){
+      function frame(
+        now
+      ){
 
         const raw =
           Math.min(
             1,
             (
-              now -
+              now
+              -
               started
-            ) /
+            )
+            /
             duration
           );
+
 
         const eased =
           smootherStep(
             raw
           );
 
-        /*
-          Tonearm only.
-          Record does not visibly seek.
-        */
 
         setTonearmAngle(
-          startArm +
+          startArm
+          +
           (
-            targetArm -
+            targetArm
+            -
             startArm
-          ) *
+          )
+          *
           eased
         );
 
+
         updateProgressUI(
-          oldTime +
+          oldTime
+          +
           (
-            targetTime -
+            targetTime
+            -
             oldTime
-          ) *
+          )
+          *
           eased
         );
+
 
         if(
           raw < 1
@@ -4429,13 +6568,16 @@ async function prePlayCueTo(
             frame
           );
 
-        }else{
+        }
+
+        else{
 
           resolve();
 
         }
 
       }
+
 
       requestAnimationFrame(
         frame
@@ -4444,40 +6586,53 @@ async function prePlayCueTo(
     }
   );
 
+
   audio.currentTime =
     targetTime;
+
 
   scratchTime =
     targetTime;
 
+
   scratchVelocity =
     0;
+
 
   setVinylAngle(
     angleFromAudioTime(
       targetTime
-    ) %
+    )
+    %
     360
   );
+
 
   setTonearmAngle(
     targetArm
   );
 
+
   updateProgressUI(
     targetTime
   );
+
 
   track.classList.remove(
     "is-precue"
   );
 
+
   isPreCueing =
     false;
 
+
   microstatus.textContent =
-    "CUE LOCK // " +
-    fmt(targetTime);
+    "CUE LOCK // "
+    +
+    fmt(
+      targetTime
+    );
 
 }
 
@@ -4500,17 +6655,34 @@ async function playSeekSound(
 
   }
 
-  await resumeAudioContext();
 
   const context =
     getAudioContext();
 
+
+  if(
+    context.state ===
+    "suspended"
+  ){
+
+    try{
+
+      await context.resume();
+
+    }
+
+    catch(_){}
+
+  }
+
+
   const forward =
-    toTime >=
-    fromTime;
+    toTime >= fromTime;
+
 
   const source =
     context.createBufferSource();
+
 
   source.buffer =
     forward
@@ -4519,104 +6691,101 @@ async function playSeekSound(
     :
     reversedTrack;
 
+
   const distance =
     Math.abs(
-      toTime -
+      toTime
+      -
       fromTime
     );
+
 
   const distanceFactor =
     Math.min(
       1,
-      distance / 45
+      distance
+      /
+      45
     );
+
 
   const startRate =
     1;
 
+
   const maxRate =
-    3.5 +
-    distanceFactor *
+    3.5
+    +
+    distanceFactor
+    *
     9.5;
 
-  /*
-    Seek returns to normal playback speed.
-    Never to zero.
-  */
 
   const endRate =
     1;
 
+
   const duration =
-    durationMs /
+    durationMs
+    /
     1000;
+
 
   const now =
     context.currentTime;
 
+
   const end =
-    now +
+    now
+    +
     duration;
 
 
-  let accelFraction =
+  const accelerationFraction =
     Math.max(
       .06,
       Math.min(
         .50,
-        .38 /
+        .38
+        /
         SEEK_START_SPEED
       )
     );
 
 
-  let brakeFraction =
+  const returnFraction =
     Math.max(
       .08,
       Math.min(
         .65,
-        .42 /
+        .42
+        /
         SEEK_STOP_SPEED
       )
     );
 
 
-  /*
-    Prevent acceleration/braking
-    schedules from overlapping.
-  */
-
-  const totalFractions =
-    accelFraction +
-    brakeFraction;
-
-  if(
-    totalFractions >
-    .82
-  ){
-
-    const k =
-      .82 /
-      totalFractions;
-
-    accelFraction *=
-      k;
-
-    brakeFraction *=
-      k;
-
-  }
-
-
   const accelEnd =
-    now +
-    duration *
-    accelFraction;
+    now
+    +
+    duration
+    *
+    accelerationFraction;
 
-  const brakeStart =
-    end -
-    duration *
-    brakeFraction;
+
+  let returnStart =
+    end
+    -
+    duration
+    *
+    returnFraction;
+
+
+  returnStart =
+    Math.max(
+      accelEnd,
+      returnStart
+    );
 
 
   source.playbackRate.setValueAtTime(
@@ -4624,26 +6793,28 @@ async function playSeekSound(
     now
   );
 
-  source.playbackRate
-    .exponentialRampToValueAtTime(
-      maxRate,
-      accelEnd
-    );
+
+  source.playbackRate.exponentialRampToValueAtTime(
+    maxRate,
+    accelEnd
+  );
+
 
   source.playbackRate.setValueAtTime(
     maxRate,
-    brakeStart
+    returnStart
   );
 
-  source.playbackRate
-    .exponentialRampToValueAtTime(
-      endRate,
-      end
-    );
+
+  source.playbackRate.exponentialRampToValueAtTime(
+    endRate,
+    end
+  );
 
 
   const gain =
     context.createGain();
+
 
   const targetGain =
     SEEK_FULL_VOLUME
@@ -4652,29 +6823,41 @@ async function playSeekSound(
     :
     SEEK_REDUCED_GAIN;
 
+
   gain.gain.setValueAtTime(
     .001,
     now
   );
 
+
   gain.gain.linearRampToValueAtTime(
     targetGain,
-    now + .03
+    now
+    +
+    .03
   );
+
 
   gain.gain.setValueAtTime(
     targetGain,
-    end - .025
+    end
+    -
+    .025
   );
+
 
   gain.gain.exponentialRampToValueAtTime(
     .001,
-    end + .018
+    end
+    +
+    .018
   );
+
 
   source.connect(
     gain
   );
+
 
   gain.connect(
     context.destination
@@ -4682,6 +6865,7 @@ async function playSeekSound(
 
 
   let offset;
+
 
   if(
     forward
@@ -4691,22 +6875,26 @@ async function playSeekSound(
       Math.max(
         0,
         Math.min(
-          decodedTrack.duration -
+          decodedTrack.duration
+          -
           .2,
           fromTime
         )
       );
 
-  }else{
+  }
+
+  else{
 
     offset =
       Math.max(
         0,
         Math.min(
-          reversedTrack.duration -
+          reversedTrack.duration
+          -
           .2,
-
-          reversedTrack.duration -
+          reversedTrack.duration
+          -
           fromTime
         )
       );
@@ -4721,13 +6909,20 @@ async function playSeekSound(
       offset
     );
 
+
     source.stop(
-      end + .025
+      end
+      +
+      .025
     );
 
-  }catch(error){
+  }
 
-    console.warn(error);
+  catch(error){
+
+    console.warn(
+      error
+    );
 
   }
 
@@ -4757,8 +6952,10 @@ function animateVinylSeek(
     resolve => {
 
       const delta =
-        toTime -
+        toTime
+        -
         fromTime;
+
 
       const direction =
         delta >= 0
@@ -4767,9 +6964,12 @@ function animateVinylSeek(
         :
         -1;
 
+
       let normalTailSeconds =
-        .34 /
+        .34
+        /
         SEEK_STOP_SPEED;
+
 
       normalTailSeconds =
         Math.max(
@@ -4780,59 +6980,83 @@ function animateVinylSeek(
           )
         );
 
+
       normalTailSeconds =
         Math.min(
           normalTailSeconds,
-          Math.abs(delta) *
+          Math.abs(
+            delta
+          )
+          *
           .35
         );
 
+
       const transitionTime =
-        toTime -
-        direction *
+        toTime
+        -
+        direction
+        *
         normalTailSeconds;
 
+
       const tailMs =
-        normalTailSeconds *
+        normalTailSeconds
+        *
         1000;
+
 
       const fastDurationMs =
         Math.max(
           60,
-          durationMs -
+          durationMs
+          -
           tailMs
         );
+
 
       const started =
         performance.now();
 
-      function frame(now){
+
+      function frame(
+        now
+      ){
 
         const elapsed =
-          now -
+          now
+          -
           started;
+
 
         let visualTime;
 
+
         if(
-          elapsed <
+          elapsed
+          <
           fastDurationMs
         ){
 
           const raw =
             Math.min(
               1,
-              elapsed /
+              elapsed
+              /
               fastDurationMs
             );
 
+
           const startPower =
-            1 +
-            1 /
+            1
+            +
+            1
+            /
             Math.max(
               .15,
               SEEK_START_SPEED
             );
+
 
           const accelerated =
             Math.pow(
@@ -4840,50 +7064,69 @@ function animateVinylSeek(
               startPower
             );
 
+
           const linearBlend =
-            .20 +
+            .20
+            +
             Math.min(
               .45,
-              SEEK_STOP_SPEED *
+              SEEK_STOP_SPEED
+              *
               .08
             );
 
+
           const moved =
-            accelerated *
+            accelerated
+            *
             (
-              1 -
+              1
+              -
               linearBlend
             )
             +
-            raw *
+            raw
+            *
             linearBlend;
 
+
           visualTime =
-            fromTime +
+            fromTime
+            +
             (
-              transitionTime -
+              transitionTime
+              -
               fromTime
-            ) *
+            )
+            *
             moved;
 
-        }else{
+        }
+
+        else{
 
           const tailElapsed =
             Math.min(
               normalTailSeconds,
               (
-                elapsed -
+                elapsed
+                -
                 fastDurationMs
-              ) /
+              )
+              /
               1000
             );
 
+
           visualTime =
-            transitionTime +
-            direction *
+            transitionTime
+            +
+            direction
+            *
             tailElapsed;
 
         }
+
 
         if(
           direction > 0
@@ -4895,7 +7138,9 @@ function animateVinylSeek(
               visualTime
             );
 
-        }else{
+        }
+
+        else{
 
           visualTime =
             Math.max(
@@ -4905,11 +7150,13 @@ function animateVinylSeek(
 
         }
 
+
         setVinylAngle(
           angleFromAudioTime(
             visualTime
           )
         );
+
 
         if(
           tonearmEngaged
@@ -4923,12 +7170,15 @@ function animateVinylSeek(
 
         }
 
+
         updateProgressUI(
           visualTime
         );
 
+
         if(
-          elapsed <
+          elapsed
+          <
           durationMs
         ){
 
@@ -4936,13 +7186,16 @@ function animateVinylSeek(
             frame
           );
 
-        }else{
+        }
+
+        else{
 
           resolve();
 
         }
 
       }
+
 
       requestAnimationFrame(
         frame
@@ -4962,16 +7215,12 @@ async function seekTo(
   targetTime
 ){
 
-  /*
-    If paused platter is still free-spinning,
-    waveform seek takes control from it.
-  */
-
   if(
     isFreeSpinning
   ){
 
     cancelFreeSpin();
+
 
     audio.currentTime =
       scratchTime;
@@ -4980,19 +7229,27 @@ async function seekTo(
 
 
   if(
-    isScratching ||
-    isMotorRecovering ||
-    isPlayStarting ||
-    isPauseBraking ||
-    isPacking ||
-    isSeeking ||
-    isPreCueing ||
+    isScratching
+    ||
+    isMotorRecovering
+    ||
+    isPlayStarting
+    ||
+    isPauseBraking
+    ||
+    isPacking
+    ||
+    isSeeking
+    ||
+    isPreCueing
+    ||
     !audio.duration
   ){
 
     return;
 
   }
+
 
   targetTime =
     Math.max(
@@ -5005,56 +7262,43 @@ async function seekTo(
 
 
   /*
-    FIRST START / AFTER FULL REPACK.
+    FIRST CUE BEFORE FIRST PLAY.
+
+    This branch now also works again after
+    the track has naturally ended and has
+    been fully packed back into the sleeve,
+    because stopAndPack() resets
+    hasPlaybackEverStarted = false.
   */
 
   if(
-    !hasPlaybackEverStarted &&
-    !playIntent &&
-    targetTime >
-    .5
+    !hasPlaybackEverStarted
+    &&
+    !playIntent
+    &&
+    targetTime > .5
   ){
 
     await prePlayCueTo(
       targetTime
     );
 
+
     playIntent =
       true;
 
+
     hasPlaybackEverStarted =
       true;
+
 
     setPlayIcon(
       true
     );
 
+
     await startPhysicalPlay();
 
-    return;
-
-  }
-
-
-  if(
-    !hasPlaybackEverStarted &&
-    !playIntent &&
-    targetTime <=
-    .5
-  ){
-
-    audio.currentTime =
-      0;
-
-    scratchTime =
-      0;
-
-    scratchVelocity =
-      0;
-
-    updateProgressUI(
-      0
-    );
 
     return;
 
@@ -5062,8 +7306,43 @@ async function seekTo(
 
 
   /*
-    Normal seek from Pause
-    automatically becomes Play.
+    Beginning before first Play.
+  */
+
+  if(
+    !hasPlaybackEverStarted
+    &&
+    !playIntent
+    &&
+    targetTime <= .5
+  ){
+
+    audio.currentTime =
+      0;
+
+
+    scratchTime =
+      0;
+
+
+    scratchVelocity =
+      0;
+
+
+    updateProgressUI(
+      0
+    );
+
+
+    return;
+
+  }
+
+
+  /*
+    NORMAL SEEK.
+
+    If currently paused, seek also starts Play.
   */
 
   if(
@@ -5072,6 +7351,7 @@ async function seekTo(
 
     playIntent =
       true;
+
 
     setPlayIcon(
       true
@@ -5086,36 +7366,50 @@ async function seekTo(
   const oldTime =
     audio.currentTime;
 
+
   const delta =
-    targetTime -
+    targetTime
+    -
     oldTime;
 
 
   if(
-    Math.abs(delta) <
+    Math.abs(
+      delta
+    )
+    <
     .08
   ){
 
     audio.currentTime =
       targetTime;
 
+
     scratchTime =
       targetTime;
+
 
     scratchVelocity =
       1;
 
+
     updateScratchVisuals();
+
 
     try{
 
       await audio.play();
 
-    }catch(error){
+    }
 
-      console.warn(error);
+    catch(error){
+
+      console.warn(
+        error
+      );
 
     }
+
 
     return;
 
@@ -5125,11 +7419,19 @@ async function seekTo(
   isSeeking =
     true;
 
+
   track.classList.add(
     "is-seeking"
   );
 
+
+  stopScratchScheduler(
+    true
+  );
+
+
   stopVinylSync();
+
 
   if(
     !audio.paused
@@ -5139,14 +7441,19 @@ async function seekTo(
 
   }
 
+
   setPlayIcon(
     true
   );
 
 
   const revolutions =
-    Math.abs(delta) *
+    Math.abs(
+      delta
+    )
+    *
     REVOLUTIONS_PER_SECOND;
+
 
   const duration =
     Math.round(
@@ -5154,10 +7461,12 @@ async function seekTo(
         380,
         Math.min(
           1700,
-          380 +
+          380
+          +
           Math.log1p(
             revolutions
-          ) *
+          )
+          *
           240
         )
       )
@@ -5165,19 +7474,28 @@ async function seekTo(
 
 
   microstatus.textContent =
-    "SEEK // " +
+    "SEEK // "
+    +
     (
       delta >= 0
       ?
       "+"
       :
       "−"
-    ) +
+    )
+    +
     fmt(
-      Math.abs(delta)
-    ) +
-    " // " +
-    revolutions.toFixed(1) +
+      Math.abs(
+        delta
+      )
+    )
+    +
+    " // "
+    +
+    revolutions.toFixed(
+      1
+    )
+    +
     " REV";
 
 
@@ -5201,22 +7519,21 @@ async function seekTo(
   audio.currentTime =
     targetTime;
 
+
   scratchTime =
     targetTime;
 
-  /*
-    Seek reaches destination
-    already at 1x.
-  */
 
   scratchVelocity =
     1;
+
 
   setVinylAngle(
     angleFromAudioTime(
       targetTime
     )
   );
+
 
   if(
     tonearmEngaged
@@ -5230,29 +7547,39 @@ async function seekTo(
 
   }
 
+
   updateProgressUI(
     targetTime
   );
+
 
   track.classList.remove(
     "is-seeking"
   );
 
+
   isSeeking =
     false;
 
+
   microstatus.textContent =
     "SEEK LOCK // 1.00×";
+
 
   try{
 
     await audio.play();
 
-  }catch(error){
+  }
 
-    console.warn(error);
+  catch(error){
+
+    console.warn(
+      error
+    );
 
   }
+
 
   setPlayIcon(
     true
@@ -5277,8 +7604,10 @@ seek.addEventListener(
 
     }
 
+
     const rect =
       seek.getBoundingClientRect();
+
 
     const ratio =
       Math.max(
@@ -5286,15 +7615,19 @@ seek.addEventListener(
         Math.min(
           1,
           (
-            event.clientX -
+            event.clientX
+            -
             rect.left
-          ) /
+          )
+          /
           rect.width
         )
       );
 
+
     seekTo(
-      ratio *
+      ratio
+      *
       audio.duration
     );
 
@@ -5335,7 +7668,7 @@ function setPlayIcon(
 
 
 /* =====================================================
-   OPEN ANIMATION COMPLETE
+   OPEN COMPLETE
 ===================================================== */
 
 recordCarrier.addEventListener(
@@ -5344,8 +7677,10 @@ recordCarrier.addEventListener(
 
     if(
       event.animationName !==
-      "recordReveal" ||
-      mechanismDeployed ||
+      "recordReveal"
+      ||
+      mechanismDeployed
+      ||
       isPacking
     ){
 
@@ -5353,12 +7688,15 @@ recordCarrier.addEventListener(
 
     }
 
+
     mechanismDeployed =
       true;
+
 
     track.classList.add(
       "arm-on-top"
     );
+
 
     requestAnimationFrame(
       () => {
@@ -5366,13 +7704,7 @@ recordCarrier.addEventListener(
         requestAnimationFrame(
           () => {
 
-            if(
-              !tonearmEngaged
-            ){
-
-              engageTonearm();
-
-            }
+            engageTonearm();
 
           }
         );
@@ -5396,8 +7728,10 @@ playButtons.forEach(
       async () => {
 
         if(
-          isPacking ||
-          isSeeking ||
+          isPacking
+          ||
+          isSeeking
+          ||
           isPreCueing
         ){
 
@@ -5417,10 +7751,18 @@ playButtons.forEach(
           playIntent =
             false;
 
+
           cancelGrabBrake();
+
+
           cancelMotorRecovery();
+
+
           cancelPlayStart();
+
+
           cancelFreeSpin();
+
 
           if(
             !audio.paused
@@ -5429,15 +7771,19 @@ playButtons.forEach(
             scratchTime =
               audio.currentTime;
 
+
             audio.pause();
 
           }
+
 
           setPlayIcon(
             false
           );
 
+
           await startPauseBrake();
+
 
           return;
 
@@ -5449,27 +7795,36 @@ playButtons.forEach(
         */
 
         cancelPauseBrake();
+
+
         cancelFreeSpin();
+
 
         playIntent =
           true;
 
+
         hasPlaybackEverStarted =
           true;
+
 
         setPlayIcon(
           true
         );
 
+
         if(
-          isScratching ||
-          isMotorRecovering ||
+          isScratching
+          ||
+          isMotorRecovering
+          ||
           isPlayStarting
         ){
 
           return;
 
         }
+
 
         await startPhysicalPlay();
 
@@ -5481,12 +7836,17 @@ playButtons.forEach(
 
 
 /* =====================================================
-   AUDIO EVENTS
+   AUDIO PLAY
 ===================================================== */
 
 audio.addEventListener(
   "play",
   () => {
+
+    stopScratchScheduler(
+      true
+    );
+
 
     if(
       !playIntent
@@ -5494,30 +7854,42 @@ audio.addEventListener(
 
       audio.pause();
 
+
       return;
 
     }
 
+
     if(
-      isPacking ||
-      isScratching ||
-      isMotorRecovering ||
-      isPlayStarting ||
-      isPauseBraking ||
-      isFreeSpinning ||
-      isSeeking ||
+      isPacking
+      ||
+      isScratching
+      ||
+      isMotorRecovering
+      ||
+      isPlayStarting
+      ||
+      isPauseBraking
+      ||
+      isFreeSpinning
+      ||
+      isSeeking
+      ||
       isPreCueing
     ){
 
       audio.pause();
 
+
       return;
 
     }
 
+
     setPlayIcon(
       true
     );
+
 
     if(
       !vinylOpened
@@ -5526,11 +7898,13 @@ audio.addEventListener(
       vinylOpened =
         true;
 
+
       track.classList.add(
         "is-open"
       );
 
     }
+
 
     startVinylSync();
 
@@ -5538,11 +7912,16 @@ audio.addEventListener(
 );
 
 
+/* =====================================================
+   AUDIO PAUSE
+===================================================== */
+
 audio.addEventListener(
   "pause",
   () => {
 
     stopVinylSync();
+
 
     setPlayIcon(
       playIntent
@@ -5551,6 +7930,10 @@ audio.addEventListener(
   }
 );
 
+
+/* =====================================================
+   TIME
+===================================================== */
 
 audio.addEventListener(
   "loadedmetadata",
@@ -5570,13 +7953,20 @@ audio.addEventListener(
   () => {
 
     if(
-      !isScratching &&
-      !isMotorRecovering &&
-      !isPlayStarting &&
-      !isPauseBraking &&
-      !isFreeSpinning &&
-      !isSeeking &&
-      !isPreCueing &&
+      !isScratching
+      &&
+      !isMotorRecovering
+      &&
+      !isPlayStarting
+      &&
+      !isPauseBraking
+      &&
+      !isFreeSpinning
+      &&
+      !isSeeking
+      &&
+      !isPreCueing
+      &&
       !isPacking
     ){
 
@@ -5590,6 +7980,10 @@ audio.addEventListener(
 );
 
 
+/* =====================================================
+   END
+===================================================== */
+
 audio.addEventListener(
   "ended",
   async () => {
@@ -5597,9 +7991,11 @@ audio.addEventListener(
     playIntent =
       false;
 
+
     setPlayIcon(
       false
     );
+
 
     await stopAndPack();
 
@@ -5614,7 +8010,8 @@ audio.addEventListener(
 async function stopAndPack(){
 
   if(
-    isPacking ||
+    isPacking
+    ||
     !vinylOpened
   ){
 
@@ -5622,25 +8019,45 @@ async function stopAndPack(){
 
   }
 
+
   cancelGrabBrake();
+
+
   cancelMotorRecovery();
+
+
   cancelPlayStart();
+
+
   cancelPauseBrake();
+
+
   cancelFreeSpin();
+
+
+  stopScratchScheduler(
+    true
+  );
+
 
   isPacking =
     true;
 
+
   isSeeking =
     false;
+
 
   isScratching =
     false;
 
+
   isPreCueing =
     false;
 
+
   stopVinylSync();
+
 
   if(
     !audio.paused
@@ -5649,6 +8066,7 @@ async function stopAndPack(){
     audio.pause();
 
   }
+
 
   microstatus.textContent =
     "STOP // RETURNING SIGNAL";
@@ -5669,6 +8087,7 @@ async function stopAndPack(){
   track.classList.remove(
     "arm-on-top"
   );
+
 
   tonearmEngaged =
     false;
@@ -5713,73 +8132,93 @@ async function stopAndPack(){
   mechanismDeployed =
     false;
 
+
   vinylOpened =
     false;
+
 
   isScratching =
     false;
 
+
   isMotorRecovering =
     false;
+
 
   isPlayStarting =
     false;
 
+
   isPauseBraking =
     false;
+
 
   isFreeSpinning =
     false;
 
+
   isSeeking =
     false;
+
 
   isPreCueing =
     false;
 
 
   /*
-    Full logical reset.
+    CRITICAL FULL RESET.
 
-    After packing the record back into
-    the sleeve, the next waveform click
-    once again behaves exactly like the
-    first interaction.
+    After the record has been completely packed
+    back into its sleeve, the player returns to
+    exactly the same logical state as on first load.
+
+    Therefore the next waveform click uses
+    PRE-PLAY CUE again.
   */
 
   playIntent =
     false;
 
+
   hasPlaybackEverStarted =
     false;
+
 
   audio.currentTime =
     0;
 
+
   scratchTime =
     0;
 
+
   scratchVelocity =
     0;
+
 
   setVinylAngle(
     0
   );
 
+
   setTonearmAngle(
     ARM_PARK_ANGLE
   );
+
 
   updateProgressUI(
     0
   );
 
+
   setPlayIcon(
     false
   );
 
+
   microstatus.textContent =
     "Connection stable // 01 signal detected";
+
 
   isPacking =
     false;
@@ -5792,30 +8231,37 @@ async function stopAndPack(){
 ===================================================== */
 
 const ARG_CODES = {
+
   "∴∆Ξ":
     "SIGNAL ACCEPTED // NODE UNLOCKED"
+
 };
+
 
 const codeForm =
   document.getElementById(
     "codeForm"
   );
 
+
 const codeInput =
   document.getElementById(
     "codeInput"
   );
+
 
 const codeResult =
   document.getElementById(
     "codeResult"
   );
 
+
 codeForm.addEventListener(
   "submit",
   event => {
 
     event.preventDefault();
+
 
     const code =
       codeInput
@@ -5826,11 +8272,15 @@ codeForm.addEventListener(
         ""
       );
 
+
     codeResult.style.display =
       "block";
 
+
     codeResult.textContent =
-      ARG_CODES[code]
+      ARG_CODES[
+        code
+      ]
       ||
       (
         code
