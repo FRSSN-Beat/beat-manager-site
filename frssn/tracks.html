@@ -372,7 +372,6 @@ input{
 
 .back:hover{
   background:var(--accent);
-
   color:#090b07;
 }
 
@@ -1521,7 +1520,7 @@ input{
 
 
 /* =====================================================
-   CURRENT MOBILE RESPONSIVE
+   MOBILE
 ===================================================== */
 
 @media(max-width:760px){
@@ -2156,140 +2155,388 @@ input{
 <script>
 "use strict";
 
-const audio = document.getElementById("trackAudio");
-const track = document.getElementById("trackOLD");
-const recordCarrier = document.getElementById("recordCarrier");
-const recordDisc = document.getElementById("recordDisc");
-const tonearmArm = document.getElementById("tonearmArm");
-const microstatus = document.getElementById("microstatus");
-const playButtons = [...document.querySelectorAll(".js-play")];
-const wave = document.querySelector(".js-wave");
-const waveClone = document.querySelector(".js-wave-clone");
-const progress = document.querySelector(".js-progress");
-const seek = document.querySelector(".js-seek");
-const current = document.querySelector(".js-current");
-const total = document.querySelector(".js-total");
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const audio =
+  document.getElementById(
+    "trackAudio"
+  );
+
+const track =
+  document.getElementById(
+    "trackOLD"
+  );
+
+const recordCarrier =
+  document.getElementById(
+    "recordCarrier"
+  );
+
+const recordDisc =
+  document.getElementById(
+    "recordDisc"
+  );
+
+const tonearmArm =
+  document.getElementById(
+    "tonearmArm"
+  );
+
+const microstatus =
+  document.getElementById(
+    "microstatus"
+  );
+
+const playButtons =
+  [
+    ...document.querySelectorAll(
+      ".js-play"
+    )
+  ];
+
+const wave =
+  document.querySelector(
+    ".js-wave"
+  );
+
+const waveClone =
+  document.querySelector(
+    ".js-wave-clone"
+  );
+
+const progress =
+  document.querySelector(
+    ".js-progress"
+  );
+
+const seek =
+  document.querySelector(
+    ".js-seek"
+  );
+
+const current =
+  document.querySelector(
+    ".js-current"
+  );
+
+const total =
+  document.querySelector(
+    ".js-total"
+  );
+
 
 /* =====================================================
    FINAL PHYSICS VALUES
 ===================================================== */
 
-const SCRATCH_TIME_SCALE = 0.54;
-const MOTOR_RECOVERY_SPEED = 3.00;
-const SEEK_START_SPEED = 0.45;
-const SEEK_STOP_SPEED = 1.00;
-const PLAY_START_SPEED = 3.55;
-const PAUSE_BRAKE_SPEED = 2.30;
-const SEEK_FULL_VOLUME = false;
+const SCRATCH_TIME_SCALE =
+  0.54;
+
+const MOTOR_RECOVERY_SPEED =
+  3.00;
+
+const SEEK_START_SPEED =
+  0.45;
+
+const SEEK_STOP_SPEED =
+  1.00;
+
+const PLAY_START_SPEED =
+  3.55;
+
+const PAUSE_BRAKE_SPEED =
+  2.30;
+
+const SEEK_FULL_VOLUME =
+  false;
+
 
 /* =====================================================
    STATE
 ===================================================== */
 
-let playIntent = false;
-let hasPlaybackEverStarted = false;
+let playIntent =
+  false;
 
-let vinylOpened = false;
-let mechanismDeployed = false;
-let tonearmEngaged = false;
-let isPacking = false;
-let isScratching = false;
-let isMotorRecovering = false;
-let isPlayStarting = false;
-let isPauseBraking = false;
-let isFreeSpinning = false;
-let isSeeking = false;
-let isPreCueing = false;
+let hasPlaybackEverStarted =
+  false;
 
-let vinylRAF = null;
+let vinylOpened =
+  false;
 
-let scratchPointerId = null;
-let scratchTime = 0;
-let scratchLastAngle = 0;
-let scratchLastPointerTime = 0;
-let scratchVelocity = 0;
-let grabBrakeActive = false;
-let manualScratchStarted = false;
-let lastManualMoveAt = 0;
-let openingPromise = null;
+let mechanismDeployed =
+  false;
 
-let grabBrakeRAF = null;
-let motorRecoveryRAF = null;
-let playStartRAF = null;
-let pauseBrakeRAF = null;
-let freeSpinRAF = null;
+let tonearmEngaged =
+  false;
 
-let playStartResolve = null;
-let pauseBrakeResolve = null;
-let motorRecoveryResolve = null;
-let freeSpinResolve = null;
+let isPacking =
+  false;
 
-let physicsGeneration = 0;
-let activeScratchGeneration = 0;
+let isScratching =
+  false;
+
+let isMotorRecovering =
+  false;
+
+let isPlayStarting =
+  false;
+
+let isPauseBraking =
+  false;
+
+let isFreeSpinning =
+  false;
+
+let isSeeking =
+  false;
+
+let isPreCueing =
+  false;
+
+let vinylRAF =
+  null;
+
+
+let scratchPointerId =
+  null;
+
+let scratchTime =
+  0;
+
+let scratchLastAngle =
+  0;
+
+let scratchLastPointerTime =
+  0;
+
+let scratchVelocity =
+  0;
+
+let grabBrakeActive =
+  false;
+
+let manualScratchStarted =
+  false;
+
+let lastManualMoveAt =
+  0;
+
+let openingPromise =
+  null;
+
+
+let grabBrakeRAF =
+  null;
+
+let motorRecoveryRAF =
+  null;
+
+let playStartRAF =
+  null;
+
+let pauseBrakeRAF =
+  null;
+
+let freeSpinRAF =
+  null;
+
+
+let playStartResolve =
+  null;
+
+let pauseBrakeResolve =
+  null;
+
+let motorRecoveryResolve =
+  null;
+
+let freeSpinResolve =
+  null;
+
+
+let physicsGeneration =
+  0;
+
+let activeScratchGeneration =
+  0;
+
 
 function nextPhysicsGeneration(){
-  physicsGeneration += 1;
+
+  physicsGeneration +=
+    1;
+
+
   return physicsGeneration;
+
 }
 
-function generationAlive(generation){
-  return generation === physicsGeneration;
+
+function generationAlive(
+  generation
+){
+
+  return (
+    generation
+    ===
+    physicsGeneration
+  );
+
 }
+
 
 /* =====================================================
    CONFIG
 ===================================================== */
 
-const SEEK_REDUCED_GAIN = 0.28;
-const SEEK_FULL_GAIN = 1.0;
+const SEEK_REDUCED_GAIN =
+  0.28;
 
-const GRAB_BRAKE_DURATION = 820;
-const GRAB_BRAKE_CURVE = 2.35;
+const SEEK_FULL_GAIN =
+  1.0;
 
-const MOTOR_RECOVERY_MIN_DURATION = 420;
-const MOTOR_RECOVERY_MAX_DURATION = 1300;
-const MOTOR_PULL_STRENGTH = 2.65;
 
-const PLAY_START_BASE_DURATION = 950;
-const PLAY_START_MIN_RATE = 0.16;
-const PLAY_START_CURVE = 2.25;
+const GRAB_BRAKE_DURATION =
+  820;
 
-const PAUSE_BRAKE_BASE_DURATION = 1150;
-const PAUSE_BRAKE_CURVE = 2.20;
+const GRAB_BRAKE_CURVE =
+  2.35;
 
-const FREE_SPIN_FRICTION = 2.55;
-const FREE_SPIN_MIN_VELOCITY = 0.018;
-const FREE_SPIN_RELEASE_THRESHOLD = 0.055;
-const FREE_SPIN_RELEASE_WINDOW = 115;
 
-const SCRATCH_SERVO_GAIN = 2.4;
-const SCRATCH_SERVO_LIMIT = 0.10;
+const MOTOR_RECOVERY_MIN_DURATION =
+  420;
 
-const WATCHDOG_INTERVAL_MS = 220;
-const WATCHDOG_MIN_SPEED = 0.50;
+const MOTOR_RECOVERY_MAX_DURATION =
+  1300;
+
+const MOTOR_PULL_STRENGTH =
+  2.65;
+
+
+const PLAY_START_BASE_DURATION =
+  950;
+
+const PLAY_START_MIN_RATE =
+  0.16;
+
+const PLAY_START_CURVE =
+  2.25;
+
+
+const PAUSE_BRAKE_BASE_DURATION =
+  1150;
+
+const PAUSE_BRAKE_CURVE =
+  2.20;
+
+
+const FREE_SPIN_FRICTION =
+  2.55;
+
+const FREE_SPIN_MIN_VELOCITY =
+  0.018;
+
+const FREE_SPIN_RELEASE_THRESHOLD =
+  0.055;
+
+const FREE_SPIN_RELEASE_WINDOW =
+  115;
+
+
+const SCRATCH_SERVO_GAIN =
+  2.4;
+
+const SCRATCH_SERVO_LIMIT =
+  0.10;
+
+
+const WATCHDOG_INTERVAL_MS =
+  220;
+
+const WATCHDOG_MIN_SPEED =
+  0.50;
+
 
 /* =====================================================
-   VINYL / HELPERS
+   VINYL
 ===================================================== */
 
-const VINYL_RPM = 45;
-const REVOLUTIONS_PER_SECOND = VINYL_RPM / 60;
-const DEGREES_PER_SECOND = REVOLUTIONS_PER_SECOND * 360;
+const VINYL_RPM =
+  45;
 
-function angleFromAudioTime(seconds){
-  return seconds * DEGREES_PER_SECOND;
+const REVOLUTIONS_PER_SECOND =
+  VINYL_RPM /
+  60;
+
+const DEGREES_PER_SECOND =
+  REVOLUTIONS_PER_SECOND *
+  360;
+
+
+function angleFromAudioTime(
+  seconds
+){
+
+  return (
+    seconds *
+    DEGREES_PER_SECOND
+  );
+
 }
 
-function setVinylAngle(angle){
-  recordDisc.style.transform = `rotate(${angle}deg)`;
+
+function setVinylAngle(
+  angle
+){
+
+  recordDisc.style.transform =
+    `rotate(${angle}deg)`;
+
 }
 
-function smootherStep(t){
-  return t*t*t * (t * (t*6 - 15) + 10);
+
+/* =====================================================
+   HELPERS
+===================================================== */
+
+function smootherStep(
+  t
+){
+
+  return (
+    t*t*t *
+    (
+      t *
+      (
+        t*6 -
+        15
+      )
+      +
+      10
+    )
+  );
+
 }
 
-function fmt(seconds){
-  if(!Number.isFinite(seconds)) return "0:00";
+
+function fmt(
+  seconds
+){
+
+  if(
+    !Number.isFinite(
+      seconds
+    )
+  ){
+
+    return "0:00";
+
+  }
+
 
   const minutes =
     Math.floor(
@@ -2297,52 +2544,77 @@ function fmt(seconds){
       60
     );
 
+
   const sec =
     Math.floor(
       seconds %
       60
     );
 
+
   return (
     minutes +
     ":" +
-    String(sec).padStart(
+    String(
+      sec
+    ).padStart(
       2,
       "0"
     )
   );
+
 }
 
+
 /* =====================================================
-   SOURCE DATA
+   AUDIO DATA
 ===================================================== */
 
-let audioContext = null;
-let decodedTrack = null;
-let reversedTrack = null;
-let trackDuration = 0;
+let audioContext =
+  null;
+
+let decodedTrack =
+  null;
+
+let reversedTrack =
+  null;
+
+let trackDuration =
+  0;
+
 
 function getAudioContext(){
-  if(!audioContext){
+
+  if(
+    !audioContext
+  ){
 
     const AC =
       window.AudioContext ||
       window.webkitAudioContext;
 
+
     audioContext =
-      new AC({
-        latencyHint:"interactive"
-      });
+      new AC(
+        {
+          latencyHint:
+            "interactive"
+        }
+      );
 
   }
 
+
   return audioContext;
+
 }
+
 
 async function resumeAudioContext(){
 
   const context =
     getAudioContext();
+
 
   if(
     context.state ===
@@ -2361,6 +2633,7 @@ async function resumeAudioContext(){
 
 }
 
+
 function getDuration(){
 
   if(
@@ -2375,6 +2648,7 @@ function getDuration(){
 
   }
 
+
   if(
     Number.isFinite(
       audio.duration
@@ -2387,13 +2661,19 @@ function getDuration(){
 
   }
 
+
   return 0;
+
 }
 
-function clampTime(time){
+
+function clampTime(
+  time
+){
 
   const duration =
     getDuration();
+
 
   if(
     !duration
@@ -2406,6 +2686,7 @@ function clampTime(time){
 
   }
 
+
   return Math.max(
     0,
     Math.min(
@@ -2413,7 +2694,13 @@ function clampTime(time){
       time
     )
   );
+
 }
+
+
+/* =====================================================
+   REVERSE BUFFER
+===================================================== */
 
 function createReversedBuffer(
   original,
@@ -2429,8 +2716,8 @@ function createReversedBuffer(
 
 
   for(
-    let channel=0;
-    channel<original.numberOfChannels;
+    let channel = 0;
+    channel < original.numberOfChannels;
     channel++
   ){
 
@@ -2439,6 +2726,7 @@ function createReversedBuffer(
         channel
       );
 
+
     const target =
       reversed.getChannelData(
         channel
@@ -2446,8 +2734,8 @@ function createReversedBuffer(
 
 
     for(
-      let i=0;
-      i<source.length;
+      let i = 0;
+      i < source.length;
       i++
     ){
 
@@ -2464,6 +2752,7 @@ function createReversedBuffer(
 
 
   return reversed;
+
 }
 
 
@@ -2479,6 +2768,7 @@ const ARM_START_ANGLE =
 
 const ARM_END_ANGLE =
   32.5;
+
 
 let currentTonearmAngle =
   ARM_PARK_ANGLE;
@@ -2547,7 +2837,7 @@ setTonearmAngle(
 
 function animateTonearmTo(
   targetAngle,
-  duration=600
+  duration = 600
 ){
 
   return new Promise(
@@ -2722,16 +3012,14 @@ function updateScratchVisuals(){
 
 
 /* =====================================================
-   AUDIOWORKLET VARISPEED ENGINE
+   AUDIOWORKLET ENGINE
 ===================================================== */
 
 let workletNode =
   null;
 
-
 let workletOutputGain =
   null;
-
 
 let workletLimiter =
   null;
@@ -2740,26 +3028,30 @@ let workletLimiter =
 let engineReady =
   false;
 
-
 let engineActive =
   false;
-
 
 let engineTargetSpeed =
   0;
 
-
 let enginePositionSec =
   0;
-
 
 let engineReportPerf =
   performance.now();
 
-
 let engineEndedLock =
   false;
 
+
+/* =====================================================
+   WORKLET PROCESSOR
+
+   IMPORTANT CHANGE:
+   motion envelope around zero RPM.
+
+   No hard sample -> zero switching.
+===================================================== */
 
 const WORKLET_PROCESSOR_CODE =
 `
@@ -2806,6 +3098,18 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
       0;
 
 
+    this.motionGain =
+      0;
+
+
+    this.motionTarget =
+      0;
+
+
+    this.motionMoving =
+      false;
+
+
     this.responseMode =
       "smooth";
 
@@ -2816,6 +3120,31 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
     this.endedSent =
       false;
+
+
+    /*
+      Hysteresis around zero.
+
+      ON threshold > OFF threshold,
+      so tiny velocity noise cannot rapidly
+      switch the motion envelope on/off.
+    */
+
+    this.motionStartThreshold =
+      0.0022;
+
+
+    this.motionStopThreshold =
+      0.0010;
+
+
+    /*
+      ~4-6 ms motion fade on typical
+      44.1 / 48 kHz devices.
+    */
+
+    this.motionSmoothing =
+      0.0046;
 
 
     this.port.onmessage =
@@ -2908,6 +3237,28 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
           this.responseMode =
             data.response ||
             "smooth";
+
+
+          this.motionMoving =
+            this.active
+            &&
+            Math.abs(
+              this.currentSpeed
+            )
+            >
+            this.motionStartThreshold;
+
+
+          this.motionTarget =
+            this.motionMoving
+            ?
+            1
+            :
+            0;
+
+
+          this.motionGain =
+            this.motionTarget;
 
 
           this.endedSent =
@@ -3116,17 +3467,6 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
       output[0].length;
 
 
-    /*
-      MANUAL:
-      дуже швидка реакція руки.
-
-      SMOOTH:
-      motor / brake / inertia.
-
-      Навіть при reverse напрямок проходить
-      через нуль sample-by-sample.
-    */
-
     const speedSmoothing =
       this.responseMode ===
       "manual"
@@ -3141,10 +3481,14 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
 
     for(
-      let i=0;
-      i<frames;
+      let i = 0;
+      i < frames;
       i++
     ){
+
+      /*
+        SPEED SLEW
+      */
 
       this.currentSpeed +=
         (
@@ -3155,6 +3499,10 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
         speedSmoothing;
 
 
+      /*
+        MASTER ACTIVE GAIN
+      */
+
       this.currentGain +=
         (
           this.targetGain -
@@ -3164,26 +3512,108 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
         gainSmoothing;
 
 
-      const audible =
-        this.active
-        &&
+      /*
+        ZERO-SPEED HYSTERESIS
+
+        start at > 0.0022
+        stop at < 0.0010
+
+        prevents chatter right around 0 RPM.
+      */
+
+      const absSpeed =
         Math.abs(
           this.currentSpeed
+        );
+
+
+      if(
+        !this.active
+      ){
+
+        this.motionMoving =
+          false;
+
+      }
+
+      else if(
+        this.motionMoving
+      ){
+
+        if(
+          absSpeed <
+          this.motionStopThreshold
+        ){
+
+          this.motionMoving =
+            false;
+
+        }
+
+      }
+
+      else{
+
+        if(
+          absSpeed >
+          this.motionStartThreshold
+        ){
+
+          this.motionMoving =
+            true;
+
+        }
+
+      }
+
+
+      this.motionTarget =
+        this.motionMoving
+        ?
+        1
+        :
+        0;
+
+
+      /*
+        SAMPLE-LEVEL MOTION ENVELOPE
+
+        This is the actual anti-click layer.
+
+        Instead of:
+        sample -> 0 instantly
+
+        we smoothly fade around zero RPM.
+      */
+
+      this.motionGain +=
+        (
+          this.motionTarget -
+          this.motionGain
         )
-        >
-        0.00001
-        &&
-        this.length > 1;
+        *
+        this.motionSmoothing;
+
+
+      /*
+        Always read the continuous sample.
+
+        No hard audible ternary gate.
+      */
+
+      const canRead =
+        this.length >
+        1;
 
 
       for(
-        let ch=0;
-        ch<output.length;
+        let ch = 0;
+        ch < output.length;
         ch++
       ){
 
-        output[ch][i] =
-          audible
+        const sample =
+          canRead
           ?
           this.sampleAt(
             Math.min(
@@ -3193,16 +3623,36 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
             ),
             this.position
           )
-          *
-          this.currentGain
           :
           0;
+
+
+        output[ch][i] =
+          sample
+          *
+          this.currentGain
+          *
+          this.motionGain;
 
       }
 
 
+      /*
+        Position continues only while there
+        is actual physical velocity.
+
+        At zero RPM the PCM cursor simply
+        remains parked at that exact sample.
+      */
+
       if(
-        audible
+        this.active
+        &&
+        absSpeed >
+        0.000001
+        &&
+        this.length >
+        1
       ){
 
         const increment =
@@ -3218,7 +3668,8 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
 
         if(
-          this.position <= 0
+          this.position <=
+          0
         ){
 
           this.position =
@@ -3226,7 +3677,8 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
 
           if(
-            this.currentSpeed < 0
+            this.currentSpeed <
+            0
           ){
 
             this.targetSpeed =
@@ -3266,8 +3718,7 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
 
         if(
-          this.position
-          >=
+          this.position >=
           this.length -
           1
         ){
@@ -3278,7 +3729,8 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
 
           if(
-            this.currentSpeed > 0
+            this.currentSpeed >
+            0
           ){
 
             this.targetSpeed =
@@ -3327,8 +3779,7 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
 
     if(
-      this.reportCounter
-      >=
+      this.reportCounter >=
       512
     ){
 
@@ -3349,7 +3800,10 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
             this.currentSpeed,
 
           active:
-            this.active
+            this.active,
+
+          motionGain:
+            this.motionGain
         }
       );
 
@@ -3454,8 +3908,10 @@ async function initWorkletFromBuffer(
 
 
   /*
-    Невеликий запас по рівню +
-    limiter як страховка від агресивних піків.
+    Small headroom.
+
+    Limiter remains only as peak protection;
+    the anti-click fix happens inside Worklet.
   */
 
   workletOutputGain =
@@ -3651,8 +4107,8 @@ async function initWorkletFromBuffer(
 
 
   for(
-    let c=0;
-    c<buffer.numberOfChannels;
+    let c = 0;
+    c < buffer.numberOfChannels;
     c++
   ){
 
@@ -3716,7 +4172,7 @@ function engineControl(
     position,
     speed,
     active,
-    hardSpeed=false,
+    hardSpeed = false,
     response
   }
   =
@@ -3861,8 +4317,7 @@ function getEstimatedEnginePosition(){
       Math.max(
         0,
         (
-          performance.now()
-          -
+          performance.now() -
           engineReportPerf
         )
         /
@@ -3889,7 +4344,7 @@ function getEstimatedEnginePosition(){
 
 
 /* =====================================================
-   WAVEFORM / LOAD
+   WAVEFORM
 ===================================================== */
 
 const WAVE_BARS =
@@ -3936,6 +4391,10 @@ function renderBars(
 
 }
 
+
+/* =====================================================
+   LOAD
+===================================================== */
 
 async function loadTrackData(
   url
@@ -3995,8 +4454,8 @@ async function loadTrackData(
 
 
     for(
-      let c=0;
-      c<decodedTrack.numberOfChannels;
+      let c = 0;
+      c < decodedTrack.numberOfChannels;
       c++
     ){
 
@@ -4013,8 +4472,7 @@ async function loadTrackData(
       Math.max(
         1,
         Math.floor(
-          decodedTrack.length
-          /
+          decodedTrack.length /
           WAVE_BARS
         )
       );
@@ -4025,8 +4483,8 @@ async function loadTrackData(
 
 
     for(
-      let i=0;
-      i<WAVE_BARS;
+      let i = 0;
+      i < WAVE_BARS;
       i++
     ){
 
@@ -4062,15 +4520,15 @@ async function loadTrackData(
 
 
       for(
-        let c=0;
-        c<channels.length;
+        let c = 0;
+        c < channels.length;
         c++
       ){
 
         for(
-          let s=start;
-          s<end;
-          s+=stride
+          let s = start;
+          s < end;
+          s += stride
         ){
 
           peak =
@@ -4149,7 +4607,8 @@ async function loadTrackData(
             WAVE_BARS
         },
         (_,i) =>
-          16 +
+          16
+          +
           (
             i *
             37
@@ -4180,14 +4639,13 @@ async function loadTrackData(
 
 
 loadTrackData(
-  audio.currentSrc
-  ||
+  audio.currentSrc ||
   audio.src
 );
 
 
 /* =====================================================
-   NORMAL PLAY SYNC
+   NORMAL SYNC
 ===================================================== */
 
 function stopVinylSync(){
@@ -4507,13 +4965,9 @@ function cancelFreeSpin(){
 function cancelAllTransientPhysics(){
 
   cancelGrabBrake();
-
   cancelMotorRecovery();
-
   cancelPlayStart();
-
   cancelPauseBrake();
-
   cancelFreeSpin();
 
 }
@@ -4571,8 +5025,7 @@ function startPlayAcceleration(
 
 
       const duration =
-        PLAY_START_BASE_DURATION
-        /
+        PLAY_START_BASE_DURATION /
         PLAY_START_SPEED;
 
 
@@ -4656,8 +5109,7 @@ function startPlayAcceleration(
             (
               now -
               previous
-            )
-            /
+            ) /
             1000
           );
 
@@ -4672,8 +5124,7 @@ function startPlayAcceleration(
             (
               now -
               started
-            )
-            /
+            ) /
             duration
           );
 
@@ -4738,8 +5189,7 @@ function startPlayAcceleration(
         if(
           t < 1
           &&
-          scratchTime
-          <
+          scratchTime <
           getDuration()
         ){
 
@@ -4804,7 +5254,7 @@ function startPlayAcceleration(
 
 
 /* =====================================================
-   START PHYSICAL PLAY
+   PHYSICAL PLAY
 ===================================================== */
 
 async function startPhysicalPlay(
@@ -4854,12 +5304,6 @@ async function startPhysicalPlay(
 
   }
 
-
-  /*
-    Один atomic resync при вході в Play.
-
-    Після цього PCM cursor не телепортується.
-  */
 
   const position =
     clampTime(
@@ -4988,13 +5432,6 @@ function startPauseBrake(
         1;
 
 
-      /*
-        Не записуємо position.
-
-        Worklet вже знаходиться на
-        безперервному PCM cursor.
-      */
-
       engineControl(
         {
           speed:
@@ -5010,8 +5447,7 @@ function startPauseBrake(
 
 
       const duration =
-        PAUSE_BRAKE_BASE_DURATION
-        /
+        PAUSE_BRAKE_BASE_DURATION /
         PAUSE_BRAKE_SPEED;
 
 
@@ -5091,8 +5527,7 @@ function startPauseBrake(
             (
               now -
               previous
-            )
-            /
+            ) /
             1000
           );
 
@@ -5107,8 +5542,7 @@ function startPauseBrake(
             (
               now -
               started
-            )
-            /
+            ) /
             duration
           );
 
@@ -5129,22 +5563,18 @@ function startPauseBrake(
 
 
         if(
-          scratchVelocity
-          <
+          scratchVelocity <
           .10
         ){
 
           const tail =
-            scratchVelocity
-            /
+            scratchVelocity /
             .10;
 
 
           scratchVelocity =
-            .10
-            *
-            tail
-            *
+            .10 *
+            tail *
             tail;
 
         }
@@ -5154,8 +5584,7 @@ function startPauseBrake(
           clampTime(
             scratchTime
             +
-            scratchVelocity
-            *
+            scratchVelocity *
             dt
           );
 
@@ -5190,8 +5619,7 @@ function startPauseBrake(
         if(
           t < 1
           &&
-          scratchVelocity
-          >
+          scratchVelocity >
           .002
         ){
 
@@ -5242,6 +5670,13 @@ function startPauseBrake(
               getEstimatedEnginePosition()
             );
 
+
+          /*
+            Do NOT hard mute.
+
+            Worklet motion envelope performs
+            the final few-ms fade to silence.
+          */
 
           engineControl(
             {
@@ -5456,8 +5891,7 @@ function startFreeSpin(
             (
               now -
               previous
-            )
-            /
+            ) /
             1000
           );
 
@@ -5468,8 +5902,7 @@ function startFreeSpin(
 
         scratchVelocity *=
           Math.exp(
-            -FREE_SPIN_FRICTION
-            *
+            -FREE_SPIN_FRICTION *
             dt
           );
 
@@ -5478,8 +5911,7 @@ function startFreeSpin(
           clampTime(
             scratchTime
             +
-            scratchVelocity
-            *
+            scratchVelocity *
             dt
           );
 
@@ -5514,8 +5946,7 @@ function startFreeSpin(
           +
           Math.abs(
             scratchVelocity
-          )
-          .toFixed(
+          ).toFixed(
             2
           )
           +
@@ -5698,8 +6129,7 @@ function startGrabBrake(
         (
           now -
           previous
-        )
-        /
+        ) /
         1000
       );
 
@@ -5714,8 +6144,7 @@ function startGrabBrake(
         (
           now -
           started
-        )
-        /
+        ) /
         GRAB_BRAKE_DURATION
       );
 
@@ -5730,8 +6159,7 @@ function startGrabBrake(
     scratchVelocity =
       Math.max(
         0,
-        startVelocity
-        *
+        startVelocity *
         (
           1 -
           braking
@@ -5740,22 +6168,18 @@ function startGrabBrake(
 
 
     if(
-      scratchVelocity
-      <
+      scratchVelocity <
       .12
     ){
 
       const tail =
-        scratchVelocity
-        /
+        scratchVelocity /
         .12;
 
 
       scratchVelocity =
-        .12
-        *
-        tail
-        *
+        .12 *
+        tail *
         tail;
 
     }
@@ -5765,8 +6189,7 @@ function startGrabBrake(
       clampTime(
         scratchTime
         +
-        scratchVelocity
-        *
+        scratchVelocity *
         dt
       );
 
@@ -5801,8 +6224,7 @@ function startGrabBrake(
     if(
       t < 1
       &&
-      scratchVelocity
-      >
+      scratchVelocity >
       .002
     ){
 
@@ -5902,16 +6324,14 @@ function startMotorRecovery(
             MOTOR_RECOVERY_MIN_DURATION,
             420
             +
-            distance
-            *
+            distance *
             520
           )
         );
 
 
       const duration =
-        baseDuration
-        /
+        baseDuration /
         MOTOR_RECOVERY_SPEED;
 
 
@@ -5922,13 +6342,6 @@ function startMotorRecovery(
       let previous =
         started;
 
-
-      /*
-        Продовжуємо з поточного
-        Worklet cursor.
-
-        position тут не пишемо.
-      */
 
       engineControl(
         {
@@ -6016,8 +6429,7 @@ function startMotorRecovery(
             (
               now -
               previous
-            )
-            /
+            ) /
             1000
           );
 
@@ -6032,8 +6444,7 @@ function startMotorRecovery(
             (
               now -
               started
-            )
-            /
+            ) /
             duration
           );
 
@@ -6063,8 +6474,7 @@ function startMotorRecovery(
           clampTime(
             scratchTime
             +
-            scratchVelocity
-            *
+            scratchVelocity *
             dt
           );
 
@@ -6183,7 +6593,7 @@ function startMotorRecovery(
 
 
 /* =====================================================
-   POINTER ANGLE
+   POINTER
 ===================================================== */
 
 function pointerAngle(
@@ -6195,28 +6605,22 @@ function pointerAngle(
 
 
   const cx =
-    rect.left
-    +
-    rect.width
-    /
+    rect.left +
+    rect.width /
     2;
 
 
   const cy =
-    rect.top
-    +
-    rect.height
-    /
+    rect.top +
+    rect.height /
     2;
 
 
   return Math.atan2(
-    event.clientY
-    -
+    event.clientY -
     cy,
 
-    event.clientX
-    -
+    event.clientX -
     cx
   );
 
@@ -6302,13 +6706,6 @@ recordDisc.addEventListener(
     );
 
 
-    /*
-      ТІЛЬКИ ОДНА position синхронізація
-      при захваті платівки.
-
-      Далі pointermove position не пише.
-    */
-
     scratchTime =
       previousPhysicalTime;
 
@@ -6346,6 +6743,10 @@ recordDisc.addEventListener(
 
     }
 
+
+    /*
+      One position sync only on grab.
+    */
 
     engineControl(
       {
@@ -6480,30 +6881,29 @@ recordDisc.addEventListener(
 
 
     let delta =
-      angle
-      -
+      angle -
       scratchLastAngle;
 
 
     if(
-      delta > Math.PI
+      delta >
+      Math.PI
     ){
 
       delta -=
-        Math.PI
-        *
+        Math.PI *
         2;
 
     }
 
 
     if(
-      delta < -Math.PI
+      delta <
+      -Math.PI
     ){
 
       delta +=
-        Math.PI
-        *
+        Math.PI *
         2;
 
     }
@@ -6536,17 +6936,14 @@ recordDisc.addEventListener(
 
 
     const deltaDegrees =
-      delta
-      *
-      180
-      /
+      delta *
+      180 /
       Math.PI;
 
 
     const deltaTrackSeconds =
       (
-        deltaDegrees
-        /
+        deltaDegrees /
         DEGREES_PER_SECOND
       )
       *
@@ -6557,8 +6954,7 @@ recordDisc.addEventListener(
       Math.max(
         .002,
         (
-          now
-          -
+          now -
           scratchLastPointerTime
         )
         /
@@ -6567,18 +6963,15 @@ recordDisc.addEventListener(
 
 
     const instantVelocity =
-      deltaTrackSeconds
-      /
+      deltaTrackSeconds /
       elapsed;
 
 
     scratchVelocity =
-      scratchVelocity
-      *
+      scratchVelocity *
       .42
       +
-      instantVelocity
-      *
+      instantVelocity *
       .58;
 
 
@@ -6603,19 +6996,9 @@ recordDisc.addEventListener(
 
 
     /*
-      ГОЛОВНА ПРАВКА ПРОТИ КЛІКІВ.
+      SPEED ONLY + soft servo.
 
-      НІЯКОГО:
-
-      position:scratchTime
-
-      на pointermove.
-
-      Worklet сам безперервно рухає PCM cursor.
-
-      Якщо візуальна позиція і PCM трохи
-      розбіглися — підтягуємо speed невеликим
-      servo correction без стрибка по семплах.
+      No PCM cursor teleport here.
     */
 
     const enginePosition =
@@ -6623,8 +7006,7 @@ recordDisc.addEventListener(
 
 
     const positionError =
-      scratchTime
-      -
+      scratchTime -
       enginePosition;
 
 
@@ -6633,8 +7015,7 @@ recordDisc.addEventListener(
         -SCRATCH_SERVO_LIMIT,
         Math.min(
           SCRATCH_SERVO_LIMIT,
-          positionError
-          *
+          positionError *
           SCRATCH_SERVO_GAIN
         )
       );
@@ -6676,8 +7057,7 @@ recordDisc.addEventListener(
       +
       Math.abs(
         scratchVelocity
-      )
-      .toFixed(
+      ).toFixed(
         2
       )
       +
@@ -6762,13 +7142,6 @@ async function finishScratch(
     null;
 
 
-  /*
-    На release саме AUDIO cursor стає
-    авторитетною позицією.
-
-    Тобто фінального teleport теж немає.
-  */
-
   scratchTime =
     clampTime(
       getEstimatedEnginePosition()
@@ -6845,8 +7218,7 @@ async function finishScratch(
 
   const releasedImmediatelyAfterMovement =
     (
-      releaseNow
-      -
+      releaseNow -
       lastManualMoveAt
     )
     <
@@ -6877,6 +7249,10 @@ async function finishScratch(
     scratchVelocity =
       0;
 
+
+    /*
+      motionGain fades naturally to 0.
+    */
 
     engineControl(
       {
@@ -6916,7 +7292,7 @@ recordDisc.addEventListener(
 
 
 /* =====================================================
-   ENSURE OPEN
+   OPEN
 ===================================================== */
 
 async function ensureVinylOpen(){
@@ -7020,7 +7396,7 @@ async function ensureVinylOpen(){
 
 
 /* =====================================================
-   PRE-PLAY CUE
+   PRE-CUE
 ===================================================== */
 
 async function prePlayCueTo(
@@ -7077,8 +7453,7 @@ async function prePlayCueTo(
 
   const distanceRatio =
     Math.abs(
-      targetTime
-      -
+      targetTime -
       oldTime
     )
     /
@@ -7089,10 +7464,8 @@ async function prePlayCueTo(
 
 
   const duration =
-    220
-    +
-    distanceRatio
-    *
+    220 +
+    distanceRatio *
     260;
 
 
@@ -7336,8 +7709,7 @@ async function playSeekSound(
 
   const distance =
     Math.abs(
-      toTime
-      -
+      toTime -
       fromTime
     );
 
@@ -7345,8 +7717,7 @@ async function playSeekSound(
   const distanceFactor =
     Math.min(
       1,
-      distance
-      /
+      distance /
       45
     );
 
@@ -7358,8 +7729,7 @@ async function playSeekSound(
   const maxRate =
     3.5
     +
-    distanceFactor
-    *
+    distanceFactor *
     9.5;
 
 
@@ -7368,8 +7738,7 @@ async function playSeekSound(
 
 
   const duration =
-    durationMs
-    /
+    durationMs /
     1000;
 
 
@@ -7378,8 +7747,7 @@ async function playSeekSound(
 
 
   const end =
-    now
-    +
+    now +
     duration;
 
 
@@ -7388,8 +7756,7 @@ async function playSeekSound(
       .06,
       Math.min(
         .50,
-        .38
-        /
+        .38 /
         SEEK_START_SPEED
       )
     );
@@ -7400,8 +7767,7 @@ async function playSeekSound(
       .08,
       Math.min(
         .65,
-        .42
-        /
+        .42 /
         SEEK_STOP_SPEED
       )
     );
@@ -7410,16 +7776,14 @@ async function playSeekSound(
   const accelEnd =
     now
     +
-    duration
-    *
+    duration *
     accelerationFraction;
 
 
   let returnStart =
     end
     -
-    duration
-    *
+    duration *
     returnFraction;
 
 
@@ -7474,24 +7838,21 @@ async function playSeekSound(
 
   gain.gain.linearRampToValueAtTime(
     targetGain,
-    now
-    +
+    now +
     .03
   );
 
 
   gain.gain.setValueAtTime(
     targetGain,
-    end
-    -
+    end -
     .025
   );
 
 
   gain.gain.exponentialRampToValueAtTime(
     .001,
-    end
-    +
+    end +
     .018
   );
 
@@ -7517,8 +7878,7 @@ async function playSeekSound(
       Math.max(
         0,
         Math.min(
-          decodedTrack.duration
-          -
+          decodedTrack.duration -
           .2,
           fromTime
         )
@@ -7532,11 +7892,9 @@ async function playSeekSound(
       Math.max(
         0,
         Math.min(
-          reversedTrack.duration
-          -
+          reversedTrack.duration -
           .2,
-          reversedTrack.duration
-          -
+          reversedTrack.duration -
           fromTime
         )
       );
@@ -7553,8 +7911,7 @@ async function playSeekSound(
 
 
     source.stop(
-      end
-      +
+      end +
       .025
     );
 
@@ -7595,8 +7952,7 @@ function animateVinylSeek(
     resolve => {
 
       const delta =
-        toTime
-        -
+        toTime -
         fromTime;
 
 
@@ -7609,8 +7965,7 @@ function animateVinylSeek(
 
 
       let normalTailSeconds =
-        .34
-        /
+        .34 /
         SEEK_STOP_SPEED;
 
 
@@ -7638,22 +7993,19 @@ function animateVinylSeek(
       const transitionTime =
         toTime
         -
-        direction
-        *
+        direction *
         normalTailSeconds;
 
 
       const tailMs =
-        normalTailSeconds
-        *
+        normalTailSeconds *
         1000;
 
 
       const fastDurationMs =
         Math.max(
           60,
-          durationMs
-          -
+          durationMs -
           tailMs
         );
 
@@ -7683,8 +8035,7 @@ function animateVinylSeek(
 
 
         const elapsed =
-          now
-          -
+          now -
           started;
 
 
@@ -7692,16 +8043,14 @@ function animateVinylSeek(
 
 
         if(
-          elapsed
-          <
+          elapsed <
           fastDurationMs
         ){
 
           const raw =
             Math.min(
               1,
-              elapsed
-              /
+              elapsed /
               fastDurationMs
             );
 
@@ -7709,8 +8058,7 @@ function animateVinylSeek(
           const startPower =
             1
             +
-            1
-            /
+            1 /
             Math.max(
               .15,
               SEEK_START_SPEED
@@ -7729,23 +8077,19 @@ function animateVinylSeek(
             +
             Math.min(
               .45,
-              SEEK_STOP_SPEED
-              *
+              SEEK_STOP_SPEED *
               .08
             );
 
 
           const moved =
-            accelerated
-            *
+            accelerated *
             (
-              1
-              -
+              1 -
               linearBlend
             )
             +
-            raw
-            *
+            raw *
             linearBlend;
 
 
@@ -7753,8 +8097,7 @@ function animateVinylSeek(
             fromTime
             +
             (
-              transitionTime
-              -
+              transitionTime -
               fromTime
             )
             *
@@ -7768,8 +8111,7 @@ function animateVinylSeek(
             Math.min(
               normalTailSeconds,
               (
-                elapsed
-                -
+                elapsed -
                 fastDurationMs
               )
               /
@@ -7780,8 +8122,7 @@ function animateVinylSeek(
           visualTime =
             transitionTime
             +
-            direction
-            *
+            direction *
             tailElapsed;
 
         }
@@ -7827,8 +8168,7 @@ function animateVinylSeek(
 
 
         if(
-          elapsed
-          <
+          elapsed <
           durationMs
         ){
 
@@ -8034,8 +8374,7 @@ async function seekTo(
 
 
   const delta =
-    targetTime
-    -
+    targetTime -
     oldTime;
 
 
@@ -8314,8 +8653,7 @@ seek.addEventListener(
         Math.min(
           1,
           (
-            event.clientX
-            -
+            event.clientX -
             rect.left
           )
           /
@@ -8325,8 +8663,7 @@ seek.addEventListener(
 
 
     seekTo(
-      ratio
-      *
+      ratio *
       duration
     );
 
@@ -8524,10 +8861,10 @@ playButtons.forEach(
 
 
         /*
-          Atomic restart.
+          Start from parked cursor.
 
-          Старі режими вже мають
-          невалідний generation.
+          motionGain fades in automatically
+          as speed leaves zero.
         */
 
         engineControl(
@@ -8606,8 +8943,7 @@ setInterval(
     if(
       duration
       &&
-      position
-      >=
+      position >=
       duration -
       .12
     ){
@@ -8616,14 +8952,6 @@ setInterval(
 
     }
 
-
-    /*
-      Якщо Android залишив Worklet
-      у stale 0× стані — повертаємо 1×.
-
-      position не пишемо,
-      тому click не створюється.
-    */
 
     if(
       !engineActive
@@ -8731,15 +9059,43 @@ async function stopAndPack(){
   stopVinylSync();
 
 
+  /*
+    First ask motion engine to reach 0 speed.
+
+    active remains true briefly so Worklet
+    can fade motionGain naturally instead
+    of hard-switching the output.
+  */
+
   engineControl(
     {
       speed:
         0,
 
       active:
-        false,
+        true,
 
       hardSpeed:
+        false,
+
+      response:
+        "smooth"
+    }
+  );
+
+
+  await new Promise(
+    resolve =>
+      setTimeout(
+        resolve,
+        18
+      )
+  );
+
+
+  engineControl(
+    {
+      active:
         false,
 
       response:
