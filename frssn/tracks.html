@@ -1480,6 +1480,87 @@ input{
 
 
 /* =====================================================
+   DEBUG SFX
+===================================================== */
+
+.sfxDebug{
+  position:fixed;
+
+  right:14px;
+  bottom:14px;
+
+  z-index:100;
+
+  width:210px;
+
+  padding:10px 12px;
+
+  border:
+    1px solid
+    rgba(214,255,40,.38);
+
+  background:
+    rgba(4,6,4,.92);
+
+  box-shadow:
+    0 0 22px
+    rgba(0,0,0,.55);
+
+  backdrop-filter:
+    blur(8px);
+
+  color:var(--accent);
+
+  font:
+    9px/1.4 monospace;
+
+  letter-spacing:.08em;
+}
+
+.sfxDebugTop{
+  display:flex;
+
+  align-items:center;
+  justify-content:space-between;
+
+  gap:10px;
+
+  margin-bottom:8px;
+}
+
+.sfxDebugTitle{
+  white-space:nowrap;
+}
+
+.sfxDebugValue{
+  color:var(--text);
+
+  min-width:35px;
+
+  text-align:right;
+}
+
+.sfxDebug input[type="range"]{
+  width:100%;
+
+  margin:0;
+
+  accent-color:
+    var(--accent);
+}
+
+.sfxDebugFiles{
+  margin-top:6px;
+
+  color:var(--muted);
+
+  font-size:8px;
+
+  line-height:1.5;
+}
+
+
+/* =====================================================
    FOOTER
 ===================================================== */
 
@@ -1728,6 +1809,15 @@ input{
 
   .time{
     display:none;
+  }
+
+  .sfxDebug{
+    right:8px;
+    bottom:8px;
+
+    width:185px;
+
+    padding:8px 10px;
   }
 }
 </style>
@@ -2107,11 +2197,65 @@ input{
 </div>
 
 
+<!-- ===================================================
+     AUDIO
+=================================================== -->
+
 <audio
   id="trackAudio"
   preload="metadata"
   src="old.mp3"
 ></audio>
+
+<audio
+  id="paperInSfx"
+  preload="auto"
+  src="Paper in.mp3"
+></audio>
+
+<audio
+  id="paperOutSfx"
+  preload="auto"
+  src="Paper out.mp3"
+></audio>
+
+
+<!-- ===================================================
+     DEBUG PAPER SFX VOLUME
+=================================================== -->
+
+<div class="sfxDebug">
+
+  <div class="sfxDebugTop">
+
+    <span class="sfxDebugTitle">
+      DEBUG // PAPER SFX
+    </span>
+
+    <span
+      class="sfxDebugValue"
+      id="sfxVolumeValue"
+    >
+      70%
+    </span>
+
+  </div>
+
+  <input
+    id="sfxVolumeSlider"
+    type="range"
+    min="0"
+    max="100"
+    step="1"
+    value="70"
+  >
+
+  <div class="sfxDebugFiles">
+    IN // Paper in.mp3<br>
+    OUT // Paper out.mp3
+  </div>
+
+</div>
 
 
 <script>
@@ -2126,6 +2270,28 @@ const audio =
   document.getElementById(
     "trackAudio"
   );
+
+const paperInSfx =
+  document.getElementById(
+    "paperInSfx"
+  );
+
+const paperOutSfx =
+  document.getElementById(
+    "paperOutSfx"
+  );
+
+
+const sfxVolumeSlider =
+  document.getElementById(
+    "sfxVolumeSlider"
+  );
+
+const sfxVolumeValue =
+  document.getElementById(
+    "sfxVolumeValue"
+  );
+
 
 const track =
   document.getElementById(
@@ -2188,6 +2354,239 @@ const total =
   document.querySelector(
     ".js-total"
   );
+
+
+/* =====================================================
+   PAPER SFX
+===================================================== */
+
+const DEFAULT_PAPER_SFX_VOLUME =
+  0.70;
+
+
+let paperSfxVolume =
+  DEFAULT_PAPER_SFX_VOLUME;
+
+
+function loadPaperSfxVolume(){
+
+  try{
+
+    const saved =
+      localStorage.getItem(
+        "frssnPaperSfxVolume"
+      );
+
+
+    if(
+      saved !== null
+    ){
+
+      const parsed =
+        Number(
+          saved
+        );
+
+
+      if(
+        Number.isFinite(
+          parsed
+        )
+      ){
+
+        paperSfxVolume =
+          Math.max(
+            0,
+            Math.min(
+              1,
+              parsed
+            )
+          );
+
+      }
+
+    }
+
+  }
+
+  catch(_){}
+
+
+  const percent =
+    Math.round(
+      paperSfxVolume *
+      100
+    );
+
+
+  sfxVolumeSlider.value =
+    String(
+      percent
+    );
+
+
+  sfxVolumeValue.textContent =
+    percent +
+    "%";
+
+
+  paperInSfx.volume =
+    paperSfxVolume;
+
+
+  paperOutSfx.volume =
+    paperSfxVolume;
+
+}
+
+
+function setPaperSfxVolume(
+  value
+){
+
+  paperSfxVolume =
+    Math.max(
+      0,
+      Math.min(
+        1,
+        value
+      )
+    );
+
+
+  paperInSfx.volume =
+    paperSfxVolume;
+
+
+  paperOutSfx.volume =
+    paperSfxVolume;
+
+
+  const percent =
+    Math.round(
+      paperSfxVolume *
+      100
+    );
+
+
+  sfxVolumeValue.textContent =
+    percent +
+    "%";
+
+
+  try{
+
+    localStorage.setItem(
+      "frssnPaperSfxVolume",
+      String(
+        paperSfxVolume
+      )
+    );
+
+  }
+
+  catch(_){}
+
+}
+
+
+sfxVolumeSlider.addEventListener(
+  "input",
+  () => {
+
+    setPaperSfxVolume(
+      Number(
+        sfxVolumeSlider.value
+      )
+      /
+      100
+    );
+
+  }
+);
+
+
+function stopPaperSfx(
+  element
+){
+
+  try{
+
+    element.pause();
+
+    element.currentTime =
+      0;
+
+  }
+
+  catch(_){}
+
+}
+
+
+function playPaperIn(){
+
+  stopPaperSfx(
+    paperInSfx
+  );
+
+
+  paperInSfx.volume =
+    paperSfxVolume;
+
+
+  const promise =
+    paperInSfx.play();
+
+
+  if(
+    promise
+    &&
+    typeof promise.catch ===
+    "function"
+  ){
+
+    promise.catch(
+      () => {}
+    );
+
+  }
+
+}
+
+
+function playPaperOut(){
+
+  stopPaperSfx(
+    paperOutSfx
+  );
+
+
+  paperOutSfx.volume =
+    paperSfxVolume;
+
+
+  const promise =
+    paperOutSfx.play();
+
+
+  if(
+    promise
+    &&
+    typeof promise.catch ===
+    "function"
+  ){
+
+    promise.catch(
+      () => {}
+    );
+
+  }
+
+}
+
+
+loadPaperSfxVolume();
 
 
 /* =====================================================
@@ -3033,10 +3432,6 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
     this.endedSent =
       false;
 
-
-    /*
-      Same physical values as main thread.
-    */
 
     this.PLAY_START_SPEED =
       ${PLAY_START_SPEED};
@@ -3900,17 +4295,6 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
 
       case "manual":
       {
-        /*
-          Manual speed is an AUDIO PARAM.
-
-          No MessagePort queue for every
-          finger movement.
-
-          Very small sample-level slew prevents
-          a hard velocity corner without creating
-          the previous Android delay.
-        */
-
         const target =
           manualSpeed;
 
@@ -4104,10 +4488,6 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
         gainSmoothing;
 
 
-      /*
-        Zero-RPM anti-click envelope.
-      */
-
       const absSpeed =
         Math.abs(
           this.currentSpeed
@@ -4295,13 +4675,6 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor {
     this.reportCounter +=
       frames;
 
-
-    /*
-      256 samples = about 5 ms at 48 kHz.
-
-      Enough for responsive visuals without
-      binding audio timing to RAF.
-    */
 
     if(
       this.reportCounter >=
@@ -4794,11 +5167,6 @@ function setManualSpeed(
     audioContext.currentTime;
 
 
-  /*
-    AudioParam is the realtime control channel.
-    No MessagePort packet per finger move.
-  */
-
   manualSpeedParam.setValueAtTime(
     speed,
     now
@@ -4992,8 +5360,6 @@ function updateStatusFromEngineMode(
 
 /* =====================================================
    VISUAL LOOP
-
-   Audio physics no longer lives here.
 ===================================================== */
 
 function startVisualLoop(){
@@ -5020,11 +5386,6 @@ function startVisualLoop(){
       &&
       manualMovementStarted
     ){
-
-      /*
-        During touch we draw directly from
-        finger-derived physical position.
-      */
 
       position =
         scratchVisualTime;
@@ -5468,6 +5829,9 @@ loadTrackData(
 
 /* =====================================================
    OPEN
+
+   Paper in.mp3 starts exactly when
+   the unpack animation begins.
 ===================================================== */
 
 async function ensureVinylOpen(){
@@ -5505,6 +5869,13 @@ async function ensureVinylOpen(){
 
           vinylOpened =
             true;
+
+
+          /*
+            UNPACK SFX
+          */
+
+          playPaperIn();
 
 
           track.classList.add(
@@ -5659,8 +6030,6 @@ function setPlayIcon(
 
 /* =====================================================
    PLAY / PAUSE
-
-   No RAF physics here anymore.
 ===================================================== */
 
 playButtons.forEach(
@@ -5692,13 +6061,6 @@ playButtons.forEach(
           playIntent
         ){
 
-          /*
-            PAUSE
-
-            Worklet calculates entire brake
-            curve sample-by-sample.
-          */
-
           playIntent =
             false;
 
@@ -5723,10 +6085,6 @@ playButtons.forEach(
         }
 
 
-        /*
-          PLAY
-        */
-
         playIntent =
           true;
 
@@ -5746,13 +6104,6 @@ playButtons.forEach(
         if(
           isScratching
         ){
-
-          /*
-            If Play is requested while hand
-            is still on the record, logical
-            intent changes but manual control
-            remains authoritative until release.
-          */
 
           return;
 
@@ -5807,9 +6158,6 @@ function pointerAngle(
 
 /* =====================================================
    MANUAL IDLE
-
-   When finger stops moving while still
-   holding record, speed must approach zero.
 ===================================================== */
 
 function clearManualIdle(){
@@ -5865,9 +6213,6 @@ function scheduleManualIdle(){
 
 /* =====================================================
    SCRATCH START
-
-   CRITICAL:
-   no position write when grabbing a moving record.
 ===================================================== */
 
 recordDisc.addEventListener(
@@ -5949,17 +6294,6 @@ recordDisc.addEventListener(
     );
 
 
-    /*
-      IMPORTANT MOBILE FIX:
-
-      No seekEngine() here.
-
-      AudioWorklet already knows its exact
-      playback cursor.
-
-      We only change physical mode.
-    */
-
     if(
       playIntent
     ){
@@ -5988,7 +6322,7 @@ recordDisc.addEventListener(
 
 
 /* =====================================================
-   MANUAL SCRATCH SAMPLE
+   MANUAL SCRATCH
 ===================================================== */
 
 function processScratchSample(
@@ -6105,13 +6439,6 @@ function processScratchSample(
     elapsed;
 
 
-  /*
-    Keep a little smoothing only on
-    pointer velocity estimation.
-
-    Audio itself has sample-level slew.
-  */
-
   scratchVelocity =
     scratchVelocity *
     .28
@@ -6139,13 +6466,6 @@ function processScratchSample(
     manualMovementStarted =
       true;
 
-
-    /*
-      One mode switch only.
-
-      From now on movement speed is fed through
-      AudioParam rather than MessagePort.
-    */
 
     sendMode(
       "manual"
@@ -6185,10 +6505,7 @@ function processScratchSample(
 
 
 /* =====================================================
-   RAW POINTER / COALESCED EVENTS
-
-   Chrome Android can deliver motion samples
-   between screen frames.
+   RAW POINTER
 ===================================================== */
 
 function handleScratchMotion(
@@ -6342,12 +6659,6 @@ function finishScratch(
     null;
 
 
-  /*
-    AUDIO cursor remains authoritative.
-
-    We deliberately do NOT seek on release.
-  */
-
   const releaseNow =
     performance.now();
 
@@ -6364,11 +6675,6 @@ function finishScratch(
   if(
     playIntent
   ){
-
-    /*
-      Whatever speed/direction the record
-      currently has, Worklet pulls it to +1.
-    */
 
     sendMode(
       "motor_recovery"
@@ -7258,10 +7564,6 @@ async function seekTo(
   );
 
 
-  /*
-    First-ever waveform cue.
-  */
-
   if(
     !hasPlaybackEverStarted
     &&
@@ -7656,6 +7958,9 @@ audio.addEventListener(
 
 /* =====================================================
    STOP / PACK
+
+   Paper out.mp3 starts exactly when
+   sleeve/record packing animation begins.
 ===================================================== */
 
 async function stopAndPack(){
@@ -7702,11 +8007,6 @@ async function stopAndPack(){
     0
   );
 
-
-  /*
-    Smooth audio shutdown happens inside
-    Worklet motion envelope.
-  */
 
   sendMode(
     "paused"
@@ -7759,6 +8059,16 @@ async function stopAndPack(){
         90
       )
   );
+
+
+  /*
+    PACKING SFX
+
+    Exactly here the sleeve starts
+    returning into the frame.
+  */
+
+  playPaperOut();
 
 
   track.classList.add(
