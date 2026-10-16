@@ -2111,8 +2111,8 @@ body.layout-mouse-edit .layout-debug-selected{
     <input id="dbgArmPark" type="range" min="-25" max="10" step="0.5" value="-8">
   </div>
   <div class="layoutDebugRow tonearmDebugRow">
-    <div class="layoutDebugHead"><span>TONEARM // INNER LIMIT</span><b id="dbgArmEndValue">32.5°</b></div>
-    <input id="dbgArmEnd" type="range" min="20" max="55" step="0.5" value="32.5">
+    <div class="layoutDebugHead"><span>TONEARM // OUTER LIMIT</span><b id="dbgArmStartValue">19.5°</b></div>
+    <input id="dbgArmStart" type="range" min="5" max="30" step="0.5" value="19.5">
   </div>
 
   <div class="layoutFrameLockStatus" id="layoutFrameLockStatus">MODULE FRAMES // <b>WAITING</b></div>
@@ -2749,7 +2749,7 @@ if(IS_DETAIL_PAGE&&layoutDebugPanel){
       `PAYMENT BLOCK = ${layoutDebugState.buyScale}% | X ${layoutDebugState.buyX} | Y ${layoutDebugState.buyY} | W ${layoutDebugState.buyStretchX}% | H ${layoutDebugState.buyStretchY}%`,
       `METER BLOCK = ${layoutDebugState.meterScale}% | X ${layoutDebugState.meterX} | Y ${layoutDebugState.meterY} | W ${layoutDebugState.meterStretchX}% | H ${layoutDebugState.meterStretchY}%`,
       `TONEARM PARK = ${ARM_PARK_ANGLE.toFixed(1)}°`,
-      `TONEARM INNER LIMIT = ${ARM_END_ANGLE.toFixed(1)}°`
+      `TONEARM OUTER LIMIT = ${ARM_START_ANGLE.toFixed(1)}°`
     ].join("\n");
     try{
       await navigator.clipboard.writeText(text);
@@ -2905,8 +2905,8 @@ const MECHANISM_DEPLOY_DURATION=1450;
 const ARM_START_OFFSET_MS=-240;
 const ARM_MOVE_DURATION_MS=380;
 let ARM_PARK_ANGLE=-8;
-const ARM_START_ANGLE=19.5;
-let ARM_END_ANGLE=32.5;
+let ARM_START_ANGLE=19.5;
+const ARM_END_ANGLE=32.5;
 
 const SCRATCH_TIME_SCALE=.54;
 const MOTOR_RECOVERY_SPEED=3.00;
@@ -2934,18 +2934,19 @@ const SEEK_FULL_GAIN=1.0;
 
 /* =====================================================
    TONEARM LIMIT DEBUG
-   PARK = resting angle. INNER LIMIT = maximum inward rotation at track end.
-   Both values are saved independently from the layout debug state.
+   PARK = resting angle. OUTER LIMIT = outer/start groove position.
+   The inner/end position stays fixed; the debug stop is intentionally on
+   the opposite side of the tonearm travel.
 ===================================================== */
 const TONEARM_DEBUG_KEY="frssnTonearmDebugV1";
-const TONEARM_DEBUG_DEFAULTS={park:-8,end:32.5};
+const TONEARM_DEBUG_DEFAULTS={park:-8,start:19.5};
 const dbgArmPark=document.getElementById("dbgArmPark");
-const dbgArmEnd=document.getElementById("dbgArmEnd");
+const dbgArmStart=document.getElementById("dbgArmStart");
 const dbgArmParkValue=document.getElementById("dbgArmParkValue");
-const dbgArmEndValue=document.getElementById("dbgArmEndValue");
+const dbgArmStartValue=document.getElementById("dbgArmStartValue");
 
 function saveTonearmDebug(){
-  try{localStorage.setItem(TONEARM_DEBUG_KEY,JSON.stringify({park:ARM_PARK_ANGLE,end:ARM_END_ANGLE}))}catch(_){}
+  try{localStorage.setItem(TONEARM_DEBUG_KEY,JSON.stringify({park:ARM_PARK_ANGLE,start:ARM_START_ANGLE}))}catch(_){}
 }
 function loadTonearmDebug(){
   try{
@@ -2953,18 +2954,19 @@ function loadTonearmDebug(){
     if(!raw)return;
     const d=JSON.parse(raw);
     if(Number.isFinite(Number(d.park)))ARM_PARK_ANGLE=Number(d.park);
-    if(Number.isFinite(Number(d.end)))ARM_END_ANGLE=Number(d.end);
+    /* Old V1 data may contain `end`; ignore it and keep the new outer stop default. */
+    if(Number.isFinite(Number(d.start)))ARM_START_ANGLE=Number(d.start);
   }catch(_){}
 }
 function updateTonearmDebugReadout(){
   if(dbgArmPark)dbgArmPark.value=String(ARM_PARK_ANGLE);
-  if(dbgArmEnd)dbgArmEnd.value=String(ARM_END_ANGLE);
+  if(dbgArmStart)dbgArmStart.value=String(ARM_START_ANGLE);
   if(dbgArmParkValue)dbgArmParkValue.textContent=`${ARM_PARK_ANGLE.toFixed(1)}°`;
-  if(dbgArmEndValue)dbgArmEndValue.textContent=`${ARM_END_ANGLE.toFixed(1)}°`;
+  if(dbgArmStartValue)dbgArmStartValue.textContent=`${ARM_START_ANGLE.toFixed(1)}°`;
 }
 function previewTonearmDebug(){
   /* Parked/non-engaged decks follow PARK live. The active engaged arm follows
-     the current groove position so INNER LIMIT can be tuned while listening. */
+     its current groove, so OUTER LIMIT can be tuned visually in real time. */
   tracks.forEach(state=>{
     if(!state.tonearmEngaged)setTonearmAngle(state,ARM_PARK_ANGLE);
   });
@@ -2973,6 +2975,8 @@ function previewTonearmDebug(){
   }
 }
 loadTonearmDebug();
+/* Keep the outer/start stop safely before the fixed inner/end stop. */
+if(ARM_START_ANGLE>ARM_END_ANGLE-1)ARM_START_ANGLE=ARM_END_ANGLE-1;
 updateTonearmDebugReadout();
 dbgArmPark?.addEventListener("input",()=>{
   ARM_PARK_ANGLE=Number(dbgArmPark.value);
@@ -2980,10 +2984,9 @@ dbgArmPark?.addEventListener("input",()=>{
   previewTonearmDebug();
   saveTonearmDebug();
 });
-dbgArmEnd?.addEventListener("input",()=>{
-  ARM_END_ANGLE=Number(dbgArmEnd.value);
-  /* Keep the end stop safely beyond the lead-in/start groove. */
-  if(ARM_END_ANGLE<ARM_START_ANGLE+1){ARM_END_ANGLE=ARM_START_ANGLE+1;dbgArmEnd.value=String(ARM_END_ANGLE)}
+dbgArmStart?.addEventListener("input",()=>{
+  ARM_START_ANGLE=Number(dbgArmStart.value);
+  if(ARM_START_ANGLE>ARM_END_ANGLE-1){ARM_START_ANGLE=ARM_END_ANGLE-1;dbgArmStart.value=String(ARM_START_ANGLE)}
   updateTonearmDebugReadout();
   previewTonearmDebug();
   saveTonearmDebug();
