@@ -240,49 +240,6 @@ button,input{font:inherit}
   background:#090a09;box-shadow:0 8px 22px rgba(0,0,0,.28);
 }
 .cover{width:100%;height:100%;object-fit:cover;display:block}
-.track.is-sold .sleeve::before,
-.signalTile.is-sold .signalTileSleeve::before,
-.detailPage .heroSleeveFrame.is-sold::before{
-  content:"SOLD";
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%) rotate(-17deg);
-  z-index:9;
-  padding:.16em .52em .14em;
-  border:.12em solid rgba(255,82,54,.96);
-  border-radius:.18em;
-  color:rgba(255,82,54,.98);
-  background:rgba(255,255,255,.04);
-  font:900 clamp(18px,2.4vw,30px)/1 "Arial Narrow","Roboto Condensed",Arial,sans-serif;
-  letter-spacing:.12em;
-  text-transform:uppercase;
-  box-shadow:0 0 0 1px rgba(255,82,54,.18) inset,0 0 22px rgba(255,82,54,.08);
-  pointer-events:none;
-  opacity:.95;
-}
-.track.is-sold .sleeve::before{font-size:26px;padding:.14em .5em .13em}
-.signalTile.is-sold .signalTileSleeve::before{font-size:20px;padding:.13em .48em .12em}
-.detailPage .heroSleeveFrame.is-sold::before{font-size:38px;padding:.14em .55em .12em}
-.track.is-sold .badge{
-  color:#ff705c;
-  border-color:rgba(255,82,54,.38);
-  background:rgba(255,82,54,.08);
-}
-.buyCol .is-disabled,
-.buyCol .license.is-disabled,
-.buyCol .secondary.is-disabled{
-  color:#7f837b!important;
-  border-color:rgba(255,255,255,.14)!important;
-  background:rgba(255,255,255,.035)!important;
-  pointer-events:none;
-  cursor:default;
-}
-.buyCol .license.is-disabled{
-  color:#f06a56!important;
-  border-color:rgba(255,82,54,.34)!important;
-  background:rgba(255,82,54,.09)!important;
-}
 .track.is-open .recordCarrier{animation:recordReveal 1.45s cubic-bezier(.22,.8,.22,1) both}
 .track.is-open .sleeve{animation:sleeveExit 1.45s cubic-bezier(.22,.8,.22,1) both}
 @keyframes recordReveal{
@@ -1463,7 +1420,7 @@ button,input{font:inherit}
         <!-- =================================================
              TRACK 01 // OLD
         ================================================== -->
-        <article class="track is-sold" data-track-id="old" data-audio="old.mp3" data-sold="1" data-purchasable="0">
+        <article class="track" data-track-id="old" data-audio="old.mp3">
           <div class="vinylUnit">
             <div class="tonearmMechanism">
               <div class="tonearmBase"></div>
@@ -1481,7 +1438,7 @@ button,input{font:inherit}
             </div>
 
             <div class="sleeve">
-              <img class="cover" src="old-cover.png" alt="OLD cover">
+              <img class="cover" src="old-cover-sold.png" alt="OLD cover">
             </div>
           </div>
 
@@ -1491,7 +1448,7 @@ button,input{font:inherit}
                 <h3 class="trackTitle"><a class="trackTitleLink" href="track.html?track=old">OLD</a></h3>
                 <div class="artist">FRSSN</div>
               </div>
-              <div class="badge">SOLD SIGNAL</div>
+              <div class="badge">NEW SIGNAL</div>
             </div>
 
             <div class="waveRow">
@@ -1508,13 +1465,13 @@ button,input{font:inherit}
             </div>
 
             <div class="meta">
-              <span>Signal // 001</span><span>45 RPM</span><span>ARCHIVE ONLY</span><span>SOLD</span>
+              <span>Signal // 001</span><span>45 RPM</span><span>SCRATCH ENABLED</span><span>MP3 LICENSE</span>
             </div>
           </div>
 
           <div class="buyCol">
-            <div class="license is-disabled">SOLD <small>// archived item</small></div>
-            <div class="secondary is-disabled">UNCLEARED SAMPLE // NO CHECKOUT</div>
+            <a class="license" href="https://traktrain.com/cart-single-track/1679177" target="_blank" rel="noopener noreferrer">License <small>// checkout ↗</small></a>
+            <a class="secondary" href="https://traktrain.com/cart-single-track/1679177" target="_blank" rel="noopener noreferrer">TRAKTRAIN CHECKOUT</a>
           </div>
         </article>
 
@@ -1730,6 +1687,14 @@ if(IS_DETAIL_PAGE){
 
       const recordLabel = clone.querySelector(".recordLabel img");
       const cover = clone.querySelector(".sleeve .cover");
+
+      /* OLD itself uses a dedicated SOLD sleeve image, but all temporary
+         showcase clones that reuse OLD assets must stay on the clean artwork. */
+      if(source.dataset.trackId === "old"){
+        if(recordLabel) recordLabel.src = "old-cover.png";
+        if(cover) cover.src = "old-cover.png";
+      }
+
       if(recordLabel) recordLabel.alt = title;
       if(cover) cover.alt = `${title} cover`;
 
@@ -2892,7 +2857,7 @@ const DETAIL_META={
     signal:"001",bpm:"142",key:"F# MIN",
     moods:["DARK","CINEMATIC","ATMOSPHERIC"],
     sections:STRUCTURE_A,
-    license:"ARCHIVE",status:"SOLD",file:"UNCLEARED"
+    license:"MP3",status:"AVAILABLE",file:"CLEAN"
   },
   "track-02":{
     signal:"002",bpm:"136",key:"D MIN",
@@ -2929,9 +2894,6 @@ function trackArtistOf(state){return state.el.querySelector(".artist")?.textCont
 function trackCoverOf(state){
   const img=state.el.querySelector(".sleeve img");
   return img?.src||img?.getAttribute("src")||"";
-}
-function trackIsSold(state){
-  return state?.el?.dataset?.sold === "1" || state?.el?.classList?.contains("is-sold");
 }
 function metaFor(state){
   if(DETAIL_META[state.id])return DETAIL_META[state.id];
@@ -3025,7 +2987,6 @@ function setHeroSleeve(state,{visible=true}={}){
   heroSleeveImage.src=trackCoverOf(state);
   heroSleeveImage.alt=`${trackTitleOf(state)} sleeve`;
   heroSleeveDock.classList.toggle("is-flight-empty",!visible);
-  heroSleeveDock.querySelector(".heroSleeveFrame")?.classList.toggle("is-sold",trackIsSold(state));
 }
 
 function tileForTrack(state){
@@ -3046,7 +3007,7 @@ function renderSignalTiles(){
     const tile=document.createElement("a");
     const isFeatured=state===featuredTrack;
 
-    tile.className=`signalTile${isFeatured?" is-featured":""}${trackIsSold(state)?" is-sold":""}`;
+    tile.className=`signalTile${isFeatured?" is-featured":""}`;
     tile.dataset.trackId=state.id;
     tile.href=`track.html?track=${encodeURIComponent(state.id)}`;
     tile.style.setProperty("--tile-cover",`url("${cover}")`);
