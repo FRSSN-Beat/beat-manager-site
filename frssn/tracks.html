@@ -274,6 +274,8 @@ button,input{font:inherit}
 .trackInfo{min-width:0}
 .topline{display:flex;justify-content:space-between;gap:16px;margin-bottom:18px}
 .trackTitle{margin:0;font-size:23px;letter-spacing:.12em;text-transform:uppercase}
+.trackTitleLink{color:inherit;text-decoration:none;border-bottom:1px solid transparent;transition:color .18s ease,border-color .18s ease}
+.trackTitleLink:hover{color:var(--accent);border-bottom-color:rgba(214,255,40,.55)}
 .artist{margin-top:5px;color:var(--muted);font:10px/1.4 monospace}
 .badge{color:var(--accent);border:1px solid var(--accent-line);padding:6px 8px;font:9px/1 monospace}
 .waveRow{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center}
@@ -477,7 +479,7 @@ button,input{font:inherit}
           <div class="trackInfo">
             <div class="topline">
               <div>
-                <h3 class="trackTitle">OLD</h3>
+                <h3 class="trackTitle"><a class="trackTitleLink" href="track.html?track=old">OLD</a></h3>
                 <div class="artist">FRSSN</div>
               </div>
               <div class="badge">NEW SIGNAL</div>
@@ -513,7 +515,7 @@ button,input{font:inherit}
              track-02.mp3
              track-02-cover.png
         ================================================== -->
-        <article class="track" data-track-id="track02" data-audio="track-02.mp3">
+        <article class="track" data-track-id="track-02" data-audio="track-02.mp3">
           <div class="vinylUnit">
             <div class="tonearmMechanism">
               <div class="tonearmBase"></div>
@@ -538,7 +540,7 @@ button,input{font:inherit}
           <div class="trackInfo">
             <div class="topline">
               <div>
-                <h3 class="trackTitle">TRACK 02</h3>
+                <h3 class="trackTitle"><a class="trackTitleLink" href="track.html?track=track-02">TRACK 02</a></h3>
                 <div class="artist">FRSSN</div>
               </div>
               <div class="badge">NEW SIGNAL</div>
@@ -835,122 +837,40 @@ function renderBars(element,heights){
 }
 function fallbackWave(state){
   const fallback=Array.from({length:WAVE_BARS},(_,i)=>16+((i*37+state.index*19)%68));
-  renderBars(state.wave,fallback);
-  renderBars(state.waveClone,fallback);
+  renderBars(state.wave,fallback);renderBars(state.waveClone,fallback);
 }
-
 async function loadTrackData(state){
   try{
-    const response=await fetch(
-      freshAssetUrl(state.audioUrl),
-      {
-        cache:"no-store"
-      }
-    );
-
-    if(!response.ok){
-      throw new Error(`Audio fetch failed: ${state.audioUrl}`);
-    }
-
+    const response=await fetch(freshAssetUrl(state.audioUrl),{cache:"no-store"});
+    if(!response.ok)throw new Error(`Audio fetch failed: ${state.audioUrl}`);
     const arrayBuffer=await response.arrayBuffer();
     const ctx=getAudioContext();
-
-    state.decoded=await ctx.decodeAudioData(
-      arrayBuffer.slice(0)
-    );
-
+    state.decoded=await ctx.decodeAudioData(arrayBuffer.slice(0));
     state.duration=state.decoded.duration;
     state.total.textContent=fmt(state.duration);
 
     const channels=[];
-
-    for(
-      let c=0;
-      c<state.decoded.numberOfChannels;
-      c++
-    ){
-      channels.push(
-        state.decoded.getChannelData(c)
-      );
-    }
-
-    const blockSize=Math.max(
-      1,
-      Math.floor(
-        state.decoded.length/
-        WAVE_BARS
-      )
-    );
-
+    for(let c=0;c<state.decoded.numberOfChannels;c++)channels.push(state.decoded.getChannelData(c));
+    const blockSize=Math.max(1,Math.floor(state.decoded.length/WAVE_BARS));
     const peaks=[];
-
-    for(
-      let i=0;
-      i<WAVE_BARS;
-      i++
-    ){
+    for(let i=0;i<WAVE_BARS;i++){
       const start=i*blockSize;
-
-      const end=Math.min(
-        state.decoded.length,
-        start+blockSize
-      );
-
+      const end=Math.min(state.decoded.length,start+blockSize);
       let peak=0;
-
-      const stride=Math.max(
-        1,
-        Math.floor(
-          (end-start)/900
-        )
-      );
-
-      for(
-        let c=0;
-        c<channels.length;
-        c++
-      ){
-        for(
-          let s=start;
-          s<end;
-          s+=stride
-        ){
-          peak=Math.max(
-            peak,
-            Math.abs(
-              channels[c][s]
-            )
-          );
-        }
+      const stride=Math.max(1,Math.floor((end-start)/900));
+      for(let c=0;c<channels.length;c++){
+        for(let s=start;s<end;s+=stride)peak=Math.max(peak,Math.abs(channels[c][s]));
       }
-
       peaks.push(peak);
     }
-
     const maxPeak=Math.max(...peaks)||1;
-
-    const heights=peaks.map(
-      p=>
-        p/maxPeak*100
-    );
-
-    renderBars(
-      state.wave,
-      heights
-    );
-
-    renderBars(
-      state.waveClone,
-      heights
-    );
-
+    const heights=peaks.map(p=>p/maxPeak*100);
+    renderBars(state.wave,heights);
+    renderBars(state.waveClone,heights);
   }catch(error){
     console.warn(error);
-
     state.loadError=true;
-
     fallbackWave(state);
-
     state.total.textContent="--:--";
   }
 }
@@ -958,7 +878,6 @@ async function loadTrackData(state){
 /* =====================================================
    SHARED AUDIOWORKLET
 ===================================================== */
-
 let workletNode=null;
 let workletOutputGain=null;
 let workletLimiter=null;
@@ -974,4982 +893,797 @@ let engineLoadToken=0;
 let pendingEngineLoad=null;
 
 const WORKLET_PROCESSOR_CODE=`
-
 class FRSSNVarispeedProcessor extends AudioWorkletProcessor{
-
-  static get parameterDescriptors(){
-    return [
-      {
-        name:"manualSpeed",
-        defaultValue:0,
-        minValue:-8,
-        maxValue:8,
-        automationRate:"a-rate"
-      }
-    ];
-  }
-
+  static get parameterDescriptors(){return [{name:"manualSpeed",defaultValue:0,minValue:-8,maxValue:8,automationRate:"a-rate"}]}
   constructor(){
     super();
-
-    this.channels=[];
-    this.sourceRate=sampleRate;
-    this.length=0;
-    this.position=0;
-
-    this.active=false;
-    this.mode="paused";
-
-    this.currentSpeed=0;
-    this.modeStartSpeed=0;
-
-    this.modeElapsedSamples=0;
-    this.modeDurationSamples=1;
-
-    this.targetGain=0;
-    this.currentGain=0;
-
-    this.motionGain=0;
-    this.motionTarget=0;
-    this.motionMoving=false;
-
-    this.motionStartThreshold=.0022;
-    this.motionStopThreshold=.0010;
-    this.motionSmoothing=.0046;
-
-    this.reportCounter=0;
-    this.endedSent=false;
-
-    this.PLAY_START_SPEED=${PLAY_START_SPEED};
-    this.PLAY_START_BASE_DURATION=${PLAY_START_BASE_DURATION};
-    this.PLAY_START_MIN_RATE=${PLAY_START_MIN_RATE};
-    this.PLAY_START_CURVE=${PLAY_START_CURVE};
-
-    this.PAUSE_BRAKE_SPEED=${PAUSE_BRAKE_SPEED};
-    this.PAUSE_BRAKE_BASE_DURATION=${PAUSE_BRAKE_BASE_DURATION};
-    this.PAUSE_BRAKE_CURVE=${PAUSE_BRAKE_CURVE};
-
-    this.GRAB_BRAKE_DURATION=${GRAB_BRAKE_DURATION};
-    this.GRAB_BRAKE_CURVE=${GRAB_BRAKE_CURVE};
-
-    this.MOTOR_RECOVERY_SPEED=${MOTOR_RECOVERY_SPEED};
-    this.MOTOR_RECOVERY_MIN_DURATION=${MOTOR_RECOVERY_MIN_DURATION};
-    this.MOTOR_RECOVERY_MAX_DURATION=${MOTOR_RECOVERY_MAX_DURATION};
-    this.MOTOR_PULL_STRENGTH=${MOTOR_PULL_STRENGTH};
-
-    this.FREE_SPIN_FRICTION=${FREE_SPIN_FRICTION};
-    this.FREE_SPIN_MIN_VELOCITY=${FREE_SPIN_MIN_VELOCITY};
-
+    this.channels=[];this.sourceRate=sampleRate;this.length=0;this.position=0;
+    this.active=false;this.mode="paused";this.currentSpeed=0;this.modeStartSpeed=0;
+    this.modeElapsedSamples=0;this.modeDurationSamples=1;this.targetGain=0;this.currentGain=0;
+    this.motionGain=0;this.motionTarget=0;this.motionMoving=false;
+    this.motionStartThreshold=.0022;this.motionStopThreshold=.0010;this.motionSmoothing=.0046;
+    this.reportCounter=0;this.endedSent=false;
+    this.PLAY_START_SPEED=${PLAY_START_SPEED};this.PLAY_START_BASE_DURATION=${PLAY_START_BASE_DURATION};this.PLAY_START_MIN_RATE=${PLAY_START_MIN_RATE};this.PLAY_START_CURVE=${PLAY_START_CURVE};
+    this.PAUSE_BRAKE_SPEED=${PAUSE_BRAKE_SPEED};this.PAUSE_BRAKE_BASE_DURATION=${PAUSE_BRAKE_BASE_DURATION};this.PAUSE_BRAKE_CURVE=${PAUSE_BRAKE_CURVE};
+    this.GRAB_BRAKE_DURATION=${GRAB_BRAKE_DURATION};this.GRAB_BRAKE_CURVE=${GRAB_BRAKE_CURVE};
+    this.MOTOR_RECOVERY_SPEED=${MOTOR_RECOVERY_SPEED};this.MOTOR_RECOVERY_MIN_DURATION=${MOTOR_RECOVERY_MIN_DURATION};this.MOTOR_RECOVERY_MAX_DURATION=${MOTOR_RECOVERY_MAX_DURATION};this.MOTOR_PULL_STRENGTH=${MOTOR_PULL_STRENGTH};
+    this.FREE_SPIN_FRICTION=${FREE_SPIN_FRICTION};this.FREE_SPIN_MIN_VELOCITY=${FREE_SPIN_MIN_VELOCITY};
     this.port.onmessage=e=>{
-
       const d=e.data||{};
-
       if(d.type==="load"){
-
-        this.channels=
-          (d.channels||[])
-          .map(
-            b=>
-              new Float32Array(b)
-          );
-
-        this.sourceRate=
-          d.sourceRate||
-          sampleRate;
-
-        this.length=
-          d.length||
-          (
-            this.channels[0]
-            ?
-            this.channels[0].length
-            :
-            0
-          );
-
-        this.position=
-          this.clampPosition(
-            (d.position||0)*
-            this.sourceRate
-          );
-
-        this.currentSpeed=0;
-        this.active=true;
-        this.mode="paused";
-        this.targetGain=1;
-        this.currentGain=0;
-        this.motionGain=0;
-        this.motionTarget=0;
-        this.motionMoving=false;
-        this.endedSent=false;
-
-        this.port.postMessage({
-          type:"loaded",
-          token:d.token,
-          position:
-            this.position/
-            this.sourceRate,
-          speed:0,
-          mode:this.mode
-        });
-
+        this.channels=(d.channels||[]).map(b=>new Float32Array(b));
+        this.sourceRate=d.sourceRate||sampleRate;
+        this.length=d.length||(this.channels[0]?this.channels[0].length:0);
+        this.position=this.clampPosition((d.position||0)*this.sourceRate);
+        this.currentSpeed=0;this.active=true;this.mode="paused";this.targetGain=1;this.currentGain=0;this.motionGain=0;this.motionTarget=0;this.motionMoving=false;this.endedSent=false;
+        this.port.postMessage({type:"loaded",token:d.token,position:this.position/this.sourceRate,speed:0,mode:this.mode});
         return;
       }
-
       if(d.type==="seek"){
-
-        if(
-          typeof d.position===
-          "number"
-        ){
-          this.position=
-            this.clampPosition(
-              d.position*
-              this.sourceRate
-            );
-
-          this.endedSent=false;
-        }
-
+        if(typeof d.position==="number"){this.position=this.clampPosition(d.position*this.sourceRate);this.endedSent=false}
         return;
       }
-
-      if(d.type==="mode"){
-        this.setMode(
-          d.mode,
-          d
-        );
-
-        return;
-      }
+      if(d.type==="mode"){this.setMode(d.mode,d);return}
     };
   }
-
-  clampPosition(p){
-    return Math.max(
-      0,
-      Math.min(
-        Math.max(
-          0,
-          this.length-1
-        ),
-        p
-      )
-    );
-  }
-
+  clampPosition(p){return Math.max(0,Math.min(Math.max(0,this.length-1),p))}
   sampleAt(ch,p){
-
-    const channel=
-      this.channels[ch]||
-      this.channels[0];
-
-    if(
-      !channel||
-      !this.length
-    ){
-      return 0;
-    }
-
-    const x=Math.max(
-      0,
-      Math.min(
-        this.length-1.001,
-        p
-      )
-    );
-
-    const i0=Math.floor(x);
-
-    const i1=Math.min(
-      this.length-1,
-      i0+1
-    );
-
-    const f=x-i0;
-
-    return (
-      channel[i0]+
-      (
-        channel[i1]-
-        channel[i0]
-      )*
-      f
-    );
+    const channel=this.channels[ch]||this.channels[0];
+    if(!channel||!this.length)return 0;
+    const x=Math.max(0,Math.min(this.length-1.001,p));
+    const i0=Math.floor(x),i1=Math.min(this.length-1,i0+1),f=x-i0;
+    return channel[i0]+(channel[i1]-channel[i0])*f;
   }
-
   setMode(mode,d={}){
-
-    this.mode=mode;
-    this.modeElapsedSamples=0;
-    this.modeStartSpeed=this.currentSpeed;
-    this.endedSent=false;
-
+    this.mode=mode;this.modeElapsedSamples=0;this.modeStartSpeed=this.currentSpeed;this.endedSent=false;
     switch(mode){
-
-      case "normal":
-
-        this.active=true;
-        this.targetGain=1;
-
-        this.currentSpeed=
-          typeof d.speed===
-          "number"
-          ?
-          d.speed
-          :
-          1;
-
-        break;
-
-
-      case "play_start":
-
-        this.active=true;
-        this.targetGain=1;
-
-        this.modeStartSpeed=
-          this.PLAY_START_MIN_RATE;
-
-        this.currentSpeed=
-          this.PLAY_START_MIN_RATE;
-
-        this.modeDurationSamples=
-          Math.max(
-            1,
-            Math.round(
-              (
-                this.PLAY_START_BASE_DURATION/
-                this.PLAY_START_SPEED/
-                1000
-              )*
-              sampleRate
-            )
-          );
-
-        break;
-
-
-      case "pause_brake":
-
-        this.active=true;
-        this.targetGain=1;
-
-        this.modeStartSpeed=
-          Math.max(
-            0,
-            this.currentSpeed
-          );
-
-        this.modeDurationSamples=
-          Math.max(
-            1,
-            Math.round(
-              (
-                this.PAUSE_BRAKE_BASE_DURATION/
-                this.PAUSE_BRAKE_SPEED/
-                1000
-              )*
-              sampleRate
-            )
-          );
-
-        break;
-
-
-      case "grab_brake":
-
-        this.active=true;
-        this.targetGain=1;
-
-        this.modeStartSpeed=
-          this.currentSpeed;
-
-        this.modeDurationSamples=
-          Math.max(
-            1,
-            Math.round(
-              (
-                this.GRAB_BRAKE_DURATION/
-                1000
-              )*
-              sampleRate
-            )
-          );
-
-        break;
-
-
-      case "manual":
-
-        this.active=true;
-        this.targetGain=1;
-
-        break;
-
-
+      case "normal":this.active=true;this.targetGain=1;this.currentSpeed=typeof d.speed==="number"?d.speed:1;break;
+      case "play_start":this.active=true;this.targetGain=1;this.modeStartSpeed=this.PLAY_START_MIN_RATE;this.currentSpeed=this.PLAY_START_MIN_RATE;this.modeDurationSamples=Math.max(1,Math.round((this.PLAY_START_BASE_DURATION/this.PLAY_START_SPEED/1000)*sampleRate));break;
+      case "pause_brake":this.active=true;this.targetGain=1;this.modeStartSpeed=Math.max(0,this.currentSpeed);this.modeDurationSamples=Math.max(1,Math.round((this.PAUSE_BRAKE_BASE_DURATION/this.PAUSE_BRAKE_SPEED/1000)*sampleRate));break;
+      case "grab_brake":this.active=true;this.targetGain=1;this.modeStartSpeed=this.currentSpeed;this.modeDurationSamples=Math.max(1,Math.round((this.GRAB_BRAKE_DURATION/1000)*sampleRate));break;
+      case "manual":this.active=true;this.targetGain=1;break;
       case "motor_recovery":{
-
-        this.active=true;
-        this.targetGain=1;
-
-        this.modeStartSpeed=
-          this.currentSpeed;
-
-        const distance=
-          Math.abs(
-            1-
-            this.modeStartSpeed
-          );
-
-        const base=
-          Math.min(
-            this.MOTOR_RECOVERY_MAX_DURATION,
-            Math.max(
-              this.MOTOR_RECOVERY_MIN_DURATION,
-              420+
-              distance*
-              520
-            )
-          );
-
-        this.modeDurationSamples=
-          Math.max(
-            1,
-            Math.round(
-              (
-                base/
-                this.MOTOR_RECOVERY_SPEED/
-                1000
-              )*
-              sampleRate
-            )
-          );
-
-        break;
+        this.active=true;this.targetGain=1;this.modeStartSpeed=this.currentSpeed;
+        const distance=Math.abs(1-this.modeStartSpeed);
+        const base=Math.min(this.MOTOR_RECOVERY_MAX_DURATION,Math.max(this.MOTOR_RECOVERY_MIN_DURATION,420+distance*520));
+        this.modeDurationSamples=Math.max(1,Math.round((base/this.MOTOR_RECOVERY_SPEED/1000)*sampleRate));break;
       }
-
-
-      case "free_spin":
-
-        this.active=true;
-        this.targetGain=1;
-
-        if(
-          typeof d.speed===
-          "number"
-        ){
-          this.currentSpeed=
-            d.speed;
-        }
-
-        break;
-
-
-      case "hold":
-      case "paused":
-
-        this.active=true;
-        this.targetGain=1;
-        this.currentSpeed=0;
-
-        break;
-
-
-      case "off":
-
-        this.active=false;
-        this.targetGain=0;
-        this.currentSpeed=0;
-
-        break;
+      case "free_spin":this.active=true;this.targetGain=1;if(typeof d.speed==="number")this.currentSpeed=d.speed;break;
+      case "hold":case "paused":this.active=true;this.targetGain=1;this.currentSpeed=0;break;
+      case "off":this.active=false;this.targetGain=0;this.currentSpeed=0;break;
     }
-
-    this.port.postMessage({
-      type:"mode",
-      mode:this.mode,
-      position:
-        this.position/
-        this.sourceRate,
-      speed:
-        this.currentSpeed
-    });
+    this.port.postMessage({type:"mode",mode:this.mode,position:this.position/this.sourceRate,speed:this.currentSpeed});
   }
-
-  finishMode(mode,speed){
-
-    this.mode=mode;
-    this.currentSpeed=speed;
-    this.modeElapsedSamples=0;
-
-    this.port.postMessage({
-      type:"mode",
-      mode:this.mode,
-      position:
-        this.position/
-        this.sourceRate,
-      speed:
-        this.currentSpeed
-    });
-  }
-
+  finishMode(mode,speed){this.mode=mode;this.currentSpeed=speed;this.modeElapsedSamples=0;this.port.postMessage({type:"mode",mode:this.mode,position:this.position/this.sourceRate,speed:this.currentSpeed})}
   calculateSpeed(manual){
-
     switch(this.mode){
-
-      case "normal":
-        return 1;
-
-
+      case "normal":return 1;
       case "play_start":{
-
-        const t=Math.min(
-          1,
-          this.modeElapsedSamples/
-          this.modeDurationSamples
-        );
-
-        const curve=
-          1-
-          Math.pow(
-            1-t,
-            this.PLAY_START_CURVE
-          );
-
-        const s=
-          this.PLAY_START_MIN_RATE+
-          (
-            1-
-            this.PLAY_START_MIN_RATE
-          )*
-          curve;
-
-        if(t>=1){
-          this.finishMode(
-            "normal",
-            1
-          );
-
-          return 1;
-        }
-
-        return s;
+        const t=Math.min(1,this.modeElapsedSamples/this.modeDurationSamples),curve=1-Math.pow(1-t,this.PLAY_START_CURVE);
+        const s=this.PLAY_START_MIN_RATE+(1-this.PLAY_START_MIN_RATE)*curve;
+        if(t>=1){this.finishMode("normal",1);return 1}return s;
       }
-
-
       case "pause_brake":{
-
-        const t=Math.min(
-          1,
-          this.modeElapsedSamples/
-          this.modeDurationSamples
-        );
-
-        const braking=
-          Math.pow(
-            t,
-            this.PAUSE_BRAKE_CURVE
-          );
-
-        let s=Math.max(
-          0,
-          this.modeStartSpeed*
-          (
-            1-braking
-          )
-        );
-
-        if(s<.10){
-          const tail=s/.10;
-          s=.10*tail*tail;
-        }
-
-        if(
-          t>=1||
-          s<.0005
-        ){
-          this.finishMode(
-            "paused",
-            0
-          );
-
-          return 0;
-        }
-
-        return s;
+        const t=Math.min(1,this.modeElapsedSamples/this.modeDurationSamples),braking=Math.pow(t,this.PAUSE_BRAKE_CURVE);
+        let s=Math.max(0,this.modeStartSpeed*(1-braking));
+        if(s<.10){const tail=s/.10;s=.10*tail*tail}
+        if(t>=1||s<.0005){this.finishMode("paused",0);return 0}return s;
       }
-
-
       case "grab_brake":{
-
-        const t=Math.min(
-          1,
-          this.modeElapsedSamples/
-          this.modeDurationSamples
-        );
-
-        const braking=
-          Math.pow(
-            t,
-            this.GRAB_BRAKE_CURVE
-          );
-
-        let s=
-          this.modeStartSpeed*
-          (
-            1-braking
-          );
-
-        if(
-          Math.abs(s)<
-          .12
-        ){
-          const sign=
-            s<0
-            ?
-            -1
-            :
-            1;
-
-          const tail=
-            Math.abs(s)/
-            .12;
-
-          s=
-            sign*
-            .12*
-            tail*
-            tail;
-        }
-
-        if(
-          t>=1||
-          Math.abs(s)<
-          .0005
-        ){
-          this.finishMode(
-            "hold",
-            0
-          );
-
-          return 0;
-        }
-
-        return s;
+        const t=Math.min(1,this.modeElapsedSamples/this.modeDurationSamples),braking=Math.pow(t,this.GRAB_BRAKE_CURVE);
+        let s=this.modeStartSpeed*(1-braking);
+        if(Math.abs(s)<.12){const sign=s<0?-1:1,tail=Math.abs(s)/.12;s=sign*.12*tail*tail}
+        if(t>=1||Math.abs(s)<.0005){this.finishMode("hold",0);return 0}return s;
       }
-
-
-      case "manual":
-
-        return (
-          this.currentSpeed+
-          (
-            manual-
-            this.currentSpeed
-          )*
-          .035
-        );
-
-
+      case "manual":return this.currentSpeed+(manual-this.currentSpeed)*.035;
       case "motor_recovery":{
-
-        const t=Math.min(
-          1,
-          this.modeElapsedSamples/
-          this.modeDurationSamples
-        );
-
-        const curve=
-          1-
-          Math.pow(
-            1-t,
-            this.MOTOR_PULL_STRENGTH
-          );
-
-        const s=
-          this.modeStartSpeed+
-          (
-            1-
-            this.modeStartSpeed
-          )*
-          curve;
-
-        if(t>=1){
-          this.finishMode(
-            "normal",
-            1
-          );
-
-          return 1;
-        }
-
-        return s;
+        const t=Math.min(1,this.modeElapsedSamples/this.modeDurationSamples),curve=1-Math.pow(1-t,this.MOTOR_PULL_STRENGTH);
+        const s=this.modeStartSpeed+(1-this.modeStartSpeed)*curve;
+        if(t>=1){this.finishMode("normal",1);return 1}return s;
       }
-
-
       case "free_spin":{
-
-        const s=
-          this.currentSpeed*
-          Math.exp(
-            -this.FREE_SPIN_FRICTION/
-            sampleRate
-          );
-
-        if(
-          Math.abs(s)<
-          this.FREE_SPIN_MIN_VELOCITY
-        ){
-          this.finishMode(
-            "paused",
-            0
-          );
-
-          return 0;
-        }
-
-        return s;
+        const s=this.currentSpeed*Math.exp(-this.FREE_SPIN_FRICTION/sampleRate);
+        if(Math.abs(s)<this.FREE_SPIN_MIN_VELOCITY){this.finishMode("paused",0);return 0}return s;
       }
-
-
-      default:
-        return 0;
+      default:return 0;
     }
   }
-
   process(inputs,outputs,parameters){
-
-    const output=
-      outputs[0];
-
-    if(
-      !output||
-      !output.length
-    ){
-      return true;
-    }
-
-    const manualSpeeds=
-      parameters.manualSpeed;
-
-    const frames=
-      output[0].length;
-
-    const gainSmoothing=
-      .0045;
-
-    for(
-      let i=0;
-      i<frames;
-      i++
-    ){
-
-      const manual=
-        manualSpeeds.length>
-        1
-        ?
-        manualSpeeds[i]
-        :
-        manualSpeeds[0];
-
-      this.currentSpeed=
-        this.calculateSpeed(
-          manual
-        );
-
-      this.modeElapsedSamples++;
-
-      this.currentGain+=
-        (
-          this.targetGain-
-          this.currentGain
-        )*
-        gainSmoothing;
-
-      const absSpeed=
-        Math.abs(
-          this.currentSpeed
-        );
-
-      if(!this.active){
-        this.motionMoving=false;
+    const output=outputs[0];if(!output||!output.length)return true;
+    const manualSpeeds=parameters.manualSpeed,frames=output[0].length,gainSmoothing=.0045;
+    for(let i=0;i<frames;i++){
+      const manual=manualSpeeds.length>1?manualSpeeds[i]:manualSpeeds[0];
+      this.currentSpeed=this.calculateSpeed(manual);this.modeElapsedSamples++;
+      this.currentGain+=(this.targetGain-this.currentGain)*gainSmoothing;
+      const absSpeed=Math.abs(this.currentSpeed);
+      if(!this.active)this.motionMoving=false;
+      else if(this.motionMoving){if(absSpeed<this.motionStopThreshold)this.motionMoving=false}
+      else if(absSpeed>this.motionStartThreshold)this.motionMoving=true;
+      this.motionTarget=this.motionMoving?1:0;
+      this.motionGain+=(this.motionTarget-this.motionGain)*this.motionSmoothing;
+      for(let ch=0;ch<output.length;ch++){
+        const sample=this.length>1?this.sampleAt(Math.min(ch,this.channels.length-1),this.position):0;
+        output[ch][i]=sample*this.currentGain*this.motionGain;
       }
-      else if(this.motionMoving){
-        if(
-          absSpeed<
-          this.motionStopThreshold
-        ){
-          this.motionMoving=false;
-        }
-      }
-      else if(
-        absSpeed>
-        this.motionStartThreshold
-      ){
-        this.motionMoving=true;
-      }
-
-      this.motionTarget=
-        this.motionMoving
-        ?
-        1
-        :
-        0;
-
-      this.motionGain+=
-        (
-          this.motionTarget-
-          this.motionGain
-        )*
-        this.motionSmoothing;
-
-      for(
-        let ch=0;
-        ch<output.length;
-        ch++
-      ){
-
-        const sample=
-          this.length>
-          1
-          ?
-          this.sampleAt(
-            Math.min(
-              ch,
-              this.channels.length-1
-            ),
-            this.position
-          )
-          :
-          0;
-
-        output[ch][i]=
-          sample*
-          this.currentGain*
-          this.motionGain;
-      }
-
-      if(
-        this.active&&
-        absSpeed>.000001&&
-        this.length>1
-      ){
-
-        this.position+=
-          this.currentSpeed*
-          this.sourceRate/
-          sampleRate;
-
-        if(
-          this.position<=0
-        ){
-          this.position=0;
-
-          if(
-            this.currentSpeed<0
-          ){
-            this.finishMode(
-              "paused",
-              0
-            );
-          }
-        }
-
-        if(
-          this.position>=
-          this.length-1
-        ){
-          this.position=
-            this.length-1;
-
-          if(
-            this.currentSpeed>0
-          ){
-
-            this.finishMode(
-              "paused",
-              0
-            );
-
-            if(
-              !this.endedSent
-            ){
-              this.endedSent=true;
-
-              this.port.postMessage({
-                type:"boundary",
-                position:
-                  this.position/
-                  this.sourceRate,
-                direction:1
-              });
-            }
+      if(this.active&&absSpeed>.000001&&this.length>1){
+        this.position+=this.currentSpeed*this.sourceRate/sampleRate;
+        if(this.position<=0){this.position=0;if(this.currentSpeed<0)this.finishMode("paused",0)}
+        if(this.position>=this.length-1){
+          this.position=this.length-1;
+          if(this.currentSpeed>0){
+            this.finishMode("paused",0);
+            if(!this.endedSent){this.endedSent=true;this.port.postMessage({type:"boundary",position:this.position/this.sourceRate,direction:1})}
           }
         }
       }
     }
-
-    this.reportCounter+=
-      frames;
-
-    if(
-      this.reportCounter>=
-      256
-    ){
-      this.reportCounter=0;
-
-      this.port.postMessage({
-        type:"position",
-        position:
-          this.position/
-          this.sourceRate,
-        speed:
-          this.currentSpeed,
-        mode:
-          this.mode,
-        active:
-          this.active
-      });
-    }
-
+    this.reportCounter+=frames;
+    if(this.reportCounter>=256){this.reportCounter=0;this.port.postMessage({type:"position",position:this.position/this.sourceRate,speed:this.currentSpeed,mode:this.mode,active:this.active})}
     return true;
   }
 }
-
-registerProcessor(
-  "frssn-varispeed",
-  FRSSNVarispeedProcessor
-);
-
+registerProcessor("frssn-varispeed",FRSSNVarispeedProcessor);
 `;
 
-/* =====================================================
-   WORKLET INIT
-===================================================== */
-
 async function initWorklet(){
-
-  if(workletReady){
-    return;
-  }
-
-  const ctx=
-    getAudioContext();
-
-  const blob=
-    new Blob(
-      [
-        WORKLET_PROCESSOR_CODE
-      ],
-      {
-        type:
-          "application/javascript"
-      }
-    );
-
-  const url=
-    URL.createObjectURL(
-      blob
-    );
-
-  try{
-    await ctx.audioWorklet.addModule(
-      url
-    );
-  }
-  finally{
-    URL.revokeObjectURL(
-      url
-    );
-  }
-
-  workletNode=
-    new AudioWorkletNode(
-      ctx,
-      "frssn-varispeed",
-      {
-        numberOfInputs:0,
-        numberOfOutputs:1,
-        outputChannelCount:[
-          2
-        ],
-        parameterData:{
-          manualSpeed:0
-        }
-      }
-    );
-
-  manualSpeedParam=
-    workletNode.parameters.get(
-      "manualSpeed"
-    );
-
-  workletOutputGain=
-    ctx.createGain();
-
-  workletOutputGain.gain.value=
-    .92;
-
-  workletLimiter=
-    ctx.createDynamicsCompressor();
-
-  workletLimiter.threshold.value=-2;
-  workletLimiter.knee.value=0;
-  workletLimiter.ratio.value=20;
-  workletLimiter.attack.value=.001;
-  workletLimiter.release.value=.05;
-
-  workletNode
-  .connect(
-    workletOutputGain
-  )
-  .connect(
-    workletLimiter
-  )
-  .connect(
-    ctx.destination
-  );
-
-  workletNode.port.onmessage=
-    handleWorkletMessage;
-
+  if(workletReady)return;
+  const ctx=getAudioContext();
+  const blob=new Blob([WORKLET_PROCESSOR_CODE],{type:"application/javascript"});
+  const url=URL.createObjectURL(blob);
+  try{await ctx.audioWorklet.addModule(url)}finally{URL.revokeObjectURL(url)}
+  workletNode=new AudioWorkletNode(ctx,"frssn-varispeed",{numberOfInputs:0,numberOfOutputs:1,outputChannelCount:[2],parameterData:{manualSpeed:0}});
+  manualSpeedParam=workletNode.parameters.get("manualSpeed");
+  workletOutputGain=ctx.createGain();workletOutputGain.gain.value=.92;
+  workletLimiter=ctx.createDynamicsCompressor();
+  workletLimiter.threshold.value=-2;workletLimiter.knee.value=0;workletLimiter.ratio.value=20;workletLimiter.attack.value=.001;workletLimiter.release.value=.05;
+  workletNode.connect(workletOutputGain).connect(workletLimiter).connect(ctx.destination);
+  workletNode.port.onmessage=handleWorkletMessage;
   workletReady=true;
-
   initVuAnalyser();
 }
 
-
-/* =====================================================
-   WORKLET MESSAGES
-===================================================== */
-
 function handleWorkletMessage(event){
+  const data=event.data||{};
+  if(typeof data.position==="number"){
+    enginePositionSec=activeTrack?clampTime(activeTrack,data.position):Math.max(0,data.position);
+    engineReportPerf=performance.now();
+    if(activeTrack)activeTrack.position=enginePositionSec;
+  }
+  if(typeof data.speed==="number")engineSpeed=data.speed;
+  if(typeof data.mode==="string"){engineMode=data.mode;updateModeClasses(data.mode);if(data.type==="mode")updateStatusFromEngineMode(data.mode)}
+  if(typeof data.active==="boolean")engineActive=data.active;
 
-  const data=
-    event.data||
-    {};
-
-  if(
-    typeof data.position===
-    "number"
-  ){
-
-    enginePositionSec=
-      activeTrack
-      ?
-      clampTime(
-        activeTrack,
-        data.position
-      )
-      :
-      Math.max(
-        0,
-        data.position
-      );
-
-    engineReportPerf=
-      performance.now();
-
-    if(activeTrack){
-      activeTrack.position=
-        enginePositionSec;
+  if(data.type==="loaded"){
+    if(pendingEngineLoad && data.token===pendingEngineLoad.token){
+      enginePositionSec=data.position||0;engineSpeed=0;engineMode="paused";engineActive=true;
+      const resolve=pendingEngineLoad.resolve;pendingEngineLoad=null;resolve();
     }
-  }
-
-  if(
-    typeof data.speed===
-    "number"
-  ){
-    engineSpeed=
-      data.speed;
-  }
-
-  if(
-    typeof data.mode===
-    "string"
-  ){
-
-    engineMode=
-      data.mode;
-
-    updateModeClasses(
-      data.mode
-    );
-
-    if(
-      data.type===
-      "mode"
-    ){
-      updateStatusFromEngineMode(
-        data.mode
-      );
-    }
-  }
-
-  if(
-    typeof data.active===
-    "boolean"
-  ){
-    engineActive=
-      data.active;
-  }
-
-  if(
-    data.type===
-    "loaded"
-  ){
-
-    if(
-      pendingEngineLoad&&
-      data.token===
-      pendingEngineLoad.token
-    ){
-
-      enginePositionSec=
-        data.position||
-        0;
-
-      engineSpeed=0;
-      engineMode="paused";
-      engineActive=true;
-
-      const resolve=
-        pendingEngineLoad.resolve;
-
-      pendingEngineLoad=null;
-
-      resolve();
-    }
-
     return;
   }
 
-  if(
-    data.type===
-    "boundary"&&
-    data.direction===
-    1&&
-    playIntent&&
-    activeTrack&&
-    !activeTrack.isPacking&&
-    !engineEndedLock
-  ){
-
+  if(data.type==="boundary"&&data.direction===1&&playIntent&&activeTrack&&!activeTrack.isPacking&&!engineEndedLock){
     engineEndedLock=true;
-
-    stopAndPackActive()
-    .finally(
-      ()=>{
-        engineEndedLock=false;
-      }
-    );
+    stopAndPackActive().finally(()=>{engineEndedLock=false});
   }
 }
 
-
-/* =====================================================
-   WORKLET COMMANDS
-===================================================== */
-
-function sendMode(
-  mode,
-  extra={}
-){
-
-  if(
-    !workletNode||
-    !workletReady
-  ){
-    return;
-  }
-
-  workletNode.port.postMessage({
-    type:"mode",
-    mode,
-    ...extra
-  });
+function sendMode(mode,extra={}){
+  if(!workletNode||!workletReady)return;
+  workletNode.port.postMessage({type:"mode",mode,...extra});
 }
-
 function setManualSpeed(speed){
-
-  if(
-    !manualSpeedParam||
-    !audioContext
-  ){
-    return;
-  }
-
-  manualSpeedParam.setValueAtTime(
-    speed,
-    audioContext.currentTime
-  );
+  if(!manualSpeedParam||!audioContext)return;
+  manualSpeedParam.setValueAtTime(speed,audioContext.currentTime);
 }
-
-function seekEngine(
-  state,
-  position
-){
-
-  const p=
-    clampTime(
-      state,
-      position
-    );
-
-  enginePositionSec=p;
-  engineReportPerf=
-    performance.now();
-
-  state.position=p;
-
-  if(
-    workletNode&&
-    workletReady
-  ){
-
-    workletNode.port.postMessage({
-      type:"seek",
-      position:p
-    });
-  }
+function seekEngine(state,position){
+  const p=clampTime(state,position);
+  enginePositionSec=p;engineReportPerf=performance.now();state.position=p;
+  if(workletNode&&workletReady)workletNode.port.postMessage({type:"seek",position:p});
 }
-
-async function loadBufferIntoEngine(
-  state,
-  position=0
-){
-
-  if(!state.decoded){
-    throw new Error(
-      `Track not loaded: ${state.audioUrl}`
-    );
-  }
-
+async function loadBufferIntoEngine(state,position=0){
+  if(!state.decoded)throw new Error(`Track not loaded: ${state.audioUrl}`);
   await initWorklet();
-
-  sendMode(
-    "off"
-  );
-
-  const channels=[];
-  const transfer=[];
-
-  for(
-    let c=0;
-    c<state.decoded.numberOfChannels;
-    c++
-  ){
-
-    const copy=
-      new Float32Array(
-        state.decoded.getChannelData(
-          c
-        )
-      );
-
-    channels.push(
-      copy.buffer
-    );
-
-    transfer.push(
-      copy.buffer
-    );
+  sendMode("off");
+  const channels=[],transfer=[];
+  for(let c=0;c<state.decoded.numberOfChannels;c++){
+    const copy=new Float32Array(state.decoded.getChannelData(c));
+    channels.push(copy.buffer);transfer.push(copy.buffer);
   }
-
-  const token=
-    ++engineLoadToken;
-
-  const promise=
-    new Promise(
-      resolve=>{
-        pendingEngineLoad={
-          token,
-          resolve
-        };
-      }
-    );
-
-  workletNode.port.postMessage(
-    {
-      type:"load",
-      token,
-      channels,
-      sourceRate:
-        state.decoded.sampleRate,
-      length:
-        state.decoded.length,
-      position:
-        clampTime(
-          state,
-          position
-        )
-    },
-    transfer
-  );
-
+  const token=++engineLoadToken;
+  const promise=new Promise(resolve=>{pendingEngineLoad={token,resolve}});
+  workletNode.port.postMessage({type:"load",token,channels,sourceRate:state.decoded.sampleRate,length:state.decoded.length,position:clampTime(state,position)},transfer);
   await promise;
-
-  engineLoadedTrack=
-    state;
-
-  state.position=
-    clampTime(
-      state,
-      position
-    );
+  engineLoadedTrack=state;
+  state.position=clampTime(state,position);
 }
-
 function getEstimatedEnginePosition(){
-
-  if(!activeTrack){
-    return 0;
+  if(!activeTrack)return 0;
+  let position=enginePositionSec;
+  if(engineLoadedTrack===activeTrack&&engineActive&&Math.abs(engineSpeed)>.00001){
+    const elapsed=Math.max(0,(performance.now()-engineReportPerf)/1000);
+    position+=engineSpeed*Math.min(.03,elapsed);
   }
-
-  let position=
-    enginePositionSec;
-
-  if(
-    engineLoadedTrack===
-    activeTrack&&
-    engineActive&&
-    Math.abs(
-      engineSpeed
-    )>
-    .00001
-  ){
-
-    const elapsed=
-      Math.max(
-        0,
-        (
-          performance.now()-
-          engineReportPerf
-        )/
-        1000
-      );
-
-    position+=
-      engineSpeed*
-      Math.min(
-        .03,
-        elapsed
-      );
-  }
-
-  return clampTime(
-    activeTrack,
-    position
-  );
+  return clampTime(activeTrack,position);
 }
-
 
 /* =====================================================
    VU ANALYSER + DEBUG
 ===================================================== */
+const vuModule=document.getElementById("vuModule");
+const vuNeedleL=document.getElementById("vuNeedleL");
+const vuNeedleR=document.getElementById("vuNeedleR");
+const vuDebugPanel=document.getElementById("vuDebugPanel");
+const vuDebugHandle=document.getElementById("vuDebugHandle");
+const vuDebugCoords=document.getElementById("vuDebugCoords");
+const vuDebugOff=document.getElementById("vuDebugOff");
+const vuDebugReopen=document.getElementById("vuDebugReopen");
 
-const vuModule=
-  document.getElementById(
-    "vuModule"
-  );
+const VU_DEFAULT_X=576,VU_DEFAULT_Y=17;
+let vuAnchorXRatio=.5,vuAnchorYRatio=.1;
+let vuModuleScale=1.13,vuFrontBrightness=.38,vuNeedleLeftX=72,vuNeedleGap=113.5,vuNeedlePivotY=100.5,vuNeedleLength=47.5,vuNeedleWidth=1.2,vuMinAngle=-53,vuMaxAngle=25.5;
+let vuDebugMode=true,vuManualTest=false,vuDragging=false,vuDragPointerId=null,vuDragOffsetX=0,vuDragOffsetY=0;
+const VU_STORAGE_KEY="frssnVuHeaderAnchoredMultiV1";
 
-const vuNeedleL=
-  document.getElementById(
-    "vuNeedleL"
-  );
+const vuXSlider=document.getElementById("vuXSlider"),vuYSlider=document.getElementById("vuYSlider"),vuScaleSlider=document.getElementById("vuScaleSlider"),vuFrontBrightnessSlider=document.getElementById("vuFrontBrightnessSlider"),vuPivotXSlider=document.getElementById("vuPivotXSlider"),vuGapSlider=document.getElementById("vuGapSlider"),vuPivotYSlider=document.getElementById("vuPivotYSlider"),vuNeedleLengthSlider=document.getElementById("vuNeedleLengthSlider"),vuNeedleWidthSlider=document.getElementById("vuNeedleWidthSlider"),vuMinAngleSlider=document.getElementById("vuMinAngleSlider"),vuMaxAngleSlider=document.getElementById("vuMaxAngleSlider");
+const vuXValue=document.getElementById("vuXValue"),vuYValue=document.getElementById("vuYValue"),vuScaleValue=document.getElementById("vuScaleValue"),vuFrontBrightnessValue=document.getElementById("vuFrontBrightnessValue"),vuPivotXValue=document.getElementById("vuPivotXValue"),vuGapValue=document.getElementById("vuGapValue"),vuPivotYValue=document.getElementById("vuPivotYValue"),vuNeedleLengthValue=document.getElementById("vuNeedleLengthValue"),vuNeedleWidthValue=document.getElementById("vuNeedleWidthValue"),vuMinAngleValue=document.getElementById("vuMinAngleValue"),vuMaxAngleValue=document.getElementById("vuMaxAngleValue");
+const vuTestLeft=document.getElementById("vuTestLeft"),vuTestCenter=document.getElementById("vuTestCenter"),vuTestRight=document.getElementById("vuTestRight"),vuTestAudio=document.getElementById("vuTestAudio"),vuResetDebug=document.getElementById("vuResetDebug");
 
-const vuNeedleR=
-  document.getElementById(
-    "vuNeedleR"
-  );
+if(IS_ANDROID){vuModule.classList.add("is-hidden");vuDebugPanel.classList.add("hidden");vuDebugReopen.classList.remove("visible")}
 
-const vuDebugPanel=
-  document.getElementById(
-    "vuDebugPanel"
-  );
-
-const vuDebugHandle=
-  document.getElementById(
-    "vuDebugHandle"
-  );
-
-const vuDebugCoords=
-  document.getElementById(
-    "vuDebugCoords"
-  );
-
-const vuDebugOff=
-  document.getElementById(
-    "vuDebugOff"
-  );
-
-const vuDebugReopen=
-  document.getElementById(
-    "vuDebugReopen"
-  );
-
-const VU_DEFAULT_X=576;
-const VU_DEFAULT_Y=17;
-
-let vuAnchorXRatio=.5;
-let vuAnchorYRatio=.1;
-
-let vuModuleScale=1.13;
-let vuFrontBrightness=.38;
-let vuNeedleLeftX=72;
-let vuNeedleGap=113.5;
-let vuNeedlePivotY=100.5;
-let vuNeedleLength=47.5;
-let vuNeedleWidth=1.2;
-let vuMinAngle=-53;
-let vuMaxAngle=25.5;
-
-let vuDebugMode=true;
-let vuManualTest=false;
-let vuDragging=false;
-let vuDragPointerId=null;
-let vuDragOffsetX=0;
-let vuDragOffsetY=0;
-
-const VU_STORAGE_KEY=
-  "frssnVuHeaderAnchoredMultiV1";
-
-const vuXSlider=document.getElementById("vuXSlider");
-const vuYSlider=document.getElementById("vuYSlider");
-const vuScaleSlider=document.getElementById("vuScaleSlider");
-const vuFrontBrightnessSlider=document.getElementById("vuFrontBrightnessSlider");
-const vuPivotXSlider=document.getElementById("vuPivotXSlider");
-const vuGapSlider=document.getElementById("vuGapSlider");
-const vuPivotYSlider=document.getElementById("vuPivotYSlider");
-const vuNeedleLengthSlider=document.getElementById("vuNeedleLengthSlider");
-const vuNeedleWidthSlider=document.getElementById("vuNeedleWidthSlider");
-const vuMinAngleSlider=document.getElementById("vuMinAngleSlider");
-const vuMaxAngleSlider=document.getElementById("vuMaxAngleSlider");
-
-const vuXValue=document.getElementById("vuXValue");
-const vuYValue=document.getElementById("vuYValue");
-const vuScaleValue=document.getElementById("vuScaleValue");
-const vuFrontBrightnessValue=document.getElementById("vuFrontBrightnessValue");
-const vuPivotXValue=document.getElementById("vuPivotXValue");
-const vuGapValue=document.getElementById("vuGapValue");
-const vuPivotYValue=document.getElementById("vuPivotYValue");
-const vuNeedleLengthValue=document.getElementById("vuNeedleLengthValue");
-const vuNeedleWidthValue=document.getElementById("vuNeedleWidthValue");
-const vuMinAngleValue=document.getElementById("vuMinAngleValue");
-const vuMaxAngleValue=document.getElementById("vuMaxAngleValue");
-
-const vuTestLeft=document.getElementById("vuTestLeft");
-const vuTestCenter=document.getElementById("vuTestCenter");
-const vuTestRight=document.getElementById("vuTestRight");
-const vuTestAudio=document.getElementById("vuTestAudio");
-const vuResetDebug=document.getElementById("vuResetDebug");
-
-if(IS_ANDROID){
-
-  vuModule.classList.add(
-    "is-hidden"
-  );
-
-  vuDebugPanel.classList.add(
-    "hidden"
-  );
-
-  vuDebugReopen.classList.remove(
-    "visible"
-  );
+function initializeVuAnchorFromLocal(x,y){
+  const r=profileHead.getBoundingClientRect();
+  vuAnchorXRatio=r.width?x/r.width:.5;
+  vuAnchorYRatio=r.height?y/r.height:.1;
 }
-
-
-function initializeVuAnchorFromLocal(
-  x,
-  y
-){
-
-  const r=
-    profileHead.getBoundingClientRect();
-
-  vuAnchorXRatio=
-    r.width
-    ?
-    x/r.width
-    :
-    .5;
-
-  vuAnchorYRatio=
-    r.height
-    ?
-    y/r.height
-    :
-    .1;
-}
-
 function saveVuState(){
-
-  try{
-
-    localStorage.setItem(
-      VU_STORAGE_KEY,
-      JSON.stringify({
-        anchorXRatio:
-          vuAnchorXRatio,
-        anchorYRatio:
-          vuAnchorYRatio,
-        scale:
-          vuModuleScale,
-        frontBrightness:
-          vuFrontBrightness,
-        needleLeftX:
-          vuNeedleLeftX,
-        needleGap:
-          vuNeedleGap,
-        needlePivotY:
-          vuNeedlePivotY,
-        needleLength:
-          vuNeedleLength,
-        needleWidth:
-          vuNeedleWidth,
-        minAngle:
-          vuMinAngle,
-        maxAngle:
-          vuMaxAngle
-      })
-    );
-
-  }catch(_){}
+  try{localStorage.setItem(VU_STORAGE_KEY,JSON.stringify({anchorXRatio:vuAnchorXRatio,anchorYRatio:vuAnchorYRatio,scale:vuModuleScale,frontBrightness:vuFrontBrightness,needleLeftX:vuNeedleLeftX,needleGap:vuNeedleGap,needlePivotY:vuNeedlePivotY,needleLength:vuNeedleLength,needleWidth:vuNeedleWidth,minAngle:vuMinAngle,maxAngle:vuMaxAngle}))}catch(_){}
 }
-
 function loadVuState(){
-
   try{
-
-    const raw=
-      localStorage.getItem(
-        VU_STORAGE_KEY
-      );
-
-    if(!raw){
-
-      initializeVuAnchorFromLocal(
-        VU_DEFAULT_X,
-        VU_DEFAULT_Y
-      );
-
-      saveVuState();
-
-      return;
-    }
-
-    const d=
-      JSON.parse(raw);
-
-    if(Number.isFinite(d.anchorXRatio)){
-      vuAnchorXRatio=d.anchorXRatio;
-    }
-
-    if(Number.isFinite(d.anchorYRatio)){
-      vuAnchorYRatio=d.anchorYRatio;
-    }
-
-    if(Number.isFinite(d.scale)){
-      vuModuleScale=d.scale;
-    }
-
-    if(Number.isFinite(d.frontBrightness)){
-      vuFrontBrightness=d.frontBrightness;
-    }
-
-    if(Number.isFinite(d.needleLeftX)){
-      vuNeedleLeftX=d.needleLeftX;
-    }
-
-    if(Number.isFinite(d.needleGap)){
-      vuNeedleGap=d.needleGap;
-    }
-
-    if(Number.isFinite(d.needlePivotY)){
-      vuNeedlePivotY=d.needlePivotY;
-    }
-
-    if(Number.isFinite(d.needleLength)){
-      vuNeedleLength=d.needleLength;
-    }
-
-    if(Number.isFinite(d.needleWidth)){
-      vuNeedleWidth=d.needleWidth;
-    }
-
-    if(Number.isFinite(d.minAngle)){
-      vuMinAngle=d.minAngle;
-    }
-
-    if(Number.isFinite(d.maxAngle)){
-      vuMaxAngle=d.maxAngle;
-    }
-
-  }catch(_){
-
-    initializeVuAnchorFromLocal(
-      VU_DEFAULT_X,
-      VU_DEFAULT_Y
-    );
-  }
+    const raw=localStorage.getItem(VU_STORAGE_KEY);
+    if(!raw){initializeVuAnchorFromLocal(VU_DEFAULT_X,VU_DEFAULT_Y);saveVuState();return}
+    const d=JSON.parse(raw);
+    if(Number.isFinite(d.anchorXRatio))vuAnchorXRatio=d.anchorXRatio;
+    if(Number.isFinite(d.anchorYRatio))vuAnchorYRatio=d.anchorYRatio;
+    if(Number.isFinite(d.scale))vuModuleScale=d.scale;
+    if(Number.isFinite(d.frontBrightness))vuFrontBrightness=d.frontBrightness;
+    if(Number.isFinite(d.needleLeftX))vuNeedleLeftX=d.needleLeftX;
+    if(Number.isFinite(d.needleGap))vuNeedleGap=d.needleGap;
+    if(Number.isFinite(d.needlePivotY))vuNeedlePivotY=d.needlePivotY;
+    if(Number.isFinite(d.needleLength))vuNeedleLength=d.needleLength;
+    if(Number.isFinite(d.needleWidth))vuNeedleWidth=d.needleWidth;
+    if(Number.isFinite(d.minAngle))vuMinAngle=d.minAngle;
+    if(Number.isFinite(d.maxAngle))vuMaxAngle=d.maxAngle;
+  }catch(_){initializeVuAnchorFromLocal(VU_DEFAULT_X,VU_DEFAULT_Y)}
 }
-
-function getVuLocalPosition(){
-
-  const r=
-    profileHead.getBoundingClientRect();
-
-  return {
-    x:
-      vuAnchorXRatio*
-      r.width,
-
-    y:
-      vuAnchorYRatio*
-      r.height
-  };
-}
-
+function getVuLocalPosition(){const r=profileHead.getBoundingClientRect();return{x:vuAnchorXRatio*r.width,y:vuAnchorYRatio*r.height}}
 function applyVuPosition(){
-
-  if(IS_ANDROID){
-    return;
-  }
-
-  const r=
-    profileHead.getBoundingClientRect();
-
-  const local=
-    getVuLocalPosition();
-
-  vuModule.style.left=
-    (
-      r.left+
-      local.x
-    )+
-    "px";
-
-  vuModule.style.top=
-    (
-      r.top+
-      local.y
-    )+
-    "px";
+  if(IS_ANDROID)return;
+  const r=profileHead.getBoundingClientRect(),local=getVuLocalPosition();
+  vuModule.style.left=(r.left+local.x)+"px";vuModule.style.top=(r.top+local.y)+"px";
 }
-
 function applyVuDebug(){
-
-  vuModule.style.setProperty(
-    "--vu-module-scale",
-    vuModuleScale
-  );
-
-  vuModule.style.setProperty(
-    "--vu-front-brightness",
-    vuFrontBrightness
-  );
-
-  vuModule.style.setProperty(
-    "--needle-left-x",
-    vuNeedleLeftX+
-    "px"
-  );
-
-  vuModule.style.setProperty(
-    "--needle-gap",
-    vuNeedleGap+
-    "px"
-  );
-
-  vuModule.style.setProperty(
-    "--needle-pivot-y",
-    vuNeedlePivotY+
-    "px"
-  );
-
-  vuModule.style.setProperty(
-    "--needle-length",
-    vuNeedleLength+
-    "px"
-  );
-
-  vuModule.style.setProperty(
-    "--needle-width",
-    vuNeedleWidth+
-    "px"
-  );
-
+  vuModule.style.setProperty("--vu-module-scale",vuModuleScale);
+  vuModule.style.setProperty("--vu-front-brightness",vuFrontBrightness);
+  vuModule.style.setProperty("--needle-left-x",vuNeedleLeftX+"px");
+  vuModule.style.setProperty("--needle-gap",vuNeedleGap+"px");
+  vuModule.style.setProperty("--needle-pivot-y",vuNeedlePivotY+"px");
+  vuModule.style.setProperty("--needle-length",vuNeedleLength+"px");
+  vuModule.style.setProperty("--needle-width",vuNeedleWidth+"px");
   applyVuPosition();
-
-  const p=
-    getVuLocalPosition();
-
-  vuXSlider.value=
-    Math.round(
-      p.x
-    );
-
-  vuYSlider.value=
-    Math.round(
-      p.y
-    );
-
-  vuScaleSlider.value=
-    Math.round(
-      vuModuleScale*
-      100
-    );
-
-  vuFrontBrightnessSlider.value=
-    Math.round(
-      vuFrontBrightness*
-      100
-    );
-
-  vuPivotXSlider.value=
-    vuNeedleLeftX;
-
-  vuGapSlider.value=
-    vuNeedleGap;
-
-  vuPivotYSlider.value=
-    vuNeedlePivotY;
-
-  vuNeedleLengthSlider.value=
-    vuNeedleLength;
-
-  vuNeedleWidthSlider.value=
-    vuNeedleWidth;
-
-  vuMinAngleSlider.value=
-    vuMinAngle;
-
-  vuMaxAngleSlider.value=
-    vuMaxAngle;
-
-  vuXValue.textContent=
-    Math.round(
-      p.x
-    )+
-    " px";
-
-  vuYValue.textContent=
-    Math.round(
-      p.y
-    )+
-    " px";
-
-  vuScaleValue.textContent=
-    Math.round(
-      vuModuleScale*
-      100
-    )+
-    "%";
-
-  vuFrontBrightnessValue.textContent=
-    Math.round(
-      vuFrontBrightness*
-      100
-    )+
-    "%";
-
-  vuPivotXValue.textContent=
-    vuNeedleLeftX.toFixed(
-      1
-    )+
-    " px";
-
-  vuGapValue.textContent=
-    vuNeedleGap.toFixed(
-      1
-    )+
-    " px";
-
-  vuPivotYValue.textContent=
-    vuNeedlePivotY.toFixed(
-      1
-    )+
-    " px";
-
-  vuNeedleLengthValue.textContent=
-    vuNeedleLength.toFixed(
-      1
-    )+
-    " px";
-
-  vuNeedleWidthValue.textContent=
-    vuNeedleWidth.toFixed(
-      1
-    )+
-    " px";
-
-  vuMinAngleValue.textContent=
-    vuMinAngle.toFixed(
-      1
-    )+
-    "°";
-
-  vuMaxAngleValue.textContent=
-    vuMaxAngle.toFixed(
-      1
-    )+
-    "°";
-
-  vuDebugCoords.textContent=
-    `VU // HEADER X ${Math.round(p.x)} // Y ${Math.round(p.y)}`;
+  const p=getVuLocalPosition();
+  vuXSlider.value=Math.round(p.x);vuYSlider.value=Math.round(p.y);vuScaleSlider.value=Math.round(vuModuleScale*100);vuFrontBrightnessSlider.value=Math.round(vuFrontBrightness*100);
+  vuPivotXSlider.value=vuNeedleLeftX;vuGapSlider.value=vuNeedleGap;vuPivotYSlider.value=vuNeedlePivotY;vuNeedleLengthSlider.value=vuNeedleLength;vuNeedleWidthSlider.value=vuNeedleWidth;vuMinAngleSlider.value=vuMinAngle;vuMaxAngleSlider.value=vuMaxAngle;
+  vuXValue.textContent=Math.round(p.x)+" px";vuYValue.textContent=Math.round(p.y)+" px";vuScaleValue.textContent=Math.round(vuModuleScale*100)+"%";vuFrontBrightnessValue.textContent=Math.round(vuFrontBrightness*100)+"%";
+  vuPivotXValue.textContent=vuNeedleLeftX.toFixed(1)+" px";vuGapValue.textContent=vuNeedleGap.toFixed(1)+" px";vuPivotYValue.textContent=vuNeedlePivotY.toFixed(1)+" px";vuNeedleLengthValue.textContent=vuNeedleLength.toFixed(1)+" px";vuNeedleWidthValue.textContent=vuNeedleWidth.toFixed(1)+" px";vuMinAngleValue.textContent=vuMinAngle.toFixed(1)+"°";vuMaxAngleValue.textContent=vuMaxAngle.toFixed(1)+"°";
+  vuDebugCoords.textContent=`VU // HEADER X ${Math.round(p.x)} // Y ${Math.round(p.y)}`;
 }
+function bindVuSlider(slider,fn){slider.addEventListener("input",()=>{fn(Number(slider.value));applyVuDebug();saveVuState()})}
+bindVuSlider(vuXSlider,v=>{const r=profileHead.getBoundingClientRect();if(r.width)vuAnchorXRatio=v/r.width});
+bindVuSlider(vuYSlider,v=>{const r=profileHead.getBoundingClientRect();if(r.height)vuAnchorYRatio=v/r.height});
+bindVuSlider(vuScaleSlider,v=>vuModuleScale=v/100);
+bindVuSlider(vuFrontBrightnessSlider,v=>vuFrontBrightness=v/100);
+bindVuSlider(vuPivotXSlider,v=>vuNeedleLeftX=v);
+bindVuSlider(vuGapSlider,v=>vuNeedleGap=v);
+bindVuSlider(vuPivotYSlider,v=>vuNeedlePivotY=v);
+bindVuSlider(vuNeedleLengthSlider,v=>vuNeedleLength=v);
+bindVuSlider(vuNeedleWidthSlider,v=>vuNeedleWidth=v);
+bindVuSlider(vuMinAngleSlider,v=>vuMinAngle=v);
+bindVuSlider(vuMaxAngleSlider,v=>vuMaxAngle=v);
 
-function bindVuSlider(
-  slider,
-  fn
-){
-
-  slider.addEventListener(
-    "input",
-    ()=>{
-
-      fn(
-        Number(
-          slider.value
-        )
-      );
-
-      applyVuDebug();
-      saveVuState();
-    }
-  );
-}
-
-bindVuSlider(
-  vuXSlider,
-  v=>{
-
-    const r=
-      profileHead.getBoundingClientRect();
-
-    if(r.width){
-      vuAnchorXRatio=
-        v/r.width;
-    }
-  }
-);
-
-bindVuSlider(
-  vuYSlider,
-  v=>{
-
-    const r=
-      profileHead.getBoundingClientRect();
-
-    if(r.height){
-      vuAnchorYRatio=
-        v/r.height;
-    }
-  }
-);
-
-bindVuSlider(
-  vuScaleSlider,
-  v=>
-    vuModuleScale=
-      v/100
-);
-
-bindVuSlider(
-  vuFrontBrightnessSlider,
-  v=>
-    vuFrontBrightness=
-      v/100
-);
-
-bindVuSlider(
-  vuPivotXSlider,
-  v=>
-    vuNeedleLeftX=
-      v
-);
-
-bindVuSlider(
-  vuGapSlider,
-  v=>
-    vuNeedleGap=
-      v
-);
-
-bindVuSlider(
-  vuPivotYSlider,
-  v=>
-    vuNeedlePivotY=
-      v
-);
-
-bindVuSlider(
-  vuNeedleLengthSlider,
-  v=>
-    vuNeedleLength=
-      v
-);
-
-bindVuSlider(
-  vuNeedleWidthSlider,
-  v=>
-    vuNeedleWidth=
-      v
-);
-
-bindVuSlider(
-  vuMinAngleSlider,
-  v=>
-    vuMinAngle=
-      v
-);
-
-bindVuSlider(
-  vuMaxAngleSlider,
-  v=>
-    vuMaxAngle=
-      v
-);
-
-vuDebugHandle.addEventListener(
-  "pointerdown",
-  e=>{
-
-    if(
-      e.target.closest(
-        "button"
-      )
-    ){
-      return;
-    }
-
-    e.preventDefault();
-
-    vuDragging=true;
-    vuDragPointerId=
-      e.pointerId;
-
-    const r=
-      vuModule.getBoundingClientRect();
-
-    vuDragOffsetX=
-      e.clientX-
-      r.left;
-
-    vuDragOffsetY=
-      e.clientY-
-      r.top;
-
-    vuDebugHandle.setPointerCapture(
-      e.pointerId
-    );
-  }
-);
-
-vuDebugHandle.addEventListener(
-  "pointermove",
-  e=>{
-
-    if(
-      !vuDragging||
-      e.pointerId!==
-      vuDragPointerId
-    ){
-      return;
-    }
-
-    e.preventDefault();
-
-    const r=
-      profileHead.getBoundingClientRect();
-
-    const x=
-      e.clientX-
-      r.left-
-      vuDragOffsetX;
-
-    const y=
-      e.clientY-
-      r.top-
-      vuDragOffsetY;
-
-    if(r.width){
-      vuAnchorXRatio=
-        x/r.width;
-    }
-
-    if(r.height){
-      vuAnchorYRatio=
-        y/r.height;
-    }
-
-    applyVuDebug();
-  }
-);
-
+vuDebugHandle.addEventListener("pointerdown",e=>{
+  if(e.target.closest("button"))return;e.preventDefault();vuDragging=true;vuDragPointerId=e.pointerId;
+  const r=vuModule.getBoundingClientRect();vuDragOffsetX=e.clientX-r.left;vuDragOffsetY=e.clientY-r.top;vuDebugHandle.setPointerCapture(e.pointerId);
+});
+vuDebugHandle.addEventListener("pointermove",e=>{
+  if(!vuDragging||e.pointerId!==vuDragPointerId)return;e.preventDefault();const r=profileHead.getBoundingClientRect();
+  const x=e.clientX-r.left-vuDragOffsetX,y=e.clientY-r.top-vuDragOffsetY;
+  if(r.width)vuAnchorXRatio=x/r.width;if(r.height)vuAnchorYRatio=y/r.height;applyVuDebug();
+});
 function finishVuDrag(e){
-
-  if(
-    !vuDragging||
-    e.pointerId!==
-    vuDragPointerId
-  ){
-    return;
-  }
-
-  vuDragging=false;
-
-  if(
-    vuDebugHandle.hasPointerCapture(
-      e.pointerId
-    )
-  ){
-    vuDebugHandle.releasePointerCapture(
-      e.pointerId
-    );
-  }
-
-  vuDragPointerId=null;
-
-  saveVuState();
+  if(!vuDragging||e.pointerId!==vuDragPointerId)return;vuDragging=false;
+  if(vuDebugHandle.hasPointerCapture(e.pointerId))vuDebugHandle.releasePointerCapture(e.pointerId);
+  vuDragPointerId=null;saveVuState();
 }
-
-vuDebugHandle.addEventListener(
-  "pointerup",
-  finishVuDrag
-);
-
-vuDebugHandle.addEventListener(
-  "pointercancel",
-  finishVuDrag
-);
-
+vuDebugHandle.addEventListener("pointerup",finishVuDrag);vuDebugHandle.addEventListener("pointercancel",finishVuDrag);
 function setVuDebugMode(enabled){
-
-  vuDebugMode=
-    enabled;
-
-  vuModule.classList.toggle(
-    "debug-on",
-    enabled
-  );
-
-  vuDebugPanel.classList.toggle(
-    "hidden",
-    !enabled
-  );
-
-  vuDebugReopen.classList.toggle(
-    "visible",
-    !enabled
-  );
-
-  if(!enabled){
-    vuManualTest=false;
-  }
+  vuDebugMode=enabled;vuModule.classList.toggle("debug-on",enabled);vuDebugPanel.classList.toggle("hidden",!enabled);vuDebugReopen.classList.toggle("visible",!enabled);if(!enabled)vuManualTest=false;
 }
+vuDebugOff.addEventListener("click",e=>{e.stopPropagation();setVuDebugMode(false)});vuDebugReopen.addEventListener("click",()=>setVuDebugMode(true));
+function setNeedlesAngle(angle){vuNeedleL.style.transform=`rotate(${angle}deg)`;vuNeedleR.style.transform=`rotate(${angle}deg)`}
+vuTestLeft.addEventListener("click",()=>{vuManualTest=true;setNeedlesAngle(vuMinAngle)});
+vuTestCenter.addEventListener("click",()=>{vuManualTest=true;setNeedlesAngle(0)});
+vuTestRight.addEventListener("click",()=>{vuManualTest=true;setNeedlesAngle(vuMaxAngle)});
+vuTestAudio.addEventListener("click",()=>{vuManualTest=false});
+vuResetDebug.addEventListener("click",()=>{
+  initializeVuAnchorFromLocal(576,17);vuModuleScale=1.13;vuFrontBrightness=.38;vuNeedleLeftX=72;vuNeedleGap=113.5;vuNeedlePivotY=100.5;vuNeedleLength=47.5;vuNeedleWidth=1.2;vuMinAngle=-53;vuMaxAngle=25.5;applyVuDebug();saveVuState();
+});
+window.addEventListener("resize",applyVuDebug);window.addEventListener("scroll",applyVuPosition,{passive:true});
+loadVuState();applyVuDebug();
 
-vuDebugOff.addEventListener(
-  "click",
-  e=>{
-
-    e.stopPropagation();
-
-    setVuDebugMode(
-      false
-    );
-  }
-);
-
-vuDebugReopen.addEventListener(
-  "click",
-  ()=>{
-    setVuDebugMode(
-      true
-    );
-  }
-);
-
-function setNeedlesAngle(angle){
-
-  vuNeedleL.style.transform=
-    `rotate(${angle}deg)`;
-
-  vuNeedleR.style.transform=
-    `rotate(${angle}deg)`;
-}
-
-vuTestLeft.addEventListener(
-  "click",
-  ()=>{
-    vuManualTest=true;
-    setNeedlesAngle(
-      vuMinAngle
-    );
-  }
-);
-
-vuTestCenter.addEventListener(
-  "click",
-  ()=>{
-    vuManualTest=true;
-    setNeedlesAngle(
-      0
-    );
-  }
-);
-
-vuTestRight.addEventListener(
-  "click",
-  ()=>{
-    vuManualTest=true;
-    setNeedlesAngle(
-      vuMaxAngle
-    );
-  }
-);
-
-vuTestAudio.addEventListener(
-  "click",
-  ()=>{
-    vuManualTest=false;
-  }
-);
-
-vuResetDebug.addEventListener(
-  "click",
-  ()=>{
-
-    initializeVuAnchorFromLocal(
-      576,
-      17
-    );
-
-    vuModuleScale=1.13;
-    vuFrontBrightness=.38;
-    vuNeedleLeftX=72;
-    vuNeedleGap=113.5;
-    vuNeedlePivotY=100.5;
-    vuNeedleLength=47.5;
-    vuNeedleWidth=1.2;
-    vuMinAngle=-53;
-    vuMaxAngle=25.5;
-
-    applyVuDebug();
-    saveVuState();
-  }
-);
-
-window.addEventListener(
-  "resize",
-  applyVuDebug
-);
-
-window.addEventListener(
-  "scroll",
-  applyVuPosition,
-  {
-    passive:true
-  }
-);
-
-loadVuState();
-applyVuDebug();
-
-
-/* =====================================================
-   VU ANALYSER
-===================================================== */
-
-let vuSplitter=null;
-let vuAnalyserL=null;
-let vuAnalyserR=null;
-let vuDataL=null;
-let vuDataR=null;
-let vuRAF=null;
-let vuNeedleValueL=0;
-let vuNeedleValueR=0;
-let vuPeakL=0;
-let vuPeakR=0;
-
+let vuSplitter=null,vuAnalyserL=null,vuAnalyserR=null,vuDataL=null,vuDataR=null,vuRAF=null,vuNeedleValueL=0,vuNeedleValueR=0,vuPeakL=0,vuPeakR=0;
 const VU_SCRATCH_IDLE_MS=60;
-
 function initVuAnalyser(){
-
-  if(
-    IS_ANDROID||
-    !workletLimiter||
-    vuAnalyserL
-  ){
-    return;
-  }
-
-  const ctx=
-    getAudioContext();
-
-  vuSplitter=
-    ctx.createChannelSplitter(
-      2
-    );
-
-  vuAnalyserL=
-    ctx.createAnalyser();
-
-  vuAnalyserR=
-    ctx.createAnalyser();
-
-  vuAnalyserL.fftSize=512;
-  vuAnalyserR.fftSize=512;
-
-  vuAnalyserL.smoothingTimeConstant=0;
-  vuAnalyserR.smoothingTimeConstant=0;
-
-  workletLimiter.connect(
-    vuSplitter
-  );
-
-  vuSplitter.connect(
-    vuAnalyserL,
-    0
-  );
-
-  vuSplitter.connect(
-    vuAnalyserR,
-    1
-  );
-
-  vuDataL=
-    new Float32Array(
-      vuAnalyserL.fftSize
-    );
-
-  vuDataR=
-    new Float32Array(
-      vuAnalyserR.fftSize
-    );
-
-  startVuLoop();
+  if(IS_ANDROID||!workletLimiter||vuAnalyserL)return;
+  const ctx=getAudioContext();
+  vuSplitter=ctx.createChannelSplitter(2);vuAnalyserL=ctx.createAnalyser();vuAnalyserR=ctx.createAnalyser();
+  vuAnalyserL.fftSize=512;vuAnalyserR.fftSize=512;vuAnalyserL.smoothingTimeConstant=0;vuAnalyserR.smoothingTimeConstant=0;
+  workletLimiter.connect(vuSplitter);vuSplitter.connect(vuAnalyserL,0);vuSplitter.connect(vuAnalyserR,1);
+  vuDataL=new Float32Array(vuAnalyserL.fftSize);vuDataR=new Float32Array(vuAnalyserR.fftSize);startVuLoop();
 }
-
-function getRms(
-  analyser,
-  data
-){
-
-  if(
-    !analyser||
-    !data
-  ){
-    return 0;
-  }
-
-  analyser.getFloatTimeDomainData(
-    data
-  );
-
-  let sum=0;
-
-  for(
-    let i=0;
-    i<data.length;
-    i++
-  ){
-    sum+=
-      data[i]*
-      data[i];
-  }
-
-  return Math.sqrt(
-    sum/
-    data.length
-  );
+function getRms(analyser,data){
+  if(!analyser||!data)return 0;analyser.getFloatTimeDomainData(data);let sum=0;
+  for(let i=0;i<data.length;i++)sum+=data[i]*data[i];return Math.sqrt(sum/data.length);
 }
-
 function rmsToVu(rms){
-
-  if(
-    rms<=.000001
-  ){
-    return 0;
-  }
-
-  const db=
-    20*
-    Math.log10(rms);
-
-  const minDb=-42;
-  const maxDb=-9;
-
-  return Math.max(
-    0,
-    Math.min(
-      1,
-      (
-        db-
-        minDb
-      )/
-      (
-        maxDb-
-        minDb
-      )
-    )
-  );
+  if(rms<=.000001)return 0;const db=20*Math.log10(rms),minDb=-42,maxDb=-9;return Math.max(0,Math.min(1,(db-minDb)/(maxDb-minDb)));
 }
-
-function vuValueToAngle(v){
-
-  return (
-    vuMinAngle+
-    v*
-    (
-      vuMaxAngle-
-      vuMinAngle
-    )
-  );
+function vuValueToAngle(v){return vuMinAngle+v*(vuMaxAngle-vuMinAngle)}
+function updateVuBallistic(current,target,scratchMode){
+  const attack=scratchMode?.42:.29;
+  const release=scratchMode?.52:.060;
+  const c=target>current?attack:release;
+  return current+(target-current)*c;
 }
-
-function updateVuBallistic(
-  current,
-  target,
-  scratchMode
-){
-
-  const attack=
-    scratchMode
-    ?
-    .42
-    :
-    .29;
-
-  const release=
-    scratchMode
-    ?
-    .52
-    :
-    .060;
-
-  const c=
-    target>
-    current
-    ?
-    attack
-    :
-    release;
-
-  return (
-    current+
-    (
-      target-
-      current
-    )*
-    c
-  );
-}
-
 function startVuLoop(){
-
-  if(
-    IS_ANDROID||
-    !vuAnalyserL||
-    !vuAnalyserR
-  ){
-    return;
-  }
-
-  if(vuRAF){
-    cancelAnimationFrame(
-      vuRAF
-    );
-  }
-
+  if(IS_ANDROID||!vuAnalyserL||!vuAnalyserR)return;if(vuRAF)cancelAnimationFrame(vuRAF);
   const frame=()=>{
-
     if(!vuManualTest){
-
-      let targetL=
-        rmsToVu(
-          getRms(
-            vuAnalyserL,
-            vuDataL
-          )
-        );
-
-      let targetR=
-        rmsToVu(
-          getRms(
-            vuAnalyserR,
-            vuDataR
-          )
-        );
-
-      const scratchMeterMode=
-        isScratching||
-        engineMode===
-        "manual"||
-        engineMode===
-        "grab_brake"||
-        engineMode===
-        "hold";
-
-      const scratchIdle=
-        scratchMeterMode&&
-        (
-          performance.now()-
-          lastManualMoveAt
-        )>
-        VU_SCRATCH_IDLE_MS;
-
+      let targetL=rmsToVu(getRms(vuAnalyserL,vuDataL)),targetR=rmsToVu(getRms(vuAnalyserR,vuDataR));
+      const scratchMeterMode=isScratching||engineMode==="manual"||engineMode==="grab_brake"||engineMode==="hold";
+      const scratchIdle=scratchMeterMode&&(performance.now()-lastManualMoveAt)>VU_SCRATCH_IDLE_MS;
       if(scratchMeterMode){
-
-        vuPeakL=
-          targetL;
-
-        vuPeakR=
-          targetR;
-
-        if(scratchIdle){
-
-          targetL=0;
-          targetR=0;
-
-          vuPeakL=0;
-          vuPeakR=0;
-        }
-
+        vuPeakL=targetL;vuPeakR=targetR;
+        if(scratchIdle){targetL=0;targetR=0;vuPeakL=0;vuPeakR=0}
       }else{
-
-        vuPeakL=
-          Math.max(
-            targetL,
-            vuPeakL*
-            .955
-          );
-
-        vuPeakR=
-          Math.max(
-            targetR,
-            vuPeakR*
-            .955
-          );
-
-        targetL=
-          targetL*
-          .89+
-          vuPeakL*
-          .11;
-
-        targetR=
-          targetR*
-          .89+
-          vuPeakR*
-          .11;
+        vuPeakL=Math.max(targetL,vuPeakL*.955);vuPeakR=Math.max(targetR,vuPeakR*.955);
+        targetL=targetL*.89+vuPeakL*.11;targetR=targetR*.89+vuPeakR*.11;
       }
-
-      vuNeedleValueL=
-        updateVuBallistic(
-          vuNeedleValueL,
-          targetL,
-          scratchMeterMode
-        );
-
-      vuNeedleValueR=
-        updateVuBallistic(
-          vuNeedleValueR,
-          targetR,
-          scratchMeterMode
-        );
-
-      if(
-        scratchMeterMode&&
-        targetL===0&&
-        vuNeedleValueL<
-        .003
-      ){
-        vuNeedleValueL=0;
-      }
-
-      if(
-        scratchMeterMode&&
-        targetR===0&&
-        vuNeedleValueR<
-        .003
-      ){
-        vuNeedleValueR=0;
-      }
-
-      vuNeedleL.style.transform=
-        `rotate(${vuValueToAngle(vuNeedleValueL)}deg)`;
-
-      vuNeedleR.style.transform=
-        `rotate(${vuValueToAngle(vuNeedleValueR)}deg)`;
+      vuNeedleValueL=updateVuBallistic(vuNeedleValueL,targetL,scratchMeterMode);
+      vuNeedleValueR=updateVuBallistic(vuNeedleValueR,targetR,scratchMeterMode);
+      if(scratchMeterMode&&targetL===0&&vuNeedleValueL<.003)vuNeedleValueL=0;
+      if(scratchMeterMode&&targetR===0&&vuNeedleValueR<.003)vuNeedleValueR=0;
+      vuNeedleL.style.transform=`rotate(${vuValueToAngle(vuNeedleValueL)}deg)`;
+      vuNeedleR.style.transform=`rotate(${vuValueToAngle(vuNeedleValueR)}deg)`;
     }
-
-    vuRAF=
-      requestAnimationFrame(
-        frame
-      );
+    vuRAF=requestAnimationFrame(frame);
   };
-
-  vuRAF=
-    requestAnimationFrame(
-      frame
-    );
+  vuRAF=requestAnimationFrame(frame);
 }
-
 
 /* =====================================================
    TONEARM / OPEN / PACK PER TRACK
 ===================================================== */
-
-function animateTonearmTo(
-  state,
-  targetAngle,
-  duration=
-    ARM_MOVE_DURATION_MS
-){
-
-  return new Promise(
-    resolve=>{
-
-      const startAngle=
-        state.currentTonearmAngle;
-
-      const started=
-        performance.now();
-
-      const frame=now=>{
-
-        const raw=Math.min(
-          1,
-          (
-            now-
-            started
-          )/
-          duration
-        );
-
-        const smooth=
-          smootherStep(
-            raw
-          );
-
-        setTonearmAngle(
-          state,
-          startAngle+
-          (
-            targetAngle-
-            startAngle
-          )*
-          smooth
-        );
-
-        if(raw<1){
-          requestAnimationFrame(
-            frame
-          );
-        }
-        else{
-          setTonearmAngle(
-            state,
-            targetAngle
-          );
-
-          resolve();
-        }
-      };
-
-      requestAnimationFrame(
-        frame
-      );
-    }
-  );
+function animateTonearmTo(state,targetAngle,duration=ARM_MOVE_DURATION_MS){
+  return new Promise(resolve=>{
+    const startAngle=state.currentTonearmAngle,started=performance.now();
+    const frame=now=>{
+      const raw=Math.min(1,(now-started)/duration),smooth=smootherStep(raw);
+      setTonearmAngle(state,startAngle+(targetAngle-startAngle)*smooth);
+      if(raw<1)requestAnimationFrame(frame);else{setTonearmAngle(state,targetAngle);resolve()}
+    };
+    requestAnimationFrame(frame);
+  });
 }
-
 function cancelScheduledTonearmEngage(state){
-
   state.armEngageGeneration++;
-
-  if(state.armDeployTimer){
-
-    clearTimeout(
-      state.armDeployTimer
-    );
-
-    state.armDeployTimer=null;
-  }
+  if(state.armDeployTimer){clearTimeout(state.armDeployTimer);state.armDeployTimer=null}
 }
-
-function getTrackPosition(state){
-
-  return (
-    state===
-    activeTrack
-    ?
-    getEstimatedEnginePosition()
-    :
-    state.position
-  );
-}
-
+function getTrackPosition(state){return state===activeTrack?getEstimatedEnginePosition():state.position}
 async function engageTonearm(state){
-
-  if(
-    state.tonearmEngaged||
-    state.isPacking||
-    !state.vinylOpened
-  ){
-    return;
-  }
-
+  if(state.tonearmEngaged||state.isPacking||!state.vinylOpened)return;
   state.tonearmEngaged=true;
-
-  await animateTonearmTo(
-    state,
-    armAngleFromTime(
-      state,
-      getTrackPosition(
-        state
-      )
-    ),
-    ARM_MOVE_DURATION_MS
-  );
+  await animateTonearmTo(state,armAngleFromTime(state,getTrackPosition(state)),ARM_MOVE_DURATION_MS);
 }
-
 function scheduleTonearmEngageFromOpenStart(state){
-
-  cancelScheduledTonearmEngage(
-    state
-  );
-
-  const generation=
-    state.armEngageGeneration;
-
-  const startAt=
-    Math.max(
-      0,
-      MECHANISM_DEPLOY_DURATION+
-      ARM_START_OFFSET_MS
-    );
-
-  state.armDeployTimer=
-    setTimeout(
-      async()=>{
-
-        state.armDeployTimer=null;
-
-        if(
-          generation!==
-          state.armEngageGeneration||
-          !state.vinylOpened||
-          state.isPacking||
-          state.tonearmEngaged
-        ){
-          return;
-        }
-
-        await engageTonearm(
-          state
-        );
-      },
-      startAt
-    );
+  cancelScheduledTonearmEngage(state);const generation=state.armEngageGeneration;
+  const startAt=Math.max(0,MECHANISM_DEPLOY_DURATION+ARM_START_OFFSET_MS);
+  state.armDeployTimer=setTimeout(async()=>{
+    state.armDeployTimer=null;
+    if(generation!==state.armEngageGeneration||!state.vinylOpened||state.isPacking||state.tonearmEngaged)return;
+    await engageTonearm(state);
+  },startAt);
 }
-
 async function ensureVinylOpen(state){
-
-  if(
-    state.vinylOpened&&
-    state.mechanismDeployed
-  ){
-    return;
-  }
-
-  if(state.openingPromise){
-    await state.openingPromise;
-    return;
-  }
-
-  state.openingPromise=
-    (
-      async()=>{
-
-        if(!state.vinylOpened){
-
-          state.vinylOpened=true;
-
-          state.tonearmEngaged=false;
-
-          setTonearmAngle(
-            state,
-            ARM_PARK_ANGLE
-          );
-
-          playPaperIn();
-
-          state.el.classList.remove(
-            "is-closing"
-          );
-
-          state.el.classList.add(
-            "is-open"
-          );
-
-          scheduleTonearmEngageFromOpenStart(
-            state
-          );
-        }
-
-        await wait(
-          MECHANISM_DEPLOY_DURATION
-        );
-
-        if(
-          !state.mechanismDeployed
-        ){
-          state.mechanismDeployed=true;
-
-          state.el.classList.add(
-            "arm-on-top"
-          );
-        }
-
-        if(
-          !state.tonearmEngaged&&
-          !state.isPacking
-        ){
-          await engageTonearm(
-            state
-          );
-        }
-      }
-    )();
-
-  try{
-    await state.openingPromise;
-  }
-  finally{
-    state.openingPromise=null;
-  }
+  if(state.vinylOpened&&state.mechanismDeployed)return;
+  if(state.openingPromise){await state.openingPromise;return}
+  state.openingPromise=(async()=>{
+    if(!state.vinylOpened){
+      state.vinylOpened=true;state.tonearmEngaged=false;setTonearmAngle(state,ARM_PARK_ANGLE);playPaperIn();
+      state.el.classList.remove("is-closing");state.el.classList.add("is-open");
+      scheduleTonearmEngageFromOpenStart(state);
+    }
+    await wait(MECHANISM_DEPLOY_DURATION);
+    if(!state.mechanismDeployed){state.mechanismDeployed=true;state.el.classList.add("arm-on-top")}
+    if(!state.tonearmEngaged&&!state.isPacking)await engageTonearm(state);
+  })();
+  try{await state.openingPromise}finally{state.openingPromise=null}
 }
-
-async function packTrack(
-  state,
-  {
-    reset=true
-  }={}
-){
-
-  if(
-    !state.vinylOpened||
-    state.isPacking
-  ){
-    return;
-  }
-
-  cancelScheduledTonearmEngage(
-    state
-  );
-
-  state.isPacking=true;
-
-  state.el.classList.remove(
-    "is-scratching",
-    "is-seeking",
-    "is-precue"
-  );
-
-  if(state.tonearmEngaged){
-
-    await animateTonearmTo(
-      state,
-      ARM_PARK_ANGLE,
-      600
-    );
-  }
-
-  state.el.classList.remove(
-    "arm-on-top"
-  );
-
-  state.tonearmEngaged=false;
-
-  await wait(
-    90
-  );
-
-  playPaperOut();
-
-  state.el.classList.add(
-    "is-closing"
-  );
-
-  await wait(
-    1480
-  );
-
-  state.el.classList.remove(
-    "is-open",
-    "is-closing",
-    "is-scratching",
-    "is-motor-recovering",
-    "is-play-starting",
-    "is-pause-braking",
-    "is-free-spinning",
-    "is-seeking",
-    "is-precue",
-    "is-active"
-  );
-
-  state.mechanismDeployed=false;
-  state.vinylOpened=false;
-  state.isPacking=false;
-
-  setTonearmAngle(
-    state,
-    ARM_PARK_ANGLE
-  );
-
+async function packTrack(state,{reset=true}={}){
+  if(!state.vinylOpened||state.isPacking)return;
+  cancelScheduledTonearmEngage(state);state.isPacking=true;state.el.classList.remove("is-scratching","is-seeking","is-precue");
+  if(state.tonearmEngaged)await animateTonearmTo(state,ARM_PARK_ANGLE,600);
+  state.el.classList.remove("arm-on-top");state.tonearmEngaged=false;
+  await wait(90);playPaperOut();state.el.classList.add("is-closing");
+  await wait(1480);
+  state.el.classList.remove("is-open","is-closing","is-scratching","is-motor-recovering","is-play-starting","is-pause-braking","is-free-spinning","is-seeking","is-precue","is-active");
+  state.mechanismDeployed=false;state.vinylOpened=false;state.isPacking=false;setTonearmAngle(state,ARM_PARK_ANGLE);
   if(reset){
-
-    state.position=0;
-
-    state.hasPlaybackEverStarted=false;
-
-    setVinylAngle(
-      state,
-      0
-    );
-
-    updateProgressUI(
-      state,
-      0
-    );
-
-    setPlayIcon(
-      state,
-      false
-    );
+    state.position=0;state.hasPlaybackEverStarted=false;setVinylAngle(state,0);updateProgressUI(state,0);setPlayIcon(state,false);
   }
 }
-
-tracks.forEach(
-  state=>{
-
-    state.recordCarrier.addEventListener(
-      "animationend",
-      event=>{
-
-        if(
-          event.animationName!==
-          "recordReveal"||
-          state.isPacking
-        ){
-          return;
-        }
-
-        state.mechanismDeployed=true;
-
-        state.el.classList.add(
-          "arm-on-top"
-        );
-      }
-    );
-  }
-);
-
+tracks.forEach(state=>{
+  state.recordCarrier.addEventListener("animationend",event=>{
+    if(event.animationName!=="recordReveal"||state.isPacking)return;
+    state.mechanismDeployed=true;state.el.classList.add("arm-on-top");
+  });
+});
 
 /* =====================================================
    ENGINE MODE UI
 ===================================================== */
-
 function updateModeClasses(mode){
-
-  tracks.forEach(
-    t=>{
-
-      const active=
-        t===
-        activeTrack;
-
-      t.el.classList.toggle(
-        "is-play-starting",
-        active&&
-        mode===
-        "play_start"
-      );
-
-      t.el.classList.toggle(
-        "is-pause-braking",
-        active&&
-        mode===
-        "pause_brake"
-      );
-
-      t.el.classList.toggle(
-        "is-motor-recovering",
-        active&&
-        mode===
-        "motor_recovery"
-      );
-
-      t.el.classList.toggle(
-        "is-free-spinning",
-        active&&
-        mode===
-        "free_spin"
-      );
-    }
-  );
+  tracks.forEach(t=>{
+    const active=t===activeTrack;
+    t.el.classList.toggle("is-play-starting",active&&mode==="play_start");
+    t.el.classList.toggle("is-pause-braking",active&&mode==="pause_brake");
+    t.el.classList.toggle("is-motor-recovering",active&&mode==="motor_recovery");
+    t.el.classList.toggle("is-free-spinning",active&&mode==="free_spin");
+  });
 }
-
 function updateStatusFromEngineMode(mode){
-
-  if(!activeTrack){
-    return;
-  }
-
-  const name=
-    activeTrack.el
-    .querySelector(
-      ".trackTitle"
-    )
-    ?.textContent
-    ?.trim()
-    ||
-    activeTrack.id;
-
+  if(!activeTrack)return;
+  const name=activeTrack.el.querySelector(".trackTitle")?.textContent?.trim()||activeTrack.id;
   switch(mode){
-
-    case "normal":
-
-      if(playIntent){
-        microstatus.textContent=
-          `${name} // MOTOR LOCK // 45 RPM`;
-      }
-
-      break;
-
-
-    case "play_start":
-
-      microstatus.textContent=
-        `${name} // MOTOR START`;
-
-      break;
-
-
-    case "pause_brake":
-
-      microstatus.textContent=
-        `${name} // PAUSE BRAKE`;
-
-      break;
-
-
-    case "grab_brake":
-
-      microstatus.textContent=
-        `${name} // GRAB BRAKE`;
-
-      break;
-
-
-    case "motor_recovery":
-
-      microstatus.textContent=
-        `${name} // MOTOR RECOVERY`;
-
-      break;
-
-
-    case "free_spin":
-
-      microstatus.textContent=
-        `${name} // FREE SPIN`;
-
-      break;
-
-
-    case "hold":
-
-      microstatus.textContent=
-        `${name} // SCRATCH HOLD`;
-
-      break;
-
-
-    case "paused":
-
-      if(!playIntent){
-        microstatus.textContent=
-          `${name} // PLAYBACK PAUSED`;
-      }
-
-      break;
+    case "normal":if(playIntent)microstatus.textContent=`${name} // MOTOR LOCK // 45 RPM`;break;
+    case "play_start":microstatus.textContent=`${name} // MOTOR START`;break;
+    case "pause_brake":microstatus.textContent=`${name} // PAUSE BRAKE`;break;
+    case "grab_brake":microstatus.textContent=`${name} // GRAB BRAKE`;break;
+    case "motor_recovery":microstatus.textContent=`${name} // MOTOR RECOVERY`;break;
+    case "free_spin":microstatus.textContent=`${name} // FREE SPIN`;break;
+    case "hold":microstatus.textContent=`${name} // SCRATCH HOLD`;break;
+    case "paused":if(!playIntent)microstatus.textContent=`${name} // PLAYBACK PAUSED`;break;
   }
 }
-
 
 /* =====================================================
    VISUAL LOOP
 ===================================================== */
-
 function startVisualLoop(){
-
-  if(visualRAF){
-    cancelAnimationFrame(
-      visualRAF
-    );
-  }
-
+  if(visualRAF)cancelAnimationFrame(visualRAF);
   const frame=()=>{
-
-    const state=
-      activeTrack;
-
-    if(
-      state&&
-      !state.isPacking&&
-      !isSeeking&&
-      !isPreCueing
-    ){
-
+    const state=activeTrack;
+    if(state&&!state.isPacking&&!isSeeking&&!isPreCueing){
       let position;
-
-      if(
-        isScratching&&
-        scratchTrack===
-        state&&
-        manualMovementStarted
-      ){
-        position=
-          scratchVisualTime;
-      }
-      else{
-        position=
-          getEstimatedEnginePosition();
-      }
-
-      state.position=
-        position;
-
-      setVinylAngle(
-        state,
-        angleFromAudioTime(
-          position
-        )
-      );
-
-      if(state.tonearmEngaged){
-
-        setTonearmAngle(
-          state,
-          armAngleFromTime(
-            state,
-            position
-          )
-        );
-      }
-
-      updateProgressUI(
-        state,
-        position
-      );
+      if(isScratching&&scratchTrack===state&&manualMovementStarted)position=scratchVisualTime;
+      else position=getEstimatedEnginePosition();
+      state.position=position;
+      setVinylAngle(state,angleFromAudioTime(position));
+      if(state.tonearmEngaged)setTonearmAngle(state,armAngleFromTime(state,position));
+      updateProgressUI(state,position);
     }
-
-    visualRAF=
-      requestAnimationFrame(
-        frame
-      );
+    visualRAF=requestAnimationFrame(frame);
   };
-
-  visualRAF=
-    requestAnimationFrame(
-      frame
-    );
+  visualRAF=requestAnimationFrame(frame);
 }
-
 
 /* =====================================================
    MULTI-TRACK SWITCHING
 ===================================================== */
-
-async function activateTrackBuffer(
-  state,
-  position=0
-){
-
-  if(
-    state.loadError||
-    !state.decoded
-  ){
-
-    microstatus.textContent=
-      `MISSING AUDIO // ${state.audioUrl}`;
-
-    throw new Error(
-      `Missing audio: ${state.audioUrl}`
-    );
+async function activateTrackBuffer(state,position=0){
+  if(state.loadError||!state.decoded){
+    microstatus.textContent=`MISSING AUDIO // ${state.audioUrl}`;
+    throw new Error(`Missing audio: ${state.audioUrl}`);
   }
-
-  await loadBufferIntoEngine(
-    state,
-    position
-  );
-
-  state.position=
-    clampTime(
-      state,
-      position
-    );
-
-  updateProgressUI(
-    state,
-    state.position
-  );
-
-  setVinylAngle(
-    state,
-    angleFromAudioTime(
-      state.position
-    )
-  );
+  await loadBufferIntoEngine(state,position);
+  state.position=clampTime(state,position);
+  updateProgressUI(state,state.position);
+  setVinylAngle(state,angleFromAudioTime(state.position));
 }
 
-async function switchToTrack(
-  next,
-  {
-    startTime=0,
-    cue=false
-  }={}
-){
-
-  if(
-    switchInProgress||
-    next.isPacking
-  ){
+async function switchToTrack(next,{startTime=0,cue=false}={}){
+  if(switchInProgress||next.isPacking)return;
+  if(next.loadError||!next.decoded){
+    microstatus.textContent=`MISSING AUDIO // ${next.audioUrl}`;
     return;
   }
-
-  if(
-    next.loadError||
-    !next.decoded
-  ){
-
-    microstatus.textContent=
-      `MISSING AUDIO // ${next.audioUrl}`;
-
-    return;
-  }
-
-  if(
-    next===
-    activeTrack
-  ){
-
-    if(cue){
-      return seekTo(
-        next,
-        startTime
-      );
-    }
-
-    if(playIntent){
-
-      playIntent=false;
-
-      setPlayIcon(
-        next,
-        false
-      );
-
-      setManualSpeed(
-        0
-      );
-
-      sendMode(
-        "pause_brake"
-      );
-
-      return;
-    }
-
-    await resumeAudioContext();
-
-    playIntent=true;
-
-    next.hasPlaybackEverStarted=true;
-
-    setPlayIcon(
-      next,
-      true
-    );
-
-    await ensureVinylOpen(
-      next
-    );
-
-    sendMode(
-      "play_start"
-    );
-
-    return;
+  if(next===activeTrack){
+    if(cue)return seekTo(next,startTime);
+    if(playIntent){playIntent=false;setPlayIcon(next,false);setManualSpeed(0);sendMode("pause_brake");return}
+    await resumeAudioContext();playIntent=true;next.hasPlaybackEverStarted=true;setPlayIcon(next,true);await ensureVinylOpen(next);sendMode("play_start");return;
   }
 
   switchInProgress=true;
-
-  const generation=
-    nextOperationGeneration();
-
+  const generation=nextOperationGeneration();
   try{
-
     await resumeAudioContext();
-
-    const previous=
-      activeTrack;
-
+    const previous=activeTrack;
     playIntent=false;
+    setManualSpeed(0);
+    sendMode("off");
+    if(previous){setPlayIcon(previous,false);previous.el.classList.remove("is-active")}
 
-    setManualSpeed(
-      0
-    );
+    const packPromise=previous?packTrack(previous,{reset:true}):Promise.resolve();
 
-    sendMode(
-      "off"
-    );
+    activeTrack=next;
+    next.el.classList.add("is-active");
+    tracks.forEach(t=>{if(t!==next)setPlayIcon(t,false)});
 
-    if(previous){
+    await activateTrackBuffer(next,0);
+    if(!operationAlive(generation))return;
 
-      setPlayIcon(
-        previous,
-        false
-      );
-
-      previous.el.classList.remove(
-        "is-active"
-      );
-    }
-
-    const packPromise=
-      previous
-      ?
-      packTrack(
-        previous,
-        {
-          reset:true
-        }
-      )
-      :
-      Promise.resolve();
-
-    activeTrack=
-      next;
-
-    next.el.classList.add(
-      "is-active"
-    );
-
-    tracks.forEach(
-      t=>{
-
-        if(
-          t!==
-          next
-        ){
-          setPlayIcon(
-            t,
-            false
-          );
-        }
-      }
-    );
-
-    await activateTrackBuffer(
-      next,
-      0
-    );
-
-    if(
-      !operationAlive(
-        generation
-      )
-    ){
-      return;
-    }
-
-    const openPromise=
-      ensureVinylOpen(
-        next
-      );
-
+    const openPromise=ensureVinylOpen(next);
     await openPromise;
+    if(!operationAlive(generation))return;
 
-    if(
-      !operationAlive(
-        generation
-      )
-    ){
-      return;
-    }
-
-    if(
-      cue&&
-      startTime>.5
-    ){
-
-      await prePlayCueTo(
-        next,
-        startTime,
-        generation
-      );
-
-      if(
-        !operationAlive(
-          generation
-        )
-      ){
-        return;
-      }
-    }
-    else if(
-      startTime>.001
-    ){
-
-      seekEngine(
-        next,
-        startTime
-      );
-
-      next.position=
-        startTime;
-
-      setVinylAngle(
-        next,
-        angleFromAudioTime(
-          startTime
-        )
-      );
-
-      if(next.tonearmEngaged){
-
-        setTonearmAngle(
-          next,
-          armAngleFromTime(
-            next,
-            startTime
-          )
-        );
-      }
-
-      updateProgressUI(
-        next,
-        startTime
-      );
+    if(cue&&startTime>.5){
+      await prePlayCueTo(next,startTime,generation);
+      if(!operationAlive(generation))return;
+    }else if(startTime>.001){
+      seekEngine(next,startTime);next.position=startTime;setVinylAngle(next,angleFromAudioTime(startTime));
+      if(next.tonearmEngaged)setTonearmAngle(next,armAngleFromTime(next,startTime));updateProgressUI(next,startTime);
     }
 
     next.hasPlaybackEverStarted=true;
-
     playIntent=true;
-
-    setPlayIcon(
-      next,
-      true
-    );
-
-    sendMode(
-      "play_start"
-    );
+    setPlayIcon(next,true);
+    sendMode("play_start");
 
     /* old row can finish packing while new row is already running */
     await packPromise;
-
   }catch(error){
-
-    console.warn(
-      error
-    );
-
+    console.warn(error);
     playIntent=false;
-
-    if(
-      activeTrack===
-      next
-    ){
-      setPlayIcon(
-        next,
-        false
-      );
-    }
-  }
-  finally{
-
+    if(activeTrack===next)setPlayIcon(next,false);
+  }finally{
     switchInProgress=false;
   }
 }
 
 async function stopAndPackActive(){
-
-  const state=
-    activeTrack;
-
-  if(!state){
-    return;
-  }
-
-  nextOperationGeneration();
-
-  playIntent=false;
-
-  setPlayIcon(
-    state,
-    false
-  );
-
-  setManualSpeed(
-    0
-  );
-
-  sendMode(
-    "off"
-  );
-
-  microstatus.textContent=
-    "STOP // RETURNING SIGNAL";
-
-  await packTrack(
-    state,
-    {
-      reset:true
-    }
-  );
-
-  if(
-    activeTrack===
-    state
-  ){
-
-    activeTrack=null;
-    engineLoadedTrack=null;
-    enginePositionSec=0;
-    engineSpeed=0;
-    engineMode="paused";
-    engineActive=false;
-  }
-
-  vuPeakL=0;
-  vuPeakR=0;
-  vuNeedleValueL=0;
-  vuNeedleValueR=0;
-
-  microstatus.textContent=
-    "Connection stable // 02 signals detected";
+  const state=activeTrack;if(!state)return;
+  nextOperationGeneration();playIntent=false;setPlayIcon(state,false);setManualSpeed(0);sendMode("off");
+  microstatus.textContent="STOP // RETURNING SIGNAL";
+  await packTrack(state,{reset:true});
+  if(activeTrack===state){activeTrack=null;engineLoadedTrack=null;enginePositionSec=0;engineSpeed=0;engineMode="paused";engineActive=false}
+  vuPeakL=vuPeakR=vuNeedleValueL=vuNeedleValueR=0;
+  microstatus.textContent="Connection stable // 02 signals detected";
 }
-
 
 /* =====================================================
    PLAY BUTTONS
 ===================================================== */
-
-tracks.forEach(
-  state=>{
-
-    state.playButton.addEventListener(
-      "click",
-      async()=>{
-
-        if(
-          isSeeking||
-          isPreCueing||
-          isScratching||
-          switchInProgress
-        ){
-          return;
-        }
-
-        await switchToTrack(
-          state,
-          {
-            startTime:
-              state===
-              activeTrack
-              ?
-              state.position
-              :
-              0,
-
-            cue:false
-          }
-        );
-      }
-    );
-  }
-);
-
+tracks.forEach(state=>{
+  state.playButton.addEventListener("click",async()=>{
+    if(isSeeking||isPreCueing||isScratching||switchInProgress)return;
+    await switchToTrack(state,{startTime:state===activeTrack?state.position:0,cue:false});
+  });
+});
 
 /* =====================================================
    SCRATCH
 ===================================================== */
-
-function pointerAngle(
-  state,
-  event
-){
-
-  const rect=
-    state.recordDisc.getBoundingClientRect();
-
-  const cx=
-    rect.left+
-    rect.width/
-    2;
-
-  const cy=
-    rect.top+
-    rect.height/
-    2;
-
-  return Math.atan2(
-    event.clientY-
-    cy,
-    event.clientX-
-    cx
-  );
+function pointerAngle(state,event){
+  const rect=state.recordDisc.getBoundingClientRect();
+  const cx=rect.left+rect.width/2,cy=rect.top+rect.height/2;
+  return Math.atan2(event.clientY-cy,event.clientX-cx);
 }
-
-function clearManualIdle(){
-
-  if(manualIdleTimer){
-
-    clearTimeout(
-      manualIdleTimer
-    );
-
-    manualIdleTimer=null;
-  }
-}
-
+function clearManualIdle(){if(manualIdleTimer){clearTimeout(manualIdleTimer);manualIdleTimer=null}}
 function scheduleManualIdle(){
-
   clearManualIdle();
-
-  manualIdleTimer=
-    setTimeout(
-      ()=>{
-
-        if(
-          isScratching&&
-          manualMovementStarted
-        ){
-
-          scratchVelocity=0;
-
-          setManualSpeed(
-            0
-          );
-        }
-      },
-      52
-    );
+  manualIdleTimer=setTimeout(()=>{
+    if(isScratching&&manualMovementStarted){scratchVelocity=0;setManualSpeed(0)}
+  },52);
 }
-
-function processScratchSample(
-  state,
-  event
-){
-
-  if(
-    !isScratching||
-    scratchTrack!==
-    state||
-    event.pointerId!==
-    scratchPointerId
-  ){
-    return;
-  }
-
-  const angle=
-    pointerAngle(
-      state,
-      event
-    );
-
-  let delta=
-    angle-
-    scratchLastAngle;
-
-  if(
-    delta>
-    Math.PI
-  ){
-    delta-=
-      Math.PI*
-      2;
-  }
-
-  if(
-    delta<
-    -Math.PI
-  ){
-    delta+=
-      Math.PI*
-      2;
-  }
-
-  const eventTime=
-    Number.isFinite(
-      event.timeStamp
-    )
-    ?
-    event.timeStamp
-    :
-    performance.now();
-
-  const elapsed=
-    Math.max(
-      .0015,
-      (
-        eventTime-
-        scratchLastEventTime
-      )/
-      1000
-    );
-
-  scratchLastEventTime=
-    eventTime;
-
-  scratchLastAngle=
-    angle;
-
-  if(
-    Math.abs(
-      delta
-    )<
-    .0003
-  ){
-    return;
-  }
-
-  const deltaDegrees=
-    delta*
-    180/
-    Math.PI;
-
-  const deltaTrackSeconds=
-    (
-      deltaDegrees/
-      DEGREES_PER_SECOND
-    )*
-    SCRATCH_TIME_SCALE;
-
-  const instantVelocity=
-    deltaTrackSeconds/
-    elapsed;
-
-  scratchVelocity=
-    scratchVelocity*
-    .28+
-    instantVelocity*
-    .72;
-
-  scratchVisualTime=
-    clampTime(
-      state,
-      scratchVisualTime+
-      deltaTrackSeconds
-    );
-
-  lastManualMoveAt=
-    performance.now();
-
-  if(
-    !manualMovementStarted
-  ){
-
-    manualMovementStarted=true;
-
-    sendMode(
-      "manual"
-    );
-  }
-
-  setManualSpeed(
-    scratchVelocity
-  );
-
-  scheduleManualIdle();
-
-  microstatus.textContent=
-    `SCRATCH // ${scratchVelocity>=0?"+":"−"}${Math.abs(scratchVelocity).toFixed(2)}×`;
+function processScratchSample(state,event){
+  if(!isScratching||scratchTrack!==state||event.pointerId!==scratchPointerId)return;
+  const angle=pointerAngle(state,event);let delta=angle-scratchLastAngle;
+  if(delta>Math.PI)delta-=Math.PI*2;if(delta<-Math.PI)delta+=Math.PI*2;
+  const eventTime=Number.isFinite(event.timeStamp)?event.timeStamp:performance.now();
+  const elapsed=Math.max(.0015,(eventTime-scratchLastEventTime)/1000);
+  scratchLastEventTime=eventTime;scratchLastAngle=angle;
+  if(Math.abs(delta)<.0003)return;
+  const deltaDegrees=delta*180/Math.PI;
+  const deltaTrackSeconds=(deltaDegrees/DEGREES_PER_SECOND)*SCRATCH_TIME_SCALE;
+  const instantVelocity=deltaTrackSeconds/elapsed;
+  scratchVelocity=scratchVelocity*.28+instantVelocity*.72;
+  scratchVisualTime=clampTime(state,scratchVisualTime+deltaTrackSeconds);
+  lastManualMoveAt=performance.now();
+  if(!manualMovementStarted){manualMovementStarted=true;sendMode("manual")}
+  setManualSpeed(scratchVelocity);scheduleManualIdle();
+  microstatus.textContent=`SCRATCH // ${scratchVelocity>=0?"+":"−"}${Math.abs(scratchVelocity).toFixed(2)}×`;
 }
-
-function handleScratchMotion(
-  state,
-  event
-){
-
-  if(
-    !isScratching||
-    scratchTrack!==
-    state||
-    event.pointerId!==
-    scratchPointerId
-  ){
-    return;
-  }
-
-  event.preventDefault();
-
-  let events=null;
-
-  if(
-    typeof event.getCoalescedEvents===
-    "function"
-  ){
-
-    try{
-      events=
-        event.getCoalescedEvents();
-    }
-    catch(_){
-      events=null;
-    }
-  }
-
-  if(
-    !events||
-    !events.length
-  ){
-    events=[
-      event
-    ];
-  }
-
-  for(
-    const sample
-    of
-    events
-  ){
-    processScratchSample(
-      state,
-      sample
-    );
-  }
+function handleScratchMotion(state,event){
+  if(!isScratching||scratchTrack!==state||event.pointerId!==scratchPointerId)return;
+  event.preventDefault();let events=null;
+  if(typeof event.getCoalescedEvents==="function"){try{events=event.getCoalescedEvents()}catch(_){events=null}}
+  if(!events||!events.length)events=[event];
+  for(const sample of events)processScratchSample(state,sample);
 }
+const scratchMoveEvent="onpointerrawupdate" in window?"pointerrawupdate":"pointermove";
 
-const scratchMoveEvent=
-  "onpointerrawupdate" in window
-  ?
-  "pointerrawupdate"
-  :
-  "pointermove";
-
-tracks.forEach(
-  state=>{
-
-    state.recordDisc.addEventListener(
-      "pointerdown",
-      async event=>{
-
-        if(
-          state!==
-          activeTrack||
-          !state.vinylOpened||
-          !state.mechanismDeployed||
-          state.isPacking||
-          isSeeking||
-          isPreCueing||
-          switchInProgress||
-          !workletReady
-        ){
-          return;
-        }
-
-        event.preventDefault();
-
-        await resumeAudioContext();
-
-        isScratching=true;
-        scratchTrack=state;
-        manualMovementStarted=false;
-        scratchPointerId=event.pointerId;
-
-        scratchVisualTime=
-          getEstimatedEnginePosition();
-
-        scratchVelocity=
-          engineSpeed;
-
-        scratchLastAngle=
-          pointerAngle(
-            state,
-            event
-          );
-
-        scratchLastEventTime=
-          Number.isFinite(
-            event.timeStamp
-          )
-          ?
-          event.timeStamp
-          :
-          performance.now();
-
-        lastManualMoveAt=
-          performance.now();
-
-        state.recordDisc.setPointerCapture(
-          event.pointerId
-        );
-
-        state.el.classList.add(
-          "is-scratching"
-        );
-
-        if(playIntent){
-
-          sendMode(
-            "grab_brake"
-          );
-        }
-        else{
-
-          setManualSpeed(
-            0
-          );
-
-          sendMode(
-            "hold"
-          );
-        }
-      }
-    );
-
-    state.recordDisc.addEventListener(
-      scratchMoveEvent,
-      event=>
-        handleScratchMotion(
-          state,
-          event
-        ),
-      {
-        passive:false
-      }
-    );
-
-    const finishScratch=
-      event=>{
-
-        if(
-          !isScratching||
-          scratchTrack!==
-          state
-        ){
-          return;
-        }
-
-        if(
-          event&&
-          event.pointerId!==
-          scratchPointerId
-        ){
-          return;
-        }
-
-        clearManualIdle();
-
-        isScratching=false;
-
-        state.el.classList.remove(
-          "is-scratching"
-        );
-
-        if(
-          event&&
-          state.recordDisc.hasPointerCapture(
-            event.pointerId
-          )
-        ){
-          state.recordDisc.releasePointerCapture(
-            event.pointerId
-          );
-        }
-
-        scratchPointerId=null;
-        scratchTrack=null;
-
-        const recent=
-          (
-            performance.now()-
-            lastManualMoveAt
-          )<
-          FREE_SPIN_RELEASE_WINDOW;
-
-        if(playIntent){
-
-          sendMode(
-            "motor_recovery"
-          );
-
-          return;
-        }
-
-        if(
-          manualMovementStarted&&
-          recent&&
-          Math.abs(
-            scratchVelocity
-          )>=
-          FREE_SPIN_RELEASE_THRESHOLD
-        ){
-
-          sendMode(
-            "free_spin",
-            {
-              speed:
-                scratchVelocity
-            }
-          );
-        }
-        else{
-
-          setManualSpeed(
-            0
-          );
-
-          sendMode(
-            "paused"
-          );
-        }
-
-        manualMovementStarted=false;
-      };
-
-    state.recordDisc.addEventListener(
-      "pointerup",
-      finishScratch
-    );
-
-    state.recordDisc.addEventListener(
-      "pointercancel",
-      finishScratch
-    );
-  }
-);
-
+tracks.forEach(state=>{
+  state.recordDisc.addEventListener("pointerdown",async event=>{
+    if(state!==activeTrack||!state.vinylOpened||!state.mechanismDeployed||state.isPacking||isSeeking||isPreCueing||switchInProgress||!workletReady)return;
+    event.preventDefault();await resumeAudioContext();
+    isScratching=true;scratchTrack=state;manualMovementStarted=false;scratchPointerId=event.pointerId;
+    scratchVisualTime=getEstimatedEnginePosition();scratchVelocity=engineSpeed;scratchLastAngle=pointerAngle(state,event);
+    scratchLastEventTime=Number.isFinite(event.timeStamp)?event.timeStamp:performance.now();lastManualMoveAt=performance.now();
+    state.recordDisc.setPointerCapture(event.pointerId);state.el.classList.add("is-scratching");
+    if(playIntent)sendMode("grab_brake");else{setManualSpeed(0);sendMode("hold")}
+  });
+  state.recordDisc.addEventListener(scratchMoveEvent,event=>handleScratchMotion(state,event),{passive:false});
+  const finishScratch=event=>{
+    if(!isScratching||scratchTrack!==state)return;if(event&&event.pointerId!==scratchPointerId)return;
+    clearManualIdle();isScratching=false;state.el.classList.remove("is-scratching");
+    if(event&&state.recordDisc.hasPointerCapture(event.pointerId))state.recordDisc.releasePointerCapture(event.pointerId);
+    scratchPointerId=null;scratchTrack=null;
+    const recent=(performance.now()-lastManualMoveAt)<FREE_SPIN_RELEASE_WINDOW;
+    if(playIntent){sendMode("motor_recovery");return}
+    if(manualMovementStarted&&recent&&Math.abs(scratchVelocity)>=FREE_SPIN_RELEASE_THRESHOLD)sendMode("free_spin",{speed:scratchVelocity});
+    else{setManualSpeed(0);sendMode("paused")}
+    manualMovementStarted=false;
+  };
+  state.recordDisc.addEventListener("pointerup",finishScratch);state.recordDisc.addEventListener("pointercancel",finishScratch);
+});
 
 /* =====================================================
    SEEK / CUE
 ===================================================== */
-
-async function prePlayCueTo(
-  state,
-  targetTime,
-  generation
-){
-
-  if(isPreCueing){
-    return false;
-  }
-
-  isPreCueing=true;
-
-  state.el.classList.add(
-    "is-precue"
-  );
-
-  await ensureVinylOpen(
-    state
-  );
-
-  if(
-    !operationAlive(
-      generation
-    )||
-    state.isPacking
-  ){
-
-    isPreCueing=false;
-
-    state.el.classList.remove(
-      "is-precue"
-    );
-
-    return false;
-  }
-
-  const oldTime=
-    getEstimatedEnginePosition();
-
-  const distanceRatio=
-    Math.abs(
-      targetTime-
-      oldTime
-    )/
-    Math.max(
-      1,
-      getDuration(
-        state
-      )
-    );
-
-  const duration=
-    220+
-    distanceRatio*
-    260;
-
-  const startArm=
-    state.currentTonearmAngle;
-
-  const targetArm=
-    armAngleFromTime(
-      state,
-      targetTime
-    );
-
-  const started=
-    performance.now();
-
-  await new Promise(
-    resolve=>{
-
-      const frame=now=>{
-
-        if(
-          !operationAlive(
-            generation
-          )
-        ){
-
-          resolve();
-
-          return;
-        }
-
-        const raw=
-          Math.min(
-            1,
-            (
-              now-
-              started
-            )/
-            duration
-          );
-
-        const eased=
-          smootherStep(
-            raw
-          );
-
-        setTonearmAngle(
-          state,
-          startArm+
-          (
-            targetArm-
-            startArm
-          )*
-          eased
-        );
-
-        updateProgressUI(
-          state,
-          oldTime+
-          (
-            targetTime-
-            oldTime
-          )*
-          eased
-        );
-
-        if(raw<1){
-          requestAnimationFrame(
-            frame
-          );
-        }
-        else{
-          resolve();
-        }
-      };
-
-      requestAnimationFrame(
-        frame
-      );
-    }
-  );
-
-  if(
-    !operationAlive(
-      generation
-    )
-  ){
-
-    isPreCueing=false;
-
-    state.el.classList.remove(
-      "is-precue"
-    );
-
-    return false;
-  }
-
-  seekEngine(
-    state,
-    targetTime
-  );
-
-  scratchVisualTime=
-    targetTime;
-
-  setVinylAngle(
-    state,
-    angleFromAudioTime(
-      targetTime
-    )%
-    360
-  );
-
-  setTonearmAngle(
-    state,
-    targetArm
-  );
-
-  updateProgressUI(
-    state,
-    targetTime
-  );
-
-  sendMode(
-    "paused"
-  );
-
-  state.el.classList.remove(
-    "is-precue"
-  );
-
-  isPreCueing=false;
-
-  microstatus.textContent=
-    `CUE LOCK // ${fmt(targetTime)}`;
-
-  return true;
+async function prePlayCueTo(state,targetTime,generation){
+  if(isPreCueing)return false;isPreCueing=true;state.el.classList.add("is-precue");await ensureVinylOpen(state);
+  if(!operationAlive(generation)||state.isPacking){isPreCueing=false;state.el.classList.remove("is-precue");return false}
+  const oldTime=getEstimatedEnginePosition();
+  const distanceRatio=Math.abs(targetTime-oldTime)/Math.max(1,getDuration(state));
+  const duration=220+distanceRatio*260,startArm=state.currentTonearmAngle,targetArm=armAngleFromTime(state,targetTime),started=performance.now();
+  await new Promise(resolve=>{
+    const frame=now=>{
+      if(!operationAlive(generation)){resolve();return}
+      const raw=Math.min(1,(now-started)/duration),eased=smootherStep(raw);
+      setTonearmAngle(state,startArm+(targetArm-startArm)*eased);updateProgressUI(state,oldTime+(targetTime-oldTime)*eased);
+      if(raw<1)requestAnimationFrame(frame);else resolve();
+    };
+    requestAnimationFrame(frame);
+  });
+  if(!operationAlive(generation)){isPreCueing=false;state.el.classList.remove("is-precue");return false}
+  seekEngine(state,targetTime);scratchVisualTime=targetTime;setVinylAngle(state,angleFromAudioTime(targetTime)%360);setTonearmAngle(state,targetArm);updateProgressUI(state,targetTime);sendMode("paused");
+  state.el.classList.remove("is-precue");isPreCueing=false;microstatus.textContent=`CUE LOCK // ${fmt(targetTime)}`;return true;
 }
 
-async function playSeekSound(
-  state,
-  fromTime,
-  toTime,
-  durationMs
-){
-
-  if(!state.decoded){
-    return;
-  }
-
-  const ctx=
-    getAudioContext();
-
-  await resumeAudioContext();
-
-  if(!state.reversed){
-
-    state.reversed=
-      createReversedBuffer(
-        state.decoded,
-        ctx
-      );
-  }
-
-  const forward=
-    toTime>=
-    fromTime;
-
-  const source=
-    ctx.createBufferSource();
-
-  source.buffer=
-    forward
-    ?
-    state.decoded
-    :
-    state.reversed;
-
-  const distance=
-    Math.abs(
-      toTime-
-      fromTime
-    );
-
-  const distanceFactor=
-    Math.min(
-      1,
-      distance/
-      45
-    );
-
-  const maxRate=
-    3.5+
-    distanceFactor*
-    9.5;
-
-  const duration=
-    durationMs/
-    1000;
-
-  const now=
-    ctx.currentTime;
-
-  const end=
-    now+
-    duration;
-
-  const accelerationFraction=
-    Math.max(
-      .06,
-      Math.min(
-        .50,
-        .38/
-        SEEK_START_SPEED
-      )
-    );
-
-  const returnFraction=
-    Math.max(
-      .08,
-      Math.min(
-        .65,
-        .42/
-        SEEK_STOP_SPEED
-      )
-    );
-
-  const accelEnd=
-    now+
-    duration*
-    accelerationFraction;
-
-  let returnStart=
-    end-
-    duration*
-    returnFraction;
-
-  returnStart=
-    Math.max(
-      accelEnd,
-      returnStart
-    );
-
-  source.playbackRate.setValueAtTime(
-    1,
-    now
-  );
-
-  source.playbackRate.exponentialRampToValueAtTime(
-    maxRate,
-    accelEnd
-  );
-
-  source.playbackRate.setValueAtTime(
-    maxRate,
-    returnStart
-  );
-
-  source.playbackRate.exponentialRampToValueAtTime(
-    1,
-    end
-  );
-
-  const gain=
-    ctx.createGain();
-
-  const targetGain=
-    SEEK_FULL_VOLUME
-    ?
-    SEEK_FULL_GAIN
-    :
-    SEEK_REDUCED_GAIN;
-
-  gain.gain.setValueAtTime(
-    .001,
-    now
-  );
-
-  gain.gain.linearRampToValueAtTime(
-    targetGain,
-    now+
-    .03
-  );
-
-  gain.gain.setValueAtTime(
-    targetGain,
-    Math.max(
-      now+
-      .031,
-      end-
-      .025
-    )
-  );
-
-  gain.gain.exponentialRampToValueAtTime(
-    .001,
-    end+
-    .018
-  );
-
-  source.connect(
-    gain
-  );
-
-  gain.connect(
-    workletLimiter||
-    ctx.destination
-  );
-
-  const offset=
-    forward
-    ?
-    Math.max(
-      0,
-      Math.min(
-        state.decoded.duration-
-        .2,
-        fromTime
-      )
-    )
-    :
-    Math.max(
-      0,
-      Math.min(
-        state.reversed.duration-
-        .2,
-        state.reversed.duration-
-        fromTime
-      )
-    );
-
-  try{
-
-    source.start(
-      now,
-      offset
-    );
-
-    source.stop(
-      end+
-      .025
-    );
-
-  }catch(error){
-
-    console.warn(
-      error
-    );
-  }
-
-  await wait(
-    durationMs
-  );
+async function playSeekSound(state,fromTime,toTime,durationMs){
+  if(!state.decoded)return;
+  const ctx=getAudioContext();await resumeAudioContext();
+  if(!state.reversed)state.reversed=createReversedBuffer(state.decoded,ctx);
+  const forward=toTime>=fromTime,source=ctx.createBufferSource();source.buffer=forward?state.decoded:state.reversed;
+  const distance=Math.abs(toTime-fromTime),distanceFactor=Math.min(1,distance/45),maxRate=3.5+distanceFactor*9.5;
+  const duration=durationMs/1000,now=ctx.currentTime,end=now+duration;
+  const accelerationFraction=Math.max(.06,Math.min(.50,.38/SEEK_START_SPEED));
+  const returnFraction=Math.max(.08,Math.min(.65,.42/SEEK_STOP_SPEED));
+  const accelEnd=now+duration*accelerationFraction;let returnStart=end-duration*returnFraction;returnStart=Math.max(accelEnd,returnStart);
+  source.playbackRate.setValueAtTime(1,now);source.playbackRate.exponentialRampToValueAtTime(maxRate,accelEnd);source.playbackRate.setValueAtTime(maxRate,returnStart);source.playbackRate.exponentialRampToValueAtTime(1,end);
+  const gain=ctx.createGain(),targetGain=SEEK_FULL_VOLUME?SEEK_FULL_GAIN:SEEK_REDUCED_GAIN;
+  gain.gain.setValueAtTime(.001,now);gain.gain.linearRampToValueAtTime(targetGain,now+.03);gain.gain.setValueAtTime(targetGain,Math.max(now+.031,end-.025));gain.gain.exponentialRampToValueAtTime(.001,end+.018);
+  source.connect(gain);gain.connect(workletLimiter||ctx.destination);
+  const offset=forward?Math.max(0,Math.min(state.decoded.duration-.2,fromTime)):Math.max(0,Math.min(state.reversed.duration-.2,state.reversed.duration-fromTime));
+  try{source.start(now,offset);source.stop(end+.025)}catch(error){console.warn(error)}
+  await wait(durationMs);
 }
 
-function animateVinylSeek(
-  state,
-  fromTime,
-  toTime,
-  durationMs,
-  generation
-){
-
-  return new Promise(
-    resolve=>{
-
-      const delta=
-        toTime-
-        fromTime;
-
-      const direction=
-        delta>=0
-        ?
-        1
-        :
-        -1;
-
-      let normalTailSeconds=
-        .34/
-        SEEK_STOP_SPEED;
-
-      normalTailSeconds=
-        Math.max(
-          .06,
-          Math.min(
-            .65,
-            normalTailSeconds
-          )
-        );
-
-      normalTailSeconds=
-        Math.min(
-          normalTailSeconds,
-          Math.abs(
-            delta
-          )*
-          .35
-        );
-
-      const transitionTime=
-        toTime-
-        direction*
-        normalTailSeconds;
-
-      const tailMs=
-        normalTailSeconds*
-        1000;
-
-      const fastDurationMs=
-        Math.max(
-          60,
-          durationMs-
-          tailMs
-        );
-
-      const started=
-        performance.now();
-
-      const frame=now=>{
-
-        if(
-          !operationAlive(
-            generation
-          )
-        ){
-
-          resolve(
-            false
-          );
-
-          return;
-        }
-
-        const elapsed=
-          now-
-          started;
-
-        let visualTime;
-
-        if(
-          elapsed<
-          fastDurationMs
-        ){
-
-          const raw=
-            Math.min(
-              1,
-              elapsed/
-              fastDurationMs
-            );
-
-          const startPower=
-            1+
-            1/
-            Math.max(
-              .15,
-              SEEK_START_SPEED
-            );
-
-          const accelerated=
-            Math.pow(
-              raw,
-              startPower
-            );
-
-          const linearBlend=
-            .20+
-            Math.min(
-              .45,
-              SEEK_STOP_SPEED*
-              .08
-            );
-
-          const moved=
-            accelerated*
-            (
-              1-
-              linearBlend
-            )+
-            raw*
-            linearBlend;
-
-          visualTime=
-            fromTime+
-            (
-              transitionTime-
-              fromTime
-            )*
-            moved;
-        }
-        else{
-
-          const tailElapsed=
-            Math.min(
-              normalTailSeconds,
-              (
-                elapsed-
-                fastDurationMs
-              )/
-              1000
-            );
-
-          visualTime=
-            transitionTime+
-            direction*
-            tailElapsed;
-        }
-
-        visualTime=
-          direction>
-          0
-          ?
-          Math.min(
-            toTime,
-            visualTime
-          )
-          :
-          Math.max(
-            toTime,
-            visualTime
-          );
-
-        setVinylAngle(
-          state,
-          angleFromAudioTime(
-            visualTime
-          )
-        );
-
-        if(
-          state.tonearmEngaged
-        ){
-
-          setTonearmAngle(
-            state,
-            armAngleFromTime(
-              state,
-              visualTime
-            )
-          );
-        }
-
-        updateProgressUI(
-          state,
-          visualTime
-        );
-
-        if(
-          elapsed<
-          durationMs
-        ){
-          requestAnimationFrame(
-            frame
-          );
-        }
-        else{
-          resolve(
-            true
-          );
-        }
-      };
-
-      requestAnimationFrame(
-        frame
-      );
-    }
-  );
-}
-
-async function seekTo(
-  state,
-  targetTime
-){
-
-  if(
-    state.isPacking||
-    !getDuration(
-      state
-    )||
-    isScratching||
-    switchInProgress
-  ){
-    return;
-  }
-
-  targetTime=
-    clampTime(
-      state,
-      targetTime
-    );
-
-  if(
-    state!==
-    activeTrack
-  ){
-
-    await switchToTrack(
-      state,
-      {
-        startTime:
-          targetTime,
-
-        cue:true
+function animateVinylSeek(state,fromTime,toTime,durationMs,generation){
+  return new Promise(resolve=>{
+    const delta=toTime-fromTime,direction=delta>=0?1:-1;
+    let normalTailSeconds=.34/SEEK_STOP_SPEED;normalTailSeconds=Math.max(.06,Math.min(.65,normalTailSeconds));normalTailSeconds=Math.min(normalTailSeconds,Math.abs(delta)*.35);
+    const transitionTime=toTime-direction*normalTailSeconds,tailMs=normalTailSeconds*1000,fastDurationMs=Math.max(60,durationMs-tailMs),started=performance.now();
+    const frame=now=>{
+      if(!operationAlive(generation)){resolve(false);return}
+      const elapsed=now-started;let visualTime;
+      if(elapsed<fastDurationMs){
+        const raw=Math.min(1,elapsed/fastDurationMs),startPower=1+1/Math.max(.15,SEEK_START_SPEED),accelerated=Math.pow(raw,startPower),linearBlend=.20+Math.min(.45,SEEK_STOP_SPEED*.08),moved=accelerated*(1-linearBlend)+raw*linearBlend;
+        visualTime=fromTime+(transitionTime-fromTime)*moved;
+      }else{
+        const tailElapsed=Math.min(normalTailSeconds,(elapsed-fastDurationMs)/1000);visualTime=transitionTime+direction*tailElapsed;
       }
-    );
-
-    return;
-  }
-
-  const generation=
-    nextOperationGeneration();
-
-  isSeeking=true;
-
-  clearManualIdle();
-
-  setManualSpeed(
-    0
-  );
-
-  if(
-    !state.hasPlaybackEverStarted&&
-    !playIntent&&
-    targetTime>.5
-  ){
-
-    isSeeking=false;
-
-    const ok=
-      await prePlayCueTo(
-        state,
-        targetTime,
-        generation
-      );
-
-    if(
-      !ok||
-      !operationAlive(
-        generation
-      )
-    ){
-      return;
-    }
-
-    playIntent=true;
-
-    state.hasPlaybackEverStarted=true;
-
-    setPlayIcon(
-      state,
-      true
-    );
-
-    sendMode(
-      "play_start"
-    );
-
-    return;
-  }
-
-  if(
-    !state.hasPlaybackEverStarted&&
-    !playIntent&&
-    targetTime<=.5
-  ){
-
-    seekEngine(
-      state,
-      0
-    );
-
-    sendMode(
-      "paused"
-    );
-
-    updateProgressUI(
-      state,
-      0
-    );
-
-    isSeeking=false;
-
-    return;
-  }
-
-  if(!playIntent){
-
-    playIntent=true;
-
-    setPlayIcon(
-      state,
-      true
-    );
-  }
-
-  await ensureVinylOpen(
-    state
-  );
-
-  if(
-    !operationAlive(
-      generation
-    )
-  ){
-
-    isSeeking=false;
-
-    return;
-  }
-
-  const oldTime=
-    getEstimatedEnginePosition();
-
-  const delta=
-    targetTime-
-    oldTime;
-
-  if(
-    Math.abs(
-      delta
-    )<
-    .08
-  ){
-
-    seekEngine(
-      state,
-      targetTime
-    );
-
-    sendMode(
-      "normal"
-    );
-
-    isSeeking=false;
-
-    return;
-  }
-
-  state.el.classList.add(
-    "is-seeking"
-  );
-
-  sendMode(
-    "off"
-  );
-
-  const revolutions=
-    Math.abs(
-      delta
-    )*
-    REVOLUTIONS_PER_SECOND;
-
-  const duration=
-    Math.round(
-      Math.max(
-        380,
-        Math.min(
-          1700,
-          380+
-          Math.log1p(
-            revolutions
-          )*
-          240
-        )
-      )
-    );
-
-  microstatus.textContent=
-    `SEEK // ${delta>=0?"+":"−"}${fmt(Math.abs(delta))} // ${revolutions.toFixed(1)} REV`;
-
-  await Promise.all(
-    [
-      animateVinylSeek(
-        state,
-        oldTime,
-        targetTime,
-        duration,
-        generation
-      ),
-
-      playSeekSound(
-        state,
-        oldTime,
-        targetTime,
-        duration
-      )
-    ]
-  );
-
-  if(
-    !operationAlive(
-      generation
-    )
-  ){
-
-    state.el.classList.remove(
-      "is-seeking"
-    );
-
-    isSeeking=false;
-
-    return;
-  }
-
-  seekEngine(
-    state,
-    targetTime
-  );
-
-  scratchVisualTime=
-    targetTime;
-
-  setVinylAngle(
-    state,
-    angleFromAudioTime(
-      targetTime
-    )
-  );
-
-  if(
-    state.tonearmEngaged
-  ){
-
-    setTonearmAngle(
-      state,
-      armAngleFromTime(
-        state,
-        targetTime
-      )
-    );
-  }
-
-  updateProgressUI(
-    state,
-    targetTime
-  );
-
-  sendMode(
-    "normal"
-  );
-
-  state.el.classList.remove(
-    "is-seeking"
-  );
-
-  isSeeking=false;
-
-  microstatus.textContent=
-    "SEEK LOCK // 1.00×";
+      visualTime=direction>0?Math.min(toTime,visualTime):Math.max(toTime,visualTime);
+      setVinylAngle(state,angleFromAudioTime(visualTime));if(state.tonearmEngaged)setTonearmAngle(state,armAngleFromTime(state,visualTime));updateProgressUI(state,visualTime);
+      if(elapsed<durationMs)requestAnimationFrame(frame);else resolve(true);
+    };
+    requestAnimationFrame(frame);
+  });
 }
 
-tracks.forEach(
-  state=>{
+async function seekTo(state,targetTime){
+  if(state.isPacking||!getDuration(state)||isScratching||switchInProgress)return;
+  targetTime=clampTime(state,targetTime);
 
-    state.seek.addEventListener(
-      "click",
-      event=>{
-
-        const d=
-          getDuration(
-            state
-          );
-
-        if(
-          !d||
-          state.loadError
-        ){
-          return;
-        }
-
-        const rect=
-          state.seek.getBoundingClientRect();
-
-        const ratio=
-          Math.max(
-            0,
-            Math.min(
-              1,
-              (
-                event.clientX-
-                rect.left
-              )/
-              rect.width
-            )
-          );
-
-        seekTo(
-          state,
-          ratio*
-          d
-        );
-      }
-    );
+  if(state!==activeTrack){
+    await switchToTrack(state,{startTime:targetTime,cue:true});
+    return;
   }
-);
 
+  const generation=nextOperationGeneration();isSeeking=true;clearManualIdle();setManualSpeed(0);
+  if(!state.hasPlaybackEverStarted&&!playIntent&&targetTime>.5){
+    isSeeking=false;const ok=await prePlayCueTo(state,targetTime,generation);if(!ok||!operationAlive(generation))return;
+    playIntent=true;state.hasPlaybackEverStarted=true;setPlayIcon(state,true);sendMode("play_start");return;
+  }
+  if(!state.hasPlaybackEverStarted&&!playIntent&&targetTime<=.5){seekEngine(state,0);sendMode("paused");updateProgressUI(state,0);isSeeking=false;return}
+  if(!playIntent){playIntent=true;setPlayIcon(state,true)}
+  await ensureVinylOpen(state);if(!operationAlive(generation)){isSeeking=false;return}
+  const oldTime=getEstimatedEnginePosition(),delta=targetTime-oldTime;
+  if(Math.abs(delta)<.08){seekEngine(state,targetTime);sendMode("normal");isSeeking=false;return}
+  state.el.classList.add("is-seeking");sendMode("off");
+  const revolutions=Math.abs(delta)*REVOLUTIONS_PER_SECOND;
+  const duration=Math.round(Math.max(380,Math.min(1700,380+Math.log1p(revolutions)*240)));
+  microstatus.textContent=`SEEK // ${delta>=0?"+":"−"}${fmt(Math.abs(delta))} // ${revolutions.toFixed(1)} REV`;
+  await Promise.all([animateVinylSeek(state,oldTime,targetTime,duration,generation),playSeekSound(state,oldTime,targetTime,duration)]);
+  if(!operationAlive(generation)){state.el.classList.remove("is-seeking");isSeeking=false;return}
+  seekEngine(state,targetTime);scratchVisualTime=targetTime;setVinylAngle(state,angleFromAudioTime(targetTime));if(state.tonearmEngaged)setTonearmAngle(state,armAngleFromTime(state,targetTime));updateProgressUI(state,targetTime);
+  sendMode("normal");state.el.classList.remove("is-seeking");isSeeking=false;microstatus.textContent="SEEK LOCK // 1.00×";
+}
+
+tracks.forEach(state=>{
+  state.seek.addEventListener("click",event=>{
+    const d=getDuration(state);if(!d||state.loadError)return;
+    const rect=state.seek.getBoundingClientRect();const ratio=Math.max(0,Math.min(1,(event.clientX-rect.left)/rect.width));seekTo(state,ratio*d);
+  });
+});
 
 /* =====================================================
    PLACEHOLDER CHECKOUT
 ===================================================== */
-
-document
-.querySelectorAll(
-  "[data-placeholder-checkout]"
-)
-.forEach(
-  link=>{
-
-    link.addEventListener(
-      "click",
-      event=>{
-
-        event.preventDefault();
-
-        microstatus.textContent=
-          "TRACK 02 // ADD TRAKTRAIN CHECKOUT URL";
-      }
-    );
-  }
-);
-
+document.querySelectorAll("[data-placeholder-checkout]").forEach(link=>{
+  link.addEventListener("click",event=>{event.preventDefault();microstatus.textContent="TRACK 02 // ADD TRAKTRAIN CHECKOUT URL"});
+});
 
 /* =====================================================
    ARG
 ===================================================== */
-
-const ARG_CODES={
-  "∴∆Ξ":
-    "SIGNAL ACCEPTED // NODE UNLOCKED"
-};
-
-const codeForm=
-  document.getElementById(
-    "codeForm"
-  );
-
-const codeInput=
-  document.getElementById(
-    "codeInput"
-  );
-
-const codeResult=
-  document.getElementById(
-    "codeResult"
-  );
-
-codeForm.addEventListener(
-  "submit",
-  event=>{
-
-    event.preventDefault();
-
-    const code=
-      codeInput.value
-      .trim()
-      .replace(
-        /\s+/g,
-        ""
-      );
-
-    codeResult.style.display=
-      "block";
-
-    codeResult.textContent=
-      ARG_CODES[code]||
-      (
-        code
-        ?
-        "UNKNOWN SIGNAL"
-        :
-        "WAITING FOR INPUT"
-      );
-  }
-);
-
+const ARG_CODES={"∴∆Ξ":"SIGNAL ACCEPTED // NODE UNLOCKED"};
+const codeForm=document.getElementById("codeForm"),codeInput=document.getElementById("codeInput"),codeResult=document.getElementById("codeResult");
+codeForm.addEventListener("submit",event=>{
+  event.preventDefault();const code=codeInput.value.trim().replace(/\s+/g,"");codeResult.style.display="block";codeResult.textContent=ARG_CODES[code]||(code?"UNKNOWN SIGNAL":"WAITING FOR INPUT");
+});
 
 /* =====================================================
    BOOT
 ===================================================== */
-
 (async()=>{
+  /* Refresh track covers too, so replacing a PNG under the same
+     filename is visible immediately after reload. */
+  tracks.forEach(state=>{
+    state.el.querySelectorAll("img[src]").forEach(img=>{
+      const src=img.getAttribute("src");
+      if(src && !src.startsWith("data:")){
+        img.src=freshAssetUrl(src);
+      }
+    });
+  });
 
-  /*
-    During development, force track covers to use the
-    same per-load cache-busting token as the audio.
-    Replacing track-02-cover.png under the same filename
-    is therefore visible immediately after reload.
-  */
-
-  tracks.forEach(
-    state=>{
-
-      state.el
-      .querySelectorAll(
-        "img[src]"
-      )
-      .forEach(
-        img=>{
-
-          const src=
-            img.getAttribute(
-              "src"
-            );
-
-          if(
-            src&&
-            !src.startsWith(
-              "data:"
-            )
-          ){
-            img.src=
-              freshAssetUrl(
-                src
-              );
-          }
-        }
-      );
-    }
-  );
-
-  tracks.forEach(
-    fallbackWave
-  );
-
-  await Promise.all(
-    tracks.map(
-      loadTrackData
-    )
-  );
-
-  try{
-
-    await initWorklet();
-
-    microstatus.textContent=
-      IS_ANDROID
-      ?
-      "ENGINE READY // ANDROID PERFORMANCE MODE"
-      :
-      "Connection stable // 02 signals detected";
-
-  }catch(error){
-
-    console.warn(
-      error
-    );
-
-    microstatus.textContent=
-      "ENGINE ERROR // AUDIOWORKLET INIT FAILED";
-  }
-
+  tracks.forEach(fallbackWave);
+  await Promise.all(tracks.map(loadTrackData));
+  try{await initWorklet();microstatus.textContent=IS_ANDROID?"ENGINE READY // ANDROID PERFORMANCE MODE":"Connection stable // 02 signals detected"}
+  catch(error){console.warn(error);microstatus.textContent="ENGINE ERROR // AUDIOWORKLET INIT FAILED"}
   startVisualLoop();
-
 })();
-
 </script>
-
 </body>
 </html>
