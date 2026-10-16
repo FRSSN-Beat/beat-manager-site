@@ -2066,44 +2066,53 @@ body.layout-mouse-edit .layout-debug-selected{
   <div class="layoutDebugSelectedReadout" id="layoutDebugSelectedReadout">SELECTED // NONE</div>
 
   <div class="layoutDebugRow">
-    <div class="layoutDebugHead"><span>HEADER HEIGHT</span><b id="dbgHeaderHeightValue">430 px</b></div>
-    <input id="dbgHeaderHeight" type="range" min="340" max="760" step="2" value="430">
+    <div class="layoutDebugHead"><span>HEADER HEIGHT</span><b id="dbgHeaderHeightValue">340 px</b></div>
+    <input id="dbgHeaderHeight" type="range" min="300" max="760" step="2" value="340">
   </div>
   <div class="layoutDebugRow">
-    <div class="layoutDebugHead"><span>TILE BLOCK</span><b id="dbgTileScaleValue">100%</b></div>
-    <input id="dbgTileScale" type="range" min="55" max="150" step="1" value="100">
+    <div class="layoutDebugHead"><span>TILE BLOCK</span><b id="dbgTileScaleValue">112%</b></div>
+    <input id="dbgTileScale" type="range" min="55" max="150" step="1" value="112">
   </div>
   <div class="layoutDebugRow">
-    <div class="layoutDebugHead"><span>TURNTABLE BLOCK</span><b id="dbgTurntableScaleValue">100%</b></div>
-    <input id="dbgTurntableScale" type="range" min="55" max="165" step="1" value="100">
+    <div class="layoutDebugHead"><span>TURNTABLE BLOCK</span><b id="dbgTurntableScaleValue">96%</b></div>
+    <input id="dbgTurntableScale" type="range" min="55" max="165" step="1" value="96">
   </div>
   <div class="layoutDebugRow">
-    <div class="layoutDebugHead"><span>PLAY + WAVE</span><b id="dbgPlayerScaleValue">100%</b></div>
-    <input id="dbgPlayerScale" type="range" min="55" max="165" step="1" value="100">
+    <div class="layoutDebugHead"><span>PLAY + WAVE</span><b id="dbgPlayerScaleValue">80%</b></div>
+    <input id="dbgPlayerScale" type="range" min="55" max="165" step="1" value="80">
   </div>
   <div class="layoutDebugRow">
-    <div class="layoutDebugHead"><span>TRACK TITLE</span><b id="dbgTitleScaleValue">100%</b></div>
-    <input id="dbgTitleScale" type="range" min="55" max="180" step="1" value="100">
+    <div class="layoutDebugHead"><span>TRACK TITLE</span><b id="dbgTitleScaleValue">83%</b></div>
+    <input id="dbgTitleScale" type="range" min="55" max="180" step="1" value="83">
   </div>
   <div class="layoutDebugRow">
-    <div class="layoutDebugHead"><span>SECTIONS</span><b id="dbgStructureScaleValue">100%</b></div>
-    <input id="dbgStructureScale" type="range" min="55" max="165" step="1" value="100">
+    <div class="layoutDebugHead"><span>SECTIONS</span><b id="dbgStructureScaleValue">75%</b></div>
+    <input id="dbgStructureScale" type="range" min="55" max="165" step="1" value="75">
   </div>
   <div class="layoutDebugRow">
-    <div class="layoutDebugHead"><span>BEAT PROPERTIES</span><b id="dbgDataScaleValue">100%</b></div>
-    <input id="dbgDataScale" type="range" min="55" max="165" step="1" value="100">
+    <div class="layoutDebugHead"><span>BEAT PROPERTIES</span><b id="dbgDataScaleValue">84%</b></div>
+    <input id="dbgDataScale" type="range" min="55" max="165" step="1" value="84">
   </div>
   <div class="layoutDebugRow">
-    <div class="layoutDebugHead"><span>TRACK STATUS</span><b id="dbgStatusScaleValue">100%</b></div>
-    <input id="dbgStatusScale" type="range" min="55" max="165" step="1" value="100">
+    <div class="layoutDebugHead"><span>TRACK STATUS</span><b id="dbgStatusScaleValue">131%</b></div>
+    <input id="dbgStatusScale" type="range" min="55" max="165" step="1" value="131">
   </div>
   <div class="layoutDebugRow">
-    <div class="layoutDebugHead"><span>PAYMENT BLOCK</span><b id="dbgBuyScaleValue">100%</b></div>
-    <input id="dbgBuyScale" type="range" min="55" max="165" step="1" value="100">
+    <div class="layoutDebugHead"><span>PAYMENT BLOCK</span><b id="dbgBuyScaleValue">97%</b></div>
+    <input id="dbgBuyScale" type="range" min="55" max="165" step="1" value="97">
   </div>
   <div class="layoutDebugRow">
     <div class="layoutDebugHead"><span>METER BLOCK</span><b id="dbgMeterScaleValue">100%</b></div>
     <input id="dbgMeterScale" type="range" min="45" max="180" step="1" value="100">
+  </div>
+
+  <div class="layoutDebugRow tonearmDebugRow">
+    <div class="layoutDebugHead"><span>TONEARM // PARK</span><b id="dbgArmParkValue">-8.0°</b></div>
+    <input id="dbgArmPark" type="range" min="-25" max="10" step="0.5" value="-8">
+  </div>
+  <div class="layoutDebugRow tonearmDebugRow">
+    <div class="layoutDebugHead"><span>TONEARM // INNER LIMIT</span><b id="dbgArmEndValue">32.5°</b></div>
+    <input id="dbgArmEnd" type="range" min="20" max="55" step="0.5" value="32.5">
   </div>
 
   <div class="layoutFrameLockStatus" id="layoutFrameLockStatus">MODULE FRAMES // <b>WAITING</b></div>
@@ -2144,15 +2153,17 @@ const paperOutSfx = document.getElementById("paperOutSfx");
 ===================================================== */
 const LAYOUT_DEBUG_KEY="frssnLayoutDebugV1";
 const LAYOUT_DEBUG_DEFAULTS={
-  headerHeight:430,
-  tileScale:100,
-  turntableScale:100,turntableX:0,turntableY:0,
-  playerScale:100,playerX:0,playerY:0,
-  titleScale:100,titleX:0,titleY:0,
-  structureScale:100,structureX:0,structureY:0,
-  dataScale:100,dataX:0,dataY:0,
-  statusScale:100,statusX:0,statusY:0,
-  buyScale:100,buyX:0,buyY:0,
+  /* Locked baseline from the current tuned layout. Existing localStorage values
+     still win, so the user's exact mouse-positioned geometry is preserved. */
+  headerHeight:340,
+  tileScale:112,
+  turntableScale:96,turntableX:0,turntableY:0,
+  playerScale:80,playerX:0,playerY:0,
+  titleScale:83,titleX:0,titleY:0,
+  structureScale:75,structureX:0,structureY:0,
+  dataScale:84,dataX:0,dataY:0,
+  statusScale:131,statusX:0,statusY:0,
+  buyScale:97,buyX:0,buyY:0,
   meterScale:100,meterX:0,meterY:0,
   turntableStretchX:100,turntableStretchY:100,
   playerStretchX:100,playerStretchY:100,
@@ -2637,7 +2648,8 @@ if(IS_DETAIL_PAGE&&layoutDebugPanel){
   loadLayoutDebug();
   applyLayoutDebug();
   updateHeroFrameLockStatus();
-  setLayoutMouseEdit(true);
+  /* Current geometry is treated as the fixed baseline. Turn MOUSE ON only for a deliberate edit. */
+  setLayoutMouseEdit(false);
 
   Object.entries(debugInputs).forEach(([key,input])=>{
     input?.addEventListener("input",()=>{
@@ -2735,7 +2747,9 @@ if(IS_DETAIL_PAGE&&layoutDebugPanel){
       `BEAT PROPERTIES = ${layoutDebugState.dataScale}% | X ${layoutDebugState.dataX} | Y ${layoutDebugState.dataY} | W ${layoutDebugState.dataStretchX}% | H ${layoutDebugState.dataStretchY}%`,
       `TRACK STATUS = ${layoutDebugState.statusScale}% | X ${layoutDebugState.statusX} | Y ${layoutDebugState.statusY} | W ${layoutDebugState.statusStretchX}% | H ${layoutDebugState.statusStretchY}%`,
       `PAYMENT BLOCK = ${layoutDebugState.buyScale}% | X ${layoutDebugState.buyX} | Y ${layoutDebugState.buyY} | W ${layoutDebugState.buyStretchX}% | H ${layoutDebugState.buyStretchY}%`,
-      `METER BLOCK = ${layoutDebugState.meterScale}% | X ${layoutDebugState.meterX} | Y ${layoutDebugState.meterY} | W ${layoutDebugState.meterStretchX}% | H ${layoutDebugState.meterStretchY}%`
+      `METER BLOCK = ${layoutDebugState.meterScale}% | X ${layoutDebugState.meterX} | Y ${layoutDebugState.meterY} | W ${layoutDebugState.meterStretchX}% | H ${layoutDebugState.meterStretchY}%`,
+      `TONEARM PARK = ${ARM_PARK_ANGLE.toFixed(1)}°`,
+      `TONEARM INNER LIMIT = ${ARM_END_ANGLE.toFixed(1)}°`
     ].join("\n");
     try{
       await navigator.clipboard.writeText(text);
@@ -2890,9 +2904,9 @@ function playPaperOut(){stopPaperSfx(paperOutSfx);paperOutSfx.volume=PAPER_SFX_V
 const MECHANISM_DEPLOY_DURATION=1450;
 const ARM_START_OFFSET_MS=-240;
 const ARM_MOVE_DURATION_MS=380;
-const ARM_PARK_ANGLE=-8;
+let ARM_PARK_ANGLE=-8;
 const ARM_START_ANGLE=19.5;
-const ARM_END_ANGLE=32.5;
+let ARM_END_ANGLE=32.5;
 
 const SCRATCH_TIME_SCALE=.54;
 const MOTOR_RECOVERY_SPEED=3.00;
@@ -2917,6 +2931,63 @@ const FREE_SPIN_RELEASE_THRESHOLD=.055;
 const FREE_SPIN_RELEASE_WINDOW=115;
 const SEEK_REDUCED_GAIN=.28;
 const SEEK_FULL_GAIN=1.0;
+
+/* =====================================================
+   TONEARM LIMIT DEBUG
+   PARK = resting angle. INNER LIMIT = maximum inward rotation at track end.
+   Both values are saved independently from the layout debug state.
+===================================================== */
+const TONEARM_DEBUG_KEY="frssnTonearmDebugV1";
+const TONEARM_DEBUG_DEFAULTS={park:-8,end:32.5};
+const dbgArmPark=document.getElementById("dbgArmPark");
+const dbgArmEnd=document.getElementById("dbgArmEnd");
+const dbgArmParkValue=document.getElementById("dbgArmParkValue");
+const dbgArmEndValue=document.getElementById("dbgArmEndValue");
+
+function saveTonearmDebug(){
+  try{localStorage.setItem(TONEARM_DEBUG_KEY,JSON.stringify({park:ARM_PARK_ANGLE,end:ARM_END_ANGLE}))}catch(_){}
+}
+function loadTonearmDebug(){
+  try{
+    const raw=localStorage.getItem(TONEARM_DEBUG_KEY);
+    if(!raw)return;
+    const d=JSON.parse(raw);
+    if(Number.isFinite(Number(d.park)))ARM_PARK_ANGLE=Number(d.park);
+    if(Number.isFinite(Number(d.end)))ARM_END_ANGLE=Number(d.end);
+  }catch(_){}
+}
+function updateTonearmDebugReadout(){
+  if(dbgArmPark)dbgArmPark.value=String(ARM_PARK_ANGLE);
+  if(dbgArmEnd)dbgArmEnd.value=String(ARM_END_ANGLE);
+  if(dbgArmParkValue)dbgArmParkValue.textContent=`${ARM_PARK_ANGLE.toFixed(1)}°`;
+  if(dbgArmEndValue)dbgArmEndValue.textContent=`${ARM_END_ANGLE.toFixed(1)}°`;
+}
+function previewTonearmDebug(){
+  /* Parked/non-engaged decks follow PARK live. The active engaged arm follows
+     the current groove position so INNER LIMIT can be tuned while listening. */
+  tracks.forEach(state=>{
+    if(!state.tonearmEngaged)setTonearmAngle(state,ARM_PARK_ANGLE);
+  });
+  if(activeTrack?.tonearmEngaged){
+    setTonearmAngle(activeTrack,armAngleFromTime(activeTrack,getTrackPosition(activeTrack)));
+  }
+}
+loadTonearmDebug();
+updateTonearmDebugReadout();
+dbgArmPark?.addEventListener("input",()=>{
+  ARM_PARK_ANGLE=Number(dbgArmPark.value);
+  updateTonearmDebugReadout();
+  previewTonearmDebug();
+  saveTonearmDebug();
+});
+dbgArmEnd?.addEventListener("input",()=>{
+  ARM_END_ANGLE=Number(dbgArmEnd.value);
+  /* Keep the end stop safely beyond the lead-in/start groove. */
+  if(ARM_END_ANGLE<ARM_START_ANGLE+1){ARM_END_ANGLE=ARM_START_ANGLE+1;dbgArmEnd.value=String(ARM_END_ANGLE)}
+  updateTonearmDebugReadout();
+  previewTonearmDebug();
+  saveTonearmDebug();
+});
 
 const VINYL_RPM=45;
 const REVOLUTIONS_PER_SECOND=VINYL_RPM/60;
