@@ -1354,6 +1354,104 @@ button,input{font:inherit}
   .detailPage .featuredSlot .dataPill{font-size:7px;padding:0 6px}
 }
 
+/* =====================================================
+   LAYOUT DEBUG // INDEPENDENT SCALE CONTROLS
+===================================================== */
+:root{
+  --dbg-tile-block-scale:1;
+  --dbg-turntable-scale:1;
+  --dbg-player-scale:1;
+  --dbg-title-scale:1;
+  --dbg-structure-scale:1;
+  --dbg-data-scale:1;
+  --dbg-status-scale:1;
+  --dbg-buy-scale:1;
+  --dbg-hero-height:430px;
+}
+
+/* Chrome/Edge use zoom here intentionally: unlike transform:scale(), it also
+   changes layout geometry, so sleeve flight coordinates stay physically correct. */
+.detailPage.layout-debug-active .signalTiles{zoom:var(--dbg-tile-block-scale)}
+.detailPage.layout-debug-active .featuredSlot .vinylUnit{zoom:var(--dbg-turntable-scale)}
+.detailPage.layout-debug-active .featuredSlot .waveRow{zoom:var(--dbg-player-scale)}
+.detailPage.layout-debug-active .featuredSlot .trackTitle{zoom:var(--dbg-title-scale)}
+.detailPage.layout-debug-active .featuredSlot .trackStructure{zoom:var(--dbg-structure-scale)}
+.detailPage.layout-debug-active .featuredSlot .trackDataStrip{zoom:var(--dbg-data-scale)}
+.detailPage.layout-debug-active .featuredSlot .badge{zoom:var(--dbg-status-scale)}
+.detailPage.layout-debug-active .featuredSlot .buyCol{zoom:var(--dbg-buy-scale)}
+
+@media(min-width:901px){
+  .detailPage.layout-debug-active .profileHead{
+    height:var(--dbg-hero-height)!important;
+    min-height:var(--dbg-hero-height)!important;
+  }
+  .detailPage.layout-debug-active .featuredSlot .track{
+    min-height:calc(var(--dbg-hero-height) - 38px)!important;
+  }
+}
+
+.layoutDebugPanel{
+  position:fixed;
+  right:14px;
+  bottom:14px;
+  z-index:1200;
+  width:318px;
+  max-height:calc(100vh - 28px);
+  overflow:auto;
+  padding:12px;
+  border:1px solid rgba(214,255,40,.48);
+  background:rgba(3,5,3,.965);
+  box-shadow:0 18px 42px rgba(0,0,0,.72);
+  color:var(--accent);
+  font:8px/1.35 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  letter-spacing:.07em;
+}
+.layoutDebugPanel.is-hidden{display:none}
+.layoutDebugTitle{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:10px;
+  font-weight:800;
+  letter-spacing:.13em;
+}
+.layoutDebugTitle button,
+.layoutDebugActions button,
+.layoutDebugReopen{
+  border:1px solid rgba(214,255,40,.45);
+  background:transparent;
+  color:var(--accent);
+  font:700 7px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  letter-spacing:.08em;
+  cursor:pointer;
+}
+.layoutDebugTitle button{height:22px;padding:0 8px}
+.layoutDebugRow{margin-top:8px}
+.layoutDebugHead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:4px}
+.layoutDebugHead span:first-child{color:rgba(255,255,255,.54)}
+.layoutDebugHead b{color:#fff;font-weight:800}
+.layoutDebugRow input[type="range"]{width:100%;margin:0;accent-color:var(--accent)}
+.layoutDebugActions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px}
+.layoutDebugActions button{height:28px}
+.layoutDebugTitle button:hover,.layoutDebugActions button:hover,.layoutDebugReopen:hover{background:var(--accent);color:#050605}
+.layoutDebugHint{margin-top:9px;color:rgba(255,255,255,.34);line-height:1.5}
+.layoutDebugReopen{
+  position:fixed;
+  right:12px;
+  bottom:12px;
+  z-index:1199;
+  display:none;
+  height:28px;
+  padding:0 10px;
+  background:rgba(3,5,3,.95);
+}
+.layoutDebugReopen.is-visible{display:block}
+
+@media(max-width:760px){
+  .layoutDebugPanel{right:8px;bottom:8px;width:min(310px,calc(100vw - 16px));max-height:72vh}
+}
+
 </style>
 </head>
 
@@ -1597,6 +1695,57 @@ button,input{font:inherit}
 
 <button class="vuDebugReopen" id="vuDebugReopen" type="button">VU DEBUG</button>
 
+<div class="layoutDebugPanel" id="layoutDebugPanel">
+  <div class="layoutDebugTitle">
+    <span>DEBUG // LAYOUT SCALE</span>
+    <button id="layoutDebugHide" type="button">HIDE</button>
+  </div>
+
+  <div class="layoutDebugRow">
+    <div class="layoutDebugHead"><span>HEADER HEIGHT</span><b id="dbgHeaderHeightValue">430 px</b></div>
+    <input id="dbgHeaderHeight" type="range" min="340" max="760" step="2" value="430">
+  </div>
+  <div class="layoutDebugRow">
+    <div class="layoutDebugHead"><span>TILE BLOCK</span><b id="dbgTileScaleValue">100%</b></div>
+    <input id="dbgTileScale" type="range" min="55" max="150" step="1" value="100">
+  </div>
+  <div class="layoutDebugRow">
+    <div class="layoutDebugHead"><span>TURNTABLE BLOCK</span><b id="dbgTurntableScaleValue">100%</b></div>
+    <input id="dbgTurntableScale" type="range" min="55" max="165" step="1" value="100">
+  </div>
+  <div class="layoutDebugRow">
+    <div class="layoutDebugHead"><span>PLAY + WAVE</span><b id="dbgPlayerScaleValue">100%</b></div>
+    <input id="dbgPlayerScale" type="range" min="55" max="165" step="1" value="100">
+  </div>
+  <div class="layoutDebugRow">
+    <div class="layoutDebugHead"><span>TRACK TITLE</span><b id="dbgTitleScaleValue">100%</b></div>
+    <input id="dbgTitleScale" type="range" min="55" max="180" step="1" value="100">
+  </div>
+  <div class="layoutDebugRow">
+    <div class="layoutDebugHead"><span>SECTIONS</span><b id="dbgStructureScaleValue">100%</b></div>
+    <input id="dbgStructureScale" type="range" min="55" max="165" step="1" value="100">
+  </div>
+  <div class="layoutDebugRow">
+    <div class="layoutDebugHead"><span>BEAT PROPERTIES</span><b id="dbgDataScaleValue">100%</b></div>
+    <input id="dbgDataScale" type="range" min="55" max="165" step="1" value="100">
+  </div>
+  <div class="layoutDebugRow">
+    <div class="layoutDebugHead"><span>TRACK STATUS</span><b id="dbgStatusScaleValue">100%</b></div>
+    <input id="dbgStatusScale" type="range" min="55" max="165" step="1" value="100">
+  </div>
+  <div class="layoutDebugRow">
+    <div class="layoutDebugHead"><span>PAYMENT BLOCK</span><b id="dbgBuyScaleValue">100%</b></div>
+    <input id="dbgBuyScale" type="range" min="55" max="165" step="1" value="100">
+  </div>
+
+  <div class="layoutDebugActions">
+    <button id="layoutDebugReset" type="button">RESET</button>
+    <button id="layoutDebugCopy" type="button">COPY VALUES</button>
+  </div>
+  <div class="layoutDebugHint">Values are saved locally. HIDE only hides this panel — the tuned layout remains active.</div>
+</div>
+<button class="layoutDebugReopen" id="layoutDebugReopen" type="button">LAYOUT DEBUG</button>
+
 <script>
 "use strict";
 
@@ -1613,6 +1762,131 @@ const profileHead = document.getElementById("profileHead");
 const microstatus = document.getElementById("microstatus");
 const paperInSfx = document.getElementById("paperInSfx");
 const paperOutSfx = document.getElementById("paperOutSfx");
+
+/* =====================================================
+   LAYOUT DEBUG CONTROLLER
+===================================================== */
+const LAYOUT_DEBUG_KEY="frssnLayoutDebugV1";
+const LAYOUT_DEBUG_DEFAULTS={
+  headerHeight:430,
+  tileScale:100,
+  turntableScale:100,
+  playerScale:100,
+  titleScale:100,
+  structureScale:100,
+  dataScale:100,
+  statusScale:100,
+  buyScale:100
+};
+let layoutDebugState={...LAYOUT_DEBUG_DEFAULTS};
+
+const layoutDebugPanel=document.getElementById("layoutDebugPanel");
+const layoutDebugHide=document.getElementById("layoutDebugHide");
+const layoutDebugReopen=document.getElementById("layoutDebugReopen");
+const layoutDebugReset=document.getElementById("layoutDebugReset");
+const layoutDebugCopy=document.getElementById("layoutDebugCopy");
+const debugInputs={
+  headerHeight:document.getElementById("dbgHeaderHeight"),
+  tileScale:document.getElementById("dbgTileScale"),
+  turntableScale:document.getElementById("dbgTurntableScale"),
+  playerScale:document.getElementById("dbgPlayerScale"),
+  titleScale:document.getElementById("dbgTitleScale"),
+  structureScale:document.getElementById("dbgStructureScale"),
+  dataScale:document.getElementById("dbgDataScale"),
+  statusScale:document.getElementById("dbgStatusScale"),
+  buyScale:document.getElementById("dbgBuyScale")
+};
+const debugValues={
+  headerHeight:document.getElementById("dbgHeaderHeightValue"),
+  tileScale:document.getElementById("dbgTileScaleValue"),
+  turntableScale:document.getElementById("dbgTurntableScaleValue"),
+  playerScale:document.getElementById("dbgPlayerScaleValue"),
+  titleScale:document.getElementById("dbgTitleScaleValue"),
+  structureScale:document.getElementById("dbgStructureScaleValue"),
+  dataScale:document.getElementById("dbgDataScaleValue"),
+  statusScale:document.getElementById("dbgStatusScaleValue"),
+  buyScale:document.getElementById("dbgBuyScaleValue")
+};
+
+function saveLayoutDebug(){
+  try{localStorage.setItem(LAYOUT_DEBUG_KEY,JSON.stringify(layoutDebugState))}catch(_){}
+}
+function loadLayoutDebug(){
+  try{
+    const raw=localStorage.getItem(LAYOUT_DEBUG_KEY);
+    if(!raw)return;
+    const parsed=JSON.parse(raw);
+    Object.keys(LAYOUT_DEBUG_DEFAULTS).forEach(key=>{
+      if(Number.isFinite(Number(parsed[key])))layoutDebugState[key]=Number(parsed[key]);
+    });
+  }catch(_){}
+}
+function applyLayoutDebug(){
+  if(!IS_DETAIL_PAGE)return;
+  document.body.classList.add("layout-debug-active");
+  const root=document.documentElement.style;
+  root.setProperty("--dbg-hero-height",`${layoutDebugState.headerHeight}px`);
+  root.setProperty("--dbg-tile-block-scale",String(layoutDebugState.tileScale/100));
+  root.setProperty("--dbg-turntable-scale",String(layoutDebugState.turntableScale/100));
+  root.setProperty("--dbg-player-scale",String(layoutDebugState.playerScale/100));
+  root.setProperty("--dbg-title-scale",String(layoutDebugState.titleScale/100));
+  root.setProperty("--dbg-structure-scale",String(layoutDebugState.structureScale/100));
+  root.setProperty("--dbg-data-scale",String(layoutDebugState.dataScale/100));
+  root.setProperty("--dbg-status-scale",String(layoutDebugState.statusScale/100));
+  root.setProperty("--dbg-buy-scale",String(layoutDebugState.buyScale/100));
+
+  Object.entries(debugInputs).forEach(([key,input])=>{if(input)input.value=String(layoutDebugState[key])});
+  if(debugValues.headerHeight)debugValues.headerHeight.textContent=`${Math.round(layoutDebugState.headerHeight)} px`;
+  ["tileScale","turntableScale","playerScale","titleScale","structureScale","dataScale","statusScale","buyScale"].forEach(key=>{
+    if(debugValues[key])debugValues[key].textContent=`${Math.round(layoutDebugState[key])}%`;
+  });
+}
+
+if(IS_DETAIL_PAGE&&layoutDebugPanel){
+  loadLayoutDebug();
+  applyLayoutDebug();
+  Object.entries(debugInputs).forEach(([key,input])=>{
+    input?.addEventListener("input",()=>{
+      layoutDebugState[key]=Number(input.value);
+      applyLayoutDebug();
+      saveLayoutDebug();
+    });
+  });
+  layoutDebugHide?.addEventListener("click",()=>{
+    layoutDebugPanel.classList.add("is-hidden");
+    layoutDebugReopen?.classList.add("is-visible");
+  });
+  layoutDebugReopen?.addEventListener("click",()=>{
+    layoutDebugPanel.classList.remove("is-hidden");
+    layoutDebugReopen.classList.remove("is-visible");
+  });
+  layoutDebugReset?.addEventListener("click",()=>{
+    layoutDebugState={...LAYOUT_DEBUG_DEFAULTS};
+    applyLayoutDebug();
+    saveLayoutDebug();
+  });
+  layoutDebugCopy?.addEventListener("click",async()=>{
+    const text=[
+      `HEADER HEIGHT = ${layoutDebugState.headerHeight}px`,
+      `TILE BLOCK = ${layoutDebugState.tileScale}%`,
+      `TURNTABLE BLOCK = ${layoutDebugState.turntableScale}%`,
+      `PLAY + WAVE = ${layoutDebugState.playerScale}%`,
+      `TRACK TITLE = ${layoutDebugState.titleScale}%`,
+      `SECTIONS = ${layoutDebugState.structureScale}%`,
+      `BEAT PROPERTIES = ${layoutDebugState.dataScale}%`,
+      `TRACK STATUS = ${layoutDebugState.statusScale}%`,
+      `PAYMENT BLOCK = ${layoutDebugState.buyScale}%`
+    ].join("\n");
+    try{
+      await navigator.clipboard.writeText(text);
+      const old=layoutDebugCopy.textContent;
+      layoutDebugCopy.textContent="COPIED";
+      setTimeout(()=>layoutDebugCopy.textContent=old,900);
+    }catch(_){}
+  });
+}else{
+  layoutDebugPanel?.classList.add("is-hidden");
+}
 
 /* =====================================================
    SHOWCASE MOCK CATALOG // 4 ROWS × 7 COLUMNS
@@ -3244,10 +3518,11 @@ async function flySleeveBetween(
   {
     duration=SLEEVE_SWAP_DURATION,
     delay=0,
-    onCloneReady=null
+    onCloneReady=null,
+    keepAfterLanding=false
   }={}
 ){
-  if(!fromRect||!toRect||!fromRect.width||!toRect.width)return;
+  if(!fromRect||!toRect||!fromRect.width||!toRect.width)return null;
 
   const node=createFlightSleeve(state,fromRect);
 
@@ -3271,7 +3546,21 @@ async function flySleeveBetween(
   );
 
   try{await animation.finished}catch(_){}
-  node.remove();
+  if(!keepAfterLanding)node.remove();
+  return node;
+}
+
+async function waitForVisualPaint(...images){
+  const valid=images.filter(Boolean);
+  await Promise.all(valid.map(img=>{
+    if(typeof img.decode==="function")return img.decode().catch(()=>{});
+    if(img.complete)return Promise.resolve();
+    return new Promise(resolve=>{
+      img.addEventListener("load",resolve,{once:true});
+      img.addEventListener("error",resolve,{once:true});
+    });
+  }));
+  await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
 }
 
 async function parkHeroArmForSwap(state){
@@ -3456,20 +3745,26 @@ async function featureTrack(next,{push=false,replace=false,sourceSleeveRect=null
     const oldSleeveFlight=oldShelfTarget
       ? flySleeveBetween(previous,heroSleeveRect,oldShelfTarget,{
           duration:SLEEVE_SWAP_DURATION,
+          keepAfterLanding:true,
           onCloneReady:()=>heroSleeveDock.classList.add("is-flight-empty")
         })
-      : wait(SLEEVE_SWAP_DURATION);
+      : wait(SLEEVE_SWAP_DURATION).then(()=>null);
 
     const newSleeveFlight=newShelfSource
       ? flySleeveBetween(next,newShelfSource,heroSleeveRect,{
           duration:SLEEVE_SWAP_DURATION,
           delay:SLEEVE_SWAP_STAGGER,
+          keepAfterLanding:true,
           onCloneReady:()=>clickedTile?.classList.add("is-package-departing")
         })
-      : wait(SLEEVE_SWAP_DURATION+SLEEVE_SWAP_STAGGER);
+      : wait(SLEEVE_SWAP_DURATION+SLEEVE_SWAP_STAGGER).then(()=>null);
 
-    await Promise.all([oldSleeveFlight,newSleeveFlight]);
-    if(!operationAlive(generation))return;
+    const [oldLandingClone,newLandingClone]=await Promise.all([oldSleeveFlight,newSleeveFlight]);
+    if(!operationAlive(generation)){
+      oldLandingClone?.remove();
+      newLandingClone?.remove();
+      return;
+    }
 
     releaseHeroToSource(previous);
 
@@ -3483,9 +3778,14 @@ async function featureTrack(next,{push=false,replace=false,sourceSleeveRect=null
     if(push)history.pushState({track:next.id},"",`track.html?track=${encodeURIComponent(next.id)}`);
     else if(replace)history.replaceState({track:next.id},"",`track.html?track=${encodeURIComponent(next.id)}`);
 
-    /* Shelf is rebuilt only after the physical package swap ends:
-       old release reappears loaded, new release becomes the empty gap. */
+    /* Rebuild the shelf UNDER the landed moving clone, wait until the real
+       images have actually painted, and only then remove the clone. This makes
+       the sleeve hand-off visually continuous and removes the one-frame blink. */
     renderSignalTiles();
+    const returnedShelfImage=tileForTrack(previous)?.querySelector(".signalTileSleeve img");
+    await waitForVisualPaint(returnedShelfImage,heroSleeveImage);
+    oldLandingClone?.remove();
+    newLandingClone?.remove();
 
     /* 3) New record leaves the newly arrived sleeve and seats on platter. */
     const enginePromise=activateTrackBuffer(next,0);
