@@ -1041,6 +1041,76 @@ button,input{font:inherit}
   object-fit:cover;
 }
 
+/* REAL HERO VU METER // independent layout block */
+.detailPage .heroMeterBlock{
+  position:absolute;
+  right:28px;
+  top:24px;
+  width:262px;
+  height:147px;
+  z-index:11;
+  transform-origin:center center;
+  isolation:isolate;
+  pointer-events:none;
+  filter:drop-shadow(0 12px 22px rgba(0,0,0,.45));
+}
+.detailPage .heroMeterFaceLayer,
+.detailPage .heroMeterFrontLayer{
+  position:absolute;
+  inset:0;
+  width:262px;
+  height:147px;
+  display:block;
+  object-fit:contain;
+  pointer-events:none;
+}
+.detailPage .heroMeterFaceLayer{z-index:1}
+.detailPage .heroMeterFrontLayer{z-index:3;filter:brightness(.38)}
+.detailPage .heroMeterNeedlePivot{
+  position:absolute;
+  top:100.5px;
+  width:1px;
+  height:1px;
+  z-index:2;
+  pointer-events:none;
+}
+.detailPage .heroMeterNeedlePivot.left{left:72px}
+.detailPage .heroMeterNeedlePivot.right{left:185.5px}
+.detailPage .heroMeterNeedle{
+  position:absolute;
+  left:0;
+  bottom:0;
+  translate:-50% 0;
+  width:1.2px;
+  height:47.5px;
+  transform-origin:50% 100%;
+  transform:rotate(-53deg);
+  background:linear-gradient(90deg,#090807 0%,#24170d 45%,#090705 100%);
+  border-radius:1px 1px 0 0;
+  box-shadow:1px 0 0 rgba(255,205,123,.16),0 0 1px rgba(0,0,0,.9);
+  will-change:transform;
+}
+.detailPage .heroMeterNeedle::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  bottom:-3px;
+  width:5px;
+  height:5px;
+  transform:translateX(-50%);
+  border-radius:50%;
+  background:radial-gradient(circle,#403022 0%,#160f0a 60%,#050403 100%);
+}
+@media(max-width:1180px){
+  .detailPage .heroMeterBlock{right:18px;top:18px}
+}
+@media(max-width:900px){
+  .detailPage .heroMeterBlock{right:18px;top:22px;zoom:.78}
+}
+@media(max-width:760px){
+  .detailPage .heroMeterBlock{right:10px;top:14px;zoom:.58}
+}
+
 /* The platter/tonearm now occupy the space immediately to the right of the sleeve. */
 .detailPage .featuredSlot .track{
   min-height:392px;
@@ -1366,6 +1436,7 @@ button,input{font:inherit}
   --dbg-data-scale:1;
   --dbg-status-scale:1;
   --dbg-buy-scale:1;
+  --dbg-meter-scale:1;
   --dbg-hero-height:430px;
   --dbg-turntable-x:0px;--dbg-turntable-y:0px;
   --dbg-player-x:0px;--dbg-player-y:0px;
@@ -1374,6 +1445,15 @@ button,input{font:inherit}
   --dbg-data-x:0px;--dbg-data-y:0px;
   --dbg-status-x:0px;--dbg-status-y:0px;
   --dbg-buy-x:0px;--dbg-buy-y:0px;
+  --dbg-meter-x:0px;--dbg-meter-y:0px;
+  --dbg-turntable-stretch-x:1;--dbg-turntable-stretch-y:1;
+  --dbg-player-stretch-x:1;--dbg-player-stretch-y:1;
+  --dbg-title-stretch-x:1;--dbg-title-stretch-y:1;
+  --dbg-structure-stretch-x:1;--dbg-structure-stretch-y:1;
+  --dbg-data-stretch-x:1;--dbg-data-stretch-y:1;
+  --dbg-status-stretch-x:1;--dbg-status-stretch-y:1;
+  --dbg-buy-stretch-x:1;--dbg-buy-stretch-y:1;
+  --dbg-meter-stretch-x:1;--dbg-meter-stretch-y:1;
 }
 
 /* Chrome/Edge use zoom here intentionally: unlike transform:scale(), it also
@@ -1381,13 +1461,14 @@ button,input{font:inherit}
    CSS translate is kept separate so mouse positioning never destroys the tuned
    transforms already used by the turntable physics. */
 .detailPage.layout-debug-active .signalTiles{zoom:var(--dbg-tile-block-scale)}
-.detailPage.layout-debug-active .featuredSlot .vinylUnit{zoom:var(--dbg-turntable-scale);translate:var(--dbg-turntable-x) var(--dbg-turntable-y)}
-.detailPage.layout-debug-active .featuredSlot .waveRow{zoom:var(--dbg-player-scale);translate:var(--dbg-player-x) var(--dbg-player-y)}
-.detailPage.layout-debug-active .featuredSlot .trackTitle{zoom:var(--dbg-title-scale);translate:var(--dbg-title-x) var(--dbg-title-y)}
-.detailPage.layout-debug-active .featuredSlot .trackStructure{zoom:var(--dbg-structure-scale);translate:var(--dbg-structure-x) var(--dbg-structure-y)}
-.detailPage.layout-debug-active .featuredSlot .trackDataStrip{zoom:var(--dbg-data-scale);translate:var(--dbg-data-x) var(--dbg-data-y)}
-.detailPage.layout-debug-active .featuredSlot .badge{zoom:var(--dbg-status-scale);translate:var(--dbg-status-x) var(--dbg-status-y)}
-.detailPage.layout-debug-active .featuredSlot .buyCol{zoom:var(--dbg-buy-scale);translate:var(--dbg-buy-x) var(--dbg-buy-y)}
+.detailPage.layout-debug-active .featuredSlot .vinylUnit{zoom:var(--dbg-turntable-scale);translate:var(--dbg-turntable-x) var(--dbg-turntable-y);scale:var(--dbg-turntable-stretch-x) var(--dbg-turntable-stretch-y)}
+.detailPage.layout-debug-active .featuredSlot .waveRow{zoom:var(--dbg-player-scale);translate:var(--dbg-player-x) var(--dbg-player-y);scale:var(--dbg-player-stretch-x) var(--dbg-player-stretch-y)}
+.detailPage.layout-debug-active .featuredSlot .trackTitle{zoom:var(--dbg-title-scale);translate:var(--dbg-title-x) var(--dbg-title-y);scale:var(--dbg-title-stretch-x) var(--dbg-title-stretch-y)}
+.detailPage.layout-debug-active .featuredSlot .trackStructure{zoom:var(--dbg-structure-scale);translate:var(--dbg-structure-x) var(--dbg-structure-y);scale:var(--dbg-structure-stretch-x) var(--dbg-structure-stretch-y)}
+.detailPage.layout-debug-active .featuredSlot .trackDataStrip{zoom:var(--dbg-data-scale);translate:var(--dbg-data-x) var(--dbg-data-y);scale:var(--dbg-data-stretch-x) var(--dbg-data-stretch-y)}
+.detailPage.layout-debug-active .featuredSlot .badge{zoom:var(--dbg-status-scale);translate:var(--dbg-status-x) var(--dbg-status-y);scale:var(--dbg-status-stretch-x) var(--dbg-status-stretch-y)}
+.detailPage.layout-debug-active .featuredSlot .buyCol{zoom:var(--dbg-buy-scale);translate:var(--dbg-buy-x) var(--dbg-buy-y);scale:var(--dbg-buy-stretch-x) var(--dbg-buy-stretch-y)}
+.detailPage.layout-debug-active #heroMeterBlock{zoom:var(--dbg-meter-scale);translate:var(--dbg-meter-x) var(--dbg-meter-y);scale:var(--dbg-meter-stretch-x) var(--dbg-meter-stretch-y)}
 
 @media(min-width:901px){
   .detailPage.layout-debug-active .profileHead{
@@ -1487,7 +1568,8 @@ body.layout-mouse-edit .featuredSlot .trackTitle,
 body.layout-mouse-edit .featuredSlot .trackStructure,
 body.layout-mouse-edit .featuredSlot .trackDataStrip,
 body.layout-mouse-edit .featuredSlot .badge,
-body.layout-mouse-edit .featuredSlot .buyCol{
+body.layout-mouse-edit .featuredSlot .buyCol,
+body.layout-mouse-edit #heroMeterBlock{
   cursor:move!important;
 }
 body.layout-mouse-edit .layout-debug-selected{
@@ -1510,6 +1592,25 @@ body.layout-mouse-edit .layout-debug-selected{
 .layoutScaleHandle::after{content:"";position:absolute;background:#050605;opacity:.75}
 .layoutScaleHandle::before{width:7px;height:1px;right:2px;bottom:4px;transform:rotate(-45deg)}
 .layoutScaleHandle::after{width:4px;height:1px;right:2px;bottom:2px;transform:rotate(-45deg)}
+
+.layoutAxisHandle{
+  position:fixed;
+  z-index:1198;
+  display:none;
+  border:1px solid #050605;
+  background:var(--accent);
+  box-shadow:0 0 0 1px rgba(214,255,40,.72),0 4px 15px rgba(0,0,0,.55);
+  touch-action:none;
+}
+.layoutAxisHandle.is-visible{display:block}
+.layoutWidthHandle{width:10px;height:28px;cursor:ew-resize}
+.layoutHeightHandle{width:28px;height:10px;cursor:ns-resize}
+.layoutAxisHandle::after{
+  content:"";
+  position:absolute;
+  inset:3px;
+  border:1px solid rgba(5,6,5,.58);
+}
 
 @media(max-width:760px){
   .layoutDebugPanel{right:8px;bottom:8px;width:min(310px,calc(100vw - 16px));max-height:72vh}
@@ -1547,6 +1648,13 @@ body.layout-mouse-edit .layout-debug-selected{
         <div class="heroSleeveFrame">
           <img id="heroSleeveImage" src="" alt="">
         </div>
+      </div>
+
+      <div class="heroMeterBlock" id="heroMeterBlock" aria-label="Stereo VU meter">
+        <img class="heroMeterFaceLayer" src="vu-panel-face-module-final.png" alt="">
+        <div class="heroMeterNeedlePivot left"><div class="heroMeterNeedle" id="heroMeterNeedleL"></div></div>
+        <div class="heroMeterNeedlePivot right"><div class="heroMeterNeedle" id="heroMeterNeedleR"></div></div>
+        <img class="heroMeterFrontLayer" src="vu-panel-front-module-final.png" alt="Stereo VU meter">
       </div>
 
       <div class="featuredSlot" id="featuredSlot"></div>
@@ -1765,7 +1873,7 @@ body.layout-mouse-edit .layout-debug-selected{
   </div>
 
   <div class="layoutDebugMouseRow">
-    <span>DIRECT EDIT // drag a block to move it. Drag the small corner square to resize it.</span>
+    <span>DIRECT EDIT // drag block = move. Corner = proportional scale. Right handle = stretch width. Bottom handle = stretch height.</span>
     <button class="layoutDebugMouseToggle is-on" id="layoutDebugMouseToggle" type="button">MOUSE ON</button>
   </div>
   <div class="layoutDebugSelectedReadout" id="layoutDebugSelectedReadout">SELECTED // NONE</div>
@@ -1806,6 +1914,10 @@ body.layout-mouse-edit .layout-debug-selected{
     <div class="layoutDebugHead"><span>PAYMENT BLOCK</span><b id="dbgBuyScaleValue">100%</b></div>
     <input id="dbgBuyScale" type="range" min="55" max="165" step="1" value="100">
   </div>
+  <div class="layoutDebugRow">
+    <div class="layoutDebugHead"><span>METER BLOCK</span><b id="dbgMeterScaleValue">100%</b></div>
+    <input id="dbgMeterScale" type="range" min="45" max="180" step="1" value="100">
+  </div>
 
   <div class="layoutDebugActions">
     <button id="layoutDebugReset" type="button">RESET</button>
@@ -1815,6 +1927,8 @@ body.layout-mouse-edit .layout-debug-selected{
 </div>
 <button class="layoutDebugReopen" id="layoutDebugReopen" type="button">LAYOUT DEBUG</button>
 <div class="layoutScaleHandle" id="layoutScaleHandle" aria-hidden="true"></div>
+<div class="layoutAxisHandle layoutWidthHandle" id="layoutWidthHandle" aria-hidden="true"></div>
+<div class="layoutAxisHandle layoutHeightHandle" id="layoutHeightHandle" aria-hidden="true"></div>
 
 <script>
 "use strict";
@@ -1849,7 +1963,16 @@ const LAYOUT_DEBUG_DEFAULTS={
   structureScale:100,structureX:0,structureY:0,
   dataScale:100,dataX:0,dataY:0,
   statusScale:100,statusX:0,statusY:0,
-  buyScale:100,buyX:0,buyY:0
+  buyScale:100,buyX:0,buyY:0,
+  meterScale:100,meterX:0,meterY:0,
+  turntableStretchX:100,turntableStretchY:100,
+  playerStretchX:100,playerStretchY:100,
+  titleStretchX:100,titleStretchY:100,
+  structureStretchX:100,structureStretchY:100,
+  dataStretchX:100,dataStretchY:100,
+  statusStretchX:100,statusStretchY:100,
+  buyStretchX:100,buyStretchY:100,
+  meterStretchX:100,meterStretchY:100
 };
 let layoutDebugState={...LAYOUT_DEBUG_DEFAULTS};
 
@@ -1861,6 +1984,8 @@ const layoutDebugCopy=document.getElementById("layoutDebugCopy");
 const layoutDebugMouseToggle=document.getElementById("layoutDebugMouseToggle");
 const layoutDebugSelectedReadout=document.getElementById("layoutDebugSelectedReadout");
 const layoutScaleHandle=document.getElementById("layoutScaleHandle");
+const layoutWidthHandle=document.getElementById("layoutWidthHandle");
+const layoutHeightHandle=document.getElementById("layoutHeightHandle");
 
 const debugInputs={
   headerHeight:document.getElementById("dbgHeaderHeight"),
@@ -1871,7 +1996,8 @@ const debugInputs={
   structureScale:document.getElementById("dbgStructureScale"),
   dataScale:document.getElementById("dbgDataScale"),
   statusScale:document.getElementById("dbgStatusScale"),
-  buyScale:document.getElementById("dbgBuyScale")
+  buyScale:document.getElementById("dbgBuyScale"),
+  meterScale:document.getElementById("dbgMeterScale")
 };
 const debugValues={
   headerHeight:document.getElementById("dbgHeaderHeightValue"),
@@ -1882,17 +2008,19 @@ const debugValues={
   structureScale:document.getElementById("dbgStructureScaleValue"),
   dataScale:document.getElementById("dbgDataScaleValue"),
   statusScale:document.getElementById("dbgStatusScaleValue"),
-  buyScale:document.getElementById("dbgBuyScaleValue")
+  buyScale:document.getElementById("dbgBuyScaleValue"),
+  meterScale:document.getElementById("dbgMeterScaleValue")
 };
 
 const LAYOUT_MOUSE_TARGETS=[
-  {id:"turntable",label:"TURNTABLE BLOCK",selector:".featuredSlot .vinylUnit",scale:"turntableScale",x:"turntableX",y:"turntableY",min:55,max:165},
-  {id:"player",label:"PLAY + WAVE",selector:".featuredSlot .waveRow",scale:"playerScale",x:"playerX",y:"playerY",min:55,max:165},
-  {id:"title",label:"TRACK TITLE",selector:".featuredSlot .trackTitle",scale:"titleScale",x:"titleX",y:"titleY",min:55,max:180},
-  {id:"structure",label:"SECTIONS",selector:".featuredSlot .trackStructure",scale:"structureScale",x:"structureX",y:"structureY",min:55,max:165},
-  {id:"data",label:"BEAT PROPERTIES",selector:".featuredSlot .trackDataStrip",scale:"dataScale",x:"dataX",y:"dataY",min:55,max:165},
-  {id:"status",label:"TRACK STATUS",selector:".featuredSlot .badge",scale:"statusScale",x:"statusX",y:"statusY",min:55,max:165},
-  {id:"buy",label:"PAYMENT BLOCK",selector:".featuredSlot .buyCol",scale:"buyScale",x:"buyX",y:"buyY",min:55,max:165}
+  {id:"turntable",label:"TURNTABLE BLOCK",selector:".featuredSlot .vinylUnit",scale:"turntableScale",x:"turntableX",y:"turntableY",sx:"turntableStretchX",sy:"turntableStretchY",min:55,max:165},
+  {id:"player",label:"PLAY + WAVE",selector:".featuredSlot .waveRow",scale:"playerScale",x:"playerX",y:"playerY",sx:"playerStretchX",sy:"playerStretchY",min:55,max:165},
+  {id:"title",label:"TRACK TITLE",selector:".featuredSlot .trackTitle",scale:"titleScale",x:"titleX",y:"titleY",sx:"titleStretchX",sy:"titleStretchY",min:55,max:180},
+  {id:"structure",label:"SECTIONS",selector:".featuredSlot .trackStructure",scale:"structureScale",x:"structureX",y:"structureY",sx:"structureStretchX",sy:"structureStretchY",min:55,max:165},
+  {id:"data",label:"BEAT PROPERTIES",selector:".featuredSlot .trackDataStrip",scale:"dataScale",x:"dataX",y:"dataY",sx:"dataStretchX",sy:"dataStretchY",min:55,max:165},
+  {id:"status",label:"TRACK STATUS",selector:".featuredSlot .badge",scale:"statusScale",x:"statusX",y:"statusY",sx:"statusStretchX",sy:"statusStretchY",min:55,max:165},
+  {id:"buy",label:"PAYMENT BLOCK",selector:".featuredSlot .buyCol",scale:"buyScale",x:"buyX",y:"buyY",sx:"buyStretchX",sy:"buyStretchY",min:55,max:165},
+  {id:"meter",label:"METER BLOCK",selector:"#heroMeterBlock",scale:"meterScale",x:"meterX",y:"meterY",sx:"meterStretchX",sy:"meterStretchY",min:45,max:180}
 ];
 
 let layoutMouseEdit=true;
@@ -1900,6 +2028,7 @@ let layoutSelectedDef=null;
 let layoutSelectedEl=null;
 let layoutDrag=null;
 let layoutScaleDrag=null;
+let layoutAxisDrag=null;
 let layoutHandleRAF=null;
 
 function saveLayoutDebug(){
@@ -1929,15 +2058,18 @@ function applyLayoutDebug(){
   root.setProperty("--dbg-data-scale",String(layoutDebugState.dataScale/100));
   root.setProperty("--dbg-status-scale",String(layoutDebugState.statusScale/100));
   root.setProperty("--dbg-buy-scale",String(layoutDebugState.buyScale/100));
+  root.setProperty("--dbg-meter-scale",String(layoutDebugState.meterScale/100));
 
-  ["turntable","player","title","structure","data","status","buy"].forEach(id=>{
+  ["turntable","player","title","structure","data","status","buy","meter"].forEach(id=>{
     root.setProperty(`--dbg-${id}-x`,`${layoutDebugState[id+"X"]}px`);
     root.setProperty(`--dbg-${id}-y`,`${layoutDebugState[id+"Y"]}px`);
+    root.setProperty(`--dbg-${id}-stretch-x`,String(layoutDebugState[id+"StretchX"]/100));
+    root.setProperty(`--dbg-${id}-stretch-y`,String(layoutDebugState[id+"StretchY"]/100));
   });
 
   Object.entries(debugInputs).forEach(([key,input])=>{if(input)input.value=String(layoutDebugState[key])});
   if(debugValues.headerHeight)debugValues.headerHeight.textContent=`${Math.round(layoutDebugState.headerHeight)} px`;
-  ["tileScale","turntableScale","playerScale","titleScale","structureScale","dataScale","statusScale","buyScale"].forEach(key=>{
+  ["tileScale","turntableScale","playerScale","titleScale","structureScale","dataScale","statusScale","buyScale","meterScale"].forEach(key=>{
     if(debugValues[key])debugValues[key].textContent=`${Math.round(layoutDebugState[key])}%`;
   });
   updateLayoutSelectionReadout();
@@ -1963,6 +2095,8 @@ function clearLayoutSelection(){
   layoutSelectedDef=null;
   layoutSelectedEl=null;
   layoutScaleHandle?.classList.remove("is-visible");
+  layoutWidthHandle?.classList.remove("is-visible");
+  layoutHeightHandle?.classList.remove("is-visible");
   updateLayoutSelectionReadout();
 }
 function selectLayoutTarget(def,el){
@@ -1979,18 +2113,29 @@ function updateLayoutSelectionReadout(){
   if(!layoutDebugSelectedReadout)return;
   if(!layoutSelectedDef){layoutDebugSelectedReadout.textContent="SELECTED // NONE";return}
   const d=layoutSelectedDef;
-  layoutDebugSelectedReadout.textContent=`SELECTED // ${d.label} // X ${Math.round(layoutDebugState[d.x])} // Y ${Math.round(layoutDebugState[d.y])} // ${Math.round(layoutDebugState[d.scale])}%`;
+  layoutDebugSelectedReadout.textContent=`SELECTED // ${d.label} // X ${Math.round(layoutDebugState[d.x])} // Y ${Math.round(layoutDebugState[d.y])} // SCALE ${Math.round(layoutDebugState[d.scale])}% // W ${Math.round(layoutDebugState[d.sx])}% // H ${Math.round(layoutDebugState[d.sy])}%`;
 }
 function positionLayoutHandle(){
   layoutHandleRAF=null;
-  if(!layoutMouseEdit||!layoutSelectedDef||!layoutScaleHandle){layoutScaleHandle?.classList.remove("is-visible");return}
+  if(!layoutMouseEdit||!layoutSelectedDef||!layoutScaleHandle){
+    layoutScaleHandle?.classList.remove("is-visible");
+    layoutWidthHandle?.classList.remove("is-visible");
+    layoutHeightHandle?.classList.remove("is-visible");
+    return;
+  }
   const el=resolveSelectedElement();
   if(!el)return;
   const r=el.getBoundingClientRect();
   if(!r.width||!r.height)return;
   layoutScaleHandle.style.left=`${r.right-8}px`;
   layoutScaleHandle.style.top=`${r.bottom-8}px`;
+  layoutWidthHandle.style.left=`${r.right-5}px`;
+  layoutWidthHandle.style.top=`${r.top+r.height/2-14}px`;
+  layoutHeightHandle.style.left=`${r.left+r.width/2-14}px`;
+  layoutHeightHandle.style.top=`${r.bottom-5}px`;
   layoutScaleHandle.classList.add("is-visible");
+  layoutWidthHandle.classList.add("is-visible");
+  layoutHeightHandle.classList.add("is-visible");
 }
 function scheduleLayoutHandleUpdate(){
   if(layoutHandleRAF)return;
@@ -2056,6 +2201,46 @@ function endLayoutScale(event){
   scheduleLayoutHandleUpdate();
 }
 
+function clampLayoutStretch(value){return Math.max(30,Math.min(260,value))}
+function beginLayoutAxisResize(event,axis){
+  if(!layoutMouseEdit||!layoutSelectedDef)return;
+  const d=layoutSelectedDef;
+  const el=resolveSelectedElement();
+  if(!el)return;
+  event.preventDefault();event.stopPropagation();
+  const rect=el.getBoundingClientRect();
+  layoutAxisDrag={
+    pointerId:event.pointerId,axis,def:d,
+    startX:event.clientX,startY:event.clientY,
+    sx:Number(layoutDebugState[d.sx])||100,
+    sy:Number(layoutDebugState[d.sy])||100,
+    width:Math.max(1,rect.width),height:Math.max(1,rect.height)
+  };
+  const handle=axis==="x"?layoutWidthHandle:layoutHeightHandle;
+  try{handle.setPointerCapture(event.pointerId)}catch(_){}
+}
+function resizeSelectedLayoutAxis(event){
+  if(!layoutAxisDrag||event.pointerId!==layoutAxisDrag.pointerId)return;
+  event.preventDefault();
+  const d=layoutAxisDrag.def;
+  if(layoutAxisDrag.axis==="x"){
+    const dx=event.clientX-layoutAxisDrag.startX;
+    layoutDebugState[d.sx]=Math.round(clampLayoutStretch(layoutAxisDrag.sx+(dx/layoutAxisDrag.width)*100));
+  }else{
+    const dy=event.clientY-layoutAxisDrag.startY;
+    layoutDebugState[d.sy]=Math.round(clampLayoutStretch(layoutAxisDrag.sy+(dy/layoutAxisDrag.height)*100));
+  }
+  applyLayoutDebug();
+}
+function endLayoutAxisResize(event){
+  if(!layoutAxisDrag||event.pointerId!==layoutAxisDrag.pointerId)return;
+  const handle=layoutAxisDrag.axis==="x"?layoutWidthHandle:layoutHeightHandle;
+  try{handle.releasePointerCapture(event.pointerId)}catch(_){}
+  layoutAxisDrag=null;
+  saveLayoutDebug();
+  scheduleLayoutHandleUpdate();
+}
+
 if(IS_DETAIL_PAGE&&layoutDebugPanel){
   loadLayoutDebug();
   applyLayoutDebug();
@@ -2075,7 +2260,9 @@ if(IS_DETAIL_PAGE&&layoutDebugPanel){
      owns these pointer gestures instead of Play/Seek/Scratch/Checkout. */
   document.addEventListener("pointerdown",event=>{
     if(!layoutMouseEdit||event.button!==0)return;
-    if(event.target===layoutScaleHandle||layoutScaleHandle?.contains(event.target))return;
+    if(event.target===layoutScaleHandle||layoutScaleHandle?.contains(event.target)||
+       event.target===layoutWidthHandle||layoutWidthHandle?.contains(event.target)||
+       event.target===layoutHeightHandle||layoutHeightHandle?.contains(event.target))return;
     if(event.target instanceof Element&&event.target.closest(".layoutDebugPanel,.layoutDebugReopen"))return;
     const hit=findLayoutTargetFromEventTarget(event.target);
     if(!hit)return;
@@ -2092,6 +2279,15 @@ if(IS_DETAIL_PAGE&&layoutDebugPanel){
   layoutScaleHandle?.addEventListener("pointermove",scaleSelectedLayout,{passive:false});
   layoutScaleHandle?.addEventListener("pointerup",endLayoutScale);
   layoutScaleHandle?.addEventListener("pointercancel",endLayoutScale);
+
+  layoutWidthHandle?.addEventListener("pointerdown",event=>beginLayoutAxisResize(event,"x"));
+  layoutWidthHandle?.addEventListener("pointermove",resizeSelectedLayoutAxis,{passive:false});
+  layoutWidthHandle?.addEventListener("pointerup",endLayoutAxisResize);
+  layoutWidthHandle?.addEventListener("pointercancel",endLayoutAxisResize);
+  layoutHeightHandle?.addEventListener("pointerdown",event=>beginLayoutAxisResize(event,"y"));
+  layoutHeightHandle?.addEventListener("pointermove",resizeSelectedLayoutAxis,{passive:false});
+  layoutHeightHandle?.addEventListener("pointerup",endLayoutAxisResize);
+  layoutHeightHandle?.addEventListener("pointercancel",endLayoutAxisResize);
 
   window.addEventListener("resize",scheduleLayoutHandleUpdate,{passive:true});
   window.addEventListener("scroll",scheduleLayoutHandleUpdate,{passive:true});
@@ -2126,13 +2322,14 @@ if(IS_DETAIL_PAGE&&layoutDebugPanel){
     const text=[
       `HEADER HEIGHT = ${layoutDebugState.headerHeight}px`,
       `TILE BLOCK = ${layoutDebugState.tileScale}%`,
-      `TURNTABLE = ${layoutDebugState.turntableScale}% | X ${layoutDebugState.turntableX} | Y ${layoutDebugState.turntableY}`,
-      `PLAY + WAVE = ${layoutDebugState.playerScale}% | X ${layoutDebugState.playerX} | Y ${layoutDebugState.playerY}`,
-      `TRACK TITLE = ${layoutDebugState.titleScale}% | X ${layoutDebugState.titleX} | Y ${layoutDebugState.titleY}`,
-      `SECTIONS = ${layoutDebugState.structureScale}% | X ${layoutDebugState.structureX} | Y ${layoutDebugState.structureY}`,
-      `BEAT PROPERTIES = ${layoutDebugState.dataScale}% | X ${layoutDebugState.dataX} | Y ${layoutDebugState.dataY}`,
-      `TRACK STATUS = ${layoutDebugState.statusScale}% | X ${layoutDebugState.statusX} | Y ${layoutDebugState.statusY}`,
-      `PAYMENT BLOCK = ${layoutDebugState.buyScale}% | X ${layoutDebugState.buyX} | Y ${layoutDebugState.buyY}`
+      `TURNTABLE = ${layoutDebugState.turntableScale}% | X ${layoutDebugState.turntableX} | Y ${layoutDebugState.turntableY} | W ${layoutDebugState.turntableStretchX}% | H ${layoutDebugState.turntableStretchY}%`,
+      `PLAY + WAVE = ${layoutDebugState.playerScale}% | X ${layoutDebugState.playerX} | Y ${layoutDebugState.playerY} | W ${layoutDebugState.playerStretchX}% | H ${layoutDebugState.playerStretchY}%`,
+      `TRACK TITLE = ${layoutDebugState.titleScale}% | X ${layoutDebugState.titleX} | Y ${layoutDebugState.titleY} | W ${layoutDebugState.titleStretchX}% | H ${layoutDebugState.titleStretchY}%`,
+      `SECTIONS = ${layoutDebugState.structureScale}% | X ${layoutDebugState.structureX} | Y ${layoutDebugState.structureY} | W ${layoutDebugState.structureStretchX}% | H ${layoutDebugState.structureStretchY}%`,
+      `BEAT PROPERTIES = ${layoutDebugState.dataScale}% | X ${layoutDebugState.dataX} | Y ${layoutDebugState.dataY} | W ${layoutDebugState.dataStretchX}% | H ${layoutDebugState.dataStretchY}%`,
+      `TRACK STATUS = ${layoutDebugState.statusScale}% | X ${layoutDebugState.statusX} | Y ${layoutDebugState.statusY} | W ${layoutDebugState.statusStretchX}% | H ${layoutDebugState.statusStretchY}%`,
+      `PAYMENT BLOCK = ${layoutDebugState.buyScale}% | X ${layoutDebugState.buyX} | Y ${layoutDebugState.buyY} | W ${layoutDebugState.buyStretchX}% | H ${layoutDebugState.buyStretchY}%`,
+      `METER BLOCK = ${layoutDebugState.meterScale}% | X ${layoutDebugState.meterX} | Y ${layoutDebugState.meterY} | W ${layoutDebugState.meterStretchX}% | H ${layoutDebugState.meterStretchY}%`
     ].join("\n");
     try{
       await navigator.clipboard.writeText(text);
@@ -2730,6 +2927,8 @@ function getEstimatedEnginePosition(){
 const vuModule=document.getElementById("vuModule");
 const vuNeedleL=document.getElementById("vuNeedleL");
 const vuNeedleR=document.getElementById("vuNeedleR");
+const heroMeterNeedleL=document.getElementById("heroMeterNeedleL");
+const heroMeterNeedleR=document.getElementById("heroMeterNeedleR");
 const vuDebugPanel=document.getElementById("vuDebugPanel");
 const vuDebugHandle=document.getElementById("vuDebugHandle");
 const vuDebugCoords=document.getElementById("vuDebugCoords");
@@ -2828,7 +3027,12 @@ function setVuDebugMode(enabled){
   vuDebugMode=enabled;vuModule.classList.toggle("debug-on",enabled);vuDebugPanel.classList.toggle("hidden",!enabled);vuDebugReopen.classList.toggle("visible",!enabled);if(!enabled)vuManualTest=false;
 }
 vuDebugOff.addEventListener("click",e=>{e.stopPropagation();setVuDebugMode(false)});vuDebugReopen.addEventListener("click",()=>setVuDebugMode(true));
-function setNeedlesAngle(angle){vuNeedleL.style.transform=`rotate(${angle}deg)`;vuNeedleR.style.transform=`rotate(${angle}deg)`}
+function setNeedlesAngle(angle){
+  vuNeedleL.style.transform=`rotate(${angle}deg)`;
+  vuNeedleR.style.transform=`rotate(${angle}deg)`;
+  if(heroMeterNeedleL)heroMeterNeedleL.style.transform=`rotate(${angle}deg)`;
+  if(heroMeterNeedleR)heroMeterNeedleR.style.transform=`rotate(${angle}deg)`;
+}
 vuTestLeft.addEventListener("click",()=>{vuManualTest=true;setNeedlesAngle(vuMinAngle)});
 vuTestCenter.addEventListener("click",()=>{vuManualTest=true;setNeedlesAngle(0)});
 vuTestRight.addEventListener("click",()=>{vuManualTest=true;setNeedlesAngle(vuMaxAngle)});
@@ -2842,7 +3046,7 @@ loadVuState();applyVuDebug();
 let vuSplitter=null,vuAnalyserL=null,vuAnalyserR=null,vuDataL=null,vuDataR=null,vuRAF=null,vuNeedleValueL=0,vuNeedleValueR=0,vuPeakL=0,vuPeakR=0;
 const VU_SCRATCH_IDLE_MS=60;
 function initVuAnalyser(){
-  if(IS_ANDROID||document.body.classList.contains("detailPage")||!workletLimiter||vuAnalyserL)return;
+  if(IS_ANDROID||!workletLimiter||vuAnalyserL)return;
   const ctx=getAudioContext();
   vuSplitter=ctx.createChannelSplitter(2);vuAnalyserL=ctx.createAnalyser();vuAnalyserR=ctx.createAnalyser();
   vuAnalyserL.fftSize=512;vuAnalyserR.fftSize=512;vuAnalyserL.smoothingTimeConstant=0;vuAnalyserR.smoothingTimeConstant=0;
@@ -2881,8 +3085,11 @@ function startVuLoop(){
       vuNeedleValueR=updateVuBallistic(vuNeedleValueR,targetR,scratchMeterMode);
       if(scratchMeterMode&&targetL===0&&vuNeedleValueL<.003)vuNeedleValueL=0;
       if(scratchMeterMode&&targetR===0&&vuNeedleValueR<.003)vuNeedleValueR=0;
-      vuNeedleL.style.transform=`rotate(${vuValueToAngle(vuNeedleValueL)}deg)`;
-      vuNeedleR.style.transform=`rotate(${vuValueToAngle(vuNeedleValueR)}deg)`;
+      const angleL=vuValueToAngle(vuNeedleValueL),angleR=vuValueToAngle(vuNeedleValueR);
+      vuNeedleL.style.transform=`rotate(${angleL}deg)`;
+      vuNeedleR.style.transform=`rotate(${angleR}deg)`;
+      if(heroMeterNeedleL)heroMeterNeedleL.style.transform=`rotate(${angleL}deg)`;
+      if(heroMeterNeedleR)heroMeterNeedleR.style.transform=`rotate(${angleR}deg)`;
     }
     vuRAF=requestAnimationFrame(frame);
   };
