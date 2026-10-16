@@ -1367,18 +1367,27 @@ button,input{font:inherit}
   --dbg-status-scale:1;
   --dbg-buy-scale:1;
   --dbg-hero-height:430px;
+  --dbg-turntable-x:0px;--dbg-turntable-y:0px;
+  --dbg-player-x:0px;--dbg-player-y:0px;
+  --dbg-title-x:0px;--dbg-title-y:0px;
+  --dbg-structure-x:0px;--dbg-structure-y:0px;
+  --dbg-data-x:0px;--dbg-data-y:0px;
+  --dbg-status-x:0px;--dbg-status-y:0px;
+  --dbg-buy-x:0px;--dbg-buy-y:0px;
 }
 
 /* Chrome/Edge use zoom here intentionally: unlike transform:scale(), it also
-   changes layout geometry, so sleeve flight coordinates stay physically correct. */
+   changes layout geometry, so sleeve flight coordinates stay physically correct.
+   CSS translate is kept separate so mouse positioning never destroys the tuned
+   transforms already used by the turntable physics. */
 .detailPage.layout-debug-active .signalTiles{zoom:var(--dbg-tile-block-scale)}
-.detailPage.layout-debug-active .featuredSlot .vinylUnit{zoom:var(--dbg-turntable-scale)}
-.detailPage.layout-debug-active .featuredSlot .waveRow{zoom:var(--dbg-player-scale)}
-.detailPage.layout-debug-active .featuredSlot .trackTitle{zoom:var(--dbg-title-scale)}
-.detailPage.layout-debug-active .featuredSlot .trackStructure{zoom:var(--dbg-structure-scale)}
-.detailPage.layout-debug-active .featuredSlot .trackDataStrip{zoom:var(--dbg-data-scale)}
-.detailPage.layout-debug-active .featuredSlot .badge{zoom:var(--dbg-status-scale)}
-.detailPage.layout-debug-active .featuredSlot .buyCol{zoom:var(--dbg-buy-scale)}
+.detailPage.layout-debug-active .featuredSlot .vinylUnit{zoom:var(--dbg-turntable-scale);translate:var(--dbg-turntable-x) var(--dbg-turntable-y)}
+.detailPage.layout-debug-active .featuredSlot .waveRow{zoom:var(--dbg-player-scale);translate:var(--dbg-player-x) var(--dbg-player-y)}
+.detailPage.layout-debug-active .featuredSlot .trackTitle{zoom:var(--dbg-title-scale);translate:var(--dbg-title-x) var(--dbg-title-y)}
+.detailPage.layout-debug-active .featuredSlot .trackStructure{zoom:var(--dbg-structure-scale);translate:var(--dbg-structure-x) var(--dbg-structure-y)}
+.detailPage.layout-debug-active .featuredSlot .trackDataStrip{zoom:var(--dbg-data-scale);translate:var(--dbg-data-x) var(--dbg-data-y)}
+.detailPage.layout-debug-active .featuredSlot .badge{zoom:var(--dbg-status-scale);translate:var(--dbg-status-x) var(--dbg-status-y)}
+.detailPage.layout-debug-active .featuredSlot .buyCol{zoom:var(--dbg-buy-scale);translate:var(--dbg-buy-x) var(--dbg-buy-y)}
 
 @media(min-width:901px){
   .detailPage.layout-debug-active .profileHead{
@@ -1447,6 +1456,60 @@ button,input{font:inherit}
   background:rgba(3,5,3,.95);
 }
 .layoutDebugReopen.is-visible{display:block}
+
+.layoutDebugMouseRow{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:8px;
+  align-items:center;
+  margin:4px 0 10px;
+  padding:8px;
+  border:1px solid rgba(214,255,40,.18);
+  background:rgba(214,255,40,.025);
+}
+.layoutDebugMouseRow span{color:rgba(255,255,255,.52);font-size:7px;line-height:1.45}
+.layoutDebugMouseToggle{
+  min-width:82px;height:26px;padding:0 8px;border:1px solid rgba(214,255,40,.48);
+  background:rgba(214,255,40,.08);color:var(--accent);font:800 7px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  letter-spacing:.08em;cursor:pointer;
+}
+.layoutDebugMouseToggle.is-on{background:var(--accent);color:#050605}
+.layoutDebugSelectedReadout{
+  margin:-2px 0 8px;padding:6px 8px;border-left:2px solid rgba(214,255,40,.52);
+  background:rgba(255,255,255,.025);color:#fff;font:700 7px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  letter-spacing:.06em;white-space:normal;
+}
+
+/* Direct mouse edit: selected hero element receives a real outline. */
+body.layout-mouse-edit .featuredSlot .vinylUnit,
+body.layout-mouse-edit .featuredSlot .waveRow,
+body.layout-mouse-edit .featuredSlot .trackTitle,
+body.layout-mouse-edit .featuredSlot .trackStructure,
+body.layout-mouse-edit .featuredSlot .trackDataStrip,
+body.layout-mouse-edit .featuredSlot .badge,
+body.layout-mouse-edit .featuredSlot .buyCol{
+  cursor:move!important;
+}
+body.layout-mouse-edit .layout-debug-selected{
+  outline:1px dashed rgba(214,255,40,.88)!important;
+  outline-offset:5px!important;
+}
+.layoutScaleHandle{
+  position:fixed;
+  z-index:1198;
+  width:17px;height:17px;
+  display:none;
+  border:1px solid #050605;
+  background:var(--accent);
+  box-shadow:0 0 0 1px rgba(214,255,40,.72),0 4px 15px rgba(0,0,0,.55);
+  cursor:nwse-resize;
+  touch-action:none;
+}
+.layoutScaleHandle.is-visible{display:block}
+.layoutScaleHandle::before,
+.layoutScaleHandle::after{content:"";position:absolute;background:#050605;opacity:.75}
+.layoutScaleHandle::before{width:7px;height:1px;right:2px;bottom:4px;transform:rotate(-45deg)}
+.layoutScaleHandle::after{width:4px;height:1px;right:2px;bottom:2px;transform:rotate(-45deg)}
 
 @media(max-width:760px){
   .layoutDebugPanel{right:8px;bottom:8px;width:min(310px,calc(100vw - 16px));max-height:72vh}
@@ -1701,6 +1764,12 @@ button,input{font:inherit}
     <button id="layoutDebugHide" type="button">HIDE</button>
   </div>
 
+  <div class="layoutDebugMouseRow">
+    <span>DIRECT EDIT // drag a block to move it. Drag the small corner square to resize it.</span>
+    <button class="layoutDebugMouseToggle is-on" id="layoutDebugMouseToggle" type="button">MOUSE ON</button>
+  </div>
+  <div class="layoutDebugSelectedReadout" id="layoutDebugSelectedReadout">SELECTED // NONE</div>
+
   <div class="layoutDebugRow">
     <div class="layoutDebugHead"><span>HEADER HEIGHT</span><b id="dbgHeaderHeightValue">430 px</b></div>
     <input id="dbgHeaderHeight" type="range" min="340" max="760" step="2" value="430">
@@ -1745,6 +1814,7 @@ button,input{font:inherit}
   <div class="layoutDebugHint">Values are saved locally. HIDE only hides this panel — the tuned layout remains active.</div>
 </div>
 <button class="layoutDebugReopen" id="layoutDebugReopen" type="button">LAYOUT DEBUG</button>
+<div class="layoutScaleHandle" id="layoutScaleHandle" aria-hidden="true"></div>
 
 <script>
 "use strict";
@@ -1765,18 +1835,21 @@ const paperOutSfx = document.getElementById("paperOutSfx");
 
 /* =====================================================
    LAYOUT DEBUG CONTROLLER
+   - sliders keep exact numeric control
+   - MOUSE ON lets us drag blocks directly in the hero
+   - selected block gets a bottom-right scale handle
 ===================================================== */
 const LAYOUT_DEBUG_KEY="frssnLayoutDebugV1";
 const LAYOUT_DEBUG_DEFAULTS={
   headerHeight:430,
   tileScale:100,
-  turntableScale:100,
-  playerScale:100,
-  titleScale:100,
-  structureScale:100,
-  dataScale:100,
-  statusScale:100,
-  buyScale:100
+  turntableScale:100,turntableX:0,turntableY:0,
+  playerScale:100,playerX:0,playerY:0,
+  titleScale:100,titleX:0,titleY:0,
+  structureScale:100,structureX:0,structureY:0,
+  dataScale:100,dataX:0,dataY:0,
+  statusScale:100,statusX:0,statusY:0,
+  buyScale:100,buyX:0,buyY:0
 };
 let layoutDebugState={...LAYOUT_DEBUG_DEFAULTS};
 
@@ -1785,6 +1858,10 @@ const layoutDebugHide=document.getElementById("layoutDebugHide");
 const layoutDebugReopen=document.getElementById("layoutDebugReopen");
 const layoutDebugReset=document.getElementById("layoutDebugReset");
 const layoutDebugCopy=document.getElementById("layoutDebugCopy");
+const layoutDebugMouseToggle=document.getElementById("layoutDebugMouseToggle");
+const layoutDebugSelectedReadout=document.getElementById("layoutDebugSelectedReadout");
+const layoutScaleHandle=document.getElementById("layoutScaleHandle");
+
 const debugInputs={
   headerHeight:document.getElementById("dbgHeaderHeight"),
   tileScale:document.getElementById("dbgTileScale"),
@@ -1808,6 +1885,23 @@ const debugValues={
   buyScale:document.getElementById("dbgBuyScaleValue")
 };
 
+const LAYOUT_MOUSE_TARGETS=[
+  {id:"turntable",label:"TURNTABLE BLOCK",selector:".featuredSlot .vinylUnit",scale:"turntableScale",x:"turntableX",y:"turntableY",min:55,max:165},
+  {id:"player",label:"PLAY + WAVE",selector:".featuredSlot .waveRow",scale:"playerScale",x:"playerX",y:"playerY",min:55,max:165},
+  {id:"title",label:"TRACK TITLE",selector:".featuredSlot .trackTitle",scale:"titleScale",x:"titleX",y:"titleY",min:55,max:180},
+  {id:"structure",label:"SECTIONS",selector:".featuredSlot .trackStructure",scale:"structureScale",x:"structureX",y:"structureY",min:55,max:165},
+  {id:"data",label:"BEAT PROPERTIES",selector:".featuredSlot .trackDataStrip",scale:"dataScale",x:"dataX",y:"dataY",min:55,max:165},
+  {id:"status",label:"TRACK STATUS",selector:".featuredSlot .badge",scale:"statusScale",x:"statusX",y:"statusY",min:55,max:165},
+  {id:"buy",label:"PAYMENT BLOCK",selector:".featuredSlot .buyCol",scale:"buyScale",x:"buyX",y:"buyY",min:55,max:165}
+];
+
+let layoutMouseEdit=true;
+let layoutSelectedDef=null;
+let layoutSelectedEl=null;
+let layoutDrag=null;
+let layoutScaleDrag=null;
+let layoutHandleRAF=null;
+
 function saveLayoutDebug(){
   try{localStorage.setItem(LAYOUT_DEBUG_KEY,JSON.stringify(layoutDebugState))}catch(_){}
 }
@@ -1821,6 +1915,7 @@ function loadLayoutDebug(){
     });
   }catch(_){}
 }
+function clampLayoutScale(def,value){return Math.max(def.min,Math.min(def.max,value))}
 function applyLayoutDebug(){
   if(!IS_DETAIL_PAGE)return;
   document.body.classList.add("layout-debug-active");
@@ -1835,16 +1930,137 @@ function applyLayoutDebug(){
   root.setProperty("--dbg-status-scale",String(layoutDebugState.statusScale/100));
   root.setProperty("--dbg-buy-scale",String(layoutDebugState.buyScale/100));
 
+  ["turntable","player","title","structure","data","status","buy"].forEach(id=>{
+    root.setProperty(`--dbg-${id}-x`,`${layoutDebugState[id+"X"]}px`);
+    root.setProperty(`--dbg-${id}-y`,`${layoutDebugState[id+"Y"]}px`);
+  });
+
   Object.entries(debugInputs).forEach(([key,input])=>{if(input)input.value=String(layoutDebugState[key])});
   if(debugValues.headerHeight)debugValues.headerHeight.textContent=`${Math.round(layoutDebugState.headerHeight)} px`;
   ["tileScale","turntableScale","playerScale","titleScale","structureScale","dataScale","statusScale","buyScale"].forEach(key=>{
     if(debugValues[key])debugValues[key].textContent=`${Math.round(layoutDebugState[key])}%`;
   });
+  updateLayoutSelectionReadout();
+  scheduleLayoutHandleUpdate();
+}
+
+function findLayoutTargetFromEventTarget(target){
+  if(!(target instanceof Element))return null;
+  for(const def of LAYOUT_MOUSE_TARGETS){
+    const el=target.closest(def.selector);
+    if(el&&document.body.contains(el))return {def,el};
+  }
+  return null;
+}
+function resolveSelectedElement(){
+  if(!layoutSelectedDef)return null;
+  if(layoutSelectedEl&&document.body.contains(layoutSelectedEl))return layoutSelectedEl;
+  layoutSelectedEl=document.querySelector(layoutSelectedDef.selector);
+  return layoutSelectedEl;
+}
+function clearLayoutSelection(){
+  document.querySelectorAll(".layout-debug-selected").forEach(el=>el.classList.remove("layout-debug-selected"));
+  layoutSelectedDef=null;
+  layoutSelectedEl=null;
+  layoutScaleHandle?.classList.remove("is-visible");
+  updateLayoutSelectionReadout();
+}
+function selectLayoutTarget(def,el){
+  if(layoutSelectedEl!==el){
+    document.querySelectorAll(".layout-debug-selected").forEach(node=>node.classList.remove("layout-debug-selected"));
+  }
+  layoutSelectedDef=def;
+  layoutSelectedEl=el;
+  el.classList.add("layout-debug-selected");
+  updateLayoutSelectionReadout();
+  scheduleLayoutHandleUpdate();
+}
+function updateLayoutSelectionReadout(){
+  if(!layoutDebugSelectedReadout)return;
+  if(!layoutSelectedDef){layoutDebugSelectedReadout.textContent="SELECTED // NONE";return}
+  const d=layoutSelectedDef;
+  layoutDebugSelectedReadout.textContent=`SELECTED // ${d.label} // X ${Math.round(layoutDebugState[d.x])} // Y ${Math.round(layoutDebugState[d.y])} // ${Math.round(layoutDebugState[d.scale])}%`;
+}
+function positionLayoutHandle(){
+  layoutHandleRAF=null;
+  if(!layoutMouseEdit||!layoutSelectedDef||!layoutScaleHandle){layoutScaleHandle?.classList.remove("is-visible");return}
+  const el=resolveSelectedElement();
+  if(!el)return;
+  const r=el.getBoundingClientRect();
+  if(!r.width||!r.height)return;
+  layoutScaleHandle.style.left=`${r.right-8}px`;
+  layoutScaleHandle.style.top=`${r.bottom-8}px`;
+  layoutScaleHandle.classList.add("is-visible");
+}
+function scheduleLayoutHandleUpdate(){
+  if(layoutHandleRAF)return;
+  layoutHandleRAF=requestAnimationFrame(positionLayoutHandle);
+}
+function setLayoutMouseEdit(enabled){
+  layoutMouseEdit=!!enabled;
+  document.body.classList.toggle("layout-mouse-edit",layoutMouseEdit);
+  layoutDebugMouseToggle?.classList.toggle("is-on",layoutMouseEdit);
+  if(layoutDebugMouseToggle)layoutDebugMouseToggle.textContent=layoutMouseEdit?"MOUSE ON":"MOUSE OFF";
+  if(!layoutMouseEdit){clearLayoutSelection()}
+  else scheduleLayoutHandleUpdate();
+}
+
+function beginLayoutMove(event,def,el){
+  selectLayoutTarget(def,el);
+  layoutDrag={
+    pointerId:event.pointerId,
+    def,el,
+    startX:event.clientX,startY:event.clientY,
+    x:Number(layoutDebugState[def.x])||0,
+    y:Number(layoutDebugState[def.y])||0
+  };
+  try{el.setPointerCapture(event.pointerId)}catch(_){}
+}
+function moveSelectedLayout(event){
+  if(!layoutDrag||event.pointerId!==layoutDrag.pointerId)return;
+  const d=layoutDrag.def;
+  layoutDebugState[d.x]=Math.round((layoutDrag.x+(event.clientX-layoutDrag.startX))*10)/10;
+  layoutDebugState[d.y]=Math.round((layoutDrag.y+(event.clientY-layoutDrag.startY))*10)/10;
+  applyLayoutDebug();
+}
+function endLayoutMove(event){
+  if(!layoutDrag||event.pointerId!==layoutDrag.pointerId)return;
+  try{layoutDrag.el.releasePointerCapture(event.pointerId)}catch(_){}
+  layoutDrag=null;
+  saveLayoutDebug();
+  scheduleLayoutHandleUpdate();
+}
+
+function beginLayoutScale(event){
+  if(!layoutMouseEdit||!layoutSelectedDef)return;
+  const d=layoutSelectedDef;
+  event.preventDefault();event.stopPropagation();
+  layoutScaleDrag={pointerId:event.pointerId,def:d,startX:event.clientX,startY:event.clientY,scale:Number(layoutDebugState[d.scale])||100};
+  try{layoutScaleHandle.setPointerCapture(event.pointerId)}catch(_){}
+}
+function scaleSelectedLayout(event){
+  if(!layoutScaleDrag||event.pointerId!==layoutScaleDrag.pointerId)return;
+  event.preventDefault();
+  const d=layoutScaleDrag.def;
+  const dx=event.clientX-layoutScaleDrag.startX;
+  const dy=event.clientY-layoutScaleDrag.startY;
+  const delta=(dx+dy)*.32;
+  layoutDebugState[d.scale]=Math.round(clampLayoutScale(d,layoutScaleDrag.scale+delta));
+  applyLayoutDebug();
+}
+function endLayoutScale(event){
+  if(!layoutScaleDrag||event.pointerId!==layoutScaleDrag.pointerId)return;
+  try{layoutScaleHandle.releasePointerCapture(event.pointerId)}catch(_){}
+  layoutScaleDrag=null;
+  saveLayoutDebug();
+  scheduleLayoutHandleUpdate();
 }
 
 if(IS_DETAIL_PAGE&&layoutDebugPanel){
   loadLayoutDebug();
   applyLayoutDebug();
+  setLayoutMouseEdit(true);
+
   Object.entries(debugInputs).forEach(([key,input])=>{
     input?.addEventListener("input",()=>{
       layoutDebugState[key]=Number(input.value);
@@ -1852,9 +2068,50 @@ if(IS_DETAIL_PAGE&&layoutDebugPanel){
       saveLayoutDebug();
     });
   });
+
+  layoutDebugMouseToggle?.addEventListener("click",()=>setLayoutMouseEdit(!layoutMouseEdit));
+
+  /* Capture phase is intentional: while MOUSE ON is active the layout editor
+     owns these pointer gestures instead of Play/Seek/Scratch/Checkout. */
+  document.addEventListener("pointerdown",event=>{
+    if(!layoutMouseEdit||event.button!==0)return;
+    if(event.target===layoutScaleHandle||layoutScaleHandle?.contains(event.target))return;
+    if(event.target instanceof Element&&event.target.closest(".layoutDebugPanel,.layoutDebugReopen"))return;
+    const hit=findLayoutTargetFromEventTarget(event.target);
+    if(!hit)return;
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+    beginLayoutMove(event,hit.def,hit.el);
+  },true);
+  document.addEventListener("pointermove",event=>{if(layoutDrag){event.preventDefault();moveSelectedLayout(event)}},{capture:true,passive:false});
+  document.addEventListener("pointerup",endLayoutMove,true);
+  document.addEventListener("pointercancel",endLayoutMove,true);
+
+  layoutScaleHandle?.addEventListener("pointerdown",beginLayoutScale);
+  layoutScaleHandle?.addEventListener("pointermove",scaleSelectedLayout,{passive:false});
+  layoutScaleHandle?.addEventListener("pointerup",endLayoutScale);
+  layoutScaleHandle?.addEventListener("pointercancel",endLayoutScale);
+
+  window.addEventListener("resize",scheduleLayoutHandleUpdate,{passive:true});
+  window.addEventListener("scroll",scheduleLayoutHandleUpdate,{passive:true});
+
+  /* DOM inside featuredSlot changes when another record is selected. Reconnect
+     the selection outline/handle to the equivalent block in the new track. */
+  const layoutHeroObserver=new MutationObserver(()=>{
+    if(!layoutSelectedDef)return;
+    document.querySelectorAll(".layout-debug-selected").forEach(node=>node.classList.remove("layout-debug-selected"));
+    layoutSelectedEl=document.querySelector(layoutSelectedDef.selector);
+    layoutSelectedEl?.classList.add("layout-debug-selected");
+    scheduleLayoutHandleUpdate();
+  });
+  const featuredForLayout=document.getElementById("featuredSlot");
+  if(featuredForLayout)layoutHeroObserver.observe(featuredForLayout,{childList:true,subtree:true});
+
   layoutDebugHide?.addEventListener("click",()=>{
     layoutDebugPanel.classList.add("is-hidden");
     layoutDebugReopen?.classList.add("is-visible");
+    setLayoutMouseEdit(false);
   });
   layoutDebugReopen?.addEventListener("click",()=>{
     layoutDebugPanel.classList.remove("is-hidden");
@@ -1869,13 +2126,13 @@ if(IS_DETAIL_PAGE&&layoutDebugPanel){
     const text=[
       `HEADER HEIGHT = ${layoutDebugState.headerHeight}px`,
       `TILE BLOCK = ${layoutDebugState.tileScale}%`,
-      `TURNTABLE BLOCK = ${layoutDebugState.turntableScale}%`,
-      `PLAY + WAVE = ${layoutDebugState.playerScale}%`,
-      `TRACK TITLE = ${layoutDebugState.titleScale}%`,
-      `SECTIONS = ${layoutDebugState.structureScale}%`,
-      `BEAT PROPERTIES = ${layoutDebugState.dataScale}%`,
-      `TRACK STATUS = ${layoutDebugState.statusScale}%`,
-      `PAYMENT BLOCK = ${layoutDebugState.buyScale}%`
+      `TURNTABLE = ${layoutDebugState.turntableScale}% | X ${layoutDebugState.turntableX} | Y ${layoutDebugState.turntableY}`,
+      `PLAY + WAVE = ${layoutDebugState.playerScale}% | X ${layoutDebugState.playerX} | Y ${layoutDebugState.playerY}`,
+      `TRACK TITLE = ${layoutDebugState.titleScale}% | X ${layoutDebugState.titleX} | Y ${layoutDebugState.titleY}`,
+      `SECTIONS = ${layoutDebugState.structureScale}% | X ${layoutDebugState.structureX} | Y ${layoutDebugState.structureY}`,
+      `BEAT PROPERTIES = ${layoutDebugState.dataScale}% | X ${layoutDebugState.dataX} | Y ${layoutDebugState.dataY}`,
+      `TRACK STATUS = ${layoutDebugState.statusScale}% | X ${layoutDebugState.statusX} | Y ${layoutDebugState.statusY}`,
+      `PAYMENT BLOCK = ${layoutDebugState.buyScale}% | X ${layoutDebugState.buyX} | Y ${layoutDebugState.buyY}`
     ].join("\n");
     try{
       await navigator.clipboard.writeText(text);
