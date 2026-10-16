@@ -1432,7 +1432,7 @@ button,input{font:inherit}
 
             <div class="recordCarrier">
               <div class="recordDisc">
-                <div class="recordLabel"><img src="old-cover-sold.png" alt="OLD"></div>
+                <div class="recordLabel"><img src="old-label.png" alt="OLD"></div>
                 <div class="recordHole"></div>
               </div>
             </div>
@@ -2895,6 +2895,10 @@ function trackCoverOf(state){
   const img=state.el.querySelector(".sleeve img");
   return img?.src||img?.getAttribute("src")||"";
 }
+function trackLabelOf(state){
+  const img=state.el.querySelector(".recordLabel img");
+  return img?.src||img?.getAttribute("src")||trackCoverOf(state);
+}
 function metaFor(state){
   if(DETAIL_META[state.id])return DETAIL_META[state.id];
   const i=state.index||0;
@@ -3105,7 +3109,7 @@ function ensureFlightLayer(className,id){
 function createFlightDisc(state,rect){
   const node=document.createElement("div");
   node.className="vinylFlightDisc";
-  node.style.setProperty("--flight-cover",`url("${trackCoverOf(state)}")`);
+  node.style.setProperty("--flight-cover",`url("${trackLabelOf(state)}")`);
   node.style.left=`${rect.left}px`;
   node.style.top=`${rect.top}px`;
   node.style.width=`${rect.width}px`;
