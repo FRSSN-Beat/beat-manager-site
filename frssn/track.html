@@ -469,9 +469,12 @@ button,input{font:inherit}
 .signalTile:hover{border-color:rgba(214,255,40,.45);transform:translateY(-2px);background:rgba(10,13,8,.92)}
 .signalTileVisual{position:relative;aspect-ratio:1/.94;overflow:hidden;margin-bottom:10px}
 .signalTileDisc{
-  position:absolute;right:2%;top:8%;width:78%;aspect-ratio:1;border-radius:50%;z-index:1;
+  position:absolute;left:3%;top:2.5%;width:78%;aspect-ratio:1;border-radius:50%;z-index:1;
   background:repeating-radial-gradient(circle at 50% 50%,#0f1010 0 2px,#151716 2px 4px,#0c0d0d 4px 6px);
-  box-shadow:0 7px 18px rgba(0,0,0,.42);transition:transform .28s cubic-bezier(.22,.8,.22,1);
+  box-shadow:0 7px 18px rgba(0,0,0,.42);
+  transform:translateX(0);
+  transition:transform .34s cubic-bezier(.22,.8,.22,1),opacity .18s ease;
+  will-change:transform,opacity;
 }
 .signalTileDisc::after{
   content:"";position:absolute;left:50%;top:50%;width:40%;height:40%;transform:translate(-50%,-50%);border-radius:50%;
@@ -479,7 +482,18 @@ button,input{font:inherit}
 }
 .signalTileSleeve{position:absolute;left:0;top:0;width:83%;aspect-ratio:1;z-index:2;background:#090b09;border:1px solid rgba(255,255,255,.08);box-shadow:0 10px 20px rgba(0,0,0,.34);overflow:hidden}
 .signalTileSleeve img{width:100%;height:100%;object-fit:cover;display:block}
-.signalTile:hover .signalTileDisc{transform:translateX(13%)}
+.signalTile:hover .signalTileDisc,
+.signalTile.is-launching .signalTileDisc{transform:translateX(29%)}
+.signalTile.is-featured{cursor:default;border-color:rgba(214,255,40,.24);transform:none!important}
+.signalTile.is-featured:hover{transform:none;background:rgba(5,7,5,.88);border-color:rgba(214,255,40,.24)}
+.signalTile.is-featured .signalTileDisc{opacity:0;transform:translateX(0)!important}
+.signalTile.is-featured::after{
+  content:"ON PLATTER";
+  position:absolute;right:8px;top:8px;z-index:5;
+  color:rgba(214,255,40,.62);font:7px/1 monospace;letter-spacing:.10em;
+}
+.signalTile{position:relative}
+.signalTile.is-departing .signalTileDisc{opacity:0}
 .signalTileTitle{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .signalTileMeta{margin-top:5px;color:var(--muted);font:8px/1.3 monospace;letter-spacing:.09em;text-transform:uppercase}
 .detailPage .vuDebugPanel,.detailPage .vuDebugHandle,.detailPage .vuDebugFrame,.detailPage .vuPivotGuide,.detailPage .vuCenterGuide,.detailPage .vuDebugReopen{display:none!important}
@@ -756,6 +770,69 @@ button,input{font:inherit}
   display:none!important;
 }
 
+/* Hero on the individual page behaves as a real turntable: the sleeve lives in the vinyl shelf. */
+.detailPage .featuredSlot .track.hero-mounted .sleeve{
+  opacity:0!important;
+  transform:translateX(-190px)!important;
+  animation:none!important;
+  pointer-events:none!important;
+}
+.detailPage .featuredSlot .track.hero-mounted .recordCarrier{
+  transform:translate(0,-50%)!important;
+  animation:none!important;
+}
+.detailPage .featuredSlot .track.hero-mounted .tonearmMechanism{
+  transform:translate(0,0) scale(1)!important;
+  opacity:1!important;
+  animation:none!important;
+  z-index:5;
+}
+.detailPage .featuredSlot .track.hero-record-hidden .recordDisc{
+  visibility:hidden!important;
+}
+
+.vinylFlightLayer{
+  position:fixed;
+  inset:0;
+  z-index:500;
+  pointer-events:none;
+  overflow:visible;
+}
+.vinylFlightDisc{
+  position:fixed;
+  left:0;
+  top:0;
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  transform-origin:top left;
+  background:
+    radial-gradient(circle at 50% 50%,rgba(255,255,255,.055) 0 8%,transparent 8.5%),
+    repeating-radial-gradient(circle at 50% 50%,#0f1010 0 2px,#151716 2px 4px,#0c0d0d 4px 6px);
+  border:1px solid rgba(255,255,255,.07);
+  box-shadow:0 12px 34px rgba(0,0,0,.54),inset 0 0 0 1px rgba(255,255,255,.04);
+  will-change:transform,opacity;
+}
+.vinylFlightDisc::before{
+  content:"";
+  position:absolute;
+  left:50%;top:50%;
+  width:46%;height:46%;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  background:var(--flight-cover) center/cover no-repeat;
+  box-shadow:0 0 0 6px rgba(214,255,40,.035);
+}
+.vinylFlightDisc::after{
+  content:"";
+  position:absolute;
+  left:50%;top:50%;
+  width:6%;height:6%;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  background:#ddd;
+}
+
 @media(max-width:1050px){
   .detailPage .featuredSlot .track{
     grid-template-columns:330px minmax(0,1fr) 172px;
@@ -801,6 +878,10 @@ button,input{font:inherit}
     margin:0 auto;
     transform:scale(1.92);
     transform-origin:center center;
+  }
+
+  .detailPage .featuredSlot .track.hero-mounted .tonearmMechanism{
+    transform:translate(0,0) scale(.63)!important;
   }
 
   .detailPage .featuredSlot .trackInfo{
@@ -1111,6 +1192,7 @@ button,input{font:inherit}
    PLATFORM
 ===================================================== */
 const IS_ANDROID = /Android/i.test(navigator.userAgent || "");
+const IS_DETAIL_PAGE = document.body.classList.contains("detailPage");
 
 /* =====================================================
    GLOBAL DOM
@@ -1883,7 +1965,21 @@ async function switchToTrack(next,{startTime=0,cue=false}={}){
   if(next===activeTrack){
     if(cue)return seekTo(next,startTime);
     if(playIntent){playIntent=false;setPlayIcon(next,false);setManualSpeed(0);sendMode("pause_brake");return}
-    await resumeAudioContext();playIntent=true;next.hasPlaybackEverStarted=true;setPlayIcon(next,true);await ensureVinylOpen(next);sendMode("play_start");return;
+    await resumeAudioContext();
+    if(IS_DETAIL_PAGE&&next.position>=Math.max(0,getDuration(next)-.08)){
+      seekEngine(next,0);next.position=0;updateProgressUI(next,0);setVinylAngle(next,0);
+      next.tonearmEngaged=false;setTonearmAngle(next,ARM_PARK_ANGLE);
+    }
+    playIntent=true;next.hasPlaybackEverStarted=true;setPlayIcon(next,true);await ensureVinylOpen(next);
+    if(IS_DETAIL_PAGE){
+      next.tonearmEngaged=false;
+      sendMode("play_start");
+      await animateTonearmTo(next,armAngleFromTime(next,next.position),ARM_MOVE_DURATION_MS);
+      next.tonearmEngaged=true;
+    }else{
+      sendMode("play_start");
+    }
+    return;
   }
 
   switchInProgress=true;
@@ -1936,6 +2032,23 @@ async function switchToTrack(next,{startTime=0,cue=false}={}){
 async function stopAndPackActive(){
   const state=activeTrack;if(!state)return;
   nextOperationGeneration();playIntent=false;setPlayIcon(state,false);setManualSpeed(0);sendMode("off");
+
+  /* On the individual track page the record belongs on the turntable.
+     Natural end parks the arm but does NOT hide the disc back under a sleeve. */
+  if(IS_DETAIL_PAGE){
+    microstatus.textContent="PLAYBACK COMPLETE // ARM RETURN";
+    state.tonearmEngaged=false;
+    await animateTonearmTo(state,ARM_PARK_ANGLE,420);
+    state.vinylOpened=true;
+    state.mechanismDeployed=true;
+    state.el.classList.add("hero-mounted","is-open","arm-on-top");
+    state.el.classList.remove("is-closing","is-play-starting","is-pause-braking","is-motor-recovering","is-free-spinning");
+    state.position=getDuration(state);
+    updateProgressUI(state,state.position);
+    microstatus.textContent="PLAYBACK COMPLETE // DISC READY";
+    return;
+  }
+
   microstatus.textContent="STOP // RETURNING SIGNAL";
   await packTrack(state,{reset:true});
   if(activeTrack===state){activeTrack=null;engineLoadedTrack=null;enginePositionSec=0;engineSpeed=0;engineMode="paused";engineActive=false}
@@ -2139,7 +2252,7 @@ codeForm.addEventListener("submit",event=>{
 /* =====================================================
    BOOT
 ===================================================== */
-(async()=>{
+const playerBootPromise=(async()=>{
   /* Refresh track covers too, so replacing a PNG under the same
      filename is visible immediately after reload. */
   tracks.forEach(state=>{
@@ -2160,8 +2273,14 @@ codeForm.addEventListener("submit",event=>{
 
 
 /* =====================================================
-   INDIVIDUAL TRACK PAGE CONTROLLER
-   Uses the exact same track/player objects as the store.
+   INDIVIDUAL TRACK PAGE CONTROLLER // VINYL FLIGHT V3
+
+   Shelf logic:
+   - every release keeps its sleeve in the lower shelf;
+   - the featured release is shown as an EMPTY sleeve;
+   - other records stay fully hidden inside sleeves until hover;
+   - click physically returns the old record and launches the new one;
+   - the hero tonearm parks but the mechanism remains visible.
 ===================================================== */
 const featuredSlot=document.getElementById("featuredSlot");
 const sourceTrackList=document.querySelector(".detailSourceTrackList");
@@ -2182,12 +2301,18 @@ const DETAIL_META={
   "track-02":{signal:"002",bpm:"—",key:"—",license:"MP3",status:"AVAILABLE",file:"CLEAN"}
 };
 
+const DISC_PACK_DURATION=560;
+const DISC_LAUNCH_DURATION=720;
+const TILE_EJECT_PREP_MS=180;
+
 let featuredTrack=null;
 let detailSwitchBusy=false;
+let autoplayPending=false;
+let autoplayUnlockInstalled=false;
 
 function trackTitleOf(state){return state.el.querySelector(".trackTitle")?.textContent?.trim()||state.id}
 function trackArtistOf(state){return state.el.querySelector(".artist")?.textContent?.trim()||"FRSSN"}
-function trackCoverOf(state){const img=state.el.querySelector(".sleeve img");return img?.getAttribute("src")||""}
+function trackCoverOf(state){const img=state.el.querySelector(".sleeve img");return img?.src||img?.getAttribute("src")||""}
 function metaFor(state){return DETAIL_META[state.id]||{signal:String(state.index+1).padStart(3,"0"),bpm:"—",key:"—",license:"MP3",status:"AVAILABLE",file:"CLEAN"}}
 
 function updateDetailHeader(state){
@@ -2198,48 +2323,340 @@ function updateDetailHeader(state){
   document.title=`${title} // FRSSN`;
 }
 
+function tileForTrack(state){
+  return signalTiles.querySelector(`.signalTile[data-track-id="${CSS.escape(state.id)}"]`);
+}
+
 function renderSignalTiles(){
-  const others=tracks.filter(t=>t!==featuredTrack);
   signalTiles.innerHTML="";
-  detailOtherCount.textContent=`VINYL INDEX // ${String(others.length).padStart(2,"0")} OTHER NODE${others.length===1?"":"S"}`;
-  others.forEach(state=>{
+  detailOtherCount.textContent=`VINYL INDEX // ${String(tracks.length).padStart(2,"0")} SIGNAL${tracks.length===1?"":"S"}`;
+
+  tracks.forEach(state=>{
     const m=metaFor(state),title=trackTitleOf(state),artist=trackArtistOf(state),cover=trackCoverOf(state);
     const tile=document.createElement("a");
-    tile.className="signalTile";
+    const isFeatured=state===featuredTrack;
+
+    tile.className=`signalTile${isFeatured?" is-featured":""}`;
+    tile.dataset.trackId=state.id;
     tile.href=`track.html?track=${encodeURIComponent(state.id)}`;
     tile.style.setProperty("--tile-cover",`url("${cover}")`);
+    if(isFeatured){
+      tile.setAttribute("aria-current","page");
+      tile.setAttribute("aria-disabled","true");
+    }
+
     tile.innerHTML=`<div class="signalTileVisual"><div class="signalTileDisc"></div><div class="signalTileSleeve"><img src="${cover}" alt="${title}"></div></div><div class="signalTileTitle">${title}</div><div class="signalTileMeta">SIGNAL // ${m.signal} &nbsp; ${artist}</div>`;
-    tile.addEventListener("click",event=>{event.preventDefault();featureTrack(state,{push:true})});
+
+    tile.addEventListener("click",async event=>{
+      event.preventDefault();
+      if(state===featuredTrack||detailSwitchBusy)return;
+
+      /* On desktop this continues the hover motion. On touch it gives the
+         record a short physical eject before it flies to the turntable. */
+      tile.classList.add("is-launching");
+      await wait(TILE_EJECT_PREP_MS);
+      if(detailSwitchBusy)return;
+
+      const sourceDisc=tile.querySelector(".signalTileDisc");
+      const sourceRect=sourceDisc.getBoundingClientRect();
+      tile.classList.add("is-departing");
+      await featureTrack(state,{push:true,sourceRect,sourceTile:tile,animate:true});
+    });
+
     signalTiles.appendChild(tile);
   });
 }
 
-async function featureTrack(next,{push=false,replace=false}={}){
+function mountHeroInstant(state,{hideRecord=false}={}){
+  cancelScheduledTonearmEngage(state);
+  state.isPacking=false;
+  state.vinylOpened=true;
+  state.mechanismDeployed=true;
+  state.tonearmEngaged=false;
+  state.el.classList.remove("is-closing","is-scratching","is-seeking","is-precue","is-play-starting","is-pause-braking","is-motor-recovering","is-free-spinning");
+  state.el.classList.add("hero-mounted","is-open","arm-on-top","is-active");
+  state.el.classList.toggle("hero-record-hidden",hideRecord);
+  setTonearmAngle(state,ARM_PARK_ANGLE);
+}
+
+function releaseHeroToSource(state){
+  if(!state)return;
+  cancelScheduledTonearmEngage(state);
+  state.el.classList.remove("hero-mounted","hero-record-hidden","is-open","arm-on-top","is-active","is-closing","is-scratching","is-seeking","is-precue","is-play-starting","is-pause-braking","is-motor-recovering","is-free-spinning");
+  state.vinylOpened=false;
+  state.mechanismDeployed=false;
+  state.tonearmEngaged=false;
+  state.isPacking=false;
+  state.position=0;
+  state.hasPlaybackEverStarted=false;
+  setVinylAngle(state,0);
+  setTonearmAngle(state,ARM_PARK_ANGLE);
+  updateProgressUI(state,0);
+  setPlayIcon(state,false);
+  if(state.el.parentElement!==sourceTrackList)sourceTrackList.appendChild(state.el);
+}
+
+function ensureFlightLayer(){
+  let layer=document.getElementById("vinylFlightLayer");
+  if(!layer){
+    layer=document.createElement("div");
+    layer.id="vinylFlightLayer";
+    layer.className="vinylFlightLayer";
+    document.body.appendChild(layer);
+  }
+  return layer;
+}
+
+function createFlightDisc(state,rect){
+  const node=document.createElement("div");
+  node.className="vinylFlightDisc";
+  node.style.setProperty("--flight-cover",`url("${trackCoverOf(state)}")`);
+  node.style.left=`${rect.left}px`;
+  node.style.top=`${rect.top}px`;
+  node.style.width=`${rect.width}px`;
+  node.style.height=`${rect.height}px`;
+  ensureFlightLayer().appendChild(node);
+  return node;
+}
+
+async function flyDiscBetween(state,fromRect,toRect,{duration=650,turns=.62,fadeEnd=false}={}){
+  if(!fromRect||!toRect||!fromRect.width||!toRect.width)return;
+
+  const node=createFlightDisc(state,fromRect);
+  const dx=toRect.left-fromRect.left;
+  const dy=toRect.top-fromRect.top;
+  const scale=toRect.width/fromRect.width;
+  const rotate=360*turns;
+
+  const animation=node.animate(
+    [
+      {transform:"translate3d(0,0,0) scale(1) rotate(0deg)",opacity:1,filter:"drop-shadow(0 8px 18px rgba(0,0,0,.45))"},
+      {offset:.58,transform:`translate3d(${dx*.60}px,${dy*.60}px,0) scale(${1+(scale-1)*.48}) rotate(${rotate*.58}deg)`,opacity:1,filter:"drop-shadow(0 18px 28px rgba(0,0,0,.62))"},
+      {transform:`translate3d(${dx}px,${dy}px,0) scale(${scale}) rotate(${rotate}deg)`,opacity:fadeEnd?.16:1,filter:"drop-shadow(0 5px 11px rgba(0,0,0,.34))"}
+    ],
+    {
+      duration,
+      easing:"cubic-bezier(.18,.72,.22,1)",
+      fill:"forwards"
+    }
+  );
+
+  try{await animation.finished}catch(_){}
+  node.remove();
+}
+
+async function parkHeroArmForSwap(state){
+  if(!state)return;
+  cancelScheduledTonearmEngage(state);
+  state.tonearmEngaged=false; /* prevents the visual loop from fighting this animation */
+  await animateTonearmTo(state,ARM_PARK_ANGLE,390);
+  state.mechanismDeployed=true;
+  state.vinylOpened=true;
+  state.el.classList.add("hero-mounted","is-open","arm-on-top");
+}
+
+async function stopCurrentForSwap(state){
+  if(!state)return;
+  playIntent=false;
+  setPlayIcon(state,false);
+  setManualSpeed(0);
+
+  /* Keep the physical stop instead of hard muting when there is time for it. */
+  const brakeMs=Math.round(PAUSE_BRAKE_BASE_DURATION/PAUSE_BRAKE_SPEED)+30;
+  sendMode("pause_brake");
+  await Promise.all([
+    wait(brakeMs),
+    parkHeroArmForSwap(state)
+  ]);
+  sendMode("off");
+}
+
+async function startHeroPlayback(state,{autoplay=false,bufferReady=false}={}){
+  if(!state||state.loadError||!state.decoded)return false;
+
+  if(!bufferReady)await activateTrackBuffer(state,0);
+  state.position=0;
+  state.hasPlaybackEverStarted=true;
+  state.vinylOpened=true;
+  state.mechanismDeployed=true;
+  state.tonearmEngaged=false;
+  setVinylAngle(state,0);
+  setTonearmAngle(state,ARM_PARK_ANGLE);
+  updateProgressUI(state,0);
+
+  playIntent=true;
+  setPlayIcon(state,true);
+
+  /* Arm and motor begin their start cycle together after the disc is seated. */
+  sendMode("play_start");
+  const armPromise=animateTonearmTo(state,armAngleFromTime(state,0),ARM_MOVE_DURATION_MS).then(()=>{
+    state.tonearmEngaged=true;
+  });
+
+  if(autoplay){
+    /* Chrome/Safari can leave AudioContext.resume() pending until a real
+       user gesture. Never let that lock the whole page transition. */
+    const ctx=getAudioContext();
+    if(ctx.state!=="running"){
+      try{
+        const resumeAttempt=ctx.resume();
+        await Promise.race([
+          resumeAttempt,
+          wait(120)
+        ]);
+      }catch(_){}
+    }
+
+    const running=ctx.state==="running";
+    autoplayPending=!running;
+    if(!running){
+      microstatus.textContent="AUTOPLAY ARMED // TOUCH OR CLICK TO RELEASE AUDIO";
+      installAutoplayUnlock();
+    }
+  }else{
+    await resumeAudioContext();
+  }
+
+  await armPromise;
+  return true;
+}
+
+function installAutoplayUnlock(){
+  if(autoplayUnlockInstalled)return;
+  autoplayUnlockInstalled=true;
+
+  const unlock=async()=>{
+    if(!autoplayPending)return;
+    await resumeAudioContext();
+    if(getAudioContext().state==="running"){
+      autoplayPending=false;
+      if(activeTrack&&playIntent){
+        /* If the browser kept the worklet suspended, restart the physical
+           start ramp from the current selected track at the first gesture. */
+        sendMode("play_start");
+        microstatus.textContent=`${trackTitleOf(activeTrack)} // MOTOR START`;
+      }
+    }
+  };
+
+  document.addEventListener("pointerdown",unlock,{capture:true,passive:true});
+  document.addEventListener("keydown",unlock,{capture:true});
+}
+
+async function featureTrack(next,{push=false,replace=false,sourceRect=null,sourceTile=null,animate=true,initial=false}={}){
   if(!next||detailSwitchBusy)return;
+
   if(featuredTrack===next){
     if(push)history.pushState({track:next.id},"",`track.html?track=${encodeURIComponent(next.id)}`);
     return;
   }
+
   detailSwitchBusy=true;
+  switchInProgress=true;
+  const generation=nextOperationGeneration();
+
   try{
-    nextOperationGeneration();
-    playIntent=false;
-    setManualSpeed(0);
-    sendMode("off");
-    if(activeTrack)setPlayIcon(activeTrack,false);
+    await playerBootPromise;
+
+    if(next.loadError||!next.decoded){
+      microstatus.textContent=`MISSING AUDIO // ${next.audioUrl}`;
+      sourceTile?.classList.remove("is-launching","is-departing");
+      return;
+    }
+
     const previous=featuredTrack;
-    if(previous&&previous.vinylOpened)await packTrack(previous,{reset:true});
-    if(activeTrack===previous){activeTrack=null;engineLoadedTrack=null;enginePositionSec=0;engineSpeed=0;engineMode="paused";engineActive=false;}
-    if(previous&&previous.el.parentElement!==sourceTrackList)sourceTrackList.appendChild(previous.el);
+
+    /* INITIAL PAGE LOAD: the record is already sitting on the player. */
+    if(initial||!previous){
+      featuredTrack=next;
+      activeTrack=next;
+      featuredSlot.appendChild(next.el);
+      mountHeroInstant(next,{hideRecord:false});
+      updateDetailHeader(next);
+      renderSignalTiles();
+
+      if(push)history.pushState({track:next.id},"",`track.html?track=${encodeURIComponent(next.id)}`);
+      else if(replace)history.replaceState({track:next.id},"",`track.html?track=${encodeURIComponent(next.id)}`);
+
+      await startHeroPlayback(next,{autoplay:true});
+      return;
+    }
+
+    /* Capture the old empty sleeve target BEFORE rebuilding the shelf. */
+    const previousTile=tileForTrack(previous);
+    const previousDiscTarget=previousTile?.querySelector(".signalTileDisc")?.getBoundingClientRect()||null;
+    const heroDiscRect=previous.recordDisc.getBoundingClientRect();
+
+    await stopCurrentForSwap(previous);
+    if(!operationAlive(generation))return;
+
+    previous.el.classList.add("hero-record-hidden");
+    playPaperOut();
+
+    /* The old record returns to its own sleeve in the shelf. */
+    if(previousDiscTarget){
+      await flyDiscBetween(previous,heroDiscRect,previousDiscTarget,{duration:DISC_PACK_DURATION,turns:.52,fadeEnd:true});
+    }else{
+      await wait(DISC_PACK_DURATION*.55);
+    }
+
+    if(!operationAlive(generation))return;
+
+    releaseHeroToSource(previous);
+
+    /* Move the new player row into the sticky hero with an empty platter. */
     featuredTrack=next;
+    activeTrack=next;
     featuredSlot.appendChild(next.el);
-    next.el.classList.remove("is-active");
+    mountHeroInstant(next,{hideRecord:true});
     updateDetailHeader(next);
-    renderSignalTiles();
+
     if(push)history.pushState({track:next.id},"",`track.html?track=${encodeURIComponent(next.id)}`);
     else if(replace)history.replaceState({track:next.id},"",`track.html?track=${encodeURIComponent(next.id)}`);
+
+    /* Rebuild now: previous sleeve becomes a normal loaded sleeve,
+       while the new featured sleeve is empty and cannot be clicked. */
+    renderSignalTiles();
+
+    const targetRect=next.recordDisc.getBoundingClientRect();
+    let launchRect=sourceRect;
+
+    /* Browser navigation has no clicked tile; use its shelf geometry. */
+    if(!launchRect){
+      const nextTile=tileForTrack(next);
+      if(nextTile){
+        nextTile.classList.add("is-launching");
+        await wait(TILE_EJECT_PREP_MS);
+        launchRect=nextTile.querySelector(".signalTileDisc")?.getBoundingClientRect()||null;
+      }
+    }
+
+    playPaperIn();
+
+    /* Decode/load in parallel with the physical record flight. */
+    const enginePromise=activateTrackBuffer(next,0);
+    const flightPromise=launchRect
+      ? flyDiscBetween(next,launchRect,targetRect,{duration:DISC_LAUNCH_DURATION,turns:.82,fadeEnd:false})
+      : wait(DISC_LAUNCH_DURATION*.60);
+
+    await Promise.all([enginePromise,flightPromise]);
+    if(!operationAlive(generation))return;
+
+    next.el.classList.remove("hero-record-hidden");
+    next.position=0;
+    setVinylAngle(next,0);
+    updateProgressUI(next,0);
+
+    await startHeroPlayback(next,{autoplay:false,bufferReady:true});
+
+  }catch(error){
+    console.warn(error);
+    playIntent=false;
+    if(activeTrack)setPlayIcon(activeTrack,false);
   }finally{
+    sourceTile?.classList.remove("is-launching","is-departing");
     detailSwitchBusy=false;
+    switchInProgress=false;
   }
 }
 
@@ -2254,16 +2671,17 @@ copyTrackLink.addEventListener("click",async()=>{
   }catch(_){detailUrl.textContent=url;}
 });
 
-window.addEventListener("popstate",()=>{
+window.addEventListener("popstate",async()=>{
   const slug=new URLSearchParams(location.search).get("track")||"old";
   const next=tracks.find(t=>t.id===slug)||tracks[0];
-  featureTrack(next,{push:false,replace:false});
+  await featureTrack(next,{push:false,replace:false,animate:true});
 });
 
-(() => {
+(async()=>{
+  await playerBootPromise;
   const slug=new URLSearchParams(location.search).get("track")||"old";
   const initial=tracks.find(t=>t.id===slug)||tracks[0];
-  featureTrack(initial,{replace:true});
+  await featureTrack(initial,{replace:true,initial:true,animate:false});
 })();
 
 </script>
