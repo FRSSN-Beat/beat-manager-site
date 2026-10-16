@@ -1449,14 +1449,17 @@ button,input{font:inherit}
   text-align:center;
   white-space:nowrap;
 }
-/* MOOD is a second independent module. Height is locked, width follows text. */
+/* MOOD is a second independent module.
+   Its OUTER frame is locked by the hero frame system. Individual tags may
+   change width inside it, but the module itself never expands for long text. */
 .detailPage .featuredSlot .moodBlock{
   display:flex;
   align-items:center;
   flex:0 0 auto;
   gap:10px;
   height:42px;
-  overflow:visible;
+  min-width:0;
+  overflow:hidden;
 }
 .detailPage .featuredSlot .moodTag{
   display:flex;
@@ -1809,8 +1812,9 @@ body.layout-mouse-edit .layout-debug-selected{
   .detailPage.hero-frame-lock .featuredSlot .moodBlock{
     flex-wrap:nowrap!important;
     align-items:center!important;
-    overflow:visible!important;
   }
+  .detailPage.hero-frame-lock .featuredSlot .beatCoreBlock{overflow:visible!important}
+  .detailPage.hero-frame-lock .featuredSlot .moodBlock{overflow:hidden!important}
   .detailPage.hero-frame-lock .featuredSlot .coreProperty,
   .detailPage.hero-frame-lock .featuredSlot .moodTag{
     white-space:nowrap!important;
@@ -2152,12 +2156,20 @@ body.layout-mouse-edit .layout-debug-selected{
     <input id="dbgStructureScale" type="range" min="55" max="165" step="1" value="75">
   </div>
   <div class="layoutDebugRow">
-    <div class="layoutDebugHead"><span>BPM + KEY</span><b id="dbgCoreScaleValue">84%</b></div>
-    <input id="dbgCoreScale" type="range" min="55" max="165" step="1" value="84">
+    <div class="layoutDebugHead"><span>BPM + KEY</span><b id="dbgCoreScaleValue">55%</b></div>
+    <input id="dbgCoreScale" type="range" min="55" max="165" step="1" value="55">
+  </div>
+  <div class="layoutDebugRow compactDebugRow">
+    <div class="layoutDebugHead"><span>BPM VALUE FONT</span><b id="dbgBpmValueFontValue">21 px</b></div>
+    <input id="dbgBpmValueFont" type="range" min="10" max="32" step="0.5" value="21">
+  </div>
+  <div class="layoutDebugRow compactDebugRow">
+    <div class="layoutDebugHead"><span>KEY VALUE FONT</span><b id="dbgKeyValueFontValue">21 px</b></div>
+    <input id="dbgKeyValueFont" type="range" min="10" max="32" step="0.5" value="21">
   </div>
   <div class="layoutDebugRow">
-    <div class="layoutDebugHead"><span>MOOD</span><b id="dbgMoodScaleValue">84%</b></div>
-    <input id="dbgMoodScale" type="range" min="55" max="165" step="1" value="84">
+    <div class="layoutDebugHead"><span>MOOD</span><b id="dbgMoodScaleValue">58%</b></div>
+    <input id="dbgMoodScale" type="range" min="40" max="165" step="1" value="58">
   </div>
   <div class="layoutDebugRow">
     <div class="layoutDebugHead"><span>TRACK STATUS</span><b id="dbgStatusScaleValue">131%</b></div>
@@ -2187,7 +2199,7 @@ body.layout-mouse-edit .layout-debug-selected{
     <button id="layoutDebugRelock" type="button">RELOCK FRAMES</button>
     <button id="layoutDebugCopy" type="button">COPY VALUES</button>
   </div>
-  <div class="layoutDebugHint">Outer frames stay fixed. BPM/KEY inner frames and label fonts are locked; values auto-fit. Mood height is locked, width follows the text, then typography fits without clipping.</div>
+  <div class="layoutDebugHint">Outer frames stay fixed. BPM/KEY inner frames and label fonts are locked; BPM and KEY value font sizes have independent ceilings and still auto-fit when needed. MOOD outer frame is locked: tag widths adapt only inside the module, then text shrinks before any clipping can occur.</div>
 </div>
 <button class="layoutDebugReopen" id="layoutDebugReopen" type="button">LAYOUT DEBUG</button>
 <div class="layoutScaleHandle" id="layoutScaleHandle" aria-hidden="true"></div>
@@ -2227,8 +2239,9 @@ const LAYOUT_DEBUG_DEFAULTS={
   playerScale:80,playerX:0,playerY:0,
   titleScale:81,titleX:0,titleY:0,
   structureScale:75,structureX:0,structureY:0,
-  coreScale:84,coreX:0,coreY:0,
-  moodScale:84,moodX:0,moodY:0,
+  coreScale:55,coreX:0,coreY:0,
+  moodScale:58,moodX:0,moodY:0,
+  bpmValueFont:21,keyValueFont:21,
   statusScale:131,statusX:0,statusY:0,
   buyScale:97,buyX:0,buyY:0,
   meterScale:100,meterX:0,meterY:0,
@@ -2266,6 +2279,8 @@ const debugInputs={
   structureScale:document.getElementById("dbgStructureScale"),
   coreScale:document.getElementById("dbgCoreScale"),
   moodScale:document.getElementById("dbgMoodScale"),
+  bpmValueFont:document.getElementById("dbgBpmValueFont"),
+  keyValueFont:document.getElementById("dbgKeyValueFont"),
   statusScale:document.getElementById("dbgStatusScale"),
   buyScale:document.getElementById("dbgBuyScale"),
   meterScale:document.getElementById("dbgMeterScale")
@@ -2279,6 +2294,8 @@ const debugValues={
   structureScale:document.getElementById("dbgStructureScaleValue"),
   coreScale:document.getElementById("dbgCoreScaleValue"),
   moodScale:document.getElementById("dbgMoodScaleValue"),
+  bpmValueFont:document.getElementById("dbgBpmValueFontValue"),
+  keyValueFont:document.getElementById("dbgKeyValueFontValue"),
   statusScale:document.getElementById("dbgStatusScaleValue"),
   buyScale:document.getElementById("dbgBuyScaleValue"),
   meterScale:document.getElementById("dbgMeterScaleValue")
@@ -2358,6 +2375,8 @@ function applyLayoutDebug(){
   ["tileScale","turntableScale","playerScale","titleScale","structureScale","coreScale","moodScale","statusScale","buyScale","meterScale"].forEach(key=>{
     if(debugValues[key])debugValues[key].textContent=`${Math.round(layoutDebugState[key])}%`;
   });
+  if(debugValues.bpmValueFont)debugValues.bpmValueFont.textContent=`${Number(layoutDebugState.bpmValueFont).toFixed(1).replace(/\.0$/,"")} px`;
+  if(debugValues.keyValueFont)debugValues.keyValueFont.textContent=`${Number(layoutDebugState.keyValueFont).toFixed(1).replace(/\.0$/,"")} px`;
   updateLayoutSelectionReadout();
   scheduleLayoutHandleUpdate();
   if(heroFrameLockReady)scheduleFitHeroModuleContents();
@@ -2538,6 +2557,7 @@ const HERO_FRAME_LOCK_TARGETS=[
   {id:"title",selector:".featuredSlot .trackTitle",debugId:"title"},
   {id:"structure",selector:".featuredSlot .trackStructure",debugId:"structure"},
   {id:"core",selector:".featuredSlot .beatCoreBlock",debugId:"core"},
+  {id:"mood",selector:".featuredSlot .moodBlock",debugId:"mood"},
   {id:"status",selector:".featuredSlot .badge",debugId:"status"},
   {id:"buy",selector:".featuredSlot .buyCol",debugId:"buy"}
 ];
@@ -2672,27 +2692,71 @@ function fitStructureRail(){
 function fitCoreBlock(){
   const block=document.querySelector(".featuredSlot .beatCoreBlock");
   if(!block)return;
-  /* BPM / KEY label typography is intentionally NOT touched here.
-     Only the changing values are fitted inside their locked frames. */
-  block.querySelectorAll(".coreValue").forEach(value=>fitFontBinary(value,{min:10,max:22}));
+  /* BPM / KEY labels stay physically locked. The changing values have separate
+     user-controlled preferred font ceilings. If a value gets longer, binary
+     fit may only SHRINK it so the inner frame never changes size. */
+  const bpmValue=block.querySelector(".coreProperty.is-bpm .coreValue");
+  const keyValue=block.querySelector(".coreProperty.is-key .coreValue");
+  if(bpmValue)fitFontBinary(bpmValue,{min:8,max:Math.max(8,Number(layoutDebugState.bpmValueFont)||21)});
+  if(keyValue)fitFontBinary(keyValue,{min:8,max:Math.max(8,Number(layoutDebugState.keyValueFont)||21)});
 }
 function fitMoodBlock(){
   const block=document.querySelector(".featuredSlot .moodBlock");
   if(!block)return;
   const tags=[...block.querySelectorAll(".moodTag")];
   if(!tags.length)return;
-  const preferred=16;
-  tags.forEach(tag=>{
-    tag.style.fontSize=`${preferred}px`;
+
+  /* HARD RULE: the outer MOOD module never grows because of text.
+     Only its children are re-laid-out inside the already locked clientWidth. */
+  const style=getComputedStyle(block);
+  const gap=parseFloat(style.columnGap||style.gap)||0;
+  const innerWidth=Math.max(0,block.clientWidth-gap*Math.max(0,tags.length-1));
+  if(innerWidth<=1)return;
+
+  const preferredFont=16;
+  const absoluteMin=34;
+  const comfortableMin=52;
+
+  /* First measure how much width every word would naturally like at the
+     preferred typography. Width:auto is temporary and never allowed to alter
+     the locked outer module because overflow is hidden. */
+  const natural=tags.map(tag=>{
+    tag.style.fontSize=`${preferredFont}px`;
     tag.style.width="auto";
-    /* scrollWidth gives the real text requirement including current padding.
-       Height never changes; width grows with text up to a sane visual ceiling. */
-    const ideal=Math.ceil(tag.scrollWidth+2);
-    const width=Math.max(64,Math.min(220,ideal));
-    tag.style.width=`${width}px`;
-    fitFontBinary(tag,{min:9,max:preferred});
+    return Math.max(comfortableMin,Math.ceil(tag.scrollWidth+2));
+  });
+  const naturalTotal=natural.reduce((a,b)=>a+b,0);
+
+  let widths=[];
+  if(naturalTotal<=innerWidth){
+    /* Short moods keep text-driven widths; any spare room simply stays empty. */
+    widths=natural.slice();
+  }else{
+    /* Long moods share ONLY the width that already exists. Longer words receive
+       proportionally more of the available room; the outer frame never moves. */
+    const minEach=Math.min(comfortableMin,Math.max(absoluteMin,innerWidth/tags.length*.48));
+    const minTotal=minEach*tags.length;
+    if(minTotal>=innerWidth){
+      widths=tags.map(()=>innerWidth/tags.length);
+    }else{
+      const extra=innerWidth-minTotal;
+      const weights=natural.map(w=>Math.max(1,w-minEach));
+      const weightTotal=weights.reduce((a,b)=>a+b,0)||1;
+      widths=weights.map(w=>minEach+extra*(w/weightTotal));
+    }
+  }
+
+  /* Remove accumulated rounding so the last pixel can never push the module. */
+  let used=0;
+  tags.forEach((tag,index)=>{
+    let width=index===tags.length-1?Math.max(absoluteMin,innerWidth-used):widths[index];
+    width=Math.max(absoluteMin,Math.min(width,innerWidth-used));
+    used+=width;
+    tag.style.width=`${Math.floor(width*10)/10}px`;
+    fitFontBinary(tag,{min:7,max:preferredFont});
   });
 }
+
 function fitPaymentBlock(){
   const buy=document.querySelector(".featuredSlot .buyCol");
   if(!buy)return;
@@ -2835,6 +2899,8 @@ if(IS_DETAIL_PAGE&&layoutDebugPanel){
       `TRACK TITLE = ${layoutDebugState.titleScale}% | X ${layoutDebugState.titleX} | Y ${layoutDebugState.titleY} | W ${layoutDebugState.titleStretchX}% | H ${layoutDebugState.titleStretchY}%`,
       `SECTIONS = ${layoutDebugState.structureScale}% | X ${layoutDebugState.structureX} | Y ${layoutDebugState.structureY} | W ${layoutDebugState.structureStretchX}% | H ${layoutDebugState.structureStretchY}%`,
       `BPM + KEY = ${layoutDebugState.coreScale}% | X ${layoutDebugState.coreX} | Y ${layoutDebugState.coreY} | W ${layoutDebugState.coreStretchX}% | H ${layoutDebugState.coreStretchY}%`,
+      `BPM VALUE FONT = ${layoutDebugState.bpmValueFont}px`,
+      `KEY VALUE FONT = ${layoutDebugState.keyValueFont}px`,
       `MOOD = ${layoutDebugState.moodScale}% | X ${layoutDebugState.moodX} | Y ${layoutDebugState.moodY} | W ${layoutDebugState.moodStretchX}% | H ${layoutDebugState.moodStretchY}%`,
       `TRACK STATUS = ${layoutDebugState.statusScale}% | X ${layoutDebugState.statusX} | Y ${layoutDebugState.statusY} | W ${layoutDebugState.statusStretchX}% | H ${layoutDebugState.statusStretchY}%`,
       `PAYMENT BLOCK = ${layoutDebugState.buyScale}% | X ${layoutDebugState.buyX} | Y ${layoutDebugState.buyY} | W ${layoutDebugState.buyStretchX}% | H ${layoutDebugState.buyStretchY}%`,
