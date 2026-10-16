@@ -1070,14 +1070,45 @@ button,input{font:inherit}
   z-index:5;
 }
 
-/* Active release leaves a literal empty place in the lower shelf. */
+/* Active release leaves a REAL EMPTY SLOT in the lower shelf.
+   The tile frame + track info remain visible, only the physical package is absent. */
 .detailPage .signalTile.is-featured{
-  visibility:hidden!important;
+  visibility:visible!important;
+  opacity:1!important;
   pointer-events:none!important;
+  cursor:default!important;
+  transform:none!important;
+  background:rgba(4,6,4,.46)!important;
+  border-color:rgba(214,255,40,.18)!important;
 }
 
 .detailPage .signalTile.is-featured::after{
   display:none!important;
+}
+
+.detailPage .signalTile.is-featured .signalTileDisc,
+.detailPage .signalTile.is-featured .signalTileSleeve{
+  opacity:0!important;
+  visibility:hidden!important;
+}
+
+.detailPage .signalTile.is-featured .signalTileVisual{
+  border:1px dashed rgba(214,255,40,.22);
+  background:
+    linear-gradient(135deg,rgba(214,255,40,.018),transparent 46%),
+    rgba(3,5,3,.34);
+}
+
+.detailPage .signalTile.is-featured .signalTileVisual::after{
+  content:"ON PLATTER";
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+  color:rgba(214,255,40,.34);
+  font:7px/1 monospace;
+  letter-spacing:.14em;
+  text-transform:uppercase;
 }
 
 /* Other records are completely inside their sleeves until hover. */
@@ -1086,16 +1117,23 @@ button,input{font:inherit}
   opacity:1;
 }
 
-.detailPage .signalTile:hover .signalTileDisc,
-.detailPage .signalTile.is-launching .signalTileDisc{
+.detailPage .signalTile:hover .signalTileDisc{
   transform:translateX(31%);
 }
 
-/* When the sleeve itself is being transferred, its local graphics disappear. */
+/* After click the preview disc first slides BACK INSIDE the package.
+   This override wins even while the mouse cursor is still hovering it. */
+.detailPage .signalTile.is-preparing-transfer .signalTileDisc{
+  transform:translateX(0)!important;
+  transition:transform .28s cubic-bezier(.22,.8,.22,1)!important;
+}
+
+/* The real tile is hidden only AFTER an identical flight clone already exists
+   at the same coordinates, so the package never blinks/disappears before moving. */
 .detailPage .signalTile.is-package-departing .signalTileDisc,
 .detailPage .signalTile.is-package-departing .signalTileSleeve{
   opacity:0!important;
-  transition:opacity .06s linear!important;
+  transition:none!important;
 }
 
 /* Fixed overlay for the two kinds of physical flights. */
@@ -2596,7 +2634,7 @@ const DISC_TO_SLEEVE_DURATION=520;
 const SLEEVE_SWAP_DURATION=610;
 const SLEEVE_SWAP_STAGGER=85;
 const DISC_FROM_SLEEVE_DURATION=690;
-const TILE_EJECT_PREP_MS=150;
+const TILE_EJECT_PREP_MS=290;
 
 let featuredTrack=null;
 let detailSwitchBusy=false;
@@ -2670,14 +2708,18 @@ function renderSignalTiles(){
       event.preventDefault();
       if(state===featuredTrack||detailSwitchBusy)return;
 
-      tile.classList.add("is-launching");
+      /* The hover-preview record must physically return into the sleeve first. */
+      tile.classList.add("is-preparing-transfer");
       await wait(TILE_EJECT_PREP_MS);
-      if(detailSwitchBusy)return;
+      if(detailSwitchBusy){
+        tile.classList.remove("is-preparing-transfer");
+        return;
+      }
 
-      /* Click transfers the complete sleeve, not the small record. */
+      /* Capture the still-visible package. The actual tile stays visible until
+         the flight clone has been painted at exactly the same coordinates. */
       const sleeve=tile.querySelector(".signalTileSleeve");
       const sourceSleeveRect=sleeve?.getBoundingClientRect()||null;
-      tile.classList.add("is-package-departing");
 
       await featureTrack(state,{
         push:true,
@@ -2768,12 +2810,26 @@ function createFlightSleeve(state,rect){
 
 function rectObject(left,top,width,height){return {left,top,width,height,right:left+width,bottom:top+height}}
 
-function heroSleeveDiscRect(){
-  const r=heroSleeveDock.getBoundingClientRect();
-  const size=r.width*.72;
+/* Stable physical platter rectangle.
+   IMPORTANT: never use recordDisc.getBoundingClientRect() here because the disc
+   itself is rotated; the bounding box of a rotated square changes with angle and
+   makes the flying record appear to grow during packing. recordCarrier does not
+   rotate, so its width/height are the real physical diameter on screen. */
+function heroPlatterDiscRect(state){
+  const r=state?.recordCarrier?.getBoundingClientRect();
+  if(!r||!r.width)return null;
+  return rectObject(r.left,r.top,r.width,r.height);
+}
+
+/* A record inside the hero sleeve has EXACTLY the same physical diameter as the
+   platter record. Only its centre changes; there is no scale phase at all. */
+function heroSleeveDiscRect(state){
+  const sleeve=heroSleeveDock.getBoundingClientRect();
+  const platter=heroPlatterDiscRect(state);
+  const size=platter?.width||sleeve.width;
   return rectObject(
-    r.left+r.width*.16,
-    r.top+(r.height-size)/2,
+    sleeve.left+(sleeve.width-size)/2,
+    sleeve.top+(sleeve.height-size)/2,
     size,
     size
   );
@@ -2814,8 +2870,9 @@ function createHeroSleeveFlightMask(state){
 async function flyDiscBetween(state,fromRect,toRect,{duration=650}={}){
   if(!fromRect||!toRect||!fromRect.width||!toRect.width)return;
 
-  const size=Math.max(fromRect.width,toRect.width);
-
+  /* NO SCALE. The start rectangle already contains the physical record diameter.
+     We only translate its centre from A to B. */
+  const size=fromRect.width;
   const fromCenterX=fromRect.left+fromRect.width/2;
   const fromCenterY=fromRect.top+fromRect.height/2;
   const toCenterX=toRect.left+toRect.width/2;
@@ -2852,12 +2909,29 @@ async function flyDiscBetween(state,fromRect,toRect,{duration=650}={}){
   sleeveMask?.remove();
 }
 
-/* Sleeve trajectory is deliberately straight: only translate + scale. */
-async function flySleeveBetween(state,fromRect,toRect,{duration=SLEEVE_SWAP_DURATION,delay=0}={}){
+/* Sleeve trajectory remains straight. A clone is created FIRST at the exact
+   source coordinates; only on the next painted frame do we hide the real source.
+   This removes the one-frame disappearance before package motion. */
+async function flySleeveBetween(
+  state,
+  fromRect,
+  toRect,
+  {
+    duration=SLEEVE_SWAP_DURATION,
+    delay=0,
+    onCloneReady=null
+  }={}
+){
   if(!fromRect||!toRect||!fromRect.width||!toRect.width)return;
-  if(delay>0)await wait(delay);
 
   const node=createFlightSleeve(state,fromRect);
+
+  /* Ensure the clone has actually reached the compositor before source hiding. */
+  await new Promise(resolve=>requestAnimationFrame(()=>resolve()));
+  if(typeof onCloneReady==="function")onCloneReady();
+
+  if(delay>0)await wait(delay);
+
   const dx=toRect.left-fromRect.left;
   const dy=toRect.top-fromRect.top;
   const scaleX=toRect.width/fromRect.width;
@@ -2985,8 +3059,8 @@ async function initialUnpackAndStart(state){
   await activateTrackBuffer(state,0);
   await wait(HERO_INITIAL_DELAY);
 
-  const fromRect=heroSleeveDiscRect();
-  const toRect=state.recordDisc.getBoundingClientRect();
+  const fromRect=heroSleeveDiscRect(state);
+  const toRect=heroPlatterDiscRect(state);
 
   playPaperIn();
   await flyDiscBetween(state,fromRect,toRect,{duration:DISC_FROM_SLEEVE_DURATION});
@@ -3015,7 +3089,7 @@ async function featureTrack(next,{push=false,replace=false,sourceSleeveRect=null
 
     if(next.loadError||!next.decoded){
       microstatus.textContent=`MISSING AUDIO // ${next.audioUrl}`;
-      sourceTile?.classList.remove("is-launching","is-package-departing");
+      sourceTile?.classList.remove("is-launching","is-preparing-transfer","is-package-departing");
       return;
     }
 
@@ -3039,29 +3113,34 @@ async function featureTrack(next,{push=false,replace=false,sourceSleeveRect=null
     if(!operationAlive(generation))return;
 
     /* 1) Old record goes back into the hero sleeve. */
-    const heroDiscRect=previous.recordDisc.getBoundingClientRect();
+    const heroDiscRect=heroPlatterDiscRect(previous);
     previous.el.classList.add("hero-record-hidden");
     playPaperOut();
 
     await flyDiscBetween(
       previous,
       heroDiscRect,
-      heroSleeveDiscRect(),
+      heroSleeveDiscRect(previous),
       {duration:DISC_TO_SLEEVE_DURATION}
     );
 
     if(!operationAlive(generation))return;
 
-    /* 2) Complete sleeves swap positions in straight trajectories. */
-    clickedTile?.classList.add("is-package-departing");
-    heroSleeveDock.classList.add("is-flight-empty");
-
+    /* 2) Complete sleeves swap positions in straight trajectories.
+       Neither source disappears before its identical moving clone exists. */
     const oldSleeveFlight=oldShelfTarget
-      ? flySleeveBetween(previous,heroSleeveRect,oldShelfTarget,{duration:SLEEVE_SWAP_DURATION})
+      ? flySleeveBetween(previous,heroSleeveRect,oldShelfTarget,{
+          duration:SLEEVE_SWAP_DURATION,
+          onCloneReady:()=>heroSleeveDock.classList.add("is-flight-empty")
+        })
       : wait(SLEEVE_SWAP_DURATION);
 
     const newSleeveFlight=newShelfSource
-      ? flySleeveBetween(next,newShelfSource,heroSleeveRect,{duration:SLEEVE_SWAP_DURATION,delay:SLEEVE_SWAP_STAGGER})
+      ? flySleeveBetween(next,newShelfSource,heroSleeveRect,{
+          duration:SLEEVE_SWAP_DURATION,
+          delay:SLEEVE_SWAP_STAGGER,
+          onCloneReady:()=>clickedTile?.classList.add("is-package-departing")
+        })
       : wait(SLEEVE_SWAP_DURATION+SLEEVE_SWAP_STAGGER);
 
     await Promise.all([oldSleeveFlight,newSleeveFlight]);
@@ -3085,8 +3164,8 @@ async function featureTrack(next,{push=false,replace=false,sourceSleeveRect=null
 
     /* 3) New record leaves the newly arrived sleeve and seats on platter. */
     const enginePromise=activateTrackBuffer(next,0);
-    const newDiscFrom=heroSleeveDiscRect();
-    const newDiscTo=next.recordDisc.getBoundingClientRect();
+    const newDiscFrom=heroSleeveDiscRect(next);
+    const newDiscTo=heroPlatterDiscRect(next);
 
     playPaperIn();
 
@@ -3109,7 +3188,7 @@ async function featureTrack(next,{push=false,replace=false,sourceSleeveRect=null
     playIntent=false;
     if(activeTrack)setPlayIcon(activeTrack,false);
   }finally{
-    sourceTile?.classList.remove("is-launching","is-package-departing");
+    sourceTile?.classList.remove("is-launching","is-preparing-transfer","is-package-departing");
     detailSwitchBusy=false;
     switchInProgress=false;
   }
