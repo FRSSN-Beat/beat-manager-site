@@ -1387,32 +1387,98 @@ button,input{font:inherit}
 .detailPage .featuredSlot .trackDataStrip{
   display:flex;
   align-items:center;
-  flex-wrap:wrap;
-  gap:7px 9px;
+  flex-wrap:nowrap;
+  gap:12px;
   margin:10px 0 0;
-  min-height:24px;
+  min-height:42px;
+  overflow:visible;
 }
-.detailPage .featuredSlot .dataPill{
-  display:inline-flex;
+/* BPM + KEY are one independent layout module. Their visible frames are fixed. */
+.detailPage .featuredSlot .beatCoreBlock{
+  display:flex;
   align-items:center;
-  gap:6px;
-  min-height:22px;
-  padding:0 8px;
-  border:1px solid rgba(214,255,40,.16);
-  background:rgba(214,255,40,.025);
-  color:rgba(236,241,229,.58);
-  font:700 8px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  letter-spacing:.12em;
+  flex:0 0 auto;
+  gap:10px;
+  height:42px;
+  overflow:visible;
+}
+.detailPage .featuredSlot .coreProperty{
+  height:42px;
+  flex:0 0 auto;
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr);
+  align-items:center;
+  gap:8px;
+  padding:0 11px;
+  border:1px solid rgba(214,255,40,.22);
+  background:rgba(214,255,40,.028);
+  box-sizing:border-box;
+  overflow:hidden;
+  white-space:nowrap;
   text-transform:uppercase;
+}
+.detailPage .featuredSlot .coreProperty.is-bpm{width:118px}
+.detailPage .featuredSlot .coreProperty.is-key{width:146px}
+.detailPage .featuredSlot .coreLabel{
+  flex:0 0 auto;
+  color:rgba(236,241,229,.72);
+  font-family:"Arial Narrow","Roboto Condensed",Arial,sans-serif;
+  font-size:16px;
+  font-weight:900;
+  line-height:1;
+  letter-spacing:.045em;
+}
+.detailPage .featuredSlot .coreValueBox{
+  min-width:0;
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+.detailPage .featuredSlot .coreValue{
+  display:block;
+  width:100%;
+  color:#eef4e7;
+  font-family:"Arial Narrow","Roboto Condensed",Arial,sans-serif;
+  font-size:21px;
+  font-weight:900;
+  line-height:1;
+  letter-spacing:.02em;
+  text-align:center;
   white-space:nowrap;
 }
-.detailPage .featuredSlot .dataPill b{
-  color:#eef4e7;
-  font-weight:800;
+/* MOOD is a second independent module. Height is locked, width follows text. */
+.detailPage .featuredSlot .moodBlock{
+  display:flex;
+  align-items:center;
+  flex:0 0 auto;
+  gap:10px;
+  height:42px;
+  overflow:visible;
 }
 .detailPage .featuredSlot .moodTag{
-  color:rgba(214,255,40,.78);
-  border-color:rgba(214,255,40,.20);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 auto;
+  height:42px;
+  min-width:64px;
+  width:auto;
+  padding:0 13px;
+  border:1px solid rgba(214,255,40,.23);
+  background:rgba(214,255,40,.028);
+  color:rgba(214,255,40,.92);
+  box-sizing:border-box;
+  overflow:hidden;
+  white-space:nowrap;
+  text-transform:uppercase;
+  font-family:"Arial Narrow","Roboto Condensed",Arial,sans-serif;
+  font-size:16px;
+  font-weight:900;
+  line-height:1;
+  letter-spacing:.045em;
 }
 .detailPage .featuredSlot .topline{margin-bottom:16px}
 .detailPage .featuredSlot .meta{display:none}
@@ -1420,8 +1486,14 @@ button,input{font:inherit}
 @media(max-width:900px){
   .detailPage .featuredSlot .trackStructure{height:25px}
   .detailPage .featuredSlot .structureSegment{font-size:6px;padding:0 4px;letter-spacing:.08em}
-  .detailPage .featuredSlot .trackDataStrip{gap:5px;margin-top:7px}
-  .detailPage .featuredSlot .dataPill{font-size:7px;padding:0 6px}
+  .detailPage .featuredSlot .trackDataStrip{gap:7px;margin-top:7px;min-height:34px}
+  .detailPage .featuredSlot .beatCoreBlock,.detailPage .featuredSlot .moodBlock{height:34px;gap:6px}
+  .detailPage .featuredSlot .coreProperty,.detailPage .featuredSlot .moodTag{height:34px}
+  .detailPage .featuredSlot .coreProperty.is-bpm{width:96px}
+  .detailPage .featuredSlot .coreProperty.is-key{width:118px}
+  .detailPage .featuredSlot .coreLabel{font-size:12px}
+  .detailPage .featuredSlot .coreValue{font-size:16px}
+  .detailPage .featuredSlot .moodTag{font-size:12px;padding:0 9px;min-width:54px}
 }
 
 /* =====================================================
@@ -1433,7 +1505,8 @@ button,input{font:inherit}
   --dbg-player-scale:1;
   --dbg-title-scale:1;
   --dbg-structure-scale:1;
-  --dbg-data-scale:1;
+  --dbg-core-scale:1;
+  --dbg-mood-scale:1;
   --dbg-status-scale:1;
   --dbg-buy-scale:1;
   --dbg-meter-scale:1;
@@ -1442,7 +1515,8 @@ button,input{font:inherit}
   --dbg-player-x:0px;--dbg-player-y:0px;
   --dbg-title-x:0px;--dbg-title-y:0px;
   --dbg-structure-x:0px;--dbg-structure-y:0px;
-  --dbg-data-x:0px;--dbg-data-y:0px;
+  --dbg-core-x:0px;--dbg-core-y:0px;
+  --dbg-mood-x:0px;--dbg-mood-y:0px;
   --dbg-status-x:0px;--dbg-status-y:0px;
   --dbg-buy-x:0px;--dbg-buy-y:0px;
   --dbg-meter-x:0px;--dbg-meter-y:0px;
@@ -1450,7 +1524,8 @@ button,input{font:inherit}
   --dbg-player-stretch-x:1;--dbg-player-stretch-y:1;
   --dbg-title-stretch-x:1;--dbg-title-stretch-y:1;
   --dbg-structure-stretch-x:1;--dbg-structure-stretch-y:1;
-  --dbg-data-stretch-x:1;--dbg-data-stretch-y:1;
+  --dbg-core-stretch-x:1;--dbg-core-stretch-y:1;
+  --dbg-mood-stretch-x:1;--dbg-mood-stretch-y:1;
   --dbg-status-stretch-x:1;--dbg-status-stretch-y:1;
   --dbg-buy-stretch-x:1;--dbg-buy-stretch-y:1;
   --dbg-meter-stretch-x:1;--dbg-meter-stretch-y:1;
@@ -1465,7 +1540,8 @@ button,input{font:inherit}
 .detailPage.layout-debug-active .featuredSlot .waveRow{zoom:var(--dbg-player-scale);translate:var(--dbg-player-x) var(--dbg-player-y);scale:var(--dbg-player-stretch-x) var(--dbg-player-stretch-y)}
 .detailPage.layout-debug-active .featuredSlot .trackTitle{zoom:var(--dbg-title-scale);translate:var(--dbg-title-x) var(--dbg-title-y);scale:var(--dbg-title-stretch-x) var(--dbg-title-stretch-y)}
 .detailPage.layout-debug-active .featuredSlot .trackStructure{zoom:var(--dbg-structure-scale);translate:var(--dbg-structure-x) var(--dbg-structure-y);scale:var(--dbg-structure-stretch-x) var(--dbg-structure-stretch-y)}
-.detailPage.layout-debug-active .featuredSlot .trackDataStrip{zoom:var(--dbg-data-scale);translate:var(--dbg-data-x) var(--dbg-data-y);scale:var(--dbg-data-stretch-x) var(--dbg-data-stretch-y)}
+.detailPage.layout-debug-active .featuredSlot .beatCoreBlock{zoom:var(--dbg-core-scale);translate:var(--dbg-core-x) var(--dbg-core-y);scale:var(--dbg-core-stretch-x) var(--dbg-core-stretch-y)}
+.detailPage.layout-debug-active .featuredSlot .moodBlock{zoom:var(--dbg-mood-scale);translate:var(--dbg-mood-x) var(--dbg-mood-y);scale:var(--dbg-mood-stretch-x) var(--dbg-mood-stretch-y)}
 .detailPage.layout-debug-active .featuredSlot .badge{zoom:var(--dbg-status-scale);translate:var(--dbg-status-x) var(--dbg-status-y);scale:var(--dbg-status-stretch-x) var(--dbg-status-stretch-y)}
 .detailPage.layout-debug-active .featuredSlot .buyCol{zoom:var(--dbg-buy-scale);translate:var(--dbg-buy-x) var(--dbg-buy-y);scale:var(--dbg-buy-stretch-x) var(--dbg-buy-stretch-y)}
 .detailPage.layout-debug-active #heroMeterBlock{zoom:var(--dbg-meter-scale);translate:var(--dbg-meter-x) var(--dbg-meter-y);scale:var(--dbg-meter-stretch-x) var(--dbg-meter-stretch-y)}
@@ -1566,7 +1642,8 @@ body.layout-mouse-edit .featuredSlot .vinylUnit,
 body.layout-mouse-edit .featuredSlot .waveRow,
 body.layout-mouse-edit .featuredSlot .trackTitle,
 body.layout-mouse-edit .featuredSlot .trackStructure,
-body.layout-mouse-edit .featuredSlot .trackDataStrip,
+body.layout-mouse-edit .featuredSlot .beatCoreBlock,
+body.layout-mouse-edit .featuredSlot .moodBlock,
 body.layout-mouse-edit .featuredSlot .badge,
 body.layout-mouse-edit .featuredSlot .buyCol,
 body.layout-mouse-edit #heroMeterBlock{
@@ -1645,22 +1722,7 @@ body.layout-mouse-edit .layout-debug-selected{
 .detailPage .featuredSlot .structureSegment.is-current{
   color:#eaff8d;
 }
-.detailPage .featuredSlot .dataPill{
-  font-family:"Arial Narrow","Roboto Condensed",Arial,sans-serif;
-  font-size:11px;
-  font-weight:900;
-  line-height:1;
-  letter-spacing:.065em;
-  color:rgba(236,241,229,.73);
-}
-.detailPage .featuredSlot .dataPill b{
-  font-size:1.08em;
-  font-weight:900;
-  letter-spacing:.035em;
-}
-.detailPage .featuredSlot .moodTag{
-  color:rgba(214,255,40,.90);
-}
+/* BPM/KEY and MOOD typography is defined by their locked inner frames above. */
 .detailPage .featuredSlot .badge{
   font-family:"Arial Narrow","Roboto Condensed",Arial,sans-serif;
   font-size:11px;
@@ -1701,7 +1763,6 @@ body.layout-mouse-edit .layout-debug-selected{
 /* Keep typography readable on the mobile breakpoint as well. */
 @media(max-width:900px){
   .detailPage .featuredSlot .structureSegment{font-size:9px;letter-spacing:.035em}
-  .detailPage .featuredSlot .dataPill{font-size:9px;letter-spacing:.045em}
   .detailPage .featuredSlot .badge{font-size:9px}
   .detailPage .featuredSlot .license{font-size:15px}
   .detailPage .featuredSlot .secondary{font-size:12px}
@@ -1717,7 +1778,8 @@ body.layout-mouse-edit .layout-debug-selected{
   .detailPage.hero-frame-lock .featuredSlot .trackTitle,
   .detailPage.hero-frame-lock .featuredSlot .trackStructure,
   .detailPage.hero-frame-lock .featuredSlot .waveRow,
-  .detailPage.hero-frame-lock .featuredSlot .trackDataStrip,
+  .detailPage.hero-frame-lock .featuredSlot .beatCoreBlock,
+  .detailPage.hero-frame-lock .featuredSlot .moodBlock,
   .detailPage.hero-frame-lock .featuredSlot .badge,
   .detailPage.hero-frame-lock .featuredSlot .buyCol{
     box-sizing:border-box!important;
@@ -1743,15 +1805,15 @@ body.layout-mouse-edit .layout-debug-selected{
     white-space:nowrap!important;
   }
 
-  .detailPage.hero-frame-lock .featuredSlot .trackDataStrip{
+  .detailPage.hero-frame-lock .featuredSlot .beatCoreBlock,
+  .detailPage.hero-frame-lock .featuredSlot .moodBlock{
     flex-wrap:nowrap!important;
     align-items:center!important;
+    overflow:visible!important;
   }
-  .detailPage.hero-frame-lock .featuredSlot .dataPill{
-    min-width:0!important;
-    flex:0 1 auto!important;
+  .detailPage.hero-frame-lock .featuredSlot .coreProperty,
+  .detailPage.hero-frame-lock .featuredSlot .moodTag{
     white-space:nowrap!important;
-    overflow:hidden!important;
     text-overflow:clip!important;
   }
 
@@ -2066,7 +2128,7 @@ body.layout-mouse-edit .layout-debug-selected{
   <div class="layoutDebugSelectedReadout" id="layoutDebugSelectedReadout">SELECTED // NONE</div>
 
   <div class="layoutDebugRow">
-    <div class="layoutDebugHead"><span>HEADER HEIGHT</span><b id="dbgHeaderHeightValue">340 px</b></div>
+    <div class="layoutDebugHead"><span>HEADER HEIGHT</span><b id="dbgHeaderHeightValue">326 px</b></div>
     <input id="dbgHeaderHeight" type="range" min="300" max="760" step="2" value="340">
   </div>
   <div class="layoutDebugRow">
@@ -2082,16 +2144,20 @@ body.layout-mouse-edit .layout-debug-selected{
     <input id="dbgPlayerScale" type="range" min="55" max="165" step="1" value="80">
   </div>
   <div class="layoutDebugRow">
-    <div class="layoutDebugHead"><span>TRACK TITLE</span><b id="dbgTitleScaleValue">83%</b></div>
-    <input id="dbgTitleScale" type="range" min="55" max="180" step="1" value="83">
+    <div class="layoutDebugHead"><span>TRACK TITLE</span><b id="dbgTitleScaleValue">81%</b></div>
+    <input id="dbgTitleScale" type="range" min="55" max="180" step="1" value="81">
   </div>
   <div class="layoutDebugRow">
     <div class="layoutDebugHead"><span>SECTIONS</span><b id="dbgStructureScaleValue">75%</b></div>
     <input id="dbgStructureScale" type="range" min="55" max="165" step="1" value="75">
   </div>
   <div class="layoutDebugRow">
-    <div class="layoutDebugHead"><span>BEAT PROPERTIES</span><b id="dbgDataScaleValue">84%</b></div>
-    <input id="dbgDataScale" type="range" min="55" max="165" step="1" value="84">
+    <div class="layoutDebugHead"><span>BPM + KEY</span><b id="dbgCoreScaleValue">84%</b></div>
+    <input id="dbgCoreScale" type="range" min="55" max="165" step="1" value="84">
+  </div>
+  <div class="layoutDebugRow">
+    <div class="layoutDebugHead"><span>MOOD</span><b id="dbgMoodScaleValue">84%</b></div>
+    <input id="dbgMoodScale" type="range" min="55" max="165" step="1" value="84">
   </div>
   <div class="layoutDebugRow">
     <div class="layoutDebugHead"><span>TRACK STATUS</span><b id="dbgStatusScaleValue">131%</b></div>
@@ -2107,12 +2173,12 @@ body.layout-mouse-edit .layout-debug-selected{
   </div>
 
   <div class="layoutDebugRow tonearmDebugRow">
-    <div class="layoutDebugHead"><span>TONEARM // PARK</span><b id="dbgArmParkValue">-8.0°</b></div>
-    <input id="dbgArmPark" type="range" min="-25" max="10" step="0.5" value="-8">
+    <div class="layoutDebugHead"><span>TONEARM // PARK</span><b id="dbgArmParkValue">0.5°</b></div>
+    <input id="dbgArmPark" type="range" min="-25" max="10" step="0.5" value="0.5">
   </div>
   <div class="layoutDebugRow tonearmDebugRow">
-    <div class="layoutDebugHead"><span>TONEARM // OUTER LIMIT</span><b id="dbgArmStartValue">19.5°</b></div>
-    <input id="dbgArmStart" type="range" min="5" max="30" step="0.5" value="19.5">
+    <div class="layoutDebugHead"><span>TONEARM // OUTER LIMIT</span><b id="dbgArmStartValue">18.5°</b></div>
+    <input id="dbgArmStart" type="range" min="5" max="30" step="0.5" value="18.5">
   </div>
 
   <div class="layoutFrameLockStatus" id="layoutFrameLockStatus">MODULE FRAMES // <b>WAITING</b></div>
@@ -2121,7 +2187,7 @@ body.layout-mouse-edit .layout-debug-selected{
     <button id="layoutDebugRelock" type="button">RELOCK FRAMES</button>
     <button id="layoutDebugCopy" type="button">COPY VALUES</button>
   </div>
-  <div class="layoutDebugHint">Outer module frames stay fixed. When titles, sections, moods, status or checkout text changes, typography is fitted inside those frames automatically.</div>
+  <div class="layoutDebugHint">Outer frames stay fixed. BPM/KEY inner frames and label fonts are locked; values auto-fit. Mood height is locked, width follows the text, then typography fits without clipping.</div>
 </div>
 <button class="layoutDebugReopen" id="layoutDebugReopen" type="button">LAYOUT DEBUG</button>
 <div class="layoutScaleHandle" id="layoutScaleHandle" aria-hidden="true"></div>
@@ -2155,13 +2221,14 @@ const LAYOUT_DEBUG_KEY="frssnLayoutDebugV1";
 const LAYOUT_DEBUG_DEFAULTS={
   /* Locked baseline from the current tuned layout. Existing localStorage values
      still win, so the user's exact mouse-positioned geometry is preserved. */
-  headerHeight:340,
+  headerHeight:326,
   tileScale:112,
   turntableScale:96,turntableX:0,turntableY:0,
   playerScale:80,playerX:0,playerY:0,
-  titleScale:83,titleX:0,titleY:0,
+  titleScale:81,titleX:0,titleY:0,
   structureScale:75,structureX:0,structureY:0,
-  dataScale:84,dataX:0,dataY:0,
+  coreScale:84,coreX:0,coreY:0,
+  moodScale:84,moodX:0,moodY:0,
   statusScale:131,statusX:0,statusY:0,
   buyScale:97,buyX:0,buyY:0,
   meterScale:100,meterX:0,meterY:0,
@@ -2169,7 +2236,8 @@ const LAYOUT_DEBUG_DEFAULTS={
   playerStretchX:100,playerStretchY:100,
   titleStretchX:100,titleStretchY:100,
   structureStretchX:100,structureStretchY:100,
-  dataStretchX:100,dataStretchY:100,
+  coreStretchX:100,coreStretchY:100,
+  moodStretchX:100,moodStretchY:100,
   statusStretchX:100,statusStretchY:100,
   buyStretchX:100,buyStretchY:100,
   meterStretchX:100,meterStretchY:100
@@ -2196,7 +2264,8 @@ const debugInputs={
   playerScale:document.getElementById("dbgPlayerScale"),
   titleScale:document.getElementById("dbgTitleScale"),
   structureScale:document.getElementById("dbgStructureScale"),
-  dataScale:document.getElementById("dbgDataScale"),
+  coreScale:document.getElementById("dbgCoreScale"),
+  moodScale:document.getElementById("dbgMoodScale"),
   statusScale:document.getElementById("dbgStatusScale"),
   buyScale:document.getElementById("dbgBuyScale"),
   meterScale:document.getElementById("dbgMeterScale")
@@ -2208,7 +2277,8 @@ const debugValues={
   playerScale:document.getElementById("dbgPlayerScaleValue"),
   titleScale:document.getElementById("dbgTitleScaleValue"),
   structureScale:document.getElementById("dbgStructureScaleValue"),
-  dataScale:document.getElementById("dbgDataScaleValue"),
+  coreScale:document.getElementById("dbgCoreScaleValue"),
+  moodScale:document.getElementById("dbgMoodScaleValue"),
   statusScale:document.getElementById("dbgStatusScaleValue"),
   buyScale:document.getElementById("dbgBuyScaleValue"),
   meterScale:document.getElementById("dbgMeterScaleValue")
@@ -2219,13 +2289,14 @@ const LAYOUT_MOUSE_TARGETS=[
   {id:"player",label:"PLAY + WAVE",selector:".featuredSlot .waveRow",scale:"playerScale",x:"playerX",y:"playerY",sx:"playerStretchX",sy:"playerStretchY",min:55,max:165},
   {id:"title",label:"TRACK TITLE",selector:".featuredSlot .trackTitle",scale:"titleScale",x:"titleX",y:"titleY",sx:"titleStretchX",sy:"titleStretchY",min:55,max:180},
   {id:"structure",label:"SECTIONS",selector:".featuredSlot .trackStructure",scale:"structureScale",x:"structureX",y:"structureY",sx:"structureStretchX",sy:"structureStretchY",min:55,max:165},
-  {id:"data",label:"BEAT PROPERTIES",selector:".featuredSlot .trackDataStrip",scale:"dataScale",x:"dataX",y:"dataY",sx:"dataStretchX",sy:"dataStretchY",min:55,max:165},
+  {id:"core",label:"BPM + KEY",selector:".featuredSlot .beatCoreBlock",scale:"coreScale",x:"coreX",y:"coreY",sx:"coreStretchX",sy:"coreStretchY",min:55,max:165},
+  {id:"mood",label:"MOOD",selector:".featuredSlot .moodBlock",scale:"moodScale",x:"moodX",y:"moodY",sx:"moodStretchX",sy:"moodStretchY",min:55,max:165},
   {id:"status",label:"TRACK STATUS",selector:".featuredSlot .badge",scale:"statusScale",x:"statusX",y:"statusY",sx:"statusStretchX",sy:"statusStretchY",min:55,max:165},
   {id:"buy",label:"PAYMENT BLOCK",selector:".featuredSlot .buyCol",scale:"buyScale",x:"buyX",y:"buyY",sx:"buyStretchX",sy:"buyStretchY",min:55,max:165},
   {id:"meter",label:"METER BLOCK",selector:"#heroMeterBlock",scale:"meterScale",x:"meterX",y:"meterY",sx:"meterStretchX",sy:"meterStretchY",min:45,max:180}
 ];
 
-let layoutMouseEdit=true;
+let layoutMouseEdit=false;
 let layoutSelectedDef=null;
 let layoutSelectedEl=null;
 let layoutDrag=null;
@@ -2244,6 +2315,18 @@ function loadLayoutDebug(){
     Object.keys(LAYOUT_DEBUG_DEFAULTS).forEach(key=>{
       if(Number.isFinite(Number(parsed[key])))layoutDebugState[key]=Number(parsed[key]);
     });
+    /* Migration from the former combined BEAT PROPERTIES module.
+       The current tuned transform is copied to both new modules so the row stays
+       in the same place on the user's existing browser. */
+    if(!Number.isFinite(Number(parsed.coreScale))&&Number.isFinite(Number(parsed.dataScale))){
+      ["Scale","X","Y","StretchX","StretchY"].forEach(suffix=>{
+        const oldKey="data"+suffix;
+        const value=Number(parsed[oldKey]);
+        if(!Number.isFinite(value))return;
+        layoutDebugState["core"+suffix]=value;
+        layoutDebugState["mood"+suffix]=value;
+      });
+    }
   }catch(_){}
 }
 function clampLayoutScale(def,value){return Math.max(def.min,Math.min(def.max,value))}
@@ -2257,12 +2340,13 @@ function applyLayoutDebug(){
   root.setProperty("--dbg-player-scale",String(layoutDebugState.playerScale/100));
   root.setProperty("--dbg-title-scale",String(layoutDebugState.titleScale/100));
   root.setProperty("--dbg-structure-scale",String(layoutDebugState.structureScale/100));
-  root.setProperty("--dbg-data-scale",String(layoutDebugState.dataScale/100));
+  root.setProperty("--dbg-core-scale",String(layoutDebugState.coreScale/100));
+  root.setProperty("--dbg-mood-scale",String(layoutDebugState.moodScale/100));
   root.setProperty("--dbg-status-scale",String(layoutDebugState.statusScale/100));
   root.setProperty("--dbg-buy-scale",String(layoutDebugState.buyScale/100));
   root.setProperty("--dbg-meter-scale",String(layoutDebugState.meterScale/100));
 
-  ["turntable","player","title","structure","data","status","buy","meter"].forEach(id=>{
+  ["turntable","player","title","structure","core","mood","status","buy","meter"].forEach(id=>{
     root.setProperty(`--dbg-${id}-x`,`${layoutDebugState[id+"X"]}px`);
     root.setProperty(`--dbg-${id}-y`,`${layoutDebugState[id+"Y"]}px`);
     root.setProperty(`--dbg-${id}-stretch-x`,String(layoutDebugState[id+"StretchX"]/100));
@@ -2271,7 +2355,7 @@ function applyLayoutDebug(){
 
   Object.entries(debugInputs).forEach(([key,input])=>{if(input)input.value=String(layoutDebugState[key])});
   if(debugValues.headerHeight)debugValues.headerHeight.textContent=`${Math.round(layoutDebugState.headerHeight)} px`;
-  ["tileScale","turntableScale","playerScale","titleScale","structureScale","dataScale","statusScale","buyScale","meterScale"].forEach(key=>{
+  ["tileScale","turntableScale","playerScale","titleScale","structureScale","coreScale","moodScale","statusScale","buyScale","meterScale"].forEach(key=>{
     if(debugValues[key])debugValues[key].textContent=`${Math.round(layoutDebugState[key])}%`;
   });
   updateLayoutSelectionReadout();
@@ -2448,12 +2532,12 @@ function endLayoutAxisResize(event){
 /* =====================================================
    FIXED HERO MODULE FRAMES + CONTENT AUTO-FIT
 ===================================================== */
-const HERO_FRAME_LOCK_KEY="frssnHeroModuleFramesV1";
+const HERO_FRAME_LOCK_KEY="frssnHeroModuleFramesV2";
 const HERO_FRAME_LOCK_TARGETS=[
   {id:"player",selector:".featuredSlot .waveRow",debugId:"player"},
   {id:"title",selector:".featuredSlot .trackTitle",debugId:"title"},
   {id:"structure",selector:".featuredSlot .trackStructure",debugId:"structure"},
-  {id:"data",selector:".featuredSlot .trackDataStrip",debugId:"data"},
+  {id:"core",selector:".featuredSlot .beatCoreBlock",debugId:"core"},
   {id:"status",selector:".featuredSlot .badge",debugId:"status"},
   {id:"buy",selector:".featuredSlot .buyCol",debugId:"buy"}
 ];
@@ -2491,16 +2575,15 @@ function clearHeroFitInlineStyles(){
   const license=document.querySelector(".featuredSlot .license");
   const secondary=document.querySelector(".featuredSlot .secondary");
   [title,badge,time,license,secondary].forEach(el=>el?.style.removeProperty("font-size"));
+  document.querySelectorAll(".featuredSlot .coreValue,.featuredSlot .moodTag").forEach(el=>el.style.removeProperty("font-size"));
   document.querySelectorAll(".featuredSlot .structureSegment").forEach(el=>{
     el.style.removeProperty("font-size");
     el.style.removeProperty("padding-left");
     el.style.removeProperty("padding-right");
   });
   if(strip)strip.style.removeProperty("gap");
-  document.querySelectorAll(".featuredSlot .dataPill").forEach(el=>{
-    el.style.removeProperty("font-size");
-    el.style.removeProperty("padding-left");
-    el.style.removeProperty("padding-right");
+  document.querySelectorAll(".featuredSlot .moodTag").forEach(el=>{
+    el.style.removeProperty("width");
   });
 }
 function clearHeroFrameInlineSizes(){
@@ -2586,23 +2669,29 @@ function fitStructureRail(){
   }
   segs.forEach(s=>{s.style.fontSize=`${best}px`;s.style.paddingLeft=`${Math.max(2,best*.48)}px`;s.style.paddingRight=`${Math.max(2,best*.48)}px`});
 }
-function fitDataStrip(){
-  const strip=document.querySelector(".featuredSlot .trackDataStrip");
-  if(!strip)return;
-  const pills=[...strip.querySelectorAll(".dataPill")];
-  if(!pills.length)return;
-  let lo=6,hi=12,best=6;
-  for(let i=0;i<10;i++){
-    const mid=(lo+hi)/2;
-    const gap=Math.max(3,mid*.62);
-    strip.style.gap=`${gap}px`;
-    pills.forEach(p=>{p.style.fontSize=`${mid}px`;p.style.paddingLeft=`${Math.max(3,mid*.68)}px`;p.style.paddingRight=`${Math.max(3,mid*.68)}px`});
-    const ok=strip.scrollWidth<=strip.clientWidth+.75&&strip.scrollHeight<=strip.clientHeight+.75&&pills.every(p=>p.scrollWidth<=p.clientWidth+.75);
-    if(ok){best=mid;lo=mid}else hi=mid;
-  }
-  const gap=Math.max(3,best*.62);
-  strip.style.gap=`${gap}px`;
-  pills.forEach(p=>{p.style.fontSize=`${best}px`;p.style.paddingLeft=`${Math.max(3,best*.68)}px`;p.style.paddingRight=`${Math.max(3,best*.68)}px`});
+function fitCoreBlock(){
+  const block=document.querySelector(".featuredSlot .beatCoreBlock");
+  if(!block)return;
+  /* BPM / KEY label typography is intentionally NOT touched here.
+     Only the changing values are fitted inside their locked frames. */
+  block.querySelectorAll(".coreValue").forEach(value=>fitFontBinary(value,{min:10,max:22}));
+}
+function fitMoodBlock(){
+  const block=document.querySelector(".featuredSlot .moodBlock");
+  if(!block)return;
+  const tags=[...block.querySelectorAll(".moodTag")];
+  if(!tags.length)return;
+  const preferred=16;
+  tags.forEach(tag=>{
+    tag.style.fontSize=`${preferred}px`;
+    tag.style.width="auto";
+    /* scrollWidth gives the real text requirement including current padding.
+       Height never changes; width grows with text up to a sane visual ceiling. */
+    const ideal=Math.ceil(tag.scrollWidth+2);
+    const width=Math.max(64,Math.min(220,ideal));
+    tag.style.width=`${width}px`;
+    fitFontBinary(tag,{min:9,max:preferred});
+  });
 }
 function fitPaymentBlock(){
   const buy=document.querySelector(".featuredSlot .buyCol");
@@ -2626,7 +2715,8 @@ function fitHeroModuleContents(){
   if(time)fitFontBinary(time,{min:8,max:14});
 
   fitStructureRail();
-  fitDataStrip();
+  fitCoreBlock();
+  fitMoodBlock();
   fitPaymentBlock();
 }
 function scheduleFitHeroModuleContents(){
@@ -2744,7 +2834,8 @@ if(IS_DETAIL_PAGE&&layoutDebugPanel){
       `PLAY + WAVE = ${layoutDebugState.playerScale}% | X ${layoutDebugState.playerX} | Y ${layoutDebugState.playerY} | W ${layoutDebugState.playerStretchX}% | H ${layoutDebugState.playerStretchY}%`,
       `TRACK TITLE = ${layoutDebugState.titleScale}% | X ${layoutDebugState.titleX} | Y ${layoutDebugState.titleY} | W ${layoutDebugState.titleStretchX}% | H ${layoutDebugState.titleStretchY}%`,
       `SECTIONS = ${layoutDebugState.structureScale}% | X ${layoutDebugState.structureX} | Y ${layoutDebugState.structureY} | W ${layoutDebugState.structureStretchX}% | H ${layoutDebugState.structureStretchY}%`,
-      `BEAT PROPERTIES = ${layoutDebugState.dataScale}% | X ${layoutDebugState.dataX} | Y ${layoutDebugState.dataY} | W ${layoutDebugState.dataStretchX}% | H ${layoutDebugState.dataStretchY}%`,
+      `BPM + KEY = ${layoutDebugState.coreScale}% | X ${layoutDebugState.coreX} | Y ${layoutDebugState.coreY} | W ${layoutDebugState.coreStretchX}% | H ${layoutDebugState.coreStretchY}%`,
+      `MOOD = ${layoutDebugState.moodScale}% | X ${layoutDebugState.moodX} | Y ${layoutDebugState.moodY} | W ${layoutDebugState.moodStretchX}% | H ${layoutDebugState.moodStretchY}%`,
       `TRACK STATUS = ${layoutDebugState.statusScale}% | X ${layoutDebugState.statusX} | Y ${layoutDebugState.statusY} | W ${layoutDebugState.statusStretchX}% | H ${layoutDebugState.statusStretchY}%`,
       `PAYMENT BLOCK = ${layoutDebugState.buyScale}% | X ${layoutDebugState.buyX} | Y ${layoutDebugState.buyY} | W ${layoutDebugState.buyStretchX}% | H ${layoutDebugState.buyStretchY}%`,
       `METER BLOCK = ${layoutDebugState.meterScale}% | X ${layoutDebugState.meterX} | Y ${layoutDebugState.meterY} | W ${layoutDebugState.meterStretchX}% | H ${layoutDebugState.meterStretchY}%`,
@@ -2904,8 +2995,8 @@ function playPaperOut(){stopPaperSfx(paperOutSfx);paperOutSfx.volume=PAPER_SFX_V
 const MECHANISM_DEPLOY_DURATION=1450;
 const ARM_START_OFFSET_MS=-240;
 const ARM_MOVE_DURATION_MS=380;
-let ARM_PARK_ANGLE=-8;
-let ARM_START_ANGLE=19.5;
+let ARM_PARK_ANGLE=0.5;
+let ARM_START_ANGLE=18.5;
 const ARM_END_ANGLE=32.5;
 
 const SCRATCH_TIME_SCALE=.54;
@@ -2939,7 +3030,7 @@ const SEEK_FULL_GAIN=1.0;
    the opposite side of the tonearm travel.
 ===================================================== */
 const TONEARM_DEBUG_KEY="frssnTonearmDebugV1";
-const TONEARM_DEBUG_DEFAULTS={park:-8,start:19.5};
+const TONEARM_DEBUG_DEFAULTS={park:0.5,start:18.5};
 const dbgArmPark=document.getElementById("dbgArmPark");
 const dbgArmStart=document.getElementById("dbgArmStart");
 const dbgArmParkValue=document.getElementById("dbgArmParkValue");
@@ -4176,9 +4267,13 @@ function ensureTrackEssentials(state){
   }
   const moods=(m.moods||[]).slice(0,3);
   strip.innerHTML=`
-    <span class="dataPill">BPM <b>${m.bpm}</b></span>
-    <span class="dataPill">KEY <b>${m.key}</b></span>
-    ${moods.map(tag=>`<span class="dataPill moodTag">${tag}</span>`).join("")}
+    <div class="beatCoreBlock" aria-label="Beat tempo and key">
+      <span class="coreProperty is-bpm"><span class="coreLabel">BPM</span><span class="coreValueBox"><b class="coreValue">${m.bpm}</b></span></span>
+      <span class="coreProperty is-key"><span class="coreLabel">KEY</span><span class="coreValueBox"><b class="coreValue">${m.key}</b></span></span>
+    </div>
+    <div class="moodBlock" aria-label="Mood">
+      ${moods.map(tag=>`<span class="moodTag">${tag}</span>`).join("")}
+    </div>
   `;
 }
 
