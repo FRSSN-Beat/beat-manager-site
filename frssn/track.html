@@ -489,6 +489,384 @@ button,input{font:inherit}
   .detailFacts{grid-template-columns:repeat(2,1fr)}.signalTiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 }
 
+
+
+/* =====================================================
+   INDIVIDUAL PAGE V2 // STICKY SINGLE-TRACK HERO
+   The entire header is now the featured player.
+   Everything below is a scrollable vinyl index.
+===================================================== */
+
+.detailPage .page{
+  width:min(1380px,calc(100% - 34px));
+  padding:0 0 34px;
+}
+
+.detailPage .topbar{
+  display:none!important;
+}
+
+.detailPage .profile{
+  margin-top:0;
+  border:0;
+  background:transparent;
+  clip-path:none;
+  overflow:visible;
+}
+
+/* The former profile header is now ONLY the fixed hero player shell. */
+.detailPage .profileHead{
+  position:sticky;
+  top:0;
+  z-index:40;
+  display:block;
+  min-height:404px;
+  padding:18px;
+  border:1px solid rgba(214,255,40,.20);
+  border-top:0;
+  background:
+    linear-gradient(180deg,rgba(8,11,8,.985),rgba(4,6,4,.97)),
+    radial-gradient(circle at 30% 45%,rgba(214,255,40,.065),transparent 34%);
+  box-shadow:
+    0 22px 38px rgba(0,0,0,.48),
+    inset 0 -1px 0 rgba(214,255,40,.08);
+  overflow:hidden;
+}
+
+.detailPage .profileHead::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(90deg,rgba(214,255,40,.035),transparent 22%,transparent 78%,rgba(214,255,40,.018)),
+    repeating-linear-gradient(90deg,transparent 0,transparent 79px,rgba(255,255,255,.012) 80px);
+}
+
+.detailPage .profileHead::after{
+  content:"SINGLE TRACK // DIRECT SIGNAL";
+  left:auto;
+  right:20px;
+  bottom:12px;
+  color:rgba(214,255,40,.24);
+  font:8px/1 monospace;
+  letter-spacing:.22em;
+}
+
+/* Old profile / link / VU furniture stays in DOM for the controller but is visually removed. */
+.detailPage .profileHead > .avatar,
+.detailPage .profileHead > .identity,
+.detailPage .profileHead > .back,
+.detailPage .detailLinkBar,
+.detailPage .tabs,
+.detailPage .detailFacts,
+.detailPage .detailNote,
+.detailPage .receiver,
+.detailPage .footer,
+.detailPage .vuModule,
+.detailPage .vuDebugPanel,
+.detailPage .vuDebugHandle,
+.detailPage .vuDebugFrame,
+.detailPage .vuPivotGuide,
+.detailPage .vuCenterGuide,
+.detailPage .vuDebugReopen{
+  display:none!important;
+}
+
+.detailPage .featuredSlot{
+  position:relative;
+  z-index:2;
+  width:100%;
+  height:100%;
+  margin:0;
+  padding:0;
+}
+
+/* Large single-track player fills the whole hero. */
+.detailPage .featuredSlot .track{
+  width:100%;
+  min-height:366px;
+  margin:0;
+  padding:24px 26px;
+  grid-template-columns:408px minmax(0,1fr) 196px;
+  gap:30px;
+  align-items:center;
+  border:0;
+  background:transparent;
+  overflow:hidden;
+  box-shadow:none;
+}
+
+.detailPage .featuredSlot .track::before{
+  width:2px;
+  opacity:.72;
+}
+
+/* Scale the complete vinyl mechanism as one object so all calibrated physics remain intact. */
+.detailPage .featuredSlot .vinylUnit{
+  width:178px;
+  height:132px;
+  margin-left:12px;
+  transform:scale(2.15);
+  transform-origin:left center;
+}
+
+.detailPage .featuredSlot .trackInfo{
+  align-self:center;
+  padding-left:4px;
+}
+
+.detailPage .featuredSlot .topline{
+  margin-bottom:25px;
+}
+
+.detailPage .featuredSlot .trackTitle{
+  font-size:44px;
+  line-height:.95;
+  letter-spacing:.14em;
+}
+
+.detailPage .featuredSlot .artist{
+  margin-top:10px;
+  font-size:11px;
+  letter-spacing:.16em;
+}
+
+.detailPage .featuredSlot .badge{
+  min-width:94px;
+  min-height:46px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:9px;
+}
+
+.detailPage .featuredSlot .waveRow{
+  grid-template-columns:52px minmax(0,1fr) auto;
+  gap:16px;
+}
+
+.detailPage .featuredSlot .iconBtn{
+  width:50px;
+  height:50px;
+}
+
+.detailPage .featuredSlot .iconBtn svg{
+  width:16px;
+  height:16px;
+}
+
+.detailPage .featuredSlot .waveBox{
+  height:82px;
+}
+
+.detailPage .featuredSlot .time{
+  font-size:11px;
+}
+
+.detailPage .featuredSlot .meta{
+  margin-top:18px;
+  gap:20px;
+  font-size:9px;
+  letter-spacing:.14em;
+}
+
+.detailPage .featuredSlot .buyCol{
+  min-width:196px;
+  gap:10px;
+}
+
+.detailPage .featuredSlot .license{
+  min-height:64px;
+  font-size:12px;
+}
+
+.detailPage .featuredSlot .secondary{
+  min-height:42px;
+}
+
+/* Lower area is intentionally independent from the fixed hero. */
+.detailPage .content{
+  position:relative;
+  z-index:2;
+  padding:28px 18px 42px;
+  background:linear-gradient(180deg,rgba(4,6,4,.82),rgba(4,5,4,.40));
+}
+
+.detailPage .sectionTitle{
+  margin:0 0 17px;
+  padding:0 4px;
+}
+
+.detailPage .sectionTitle h2{
+  font-size:13px;
+  letter-spacing:.18em;
+}
+
+/* Vinyl shelf: many releases scroll horizontally, while the hero stays pinned. */
+.detailPage .signalTiles{
+  display:grid;
+  grid-template-columns:none;
+  grid-auto-flow:column;
+  grid-auto-columns:176px;
+  gap:14px;
+  width:100%;
+  margin:0;
+  padding:4px 4px 18px;
+  overflow-x:auto;
+  overflow-y:hidden;
+  overscroll-behavior-x:contain;
+  scroll-snap-type:x proximity;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(214,255,40,.34) rgba(255,255,255,.05);
+}
+
+.detailPage .signalTiles::-webkit-scrollbar{
+  height:7px;
+}
+
+.detailPage .signalTiles::-webkit-scrollbar-track{
+  background:rgba(255,255,255,.04);
+}
+
+.detailPage .signalTiles::-webkit-scrollbar-thumb{
+  background:rgba(214,255,40,.28);
+}
+
+.detailPage .signalTile{
+  scroll-snap-align:start;
+  padding:10px;
+  min-height:218px;
+  background:rgba(5,7,5,.88);
+}
+
+.detailPage .signalTileVisual{
+  margin-bottom:10px;
+}
+
+.detailPage .signalTileTitle{
+  font-size:11px;
+}
+
+.detailPage .signalTileMeta{
+  font-size:7px;
+}
+
+.detailPage .detailSourceTrackList{
+  display:none!important;
+}
+
+@media(max-width:1050px){
+  .detailPage .featuredSlot .track{
+    grid-template-columns:330px minmax(0,1fr) 172px;
+    gap:20px;
+    padding:22px 20px;
+  }
+  .detailPage .featuredSlot .vinylUnit{
+    transform:scale(1.75);
+    margin-left:8px;
+  }
+  .detailPage .featuredSlot .trackTitle{font-size:36px}
+  .detailPage .featuredSlot .buyCol{min-width:172px}
+}
+
+@media(max-width:760px){
+  .detailPage .page{
+    width:100%;
+    padding:0;
+  }
+
+  .detailPage .profileHead{
+    min-height:auto;
+    padding:12px 12px 14px;
+  }
+
+  .detailPage .profileHead::after{
+    display:none;
+  }
+
+  .detailPage .featuredSlot .track{
+    min-height:540px;
+    display:grid;
+    grid-template-columns:1fr;
+    grid-template-rows:205px auto auto;
+    gap:8px;
+    padding:14px;
+    overflow:hidden;
+  }
+
+  .detailPage .featuredSlot .vinylUnit{
+    width:112px;
+    height:86px;
+    margin:0 auto;
+    transform:scale(1.92);
+    transform-origin:center center;
+  }
+
+  .detailPage .featuredSlot .trackInfo{
+    width:100%;
+    padding:0;
+  }
+
+  .detailPage .featuredSlot .trackTitle{
+    font-size:31px;
+  }
+
+  .detailPage .featuredSlot .topline{
+    margin-bottom:12px;
+  }
+
+  .detailPage .featuredSlot .waveRow{
+    grid-template-columns:44px minmax(0,1fr);
+    gap:10px;
+  }
+
+  .detailPage .featuredSlot .iconBtn{
+    width:42px;
+    height:42px;
+  }
+
+  .detailPage .featuredSlot .waveBox{
+    height:62px;
+  }
+
+  .detailPage .featuredSlot .time{
+    display:none;
+  }
+
+  .detailPage .featuredSlot .meta{
+    margin-top:10px;
+    gap:10px;
+  }
+
+  .detailPage .featuredSlot .buyCol{
+    min-width:0;
+    width:100%;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+  }
+
+  .detailPage .featuredSlot .license,
+  .detailPage .featuredSlot .secondary{
+    min-height:46px;
+  }
+
+  .detailPage .content{
+    padding:20px 10px 28px;
+  }
+
+  .detailPage .signalTiles{
+    grid-auto-columns:144px;
+    gap:10px;
+    padding-bottom:14px;
+  }
+
+  .detailPage .signalTile{
+    min-height:184px;
+    padding:8px;
+  }
+}
+
 </style>
 </head>
 
@@ -1319,7 +1697,7 @@ loadVuState();applyVuDebug();
 let vuSplitter=null,vuAnalyserL=null,vuAnalyserR=null,vuDataL=null,vuDataR=null,vuRAF=null,vuNeedleValueL=0,vuNeedleValueR=0,vuPeakL=0,vuPeakR=0;
 const VU_SCRATCH_IDLE_MS=60;
 function initVuAnalyser(){
-  if(IS_ANDROID||!workletLimiter||vuAnalyserL)return;
+  if(IS_ANDROID||document.body.classList.contains("detailPage")||!workletLimiter||vuAnalyserL)return;
   const ctx=getAudioContext();
   vuSplitter=ctx.createChannelSplitter(2);vuAnalyserL=ctx.createAnalyser();vuAnalyserR=ctx.createAnalyser();
   vuAnalyserL.fftSize=512;vuAnalyserR.fftSize=512;vuAnalyserL.smoothingTimeConstant=0;vuAnalyserR.smoothingTimeConstant=0;
