@@ -717,14 +717,15 @@ button,input{font:inherit}
   letter-spacing:.18em;
 }
 
-/* Vinyl shelf: many releases scroll horizontally, while the hero stays pinned. */
+/* Vinyl showcase: exactly 4 rows. More releases extend the shelf horizontally. */
 .detailPage .signalTiles{
+  --tile-column:176px;
   display:grid;
-  grid-template-columns:none;
-  grid-auto-flow:column;
-  grid-auto-columns:176px;
+  grid-template-rows:repeat(4,auto);
+  grid-auto-flow:row;
   gap:14px;
   width:100%;
+  min-width:max-content;
   margin:0;
   padding:4px 4px 18px;
   overflow-x:auto;
@@ -968,7 +969,7 @@ button,input{font:inherit}
   }
 
   .detailPage .signalTiles{
-    grid-auto-columns:144px;
+    --tile-column:144px;
     gap:10px;
     padding-bottom:14px;
   }
@@ -1279,7 +1280,7 @@ button,input{font:inherit}
       <div class="identity">
         <h1>FRSSN</h1>
         <div class="handle">Individual signal page // direct track link</div>
-        <div class="microstatus" id="microstatus">Connection stable // 02 signals detected</div>
+        <div class="microstatus" id="microstatus">Connection stable // 24 signals detected</div>
       </div>
       <a class="back" href="tracks.html">← Back // Store</a>
 
@@ -1524,6 +1525,86 @@ const paperInSfx = document.getElementById("paperInSfx");
 const paperOutSfx = document.getElementById("paperOutSfx");
 
 /* =====================================================
+   SHOWCASE MOCK CATALOG // 4 ROWS
+   Temporary visual fill for the storefront. The two real assets are reused
+   alternately, but every slot has its own title / URL identity.
+===================================================== */
+const SHOWCASE_TRACK_NAMES = [
+  "OLD",
+  "TRACK 02",
+  "STATIC",
+  "VEIL",
+  "ECHO",
+  "NOCTURNE",
+  "NULL",
+  "AFTERIMAGE",
+  "GHOSTLINE",
+  "BLACKOUT",
+  "ORBIT",
+  "PHASE",
+  "DUST",
+  "SUBLEVEL",
+  "MIRROR",
+  "CONTACT",
+  "VOID",
+  "RECEIVER",
+  "COLD SIGNAL",
+  "NIGHT NODE",
+  "MEMORY",
+  "TRACE",
+  "DEAD AIR",
+  "HORIZON"
+];
+
+if(IS_DETAIL_PAGE){
+  const showcaseSourceList = document.querySelector(".detailSourceTrackList");
+  const showcaseBaseTracks = showcaseSourceList
+    ? [...showcaseSourceList.querySelectorAll(":scope > .track")]
+    : [];
+
+  if(showcaseSourceList && showcaseBaseTracks.length >= 2){
+    SHOWCASE_TRACK_NAMES.forEach((title,index)=>{
+      const signal = String(index+1).padStart(3,"0");
+
+      if(index < showcaseBaseTracks.length){
+        const existing = showcaseBaseTracks[index];
+        const titleLink = existing.querySelector(".trackTitleLink");
+        if(titleLink){
+          titleLink.textContent = title;
+          titleLink.href = `track.html?track=${encodeURIComponent(existing.dataset.trackId)}`;
+        }
+        const metaSignal = existing.querySelector(".meta span");
+        if(metaSignal) metaSignal.textContent = `Signal // ${signal}`;
+        return;
+      }
+
+      const source = showcaseBaseTracks[index % 2];
+      const clone = source.cloneNode(true);
+      const id = `showcase-${String(index+1).padStart(2,"0")}`;
+
+      clone.dataset.trackId = id;
+      clone.dataset.audio = source.dataset.audio;
+
+      const titleLink = clone.querySelector(".trackTitleLink");
+      if(titleLink){
+        titleLink.textContent = title;
+        titleLink.href = `track.html?track=${encodeURIComponent(id)}`;
+      }
+
+      const recordLabel = clone.querySelector(".recordLabel img");
+      const cover = clone.querySelector(".sleeve .cover");
+      if(recordLabel) recordLabel.alt = title;
+      if(cover) cover.alt = `${title} cover`;
+
+      const metaSignal = clone.querySelector(".meta span");
+      if(metaSignal) metaSignal.textContent = `Signal // ${signal}`;
+
+      showcaseSourceList.appendChild(clone);
+    });
+  }
+}
+
+/* =====================================================
    TRACK OBJECTS
 ===================================================== */
 const tracks = [...document.querySelectorAll(".track")].map((el,index)=>({
@@ -1715,34 +1796,61 @@ function fallbackWave(state){
   const fallback=Array.from({length:WAVE_BARS},(_,i)=>16+((i*37+state.index*19)%68));
   renderBars(state.wave,fallback);renderBars(state.waveClone,fallback);
 }
-async function loadTrackData(state){
-  try{
-    const response=await fetch(freshAssetUrl(state.audioUrl),{cache:"no-store"});
-    if(!response.ok)throw new Error(`Audio fetch failed: ${state.audioUrl}`);
+const decodedAudioAssetCache = new Map();
+
+async function getDecodedAudioAsset(audioUrl){
+  if(decodedAudioAssetCache.has(audioUrl)){
+    return decodedAudioAssetCache.get(audioUrl);
+  }
+
+  const promise=(async()=>{
+    const response=await fetch(freshAssetUrl(audioUrl),{cache:"no-store"});
+    if(!response.ok)throw new Error(`Audio fetch failed: ${audioUrl}`);
+
     const arrayBuffer=await response.arrayBuffer();
     const ctx=getAudioContext();
-    state.decoded=await ctx.decodeAudioData(arrayBuffer.slice(0));
-    state.duration=state.decoded.duration;
-    state.total.textContent=fmt(state.duration);
+    const decoded=await ctx.decodeAudioData(arrayBuffer.slice(0));
 
     const channels=[];
-    for(let c=0;c<state.decoded.numberOfChannels;c++)channels.push(state.decoded.getChannelData(c));
-    const blockSize=Math.max(1,Math.floor(state.decoded.length/WAVE_BARS));
+    for(let c=0;c<decoded.numberOfChannels;c++)channels.push(decoded.getChannelData(c));
+
+    const blockSize=Math.max(1,Math.floor(decoded.length/WAVE_BARS));
     const peaks=[];
     for(let i=0;i<WAVE_BARS;i++){
       const start=i*blockSize;
-      const end=Math.min(state.decoded.length,start+blockSize);
+      const end=Math.min(decoded.length,start+blockSize);
       let peak=0;
       const stride=Math.max(1,Math.floor((end-start)/900));
       for(let c=0;c<channels.length;c++){
-        for(let s=start;s<end;s+=stride)peak=Math.max(peak,Math.abs(channels[c][s]));
+        for(let sample=start;sample<end;sample+=stride){
+          peak=Math.max(peak,Math.abs(channels[c][sample]));
+        }
       }
       peaks.push(peak);
     }
+
     const maxPeak=Math.max(...peaks)||1;
-    const heights=peaks.map(p=>p/maxPeak*100);
-    renderBars(state.wave,heights);
-    renderBars(state.waveClone,heights);
+    const heights=peaks.map(peak=>peak/maxPeak*100);
+    return {decoded,duration:decoded.duration,heights};
+  })();
+
+  decodedAudioAssetCache.set(audioUrl,promise);
+  try{
+    return await promise;
+  }catch(error){
+    decodedAudioAssetCache.delete(audioUrl);
+    throw error;
+  }
+}
+
+async function loadTrackData(state){
+  try{
+    const asset=await getDecodedAudioAsset(state.audioUrl);
+    state.decoded=asset.decoded;
+    state.duration=asset.duration;
+    state.total.textContent=fmt(state.duration);
+    renderBars(state.wave,asset.heights);
+    renderBars(state.waveClone,asset.heights);
   }catch(error){
     console.warn(error);
     state.loadError=true;
@@ -2374,7 +2482,7 @@ async function stopAndPackActive(){
   await packTrack(state,{reset:true});
   if(activeTrack===state){activeTrack=null;engineLoadedTrack=null;enginePositionSec=0;engineSpeed=0;engineMode="paused";engineActive=false}
   vuPeakL=vuPeakR=vuNeedleValueL=vuNeedleValueR=0;
-  microstatus.textContent="Connection stable // 02 signals detected";
+  microstatus.textContent=`Connection stable // ${String(tracks.length).padStart(2,"0")} signals detected`;
 }
 
 /* =====================================================
@@ -2587,7 +2695,7 @@ const playerBootPromise=(async()=>{
 
   tracks.forEach(fallbackWave);
   await Promise.all(tracks.map(loadTrackData));
-  try{await initWorklet();microstatus.textContent=IS_ANDROID?"ENGINE READY // ANDROID PERFORMANCE MODE":"Connection stable // 02 signals detected"}
+  try{await initWorklet();microstatus.textContent=IS_ANDROID?"ENGINE READY // ANDROID PERFORMANCE MODE":`Connection stable // ${String(tracks.length).padStart(2,"0")} signals detected`}
   catch(error){console.warn(error);microstatus.textContent="ENGINE ERROR // AUDIOWORKLET INIT FAILED"}
   startVisualLoop();
 })();
@@ -2680,6 +2788,11 @@ function tileForTrack(state){
 function renderSignalTiles(){
   signalTiles.innerHTML="";
   detailOtherCount.textContent=`VINYL INDEX // ${String(tracks.length).padStart(2,"0")} SIGNAL${tracks.length===1?"":"S"}`;
+
+  const showcaseRows=4;
+  const showcaseColumns=Math.max(1,Math.ceil(tracks.length/showcaseRows));
+  signalTiles.style.gridTemplateColumns=`repeat(${showcaseColumns}, var(--tile-column))`;
+  signalTiles.style.gridTemplateRows=`repeat(${showcaseRows}, auto)`;
 
   tracks.forEach(state=>{
     const m=metaFor(state),title=trackTitleOf(state),artist=trackArtistOf(state),cover=trackCoverOf(state);
