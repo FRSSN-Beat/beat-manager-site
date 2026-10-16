@@ -1707,6 +1707,102 @@ body.layout-mouse-edit .layout-debug-selected{
   .detailPage .featuredSlot .secondary{font-size:12px}
 }
 
+
+/* =====================================================
+   HERO MODULE FRAME LOCK // FIXED OUTER GEOMETRY + AUTO FIT
+   The debug geometry stays exactly where the user placed it.
+   Dynamic text/content is fitted INSIDE the locked module box.
+===================================================== */
+@media(min-width:901px){
+  .detailPage.hero-frame-lock .featuredSlot .trackTitle,
+  .detailPage.hero-frame-lock .featuredSlot .trackStructure,
+  .detailPage.hero-frame-lock .featuredSlot .waveRow,
+  .detailPage.hero-frame-lock .featuredSlot .trackDataStrip,
+  .detailPage.hero-frame-lock .featuredSlot .badge,
+  .detailPage.hero-frame-lock .featuredSlot .buyCol{
+    box-sizing:border-box!important;
+    overflow:hidden!important;
+    min-width:0!important;
+    min-height:0!important;
+    max-width:none!important;
+    max-height:none!important;
+  }
+
+  .detailPage.hero-frame-lock .featuredSlot .trackTitle{
+    white-space:nowrap!important;
+    text-overflow:clip!important;
+  }
+
+  .detailPage.hero-frame-lock .featuredSlot .trackStructure{
+    flex-wrap:nowrap!important;
+  }
+  .detailPage.hero-frame-lock .featuredSlot .structureSegment{
+    min-width:0!important;
+    overflow:hidden!important;
+    text-overflow:clip!important;
+    white-space:nowrap!important;
+  }
+
+  .detailPage.hero-frame-lock .featuredSlot .trackDataStrip{
+    flex-wrap:nowrap!important;
+    align-items:center!important;
+  }
+  .detailPage.hero-frame-lock .featuredSlot .dataPill{
+    min-width:0!important;
+    flex:0 1 auto!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:clip!important;
+  }
+
+  .detailPage.hero-frame-lock .featuredSlot .badge{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+  }
+
+  .detailPage.hero-frame-lock .featuredSlot .buyCol{
+    display:grid!important;
+    grid-template-rows:minmax(0,1.58fr) minmax(0,1fr)!important;
+    align-items:stretch!important;
+  }
+  .detailPage.hero-frame-lock .featuredSlot .buyCol > *{
+    width:100%!important;
+    min-width:0!important;
+    min-height:0!important;
+    height:100%!important;
+    overflow:hidden!important;
+    white-space:nowrap!important;
+    box-sizing:border-box!important;
+  }
+
+  .detailPage.hero-frame-lock .featuredSlot .waveRow{
+    align-items:center!important;
+  }
+  .detailPage.hero-frame-lock .featuredSlot .waveBox{
+    min-width:0!important;
+    width:auto!important;
+  }
+  .detailPage.hero-frame-lock .featuredSlot .time{
+    min-width:0!important;
+    white-space:nowrap!important;
+  }
+}
+
+.layoutFrameLockStatus{
+  margin-top:8px;
+  padding:6px 8px;
+  border:1px solid rgba(214,255,40,.16);
+  background:rgba(214,255,40,.025);
+  color:rgba(255,255,255,.46);
+  font:700 7px/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  letter-spacing:.05em;
+}
+.layoutFrameLockStatus b{color:var(--accent);font-weight:900}
+.layoutDebugActions.three{grid-template-columns:1fr 1fr 1fr}
+
 </style>
 </head>
 
@@ -2010,11 +2106,13 @@ body.layout-mouse-edit .layout-debug-selected{
     <input id="dbgMeterScale" type="range" min="45" max="180" step="1" value="100">
   </div>
 
-  <div class="layoutDebugActions">
+  <div class="layoutFrameLockStatus" id="layoutFrameLockStatus">MODULE FRAMES // <b>WAITING</b></div>
+  <div class="layoutDebugActions three">
     <button id="layoutDebugReset" type="button">RESET</button>
+    <button id="layoutDebugRelock" type="button">RELOCK FRAMES</button>
     <button id="layoutDebugCopy" type="button">COPY VALUES</button>
   </div>
-  <div class="layoutDebugHint">Values are saved locally. HIDE only hides this panel — the tuned layout remains active.</div>
+  <div class="layoutDebugHint">Outer module frames stay fixed. When titles, sections, moods, status or checkout text changes, typography is fitted inside those frames automatically.</div>
 </div>
 <button class="layoutDebugReopen" id="layoutDebugReopen" type="button">LAYOUT DEBUG</button>
 <div class="layoutScaleHandle" id="layoutScaleHandle" aria-hidden="true"></div>
@@ -2071,7 +2169,9 @@ const layoutDebugPanel=document.getElementById("layoutDebugPanel");
 const layoutDebugHide=document.getElementById("layoutDebugHide");
 const layoutDebugReopen=document.getElementById("layoutDebugReopen");
 const layoutDebugReset=document.getElementById("layoutDebugReset");
+const layoutDebugRelock=document.getElementById("layoutDebugRelock");
 const layoutDebugCopy=document.getElementById("layoutDebugCopy");
+const layoutFrameLockStatus=document.getElementById("layoutFrameLockStatus");
 const layoutDebugMouseToggle=document.getElementById("layoutDebugMouseToggle");
 const layoutDebugSelectedReadout=document.getElementById("layoutDebugSelectedReadout");
 const layoutScaleHandle=document.getElementById("layoutScaleHandle");
@@ -2165,6 +2265,7 @@ function applyLayoutDebug(){
   });
   updateLayoutSelectionReadout();
   scheduleLayoutHandleUpdate();
+  if(heroFrameLockReady)scheduleFitHeroModuleContents();
 }
 
 function findLayoutTargetFromEventTarget(target){
@@ -2332,9 +2433,210 @@ function endLayoutAxisResize(event){
   scheduleLayoutHandleUpdate();
 }
 
+
+/* =====================================================
+   FIXED HERO MODULE FRAMES + CONTENT AUTO-FIT
+===================================================== */
+const HERO_FRAME_LOCK_KEY="frssnHeroModuleFramesV1";
+const HERO_FRAME_LOCK_TARGETS=[
+  {id:"player",selector:".featuredSlot .waveRow",debugId:"player"},
+  {id:"title",selector:".featuredSlot .trackTitle",debugId:"title"},
+  {id:"structure",selector:".featuredSlot .trackStructure",debugId:"structure"},
+  {id:"data",selector:".featuredSlot .trackDataStrip",debugId:"data"},
+  {id:"status",selector:".featuredSlot .badge",debugId:"status"},
+  {id:"buy",selector:".featuredSlot .buyCol",debugId:"buy"}
+];
+let heroFrameLockState={};
+let heroFrameLockReady=false;
+let heroFitRAF=0;
+
+function frameDebugDef(id){return LAYOUT_MOUSE_TARGETS.find(d=>d.id===id)||null}
+function frameScaleFactors(id){
+  const d=frameDebugDef(id);
+  if(!d)return {x:1,y:1};
+  const zoom=Math.max(.01,(Number(layoutDebugState[d.scale])||100)/100);
+  const sx=Math.max(.01,(Number(layoutDebugState[d.sx])||100)/100);
+  const sy=Math.max(.01,(Number(layoutDebugState[d.sy])||100)/100);
+  return {x:zoom*sx,y:zoom*sy};
+}
+function saveHeroFrameLocks(){
+  try{localStorage.setItem(HERO_FRAME_LOCK_KEY,JSON.stringify(heroFrameLockState))}catch(_){}
+}
+function loadHeroFrameLocks(){
+  try{
+    const raw=localStorage.getItem(HERO_FRAME_LOCK_KEY);
+    if(!raw)return false;
+    const parsed=JSON.parse(raw);
+    if(!parsed||typeof parsed!=="object")return false;
+    heroFrameLockState=parsed;
+    return HERO_FRAME_LOCK_TARGETS.every(d=>parsed[d.id]&&Number(parsed[d.id].width)>0&&Number(parsed[d.id].height)>0);
+  }catch(_){return false}
+}
+function clearHeroFitInlineStyles(){
+  const title=document.querySelector(".featuredSlot .trackTitle");
+  const badge=document.querySelector(".featuredSlot .badge");
+  const time=document.querySelector(".featuredSlot .time");
+  const strip=document.querySelector(".featuredSlot .trackDataStrip");
+  const license=document.querySelector(".featuredSlot .license");
+  const secondary=document.querySelector(".featuredSlot .secondary");
+  [title,badge,time,license,secondary].forEach(el=>el?.style.removeProperty("font-size"));
+  document.querySelectorAll(".featuredSlot .structureSegment").forEach(el=>{
+    el.style.removeProperty("font-size");
+    el.style.removeProperty("padding-left");
+    el.style.removeProperty("padding-right");
+  });
+  if(strip)strip.style.removeProperty("gap");
+  document.querySelectorAll(".featuredSlot .dataPill").forEach(el=>{
+    el.style.removeProperty("font-size");
+    el.style.removeProperty("padding-left");
+    el.style.removeProperty("padding-right");
+  });
+}
+function clearHeroFrameInlineSizes(){
+  HERO_FRAME_LOCK_TARGETS.forEach(d=>{
+    const el=document.querySelector(d.selector);
+    if(!el)return;
+    el.style.removeProperty("width");
+    el.style.removeProperty("height");
+  });
+  document.body.classList.remove("hero-frame-lock");
+}
+function captureHeroFrameLocks({force=false}={}){
+  if(!IS_DETAIL_PAGE||window.innerWidth<901)return false;
+  if(!force&&heroFrameLockReady)return true;
+  clearHeroFitInlineStyles();
+  clearHeroFrameInlineSizes();
+
+  const next={};
+  for(const d of HERO_FRAME_LOCK_TARGETS){
+    const el=document.querySelector(d.selector);
+    if(!el)continue;
+    const r=el.getBoundingClientRect();
+    const f=frameScaleFactors(d.debugId);
+    const width=Math.max(1,r.width/f.x);
+    const height=Math.max(1,r.height/f.y);
+    next[d.id]={width:Math.round(width*10)/10,height:Math.round(height*10)/10};
+  }
+  if(Object.keys(next).length!==HERO_FRAME_LOCK_TARGETS.length)return false;
+  heroFrameLockState=next;
+  heroFrameLockReady=true;
+  saveHeroFrameLocks();
+  applyHeroFrameLocks();
+  updateHeroFrameLockStatus();
+  return true;
+}
+function applyHeroFrameLocks(){
+  if(!IS_DETAIL_PAGE||window.innerWidth<901)return;
+  if(!heroFrameLockReady&&!loadHeroFrameLocks())return;
+  heroFrameLockReady=true;
+  document.body.classList.add("hero-frame-lock");
+  HERO_FRAME_LOCK_TARGETS.forEach(d=>{
+    const el=document.querySelector(d.selector);
+    const box=heroFrameLockState[d.id];
+    if(!el||!box)return;
+    el.style.width=`${box.width}px`;
+    el.style.height=`${box.height}px`;
+  });
+  scheduleFitHeroModuleContents();
+}
+function updateHeroFrameLockStatus(){
+  if(!layoutFrameLockStatus)return;
+  layoutFrameLockStatus.innerHTML=heroFrameLockReady
+    ? 'MODULE FRAMES // <b>LOCKED</b> // CONTENT AUTO-FIT ON'
+    : 'MODULE FRAMES // <b>WAITING</b>';
+}
+
+function elementFits(el){
+  return el.scrollWidth<=el.clientWidth+.75 && el.scrollHeight<=el.clientHeight+.75;
+}
+function fitFontBinary(el,{min=7,max=44,after=null}={}){
+  if(!el||el.clientWidth<=1||el.clientHeight<=1)return min;
+  let lo=min,hi=max,best=min;
+  for(let i=0;i<11;i++){
+    const mid=(lo+hi)/2;
+    el.style.fontSize=`${mid}px`;
+    if(after)after(mid);
+    if(elementFits(el)){best=mid;lo=mid}else hi=mid;
+  }
+  el.style.fontSize=`${best}px`;
+  if(after)after(best);
+  return best;
+}
+function fitStructureRail(){
+  const rail=document.querySelector(".featuredSlot .trackStructure");
+  if(!rail||!rail.children.length)return;
+  const segs=[...rail.querySelectorAll(".structureSegment")];
+  let lo=6,hi=12,best=6;
+  for(let i=0;i<10;i++){
+    const mid=(lo+hi)/2;
+    segs.forEach(s=>{s.style.fontSize=`${mid}px`;s.style.paddingLeft=`${Math.max(2,mid*.48)}px`;s.style.paddingRight=`${Math.max(2,mid*.48)}px`});
+    const ok=segs.every(s=>s.scrollWidth<=s.clientWidth+.75&&s.scrollHeight<=s.clientHeight+.75);
+    if(ok){best=mid;lo=mid}else hi=mid;
+  }
+  segs.forEach(s=>{s.style.fontSize=`${best}px`;s.style.paddingLeft=`${Math.max(2,best*.48)}px`;s.style.paddingRight=`${Math.max(2,best*.48)}px`});
+}
+function fitDataStrip(){
+  const strip=document.querySelector(".featuredSlot .trackDataStrip");
+  if(!strip)return;
+  const pills=[...strip.querySelectorAll(".dataPill")];
+  if(!pills.length)return;
+  let lo=6,hi=12,best=6;
+  for(let i=0;i<10;i++){
+    const mid=(lo+hi)/2;
+    const gap=Math.max(3,mid*.62);
+    strip.style.gap=`${gap}px`;
+    pills.forEach(p=>{p.style.fontSize=`${mid}px`;p.style.paddingLeft=`${Math.max(3,mid*.68)}px`;p.style.paddingRight=`${Math.max(3,mid*.68)}px`});
+    const ok=strip.scrollWidth<=strip.clientWidth+.75&&strip.scrollHeight<=strip.clientHeight+.75&&pills.every(p=>p.scrollWidth<=p.clientWidth+.75);
+    if(ok){best=mid;lo=mid}else hi=mid;
+  }
+  const gap=Math.max(3,best*.62);
+  strip.style.gap=`${gap}px`;
+  pills.forEach(p=>{p.style.fontSize=`${best}px`;p.style.paddingLeft=`${Math.max(3,best*.68)}px`;p.style.paddingRight=`${Math.max(3,best*.68)}px`});
+}
+function fitPaymentBlock(){
+  const buy=document.querySelector(".featuredSlot .buyCol");
+  if(!buy)return;
+  const license=buy.querySelector(".license");
+  const secondary=buy.querySelector(".secondary");
+  if(license)fitFontBinary(license,{min:8,max:19});
+  if(secondary)fitFontBinary(secondary,{min:7,max:15});
+}
+function fitHeroModuleContents(){
+  heroFitRAF=0;
+  if(!heroFrameLockReady||window.innerWidth<901)return;
+
+  const title=document.querySelector(".featuredSlot .trackTitle");
+  if(title)fitFontBinary(title,{min:18,max:48});
+
+  const badge=document.querySelector(".featuredSlot .badge");
+  if(badge)fitFontBinary(badge,{min:7,max:13});
+
+  const time=document.querySelector(".featuredSlot .time");
+  if(time)fitFontBinary(time,{min:8,max:14});
+
+  fitStructureRail();
+  fitDataStrip();
+  fitPaymentBlock();
+}
+function scheduleFitHeroModuleContents(){
+  if(heroFitRAF)return;
+  heroFitRAF=requestAnimationFrame(()=>requestAnimationFrame(fitHeroModuleContents));
+}
+function ensureHeroFrameLocks(){
+  if(!IS_DETAIL_PAGE||window.innerWidth<901)return;
+  if(loadHeroFrameLocks()){
+    heroFrameLockReady=true;
+    applyHeroFrameLocks();
+    updateHeroFrameLockStatus();
+    return;
+  }
+  requestAnimationFrame(()=>requestAnimationFrame(()=>captureHeroFrameLocks({force:true})));
+}
+
 if(IS_DETAIL_PAGE&&layoutDebugPanel){
   loadLayoutDebug();
   applyLayoutDebug();
+  updateHeroFrameLockStatus();
   setLayoutMouseEdit(true);
 
   Object.entries(debugInputs).forEach(([key,input])=>{
@@ -2380,7 +2682,11 @@ if(IS_DETAIL_PAGE&&layoutDebugPanel){
   layoutHeightHandle?.addEventListener("pointerup",endLayoutAxisResize);
   layoutHeightHandle?.addEventListener("pointercancel",endLayoutAxisResize);
 
-  window.addEventListener("resize",scheduleLayoutHandleUpdate,{passive:true});
+  window.addEventListener("resize",()=>{
+    scheduleLayoutHandleUpdate();
+    if(window.innerWidth>=901){applyHeroFrameLocks();scheduleFitHeroModuleContents()}
+    else document.body.classList.remove("hero-frame-lock");
+  },{passive:true});
   window.addEventListener("scroll",scheduleLayoutHandleUpdate,{passive:true});
 
   /* DOM inside featuredSlot changes when another record is selected. Reconnect
@@ -2408,6 +2714,15 @@ if(IS_DETAIL_PAGE&&layoutDebugPanel){
     layoutDebugState={...LAYOUT_DEBUG_DEFAULTS};
     applyLayoutDebug();
     saveLayoutDebug();
+    setTimeout(()=>captureHeroFrameLocks({force:true}),60);
+  });
+  layoutDebugRelock?.addEventListener("click",()=>{
+    heroFrameLockReady=false;
+    try{localStorage.removeItem(HERO_FRAME_LOCK_KEY)}catch(_){}
+    captureHeroFrameLocks({force:true});
+    const old=layoutDebugRelock.textContent;
+    layoutDebugRelock.textContent="LOCKED";
+    setTimeout(()=>layoutDebugRelock.textContent=old,900);
   });
   layoutDebugCopy?.addEventListener("click",async()=>{
     const text=[
@@ -3814,6 +4129,7 @@ function updateDetailHeader(state){
   factStatus.textContent=m.status;
   factFile.textContent=m.file;
   document.title=`${title} // FRSSN`;
+  scheduleFitHeroModuleContents();
 }
 
 function setHeroSleeve(state,{visible=true}={}){
@@ -4224,6 +4540,7 @@ async function initialUnpackAndStart(state){
   setHeroSleeve(state,{visible:true});
   updateDetailHeader(state);
   renderSignalTiles();
+  ensureHeroFrameLocks();
 
   await activateTrackBuffer(state,0);
   await wait(HERO_INITIAL_DELAY);
@@ -4329,6 +4646,8 @@ async function featureTrack(next,{push=false,replace=false,sourceSleeveRect=null
     mountHeroInstant(next,{hideRecord:true});
     setHeroSleeve(next,{visible:true});
     updateDetailHeader(next);
+    applyHeroFrameLocks();
+    scheduleFitHeroModuleContents();
 
     if(push)history.pushState({track:next.id},"",`track.html?track=${encodeURIComponent(next.id)}`);
     else if(replace)history.replaceState({track:next.id},"",`track.html?track=${encodeURIComponent(next.id)}`);
