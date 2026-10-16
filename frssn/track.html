@@ -1483,6 +1483,64 @@ button,input{font:inherit}
   line-height:1;
   letter-spacing:.045em;
 }
+/* Release date is its own fixed hero module. */
+.detailPage .featuredSlot .releaseBlock{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 172px;
+  width:172px;
+  height:42px;
+  padding:0 12px;
+  border:1px solid rgba(214,255,40,.20);
+  background:rgba(214,255,40,.022);
+  box-sizing:border-box;
+  overflow:hidden;
+  white-space:nowrap;
+  text-transform:uppercase;
+  color:rgba(236,241,229,.72);
+  font-family:"Arial Narrow","Roboto Condensed",Arial,sans-serif;
+  font-size:13px;
+  font-weight:900;
+  line-height:1;
+  letter-spacing:.055em;
+}
+.detailPage .featuredSlot .releaseBlock .releaseLabel{color:rgba(236,241,229,.48);margin-right:7px}
+.detailPage .featuredSlot .releaseBlock .releaseValue{color:#eef4e7;min-width:0;overflow:hidden;white-space:nowrap}
+
+/* Three fixed purchase tiers share the already tuned payment-module frame. */
+.detailPage .featuredSlot .buyCol{
+  display:grid!important;
+  grid-template-rows:repeat(3,minmax(0,1fr))!important;
+  gap:7px!important;
+}
+.detailPage .featuredSlot .purchaseTier{
+  width:100%;
+  min-width:0;
+  min-height:0;
+  height:100%;
+  padding:0 12px;
+  border:1px solid rgba(214,255,40,.34);
+  background:rgba(214,255,40,.055);
+  color:#eaff8d;
+  text-decoration:none;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  box-sizing:border-box;
+  overflow:hidden;
+  white-space:nowrap;
+  font-family:"Arial Narrow","Roboto Condensed",Arial,sans-serif;
+  font-size:14px;
+  font-weight:900;
+  line-height:1;
+  letter-spacing:.035em;
+  text-transform:uppercase;
+}
+.detailPage .featuredSlot .purchaseTier.primary{background:var(--accent);color:#080a06;border-color:var(--accent)}
+.detailPage .featuredSlot .purchaseTier .tierPrice{font-size:1.08em;letter-spacing:.01em}
+.detailPage .featuredSlot .purchaseTier:hover{background:var(--accent);color:#080a06}
 .detailPage .featuredSlot .topline{margin-bottom:16px}
 .detailPage .featuredSlot .meta{display:none}
 
@@ -1491,12 +1549,13 @@ button,input{font:inherit}
   .detailPage .featuredSlot .structureSegment{font-size:6px;padding:0 4px;letter-spacing:.08em}
   .detailPage .featuredSlot .trackDataStrip{gap:7px;margin-top:7px;min-height:34px}
   .detailPage .featuredSlot .beatCoreBlock,.detailPage .featuredSlot .moodBlock{height:34px;gap:6px}
-  .detailPage .featuredSlot .coreProperty,.detailPage .featuredSlot .moodTag{height:34px}
+  .detailPage .featuredSlot .coreProperty,.detailPage .featuredSlot .moodTag,.detailPage .featuredSlot .releaseBlock{height:34px}
   .detailPage .featuredSlot .coreProperty.is-bpm{width:96px}
   .detailPage .featuredSlot .coreProperty.is-key{width:118px}
   .detailPage .featuredSlot .coreLabel{font-size:12px}
   .detailPage .featuredSlot .coreValue{font-size:16px}
   .detailPage .featuredSlot .moodTag{font-size:12px;padding:0 9px;min-width:54px}
+  .detailPage .featuredSlot .releaseBlock{width:148px;flex-basis:148px;font-size:10px;padding:0 8px}
 }
 
 /* =====================================================
@@ -1510,6 +1569,7 @@ button,input{font:inherit}
   --dbg-structure-scale:1;
   --dbg-core-scale:1;
   --dbg-mood-scale:1;
+  --dbg-release-scale:1;
   --dbg-status-scale:1;
   --dbg-buy-scale:1;
   --dbg-meter-scale:1;
@@ -1520,6 +1580,7 @@ button,input{font:inherit}
   --dbg-structure-x:0px;--dbg-structure-y:0px;
   --dbg-core-x:0px;--dbg-core-y:0px;
   --dbg-mood-x:0px;--dbg-mood-y:0px;
+  --dbg-release-x:0px;--dbg-release-y:0px;
   --dbg-status-x:0px;--dbg-status-y:0px;
   --dbg-buy-x:0px;--dbg-buy-y:0px;
   --dbg-meter-x:0px;--dbg-meter-y:0px;
@@ -1529,6 +1590,7 @@ button,input{font:inherit}
   --dbg-structure-stretch-x:1;--dbg-structure-stretch-y:1;
   --dbg-core-stretch-x:1;--dbg-core-stretch-y:1;
   --dbg-mood-stretch-x:1;--dbg-mood-stretch-y:1;
+  --dbg-release-stretch-x:1;--dbg-release-stretch-y:1;
   --dbg-status-stretch-x:1;--dbg-status-stretch-y:1;
   --dbg-buy-stretch-x:1;--dbg-buy-stretch-y:1;
   --dbg-meter-stretch-x:1;--dbg-meter-stretch-y:1;
@@ -1545,6 +1607,7 @@ button,input{font:inherit}
 .detailPage.layout-debug-active .featuredSlot .trackStructure{zoom:var(--dbg-structure-scale);translate:var(--dbg-structure-x) var(--dbg-structure-y);scale:var(--dbg-structure-stretch-x) var(--dbg-structure-stretch-y)}
 .detailPage.layout-debug-active .featuredSlot .beatCoreBlock{zoom:var(--dbg-core-scale);translate:var(--dbg-core-x) var(--dbg-core-y);scale:var(--dbg-core-stretch-x) var(--dbg-core-stretch-y)}
 .detailPage.layout-debug-active .featuredSlot .moodBlock{zoom:var(--dbg-mood-scale);translate:var(--dbg-mood-x) var(--dbg-mood-y);scale:var(--dbg-mood-stretch-x) var(--dbg-mood-stretch-y)}
+.detailPage.layout-debug-active .featuredSlot .releaseBlock{zoom:var(--dbg-release-scale);translate:var(--dbg-release-x) var(--dbg-release-y);scale:var(--dbg-release-stretch-x) var(--dbg-release-stretch-y)}
 .detailPage.layout-debug-active .featuredSlot .badge{zoom:var(--dbg-status-scale);translate:var(--dbg-status-x) var(--dbg-status-y);scale:var(--dbg-status-stretch-x) var(--dbg-status-stretch-y)}
 .detailPage.layout-debug-active .featuredSlot .buyCol{zoom:var(--dbg-buy-scale);translate:var(--dbg-buy-x) var(--dbg-buy-y);scale:var(--dbg-buy-stretch-x) var(--dbg-buy-stretch-y)}
 .detailPage.layout-debug-active #heroMeterBlock{zoom:var(--dbg-meter-scale);translate:var(--dbg-meter-x) var(--dbg-meter-y);scale:var(--dbg-meter-stretch-x) var(--dbg-meter-stretch-y)}
@@ -1647,6 +1710,7 @@ body.layout-mouse-edit .featuredSlot .trackTitle,
 body.layout-mouse-edit .featuredSlot .trackStructure,
 body.layout-mouse-edit .featuredSlot .beatCoreBlock,
 body.layout-mouse-edit .featuredSlot .moodBlock,
+body.layout-mouse-edit .featuredSlot .releaseBlock,
 body.layout-mouse-edit .featuredSlot .badge,
 body.layout-mouse-edit .featuredSlot .buyCol,
 body.layout-mouse-edit #heroMeterBlock{
@@ -1783,6 +1847,7 @@ body.layout-mouse-edit .layout-debug-selected{
   .detailPage.hero-frame-lock .featuredSlot .waveRow,
   .detailPage.hero-frame-lock .featuredSlot .beatCoreBlock,
   .detailPage.hero-frame-lock .featuredSlot .moodBlock,
+  .detailPage.hero-frame-lock .featuredSlot .releaseBlock,
   .detailPage.hero-frame-lock .featuredSlot .badge,
   .detailPage.hero-frame-lock .featuredSlot .buyCol{
     box-sizing:border-box!important;
@@ -1831,7 +1896,7 @@ body.layout-mouse-edit .layout-debug-selected{
 
   .detailPage.hero-frame-lock .featuredSlot .buyCol{
     display:grid!important;
-    grid-template-rows:minmax(0,1.58fr) minmax(0,1fr)!important;
+    grid-template-rows:repeat(3,minmax(0,1fr))!important;
     align-items:stretch!important;
   }
   .detailPage.hero-frame-lock .featuredSlot .buyCol > *{
@@ -1992,8 +2057,9 @@ body.layout-mouse-edit .layout-debug-selected{
           </div>
 
           <div class="buyCol">
-            <a class="license" href="https://traktrain.com/cart-single-track/1679177" target="_blank" rel="noopener noreferrer">License <small>// checkout ↗</small></a>
-            <a class="secondary" href="https://traktrain.com/cart-single-track/1679177" target="_blank" rel="noopener noreferrer">TRAKTRAIN CHECKOUT</a>
+            <a class="purchaseTier primary" data-license-tier="mp3" href="https://traktrain.com/cart-single-track/1679177" target="_blank" rel="noopener noreferrer"><span>MP3</span><b class="tierPrice">$40</b></a>
+            <a class="purchaseTier" data-license-tier="wav" href="#"><span>WAV</span><b class="tierPrice">—</b></a>
+            <a class="purchaseTier" data-license-tier="stems" href="#"><span>STEMS</span><b class="tierPrice">—</b></a>
           </div>
         </article>
 
@@ -2053,8 +2119,9 @@ body.layout-mouse-edit .layout-debug-selected{
           </div>
 
           <div class="buyCol">
-            <a class="license" href="#" data-placeholder-checkout="1">License <small>// checkout ↗</small></a>
-            <a class="secondary" href="#" data-placeholder-checkout="1">TRAKTRAIN CHECKOUT</a>
+            <a class="purchaseTier primary" data-license-tier="mp3" href="#" data-placeholder-checkout="1"><span>MP3</span><b class="tierPrice">$40</b></a>
+            <a class="purchaseTier" data-license-tier="wav" href="#" data-placeholder-checkout="1"><span>WAV</span><b class="tierPrice">—</b></a>
+            <a class="purchaseTier" data-license-tier="stems" href="#" data-placeholder-checkout="1"><span>STEMS</span><b class="tierPrice">—</b></a>
           </div>
         </article>
       </div>
@@ -2132,20 +2199,20 @@ body.layout-mouse-edit .layout-debug-selected{
   <div class="layoutDebugSelectedReadout" id="layoutDebugSelectedReadout">SELECTED // NONE</div>
 
   <div class="layoutDebugRow">
-    <div class="layoutDebugHead"><span>HEADER HEIGHT</span><b id="dbgHeaderHeightValue">326 px</b></div>
-    <input id="dbgHeaderHeight" type="range" min="300" max="760" step="2" value="340">
+    <div class="layoutDebugHead"><span>HEADER HEIGHT</span><b id="dbgHeaderHeightValue">398 px</b></div>
+    <input id="dbgHeaderHeight" type="range" min="300" max="760" step="2" value="398">
   </div>
   <div class="layoutDebugRow">
     <div class="layoutDebugHead"><span>TILE BLOCK</span><b id="dbgTileScaleValue">112%</b></div>
     <input id="dbgTileScale" type="range" min="55" max="150" step="1" value="112">
   </div>
   <div class="layoutDebugRow">
-    <div class="layoutDebugHead"><span>TURNTABLE BLOCK</span><b id="dbgTurntableScaleValue">96%</b></div>
-    <input id="dbgTurntableScale" type="range" min="55" max="165" step="1" value="96">
+    <div class="layoutDebugHead"><span>TURNTABLE BLOCK</span><b id="dbgTurntableScaleValue">94%</b></div>
+    <input id="dbgTurntableScale" type="range" min="55" max="165" step="1" value="94">
   </div>
   <div class="layoutDebugRow">
-    <div class="layoutDebugHead"><span>PLAY + WAVE</span><b id="dbgPlayerScaleValue">80%</b></div>
-    <input id="dbgPlayerScale" type="range" min="55" max="165" step="1" value="80">
+    <div class="layoutDebugHead"><span>PLAY + WAVE</span><b id="dbgPlayerScaleValue">84%</b></div>
+    <input id="dbgPlayerScale" type="range" min="55" max="165" step="1" value="84">
   </div>
   <div class="layoutDebugRow">
     <div class="layoutDebugHead"><span>TRACK TITLE</span><b id="dbgTitleScaleValue">81%</b></div>
@@ -2168,16 +2235,20 @@ body.layout-mouse-edit .layout-debug-selected{
     <input id="dbgKeyValueFont" type="range" min="10" max="32" step="0.5" value="21">
   </div>
   <div class="layoutDebugRow">
-    <div class="layoutDebugHead"><span>MOOD</span><b id="dbgMoodScaleValue">58%</b></div>
-    <input id="dbgMoodScale" type="range" min="40" max="165" step="1" value="58">
+    <div class="layoutDebugHead"><span>MOOD</span><b id="dbgMoodScaleValue">66%</b></div>
+    <input id="dbgMoodScale" type="range" min="40" max="165" step="1" value="66">
   </div>
   <div class="layoutDebugRow">
-    <div class="layoutDebugHead"><span>TRACK STATUS</span><b id="dbgStatusScaleValue">131%</b></div>
-    <input id="dbgStatusScale" type="range" min="55" max="165" step="1" value="131">
+    <div class="layoutDebugHead"><span>RELEASE DATE</span><b id="dbgReleaseScaleValue">100%</b></div>
+    <input id="dbgReleaseScale" type="range" min="45" max="165" step="1" value="100">
   </div>
   <div class="layoutDebugRow">
-    <div class="layoutDebugHead"><span>PAYMENT BLOCK</span><b id="dbgBuyScaleValue">97%</b></div>
-    <input id="dbgBuyScale" type="range" min="55" max="165" step="1" value="97">
+    <div class="layoutDebugHead"><span>TRACK STATUS</span><b id="dbgStatusScaleValue">94%</b></div>
+    <input id="dbgStatusScale" type="range" min="55" max="165" step="1" value="94">
+  </div>
+  <div class="layoutDebugRow">
+    <div class="layoutDebugHead"><span>PAYMENT BLOCK</span><b id="dbgBuyScaleValue">84%</b></div>
+    <input id="dbgBuyScale" type="range" min="55" max="165" step="1" value="84">
   </div>
   <div class="layoutDebugRow">
     <div class="layoutDebugHead"><span>METER BLOCK</span><b id="dbgMeterScaleValue">100%</b></div>
@@ -2199,7 +2270,7 @@ body.layout-mouse-edit .layout-debug-selected{
     <button id="layoutDebugRelock" type="button">RELOCK FRAMES</button>
     <button id="layoutDebugCopy" type="button">COPY VALUES</button>
   </div>
-  <div class="layoutDebugHint">Outer frames stay fixed. BPM/KEY inner frames and label fonts are locked; BPM and KEY value font sizes have independent ceilings and still auto-fit when needed. MOOD outer frame is locked: tag widths adapt only inside the module, then text shrinks before any clipping can occur.</div>
+  <div class="layoutDebugHint">Outer frames stay fixed. BPM/KEY inner frames and label fonts are locked. MOOD never expands beyond its module. RELEASE DATE and the three purchase tiers are independent fixed modules and auto-fit their content.</div>
 </div>
 <button class="layoutDebugReopen" id="layoutDebugReopen" type="button">LAYOUT DEBUG</button>
 <div class="layoutScaleHandle" id="layoutScaleHandle" aria-hidden="true"></div>
@@ -2233,17 +2304,18 @@ const LAYOUT_DEBUG_KEY="frssnLayoutDebugV1";
 const LAYOUT_DEBUG_DEFAULTS={
   /* Locked baseline from the current tuned layout. Existing localStorage values
      still win, so the user's exact mouse-positioned geometry is preserved. */
-  headerHeight:326,
+  headerHeight:398,
   tileScale:112,
-  turntableScale:96,turntableX:0,turntableY:0,
-  playerScale:80,playerX:0,playerY:0,
+  turntableScale:94,turntableX:0,turntableY:0,
+  playerScale:84,playerX:0,playerY:0,
   titleScale:81,titleX:0,titleY:0,
   structureScale:75,structureX:0,structureY:0,
   coreScale:55,coreX:0,coreY:0,
-  moodScale:58,moodX:0,moodY:0,
+  moodScale:66,moodX:0,moodY:0,
+  releaseScale:100,releaseX:0,releaseY:0,
   bpmValueFont:21,keyValueFont:21,
-  statusScale:131,statusX:0,statusY:0,
-  buyScale:97,buyX:0,buyY:0,
+  statusScale:94,statusX:0,statusY:0,
+  buyScale:84,buyX:0,buyY:0,
   meterScale:100,meterX:0,meterY:0,
   turntableStretchX:100,turntableStretchY:100,
   playerStretchX:100,playerStretchY:100,
@@ -2251,6 +2323,7 @@ const LAYOUT_DEBUG_DEFAULTS={
   structureStretchX:100,structureStretchY:100,
   coreStretchX:100,coreStretchY:100,
   moodStretchX:100,moodStretchY:100,
+  releaseStretchX:100,releaseStretchY:100,
   statusStretchX:100,statusStretchY:100,
   buyStretchX:100,buyStretchY:100,
   meterStretchX:100,meterStretchY:100
@@ -2279,6 +2352,7 @@ const debugInputs={
   structureScale:document.getElementById("dbgStructureScale"),
   coreScale:document.getElementById("dbgCoreScale"),
   moodScale:document.getElementById("dbgMoodScale"),
+  releaseScale:document.getElementById("dbgReleaseScale"),
   bpmValueFont:document.getElementById("dbgBpmValueFont"),
   keyValueFont:document.getElementById("dbgKeyValueFont"),
   statusScale:document.getElementById("dbgStatusScale"),
@@ -2294,6 +2368,7 @@ const debugValues={
   structureScale:document.getElementById("dbgStructureScaleValue"),
   coreScale:document.getElementById("dbgCoreScaleValue"),
   moodScale:document.getElementById("dbgMoodScaleValue"),
+  releaseScale:document.getElementById("dbgReleaseScaleValue"),
   bpmValueFont:document.getElementById("dbgBpmValueFontValue"),
   keyValueFont:document.getElementById("dbgKeyValueFontValue"),
   statusScale:document.getElementById("dbgStatusScaleValue"),
@@ -2307,7 +2382,8 @@ const LAYOUT_MOUSE_TARGETS=[
   {id:"title",label:"TRACK TITLE",selector:".featuredSlot .trackTitle",scale:"titleScale",x:"titleX",y:"titleY",sx:"titleStretchX",sy:"titleStretchY",min:55,max:180},
   {id:"structure",label:"SECTIONS",selector:".featuredSlot .trackStructure",scale:"structureScale",x:"structureX",y:"structureY",sx:"structureStretchX",sy:"structureStretchY",min:55,max:165},
   {id:"core",label:"BPM + KEY",selector:".featuredSlot .beatCoreBlock",scale:"coreScale",x:"coreX",y:"coreY",sx:"coreStretchX",sy:"coreStretchY",min:55,max:165},
-  {id:"mood",label:"MOOD",selector:".featuredSlot .moodBlock",scale:"moodScale",x:"moodX",y:"moodY",sx:"moodStretchX",sy:"moodStretchY",min:55,max:165},
+  {id:"mood",label:"MOOD",selector:".featuredSlot .moodBlock",scale:"moodScale",x:"moodX",y:"moodY",sx:"moodStretchX",sy:"moodStretchY",min:40,max:165},
+  {id:"release",label:"RELEASE DATE",selector:".featuredSlot .releaseBlock",scale:"releaseScale",x:"releaseX",y:"releaseY",sx:"releaseStretchX",sy:"releaseStretchY",min:45,max:165},
   {id:"status",label:"TRACK STATUS",selector:".featuredSlot .badge",scale:"statusScale",x:"statusX",y:"statusY",sx:"statusStretchX",sy:"statusStretchY",min:55,max:165},
   {id:"buy",label:"PAYMENT BLOCK",selector:".featuredSlot .buyCol",scale:"buyScale",x:"buyX",y:"buyY",sx:"buyStretchX",sy:"buyStretchY",min:55,max:165},
   {id:"meter",label:"METER BLOCK",selector:"#heroMeterBlock",scale:"meterScale",x:"meterX",y:"meterY",sx:"meterStretchX",sy:"meterStretchY",min:45,max:180}
@@ -2359,11 +2435,12 @@ function applyLayoutDebug(){
   root.setProperty("--dbg-structure-scale",String(layoutDebugState.structureScale/100));
   root.setProperty("--dbg-core-scale",String(layoutDebugState.coreScale/100));
   root.setProperty("--dbg-mood-scale",String(layoutDebugState.moodScale/100));
+  root.setProperty("--dbg-release-scale",String(layoutDebugState.releaseScale/100));
   root.setProperty("--dbg-status-scale",String(layoutDebugState.statusScale/100));
   root.setProperty("--dbg-buy-scale",String(layoutDebugState.buyScale/100));
   root.setProperty("--dbg-meter-scale",String(layoutDebugState.meterScale/100));
 
-  ["turntable","player","title","structure","core","mood","status","buy","meter"].forEach(id=>{
+  ["turntable","player","title","structure","core","mood","release","status","buy","meter"].forEach(id=>{
     root.setProperty(`--dbg-${id}-x`,`${layoutDebugState[id+"X"]}px`);
     root.setProperty(`--dbg-${id}-y`,`${layoutDebugState[id+"Y"]}px`);
     root.setProperty(`--dbg-${id}-stretch-x`,String(layoutDebugState[id+"StretchX"]/100));
@@ -2372,7 +2449,7 @@ function applyLayoutDebug(){
 
   Object.entries(debugInputs).forEach(([key,input])=>{if(input)input.value=String(layoutDebugState[key])});
   if(debugValues.headerHeight)debugValues.headerHeight.textContent=`${Math.round(layoutDebugState.headerHeight)} px`;
-  ["tileScale","turntableScale","playerScale","titleScale","structureScale","coreScale","moodScale","statusScale","buyScale","meterScale"].forEach(key=>{
+  ["tileScale","turntableScale","playerScale","titleScale","structureScale","coreScale","moodScale","releaseScale","statusScale","buyScale","meterScale"].forEach(key=>{
     if(debugValues[key])debugValues[key].textContent=`${Math.round(layoutDebugState[key])}%`;
   });
   if(debugValues.bpmValueFont)debugValues.bpmValueFont.textContent=`${Number(layoutDebugState.bpmValueFont).toFixed(1).replace(/\.0$/,"")} px`;
@@ -2558,6 +2635,7 @@ const HERO_FRAME_LOCK_TARGETS=[
   {id:"structure",selector:".featuredSlot .trackStructure",debugId:"structure"},
   {id:"core",selector:".featuredSlot .beatCoreBlock",debugId:"core"},
   {id:"mood",selector:".featuredSlot .moodBlock",debugId:"mood"},
+  {id:"release",selector:".featuredSlot .releaseBlock",debugId:"release"},
   {id:"status",selector:".featuredSlot .badge",debugId:"status"},
   {id:"buy",selector:".featuredSlot .buyCol",debugId:"buy"}
 ];
@@ -2760,10 +2838,12 @@ function fitMoodBlock(){
 function fitPaymentBlock(){
   const buy=document.querySelector(".featuredSlot .buyCol");
   if(!buy)return;
-  const license=buy.querySelector(".license");
-  const secondary=buy.querySelector(".secondary");
-  if(license)fitFontBinary(license,{min:8,max:19});
-  if(secondary)fitFontBinary(secondary,{min:7,max:15});
+  [...buy.querySelectorAll(".purchaseTier")].forEach(btn=>fitFontBinary(btn,{min:8,max:16}));
+}
+function fitReleaseBlock(){
+  const release=document.querySelector(".featuredSlot .releaseBlock");
+  const value=release?.querySelector(".releaseValue");
+  if(value)fitFontBinary(value,{min:8,max:14});
 }
 function fitHeroModuleContents(){
   heroFitRAF=0;
@@ -2781,6 +2861,7 @@ function fitHeroModuleContents(){
   fitStructureRail();
   fitCoreBlock();
   fitMoodBlock();
+  fitReleaseBlock();
   fitPaymentBlock();
 }
 function scheduleFitHeroModuleContents(){
@@ -2902,6 +2983,7 @@ if(IS_DETAIL_PAGE&&layoutDebugPanel){
       `BPM VALUE FONT = ${layoutDebugState.bpmValueFont}px`,
       `KEY VALUE FONT = ${layoutDebugState.keyValueFont}px`,
       `MOOD = ${layoutDebugState.moodScale}% | X ${layoutDebugState.moodX} | Y ${layoutDebugState.moodY} | W ${layoutDebugState.moodStretchX}% | H ${layoutDebugState.moodStretchY}%`,
+      `RELEASE DATE = ${layoutDebugState.releaseScale}% | X ${layoutDebugState.releaseX} | Y ${layoutDebugState.releaseY} | W ${layoutDebugState.releaseStretchX}% | H ${layoutDebugState.releaseStretchY}%`,
       `TRACK STATUS = ${layoutDebugState.statusScale}% | X ${layoutDebugState.statusX} | Y ${layoutDebugState.statusY} | W ${layoutDebugState.statusStretchX}% | H ${layoutDebugState.statusStretchY}%`,
       `PAYMENT BLOCK = ${layoutDebugState.buyScale}% | X ${layoutDebugState.buyX} | Y ${layoutDebugState.buyY} | W ${layoutDebugState.buyStretchX}% | H ${layoutDebugState.buyStretchY}%`,
       `METER BLOCK = ${layoutDebugState.meterScale}% | X ${layoutDebugState.meterX} | Y ${layoutDebugState.meterY} | W ${layoutDebugState.meterStretchX}% | H ${layoutDebugState.meterStretchY}%`,
@@ -4144,7 +4226,18 @@ tracks.forEach(state=>{
    PLACEHOLDER CHECKOUT
 ===================================================== */
 document.querySelectorAll("[data-placeholder-checkout]").forEach(link=>{
-  link.addEventListener("click",event=>{event.preventDefault();microstatus.textContent="TRACK 02 // ADD TRAKTRAIN CHECKOUT URL"});
+  link.addEventListener("click",event=>{
+    event.preventDefault();
+    const tier=(link.dataset.licenseTier||"LICENSE").toUpperCase();
+    microstatus.textContent=`${tier} // ADD CHECKOUT URL`;
+  });
+});
+document.querySelectorAll('.purchaseTier[href="#"]:not([data-placeholder-checkout])').forEach(link=>{
+  link.addEventListener("click",event=>{
+    event.preventDefault();
+    const tier=(link.dataset.licenseTier||"LICENSE").toUpperCase();
+    microstatus.textContent=`${tier} // PRICE + CHECKOUT TO BE SET`;
+  });
 });
 
 /* =====================================================
@@ -4232,13 +4325,17 @@ const DETAIL_META={
     signal:"001",bpm:"142",key:"F# MIN",
     moods:["DARK","CINEMATIC","ATMOSPHERIC"],
     sections:STRUCTURE_A,
-    license:"MP3",status:"AVAILABLE",file:"CLEAN"
+    release:"16 OCT 2026",
+    license:"MP3",status:"AVAILABLE",file:"CLEAN",
+    prices:{mp3:"$40",wav:"—",stems:"—"}
   },
   "track-02":{
     signal:"002",bpm:"136",key:"D MIN",
     moods:["NOCTURNAL","TENSE","SPACIOUS"],
     sections:STRUCTURE_B,
-    license:"MP3",status:"AVAILABLE",file:"CLEAN"
+    release:"16 OCT 2026",
+    license:"MP3",status:"AVAILABLE",file:"CLEAN",
+    prices:{mp3:"$40",wav:"—",stems:"—"}
   }
 };
 
@@ -4283,7 +4380,9 @@ function metaFor(state){
     key:MOCK_KEY[i%MOCK_KEY.length],
     moods:MOCK_MOODS[i%MOCK_MOODS.length],
     sections:(i%2?STRUCTURE_B:STRUCTURE_A),
-    license:"MP3",status:"AVAILABLE",file:"CLEAN"
+    release:"16 OCT 2026",
+    license:"MP3",status:"AVAILABLE",file:"CLEAN",
+    prices:{mp3:"$40",wav:"—",stems:"—"}
   };
 }
 
@@ -4340,6 +4439,7 @@ function ensureTrackEssentials(state){
     <div class="moodBlock" aria-label="Mood">
       ${moods.map(tag=>`<span class="moodTag">${tag}</span>`).join("")}
     </div>
+    <div class="releaseBlock" aria-label="Release date"><span class="releaseLabel">RELEASE</span><b class="releaseValue">${m.release||"—"}</b></div>
   `;
 }
 
