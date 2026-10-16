@@ -1616,6 +1616,97 @@ body.layout-mouse-edit .layout-debug-selected{
   .layoutDebugPanel{right:8px;bottom:8px;width:min(310px,calc(100vw - 16px));max-height:72vh}
 }
 
+/* =====================================================
+   HERO TYPOGRAPHY // READABILITY PASS
+   Geometry stays untouched. Only the text inside the tuned
+   debug blocks is enlarged and given more natural proportions.
+===================================================== */
+.detailPage .featuredSlot .trackTitle{
+  font-family:"Arial Narrow","Roboto Condensed",Arial,sans-serif;
+  font-weight:900;
+  letter-spacing:.085em;
+}
+.detailPage .featuredSlot .artist{
+  font-family:"Arial Narrow","Roboto Condensed",Arial,sans-serif;
+  font-size:12px;
+  font-weight:700;
+  line-height:1.15;
+  letter-spacing:.14em;
+  color:rgba(236,241,229,.66);
+}
+.detailPage .featuredSlot .structureSegment{
+  font-family:"Arial Narrow","Roboto Condensed",Arial,sans-serif;
+  font-size:11px;
+  font-weight:900;
+  line-height:1;
+  letter-spacing:.045em;
+  color:rgba(236,241,229,.70);
+}
+.detailPage .featuredSlot .structureSegment.is-current{
+  color:#eaff8d;
+}
+.detailPage .featuredSlot .dataPill{
+  font-family:"Arial Narrow","Roboto Condensed",Arial,sans-serif;
+  font-size:11px;
+  font-weight:900;
+  line-height:1;
+  letter-spacing:.065em;
+  color:rgba(236,241,229,.73);
+}
+.detailPage .featuredSlot .dataPill b{
+  font-size:1.08em;
+  font-weight:900;
+  letter-spacing:.035em;
+}
+.detailPage .featuredSlot .moodTag{
+  color:rgba(214,255,40,.90);
+}
+.detailPage .featuredSlot .badge{
+  font-family:"Arial Narrow","Roboto Condensed",Arial,sans-serif;
+  font-size:11px;
+  font-weight:900;
+  line-height:1;
+  letter-spacing:.055em;
+  white-space:nowrap;
+}
+.detailPage .featuredSlot .time{
+  font-family:"Arial Narrow","Roboto Condensed",Arial,sans-serif;
+  font-size:13px;
+  font-weight:800;
+  letter-spacing:.035em;
+  color:rgba(236,241,229,.68);
+}
+.detailPage .featuredSlot .license{
+  font-family:"Arial Narrow","Roboto Condensed",Arial,sans-serif;
+  font-size:18px;
+  font-weight:900;
+  line-height:1;
+  letter-spacing:.025em;
+  white-space:nowrap;
+}
+.detailPage .featuredSlot .license small{
+  font-size:.72em;
+  font-weight:800;
+  letter-spacing:.035em;
+}
+.detailPage .featuredSlot .secondary{
+  font-family:"Arial Narrow","Roboto Condensed",Arial,sans-serif;
+  font-size:15px;
+  font-weight:800;
+  line-height:1;
+  letter-spacing:.045em;
+  white-space:nowrap;
+}
+
+/* Keep typography readable on the mobile breakpoint as well. */
+@media(max-width:900px){
+  .detailPage .featuredSlot .structureSegment{font-size:9px;letter-spacing:.035em}
+  .detailPage .featuredSlot .dataPill{font-size:9px;letter-spacing:.045em}
+  .detailPage .featuredSlot .badge{font-size:9px}
+  .detailPage .featuredSlot .license{font-size:15px}
+  .detailPage .featuredSlot .secondary{font-size:12px}
+}
+
 </style>
 </head>
 
