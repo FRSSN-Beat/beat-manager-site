@@ -273,9 +273,10 @@ button,input{font:inherit}
 /* TRACK INFO */
 .trackInfo{min-width:0}
 .topline{display:flex;justify-content:space-between;gap:16px;margin-bottom:18px}
-.trackTitle{margin:0;font-size:23px;letter-spacing:.12em;text-transform:uppercase}
+.trackTitle{margin:0;font-size:23px;letter-spacing:.12em;text-transform:uppercase;position:relative}
 .trackTitleLink{color:inherit;text-decoration:none;border-bottom:1px solid transparent;transition:color .18s ease,border-color .18s ease}
 .trackTitleLink:hover{color:var(--accent);border-bottom-color:rgba(214,255,40,.55)}
+.typeCode{display:none}
 .artist{margin-top:5px;color:var(--muted);font:10px/1.4 monospace}
 .badge{color:var(--accent);border:1px solid var(--accent-line);padding:6px 8px;font:9px/1 monospace}
 .waveRow{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center}
@@ -666,6 +667,28 @@ body.is-android .bar{min-width:1.05px;max-width:4px}
   letter-spacing:.14em;
 }
 
+.detailPage .featuredSlot .trackTitle{overflow:visible!important}
+.detailPage .featuredSlot .trackTitleLink{display:inline-block;max-width:100%;white-space:nowrap}
+.detailPage .featuredSlot .typeCode{
+  display:block;
+  position:absolute;
+  left:0;
+  top:100%;
+  margin-top:7px;
+  max-width:420px;
+  color:rgba(248,250,244,.92);
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:13px;
+  font-weight:800;
+  line-height:1;
+  letter-spacing:.045em;
+  text-transform:uppercase;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  pointer-events:none;
+}
+
 .detailPage .featuredSlot .artist{
   display:none!important;
 }
@@ -800,7 +823,17 @@ body.is-android .bar{min-width:1.05px;max-width:4px}
 }
 
 .detailPage .signalTileMeta{
-  font-size:7px;
+  margin-top:5px;
+  color:rgba(248,250,244,.88);
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:7.5px;
+  font-weight:700;
+  line-height:1.25;
+  letter-spacing:.035em;
+  text-transform:uppercase;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 .detailPage .detailSourceTrackList{
@@ -1974,6 +2007,7 @@ body.layout-mouse-edit .layout-debug-selected{
   .detailPage.hero-frame-lock .featuredSlot .trackTitle{
     white-space:nowrap!important;
     text-overflow:clip!important;
+    overflow:visible!important;
   }
 
   .detailPage.hero-frame-lock .featuredSlot .trackStructure{
@@ -2360,7 +2394,7 @@ body.layout-mouse-edit .layout-debug-selected{
           <div class="trackInfo">
             <div class="topline">
               <div>
-                <h3 class="trackTitle"><a class="trackTitleLink" href="track.html?track=old">OLD</a></h3>
+                <h3 class="trackTitle"><a class="trackTitleLink" href="track.html?track=old">OLD</a><span class="typeCode">TRAVIS SCOTT × KANYE WEST</span></h3>
                 <div class="artist">FRSSN</div>
               </div>
               <div class="badge commercialStatus">
@@ -2424,7 +2458,7 @@ body.layout-mouse-edit .layout-debug-selected{
           <div class="trackInfo">
             <div class="topline">
               <div>
-                <h3 class="trackTitle"><a class="trackTitleLink" href="track.html?track=track-02">TRACK 02</a></h3>
+                <h3 class="trackTitle"><a class="trackTitleLink" href="track.html?track=track-02">TRACK 02</a><span class="typeCode">TRAVIS SCOTT × DON TOLIVER</span></h3>
                 <div class="artist">FRSSN</div>
               </div>
               <div class="badge commercialStatus">
@@ -3061,12 +3095,13 @@ function captureMissingHeroFrameLocks(){
 }
 function clearHeroFitInlineStyles(){
   const title=document.querySelector(".featuredSlot .trackTitle");
+  const typeCode=document.querySelector(".featuredSlot .typeCode");
   const badge=document.querySelector(".featuredSlot .badge");
   const time=document.querySelector(".featuredSlot .time");
   const strip=document.querySelector(".featuredSlot .trackDataStrip");
   const license=document.querySelector(".featuredSlot .license");
   const secondary=document.querySelector(".featuredSlot .secondary");
-  [title,badge,time,license,secondary].forEach(el=>el?.style.removeProperty("font-size"));
+  [title,typeCode,badge,time,license,secondary].forEach(el=>el?.style.removeProperty("font-size"));
   document.querySelectorAll(".featuredSlot .statusChip,.featuredSlot .purchaseName,.featuredSlot .tierPrice,.featuredSlot .coreValue,.featuredSlot .moodTag").forEach(el=>el.style.removeProperty("font-size"));
   document.querySelectorAll(".featuredSlot .structureSegment").forEach(el=>{
     el.style.removeProperty("font-size");
@@ -3290,8 +3325,11 @@ function fitHeroModuleContents(){
   heroFitRAF=0;
   if(!heroFrameLockReady||window.innerWidth<901)return;
 
-  const title=document.querySelector(".featuredSlot .trackTitle");
-  if(title)fitFontBinary(title,{min:18,max:48});
+  const titleLink=document.querySelector(".featuredSlot .trackTitleLink");
+  if(titleLink)fitFontBinary(titleLink,{min:18,max:48});
+
+  const typeCode=document.querySelector(".featuredSlot .typeCode");
+  if(typeCode)fitFontBinary(typeCode,{min:9,max:13});
 
   const badge=document.querySelector(".featuredSlot .badge");
   /* Status typography is intentionally fixed. The module frame may change size,
@@ -4896,7 +4934,7 @@ const STRUCTURE_B=[
 
 const DETAIL_META={
   "old":{
-    signal:"001",bpm:"142",key:"F# MIN",
+    signal:"001",typeCode:"TRAVIS SCOTT × KANYE WEST",bpm:"142",key:"F# MIN",
     moods:["DARK","CINEMATIC","ATMOSPHERIC"],
     sections:STRUCTURE_A,
     release:"16 OCT 2026",
@@ -4909,7 +4947,7 @@ const DETAIL_META={
     prices:{mp3:"$40",wav:"$80",stems:"$150"}
   },
   "track-02":{
-    signal:"002",bpm:"136",key:"D MIN",
+    signal:"002",typeCode:"TRAVIS SCOTT × DON TOLIVER",bpm:"136",key:"D MIN",
     moods:["NOCTURNAL","TENSE","SPACIOUS"],
     sections:STRUCTURE_B,
     release:"16 OCT 2026",
@@ -4922,6 +4960,16 @@ const DETAIL_META={
     prices:{mp3:"$40",wav:"$80",stems:"$150"}
   }
 };
+
+const MOCK_TYPE_CODES=[
+  "TRAVIS SCOTT × DON TOLIVER",
+  "KANYE WEST × TRAVIS SCOTT",
+  "FUTURE × METRO BOOMIN",
+  "PLAYBOI CARTI × TRAVIS SCOTT",
+  "DON TOLIVER × TRAVIS SCOTT",
+  "THE WEEKND × TRAVIS SCOTT",
+  "LIL WAYNE × DRAKE"
+];
 
 const MOCK_BPM=[142,136,148,132,140,128,145];
 const MOCK_KEY=["F# MIN","D MIN","C MIN","A MIN","G MIN","E MIN","C# MIN"];
@@ -4945,7 +4993,7 @@ let detailSwitchBusy=false;
 let autoplayPending=false;
 let autoplayUnlockInstalled=false;
 
-function trackTitleOf(state){return state.el.querySelector(".trackTitle")?.textContent?.trim()||state.id}
+function trackTitleOf(state){return state.el.querySelector(".trackTitleLink")?.textContent?.trim()||state.el.querySelector(".trackTitle")?.childNodes?.[0]?.textContent?.trim()||state.id}
 function trackArtistOf(state){return state.el.querySelector(".artist")?.textContent?.trim()||"FRSSN"}
 function trackCoverOf(state){
   const img=state.el.querySelector(".sleeve img");
@@ -4960,6 +5008,7 @@ function metaFor(state){
   const i=state.index||0;
   return {
     signal:String(i+1).padStart(3,"0"),
+    typeCode:MOCK_TYPE_CODES[i%MOCK_TYPE_CODES.length],
     bpm:String(MOCK_BPM[i%MOCK_BPM.length]),
     key:MOCK_KEY[i%MOCK_KEY.length],
     moods:MOCK_MOODS[i%MOCK_MOODS.length],
@@ -4980,6 +5029,18 @@ function ensureTrackEssentials(state){
   const waveRow=state.el.querySelector(".waveRow");
   if(!info||!waveRow)return;
   const m=metaFor(state);
+
+  const titleEl=info.querySelector(".trackTitle");
+  if(titleEl){
+    let typeCodeEl=titleEl.querySelector(".typeCode");
+    if(!typeCodeEl){
+      typeCodeEl=document.createElement("span");
+      typeCodeEl.className="typeCode";
+      titleEl.appendChild(typeCodeEl);
+    }
+    typeCodeEl.textContent=m.typeCode||"";
+    typeCodeEl.title=m.typeCode||"";
+  }
 
   let rail=info.querySelector(".trackStructure");
   if(!rail){
@@ -5124,7 +5185,7 @@ function renderSignalTiles(){
   signalTiles.style.gridTemplateRows=`repeat(${showcaseRows}, auto)`;
 
   tracks.forEach(state=>{
-    const m=metaFor(state),title=trackTitleOf(state),artist=trackArtistOf(state),cover=trackCoverOf(state);
+    const m=metaFor(state),title=trackTitleOf(state),cover=trackCoverOf(state);
     const tile=document.createElement("a");
     const isFeatured=state===featuredTrack;
 
@@ -5144,7 +5205,7 @@ function renderSignalTiles(){
         <div class="signalTileSleeve"><img src="${cover}" alt="${title}"></div>
       </div>
       <div class="signalTileTitle">${title}</div>
-      <div class="signalTileMeta">SIGNAL // ${m.signal} &nbsp; ${artist}</div>`;
+      <div class="signalTileMeta">${m.typeCode||""}</div>`;
 
     tile.addEventListener("click",async event=>{
       event.preventDefault();
