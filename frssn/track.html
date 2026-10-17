@@ -225,29 +225,45 @@ button,input{font:inherit}
   z-index:0;
   pointer-events:none;
   overflow:hidden;
+  transform:rotate(0deg);
+  transform-origin:50% 50%;
+  will-change:transform;
+  touch-action:none;
+  user-select:none;
+  -webkit-user-select:none;
   background:
-    radial-gradient(circle at 50% 50%,rgba(255,255,255,.035) 0 4%,transparent 4.5%),
-    radial-gradient(circle at 48% 44%,#181b18 0%,#0c0e0c 46%,#050605 78%,#020302 100%);
+    radial-gradient(circle at 50% 50%,rgba(255,255,255,.04) 0 4%,transparent 4.5%),
+    repeating-radial-gradient(circle at 50% 50%,rgba(255,255,255,.012) 0 1px,rgba(0,0,0,.018) 1px 3px),
+    radial-gradient(circle at 48% 44%,#191c19 0%,#0c0e0c 46%,#050605 78%,#020302 100%);
   border:1px solid rgba(255,255,255,.09);
   box-shadow:
     0 6px 20px rgba(0,0,0,.55),
     inset 0 0 0 2px rgba(255,255,255,.018),
     inset 0 0 28px rgba(0,0,0,.68);
 }
+.track.hero-record-packed .platterBase{
+  pointer-events:auto;
+  cursor:grab;
+}
+.track.hero-record-packed.is-platter-hand-spin .platterBase{cursor:grabbing}
 .platterBase::before{
   content:"FRSSN";
   position:absolute;
   left:50%;
-  top:42%;
-  transform:translate(-50%,-50%);
-  color:rgba(176,184,176,.78);
+  top:50%;
+  transform:translate(-50%,-50%) rotate(-2deg);
+  width:88%;
+  text-align:center;
   font-family:Arial,Helvetica,sans-serif;
-  font-size:19px;
-  font-weight:800;
+  font-size:26px;
+  font-weight:900;
   line-height:1;
-  letter-spacing:.02em;
+  letter-spacing:.065em;
   white-space:nowrap;
-  text-shadow:0 1px 1px rgba(0,0,0,.75);
+  color:rgba(184,191,184,.78);
+  text-shadow:0 1px 1px rgba(0,0,0,.82),0 0 1px rgba(255,255,255,.10);
+  -webkit-mask-image:repeating-linear-gradient(176deg,#000 0 9px,rgba(0,0,0,.44) 9px 10px,#000 10px 18px);
+  mask-image:repeating-linear-gradient(176deg,#000 0 9px,rgba(0,0,0,.44) 9px 10px,#000 10px 18px);
 }
 .platterBase::after{
   content:"";
@@ -3774,6 +3790,7 @@ const tracks = [...document.querySelectorAll(".track")].map((el,index)=>({
   current:el.querySelector(".js-current"),
   total:el.querySelector(".js-total"),
   recordCarrier:el.querySelector(".recordCarrier"),
+  platterBase:el.querySelector(".platterBase"),
   recordDisc:el.querySelector(".recordDisc"),
   tonearmArm:el.querySelector(".tonearmArm"),
   decoded:null,
@@ -3790,7 +3807,9 @@ const tracks = [...document.querySelectorAll(".track")].map((el,index)=>({
   armEngageGeneration:0,
   currentTonearmAngle:-8,
   hasPlaybackEverStarted:false,
-  heroRecordPacked:false
+  heroRecordPacked:false,
+  platterBaseAngle:0,
+  platterSpinRAF:0
 }));
 
 /* =====================================================
@@ -4811,6 +4830,102 @@ tracks.forEach(state=>{
 });
 
 /* =====================================================
+   EMPTY PLATTER // HAND SPIN
+   Works ONLY while the hero record is packed in its sleeve. This is a purely
+   tactile visual interaction: no audio engine movement and the tonearm stays
+   parked. A small visual inertia continues after release.
+===================================================== */
+function platterPointerAngle(state,event){
+  const rect=state?.platterBase?.getBoundingClientRect();
+  if(!rect)return 0;
+  const cx=rect.left+rect.width/2,cy=rect.top+rect.height/2;
+  return Math.atan2(event.clientY-cy,event.clientX-cx);
+}
+function setPlatterBaseAngle(state,angle){
+  if(!state?.platterBase)return;
+  state.platterBaseAngle=angle;
+  state.platterBase.style.transform=`rotate(${angle}deg)`;
+}
+function stopPlatterBaseInertia(state){
+  if(state?.platterSpinRAF){cancelAnimationFrame(state.platterSpinRAF);state.platterSpinRAF=0}
+}
+function startPlatterBaseInertia(state,velocityDegMs){
+  stopPlatterBaseInertia(state);
+  let velocity=velocityDegMs;
+  let last=performance.now();
+  const frame=now=>{
+    if(!isHeroRecordPacked(state)||state!==featuredTrack){state.platterSpinRAF=0;return}
+    const dt=Math.min(32,Math.max(0,now-last));last=now;
+    setPlatterBaseAngle(state,state.platterBaseAngle+velocity*dt);
+    velocity*=Math.pow(.972,dt/16.667);
+    if(Math.abs(velocity)>.004)state.platterSpinRAF=requestAnimationFrame(frame);
+    else state.platterSpinRAF=0;
+  };
+  if(Math.abs(velocity)>.004)state.platterSpinRAF=requestAnimationFrame(frame);
+}
+
+tracks.forEach(state=>{
+  const platter=state.platterBase;
+  if(!platter)return;
+  let dragging=false,pointerId=null,lastAngle=0,lastTime=0,velocity=0;
+  const moveEvent="onpointerrawupdate" in window?"pointerrawupdate":"pointermove";
+
+  platter.addEventListener("pointerdown",event=>{
+    if(state!==featuredTrack||!isHeroRecordPacked(state)||heroSleeveToggleBusy||detailSwitchBusy||switchInProgress)return;
+    event.preventDefault();event.stopPropagation();
+    stopPlatterBaseInertia(state);
+    /* Packed mode is silent and mechanically parked by definition. */
+    playIntent=false;
+    setPlayIcon(state,false);
+    setManualSpeed(0);
+    sendMode("paused");
+    cancelScheduledTonearmEngage(state);
+    state.tonearmEngaged=false;
+    setTonearmAngle(state,ARM_PARK_ANGLE);
+    dragging=true;pointerId=event.pointerId;
+    lastAngle=platterPointerAngle(state,event);
+    lastTime=Number.isFinite(event.timeStamp)?event.timeStamp:performance.now();
+    velocity=0;
+    platter.setPointerCapture(event.pointerId);
+    state.el.classList.add("is-platter-hand-spin");
+    microstatus.textContent=`${trackTitleOf(state)} // EMPTY PLATTER`;
+  });
+
+  platter.addEventListener(moveEvent,event=>{
+    if(!dragging||event.pointerId!==pointerId||!isHeroRecordPacked(state))return;
+    event.preventDefault();
+    const samples=(typeof event.getCoalescedEvents==="function"?event.getCoalescedEvents():null)||[event];
+    for(const sample of (samples.length?samples:[event])){
+      const angle=platterPointerAngle(state,sample);
+      let delta=angle-lastAngle;
+      if(delta>Math.PI)delta-=Math.PI*2;
+      if(delta<-Math.PI)delta+=Math.PI*2;
+      const now=Number.isFinite(sample.timeStamp)?sample.timeStamp:performance.now();
+      const dt=Math.max(1,now-lastTime);
+      const deltaDeg=delta*180/Math.PI;
+      setPlatterBaseAngle(state,state.platterBaseAngle+deltaDeg);
+      const instant=deltaDeg/dt;
+      velocity=velocity*.38+instant*.62;
+      lastAngle=angle;lastTime=now;
+    }
+  },{passive:false});
+
+  const finish=event=>{
+    if(!dragging)return;
+    if(event&&event.pointerId!==pointerId)return;
+    dragging=false;
+    state.el.classList.remove("is-platter-hand-spin");
+    if(event&&platter.hasPointerCapture(event.pointerId))platter.releasePointerCapture(event.pointerId);
+    pointerId=null;
+    state.tonearmEngaged=false;
+    setTonearmAngle(state,ARM_PARK_ANGLE);
+    if(isHeroRecordPacked(state))startPlatterBaseInertia(state,velocity);
+  };
+  platter.addEventListener("pointerup",finish);
+  platter.addEventListener("pointercancel",finish);
+});
+
+/* =====================================================
    SCRATCH
 ===================================================== */
 function pointerAngle(state,event){
@@ -5653,6 +5768,7 @@ async function parkHeroTonearm(state,duration=390){
 }
 
 async function packHeroRecordToSleeve(state){
+  stopPlatterBaseInertia(state);
   if(!IS_DETAIL_PAGE||!state||state!==featuredTrack||isHeroRecordPacked(state)||heroSleeveToggleBusy||detailSwitchBusy||switchInProgress)return false;
   heroSleeveToggleBusy=true;
   try{
@@ -5688,6 +5804,7 @@ async function packHeroRecordToSleeve(state){
 }
 
 async function unpackHeroRecordToPlatter(state,{autoplay=false,targetTime=null}={}){
+  stopPlatterBaseInertia(state);
   if(!IS_DETAIL_PAGE||!state||state!==featuredTrack||heroSleeveToggleBusy||detailSwitchBusy||switchInProgress)return false;
   if(!isHeroRecordPacked(state)){
     if(autoplay&&!playIntent){
