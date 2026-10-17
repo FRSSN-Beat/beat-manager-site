@@ -1653,13 +1653,13 @@ button,input{font:inherit}
    transforms already used by the turntable physics. */
 .detailPage.layout-debug-active .signalTiles{zoom:var(--dbg-tile-block-scale)}
 .detailPage.layout-debug-active .featuredSlot .vinylUnit{zoom:var(--dbg-turntable-scale);translate:var(--dbg-turntable-x) var(--dbg-turntable-y);scale:var(--dbg-turntable-stretch-x) var(--dbg-turntable-stretch-y)}
-.detailPage.layout-debug-active .featuredSlot .waveRow{zoom:var(--dbg-player-scale);translate:var(--dbg-player-x) var(--dbg-player-y);scale:var(--dbg-player-stretch-x) var(--dbg-player-stretch-y)}
-.detailPage.layout-debug-active .featuredSlot .trackTitle{zoom:var(--dbg-title-scale);translate:var(--dbg-title-x) var(--dbg-title-y);scale:var(--dbg-title-stretch-x) var(--dbg-title-stretch-y)}
-.detailPage.layout-debug-active .featuredSlot .trackStructure{zoom:var(--dbg-structure-scale);translate:var(--dbg-structure-x) var(--dbg-structure-y);scale:var(--dbg-structure-stretch-x) var(--dbg-structure-stretch-y)}
-.detailPage.layout-debug-active .featuredSlot .beatCoreBlock{zoom:var(--dbg-core-scale);translate:var(--dbg-core-x) var(--dbg-core-y);scale:var(--dbg-core-stretch-x) var(--dbg-core-stretch-y)}
-.detailPage.layout-debug-active .featuredSlot .moodBlock{zoom:var(--dbg-mood-scale);translate:var(--dbg-mood-x) var(--dbg-mood-y);scale:var(--dbg-mood-stretch-x) var(--dbg-mood-stretch-y)}
-.detailPage.layout-debug-active .featuredSlot .releaseBlock{zoom:var(--dbg-release-scale);translate:var(--dbg-release-x) var(--dbg-release-y);scale:var(--dbg-release-stretch-x) var(--dbg-release-stretch-y)}
-.detailPage.layout-debug-active .featuredSlot .badge{zoom:var(--dbg-status-scale);translate:var(--dbg-status-x) var(--dbg-status-y);scale:var(--dbg-status-stretch-x) var(--dbg-status-stretch-y)}
+.detailPage.layout-debug-active .featuredSlot .waveRow{zoom:var(--dbg-player-scale);translate:var(--dbg-player-x) var(--dbg-player-y);scale:1 1}
+.detailPage.layout-debug-active .featuredSlot .trackTitle{zoom:var(--dbg-title-scale);translate:var(--dbg-title-x) var(--dbg-title-y);scale:1 1}
+.detailPage.layout-debug-active .featuredSlot .trackStructure{zoom:var(--dbg-structure-scale);translate:var(--dbg-structure-x) var(--dbg-structure-y);scale:1 1}
+.detailPage.layout-debug-active .featuredSlot .beatCoreBlock{zoom:var(--dbg-core-scale);translate:var(--dbg-core-x) var(--dbg-core-y);scale:1 1}
+.detailPage.layout-debug-active .featuredSlot .moodBlock{zoom:var(--dbg-mood-scale);translate:var(--dbg-mood-x) var(--dbg-mood-y);scale:1 1}
+.detailPage.layout-debug-active .featuredSlot .releaseBlock{zoom:var(--dbg-release-scale);translate:var(--dbg-release-x) var(--dbg-release-y);scale:1 1}
+.detailPage.layout-debug-active .featuredSlot .badge{zoom:var(--dbg-status-scale);translate:var(--dbg-status-x) var(--dbg-status-y);scale:1 1}
 .detailPage.layout-debug-active .featuredSlot .buyCol{zoom:var(--dbg-buy-scale);translate:var(--dbg-buy-x) var(--dbg-buy-y);scale:1 1}
 .detailPage.layout-debug-active #heroMeterBlock{zoom:var(--dbg-meter-scale);translate:var(--dbg-meter-x) var(--dbg-meter-y);scale:var(--dbg-meter-stretch-x) var(--dbg-meter-stretch-y)}
 
@@ -2021,21 +2021,23 @@ body.layout-mouse-edit .layout-debug-selected{
   height:34px;
   padding:0 12px;
   border:1px solid rgba(214,255,40,.56);
-  background:rgba(8,12,5,.80);
+  background:rgba(8,12,5,.82);
   color:#d6ff28;
   box-shadow:inset 0 0 0 1px rgba(214,255,40,.035);
-  font-family:"Arial Narrow","Roboto Condensed",Arial,sans-serif;
+  font-family:Arial,Helvetica,sans-serif;
   font-size:12px;
   font-weight:900;
   line-height:1;
-  letter-spacing:.03em;
+  letter-spacing:.02em;
   text-transform:uppercase;
   white-space:nowrap;
   overflow:hidden;
 }
 .detailPage .featuredSlot .statusChip .statusValue{
   color:rgba(236,241,229,.86);
+  font-size:.82em;
   font-weight:800;
+  letter-spacing:.02em;
 }
 .detailPage .featuredSlot .statusChipIcon{
   width:14px;
@@ -2047,11 +2049,11 @@ body.layout-mouse-edit .layout-debug-selected{
 }
 .detailPage .featuredSlot .statusChipIcon.dot::before{
   content:"";
-  width:6px;
-  height:6px;
+  width:7px;
+  height:7px;
   border-radius:50%;
   background:#d6ff28;
-  box-shadow:0 0 8px rgba(214,255,40,.28);
+  box-shadow:0 0 9px rgba(214,255,40,.30);
 }
 .detailPage .featuredSlot .statusChipIcon svg{
   width:14px;
@@ -2461,7 +2463,7 @@ body.layout-mouse-edit .layout-debug-selected{
   </div>
 
   <div class="layoutDebugMouseRow">
-    <span>DIRECT EDIT // drag block = move. Corner = proportional scale. Right handle = stretch width. Bottom handle = stretch height.</span>
+    <span>DIRECT EDIT // drag block = move. Corner = proportional scale. Right handle = FRAME WIDTH. Bottom handle = FRAME HEIGHT. Content proportions stay locked.</span>
     <button class="layoutDebugMouseToggle is-on" id="layoutDebugMouseToggle" type="button">MOUSE ON</button>
   </div>
   <div class="layoutDebugSelectedReadout" id="layoutDebugSelectedReadout">SELECTED // NONE</div>
@@ -2538,7 +2540,7 @@ body.layout-mouse-edit .layout-debug-selected{
     <button id="layoutDebugRelock" type="button">RELOCK FRAMES</button>
     <button id="layoutDebugCopy" type="button">COPY VALUES</button>
   </div>
-  <div class="layoutDebugHint">Outer frames stay fixed. BPM/KEY inner frames and label fonts are locked. MOOD never expands beyond its module. RELEASE DATE and the purchase row use fixed geometry; the cart icon is standalone and each price button auto-fits its content.</div>
+  <div class="layoutDebugHint">CURRENT MODULE RECTANGLES ARE THE ZERO POINT. Width/height handles resize the FRAME only; text, icons and internal controls are never stretched. We can now tune typography inside each locked frame independently.</div>
 </div>
 <button class="layoutDebugReopen" id="layoutDebugReopen" type="button">LAYOUT DEBUG</button>
 <div class="layoutScaleHandle" id="layoutScaleHandle" aria-hidden="true"></div>
@@ -2724,7 +2726,10 @@ function applyLayoutDebug(){
   if(debugValues.keyValueFont)debugValues.keyValueFont.textContent=`${Number(layoutDebugState.keyValueFont).toFixed(1).replace(/\.0$/,"")} px`;
   updateLayoutSelectionReadout();
   scheduleLayoutHandleUpdate();
-  if(heroFrameLockReady)scheduleFitHeroModuleContents();
+  if(heroFrameLockReady){
+    applyHeroFrameLocks();
+    scheduleFitHeroModuleContents();
+  }
 }
 
 function findLayoutTargetFromEventTarget(target){
@@ -2981,6 +2986,7 @@ function captureHeroFrameLocks({force=false}={}){
   heroFrameLockState=next;
   heroFrameLockReady=true;
   saveHeroFrameLocks();
+  try{localStorage.setItem(HERO_GEOMETRY_NORMALIZED_KEY,"1")}catch(_){}
   applyHeroFrameLocks();
   updateHeroFrameLockStatus();
   return true;
@@ -2993,24 +2999,58 @@ function applyHeroFrameLocks(){
   HERO_FRAME_LOCK_TARGETS.forEach(d=>{
     const el=document.querySelector(d.selector);
     const box=heroFrameLockState[d.id];
-    if(!el||!box)return;
-    if(d.id==="buy"){
-      const sx=Math.max(.2,(Number(layoutDebugState.buyStretchX)||100)/100);
-      const sy=Math.max(.2,(Number(layoutDebugState.buyStretchY)||100)/100);
-      el.style.width=`${Math.round(box.width*sx*10)/10}px`;
-      el.style.height=`${Math.round(box.height*sy*10)/10}px`;
-    }else{
-      el.style.width=`${box.width}px`;
-      el.style.height=`${box.height}px`;
-    }
+    const def=frameDebugDef(d.debugId);
+    if(!el||!box||!def)return;
+    const sx=Math.max(.2,(Number(layoutDebugState[def.sx])||100)/100);
+    const sy=Math.max(.2,(Number(layoutDebugState[def.sy])||100)/100);
+    /* Width/height stretch now changes ONLY the outer frame geometry.
+       Text, icons and internal controls keep their own natural proportions. */
+    el.style.width=`${Math.round(box.width*sx*10)/10}px`;
+    el.style.height=`${Math.round(box.height*sy*10)/10}px`;
   });
   scheduleFitHeroModuleContents();
 }
 function updateHeroFrameLockStatus(){
   if(!layoutFrameLockStatus)return;
   layoutFrameLockStatus.innerHTML=heroFrameLockReady
-    ? 'MODULE FRAMES // <b>LOCKED</b> // CONTENT AUTO-FIT ON'
+    ? 'MODULE FRAMES // <b>LOCKED</b> // NO CONTENT DEFORMATION'
     : 'MODULE FRAMES // <b>WAITING</b>';
+}
+
+const HERO_GEOMETRY_NORMALIZED_KEY="frssnHeroGeometryNormalizedV3";
+function normalizeHeroFrameGeometryOnce(){
+  if(!heroFrameLockReady||window.innerWidth<901)return false;
+  try{if(localStorage.getItem(HERO_GEOMETRY_NORMALIZED_KEY)==="1")return false}catch(_){}
+
+  HERO_FRAME_LOCK_TARGETS.forEach(d=>{
+    const box=heroFrameLockState[d.id];
+    const def=frameDebugDef(d.debugId);
+    if(!box||!def)return;
+    const sx=Math.max(.2,(Number(layoutDebugState[def.sx])||100)/100);
+    const sy=Math.max(.2,(Number(layoutDebugState[def.sy])||100)/100);
+    const oldW=Number(box.width)||1;
+    const oldH=Number(box.height)||1;
+
+    /* Bake the old visual stretch into the frame itself. This makes the exact
+       current module rectangle the new 100% / 100% zero point. */
+    box.width=Math.round(oldW*sx*10)/10;
+    box.height=Math.round(oldH*sy*10)/10;
+
+    /* Legacy CSS scale expanded from the centre. Compensate the position so the
+       visible rectangle stays where the user placed it. */
+    layoutDebugState[def.x]=Math.round(((Number(layoutDebugState[def.x])||0)-oldW*(sx-1)/2)*10)/10;
+    layoutDebugState[def.y]=Math.round(((Number(layoutDebugState[def.y])||0)-oldH*(sy-1)/2)*10)/10;
+    layoutDebugState[def.sx]=100;
+    layoutDebugState[def.sy]=100;
+  });
+
+  saveHeroFrameLocks();
+  saveLayoutDebug();
+  try{localStorage.setItem(HERO_GEOMETRY_NORMALIZED_KEY,"1")}catch(_){}
+  applyLayoutDebug();
+  applyHeroFrameLocks();
+  updateHeroFrameLockStatus();
+  return true;
 }
 
 function elementFits(el){
@@ -3133,9 +3173,8 @@ function fitHeroModuleContents(){
   if(title)fitFontBinary(title,{min:18,max:48});
 
   const badge=document.querySelector(".featuredSlot .badge");
-  if(badge){
-    badge.querySelectorAll(".statusChip").forEach(chip=>fitFontBinary(chip,{min:9,max:13}));
-  }
+  /* Status typography is intentionally fixed. The module frame may change size,
+     but its glyphs are never non-uniformly stretched or squeezed. */
 
   const time=document.querySelector(".featuredSlot .time");
   if(time)fitFontBinary(time,{min:8,max:14});
@@ -3154,6 +3193,7 @@ function ensureHeroFrameLocks(){
   if(!IS_DETAIL_PAGE||window.innerWidth<901)return;
   if(loadHeroFrameLocks()){
     heroFrameLockReady=true;
+    normalizeHeroFrameGeometryOnce();
     applyHeroFrameLocks();
     updateHeroFrameLockStatus();
     return;
@@ -3246,8 +3286,16 @@ if(IS_DETAIL_PAGE&&layoutDebugPanel){
     setTimeout(()=>captureHeroFrameLocks({force:true}),60);
   });
   layoutDebugRelock?.addEventListener("click",()=>{
+    /* RELock means: whatever rectangles are visible now become the new zero point. */
+    HERO_FRAME_LOCK_TARGETS.forEach(d=>{
+      const def=frameDebugDef(d.debugId);
+      if(!def)return;
+      layoutDebugState[def.sx]=100;
+      layoutDebugState[def.sy]=100;
+    });
+    saveLayoutDebug();
     heroFrameLockReady=false;
-    try{localStorage.removeItem(HERO_FRAME_LOCK_KEY)}catch(_){}
+    try{localStorage.removeItem(HERO_FRAME_LOCK_KEY);localStorage.removeItem(HERO_GEOMETRY_NORMALIZED_KEY)}catch(_){}
     captureHeroFrameLocks({force:true});
     const old=layoutDebugRelock.textContent;
     layoutDebugRelock.textContent="LOCKED";
