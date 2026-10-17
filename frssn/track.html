@@ -5591,6 +5591,21 @@ function mountHeroInstant(state,{hideRecord=true}={}){
   setVinylAngle(state,0);
 }
 
+function resetTrackTransportVisualToZero(state){
+  if(!state)return;
+  /* Reset ONLY the record/track transport. The hardware platter is deliberately
+     excluded: physicalPlatterAngle must survive record changes exactly as a real
+     turntable platter would. */
+  uncoupleRecordFromPlatter(state);
+  state.position=0;
+  state.hasPlaybackEverStarted=false;
+  state.tonearmEngaged=false;
+  setVinylAngle(state,0);
+  updateProgressUI(state,0);
+  setPlayIcon(state,false);
+  setTonearmAngle(state,ARM_PARK_ANGLE);
+}
+
 function releaseHeroToSource(state){
   if(!state)return;
   cancelScheduledTonearmEngage(state);
@@ -6224,6 +6239,11 @@ async function featureTrack(next,{push=false,replace=false,sourceSleeveRect=null
     activeTrack=next;
     featuredSlot.appendChild(next.el);
     mountHeroInstant(next,{hideRecord:true});
+
+    /* New record always starts visually at its own ZERO orientation and its
+       waveform/timecode are reset immediately. The lower hardware platter keeps
+       whatever absolute angle it had from the previous record. */
+    resetTrackTransportVisualToZero(next);
     applyPhysicalPlatterAngle(next);
     setHeroSleeve(next,{visible:true});
     updateDetailHeader(next);
@@ -6242,7 +6262,12 @@ async function featureTrack(next,{push=false,replace=false,sourceSleeveRect=null
     oldLandingClone?.remove();
     newLandingClone?.remove();
 
-    /* 3) New record leaves the newly arrived sleeve and seats on platter. */
+    /* 3) New record leaves the newly arrived sleeve and seats on platter.
+       Force its own visual angle to 0° BEFORE the flight clone is created, so
+       the incoming record is visibly installed in its zero orientation while
+       the platter underneath keeps its previous physical angle. */
+    resetTrackTransportVisualToZero(next);
+    applyPhysicalPlatterAngle(next);
     const enginePromise=activateTrackBuffer(next,0);
     const newDiscFrom=heroSleeveDiscRect(next);
     const newDiscTo=heroPlatterDiscRect(next);
@@ -6259,14 +6284,15 @@ async function featureTrack(next,{push=false,replace=false,sourceSleeveRect=null
     next.heroRecordPacked=false;
     next.vinylOpened=true;
     next.el.classList.remove("hero-record-hidden","hero-record-packed");
-    /* The new record lands on the SAME physical platter angle left by the old
-       record. Its own label orientation may differ, but from now on both spin
-       together exactly like coupled physical surfaces. */
-    coupleRecordToPlatter(next,0);
-    syncHeroPackedUI(next);
+    /* The incoming record itself is at 0°. Coupling stores the platter's current
+       angle as an offset, so the hardware does NOT jump to zero. From here on
+       both surfaces receive the same angular delta and spin physically together. */
     next.position=0;
     setVinylAngle(next,0);
     updateProgressUI(next,0);
+    coupleRecordToPlatter(next,0);
+    setVinylAngle(next,0);
+    syncHeroPackedUI(next);
 
     await startHeroPlayback(next,{autoplay:false,bufferReady:true});
 
