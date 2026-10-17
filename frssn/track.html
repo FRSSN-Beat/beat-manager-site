@@ -5056,28 +5056,37 @@ function processScratchSample(state,event){
   if(!manualMovementStarted){
     manualMovementStarted=true;
 
-    /* STOP + parked arm + hand movement = direct physical cue.
-       The first real movement drops the needle at the current hand-selected
-       position, opens the contact gate and turns the gesture into audible
-       scratch/playback. This mirrors waveform/section cue behavior. */
+    /* STOP + parked arm is a silent hand-positioning mode.
+       Rotating the record changes only the selected groove / waveform position.
+       The arm stays parked, the contact gate stays closed and playback never
+       starts from this gesture. Play or a waveform/section cue is required. */
     if(scratchStartedFromParkedStop&&!state.tonearmEngaged){
-      seekEngine(state,scratchVisualTime);
-      state.position=scratchVisualTime;
-      setTonearmAngle(state,armAngleFromTime(state,scratchVisualTime));
-      state.tonearmEngaged=true;
-      playIntent=true;
-      state.hasPlaybackEverStarted=true;
-      setPlayIcon(state,true);
-      setTonearmAudioContact(state,true);
-      scratchStartedFromParkedStop=false;
-      microstatus.textContent=`MANUAL CUE // ${fmt(scratchVisualTime)}`;
+      playIntent=false;
+      setPlayIcon(state,false);
+      setTonearmAudioContact(state,false);
+      setTonearmAngle(state,ARM_PARK_ANGLE);
+      setManualSpeed(0);
+      sendMode("paused");
+    }else{
+      /* Ordinary PAUSE keeps the needle on the record, so hand scratching is
+         still a real audible scratch exactly as before. */
+      sendMode("manual");
     }
-
-    sendMode("manual");
   }
 
-  setManualSpeed(scratchVelocity);scheduleManualIdle();
-  microstatus.textContent=`SCRATCH // ${scratchVelocity>=0?"+":"−"}${Math.abs(scratchVelocity).toFixed(2)}×`;
+  if(scratchStartedFromParkedStop&&!state.tonearmEngaged){
+    /* Keep the engine silently cued to the hand-selected position so a later
+       Play starts from exactly where the user left the record. */
+    seekEngine(state,scratchVisualTime);
+    state.position=scratchVisualTime;
+    setManualSpeed(0);
+    setTonearmAudioContact(state,false);
+    setTonearmAngle(state,ARM_PARK_ANGLE);
+    microstatus.textContent=`HAND CUE // ${fmt(scratchVisualTime)} // ARM PARKED`;
+  }else{
+    setManualSpeed(scratchVelocity);scheduleManualIdle();
+    microstatus.textContent=`SCRATCH // ${scratchVelocity>=0?"+":"−"}${Math.abs(scratchVelocity).toFixed(2)}×`;
+  }
 }
 function handleScratchMotion(state,event){
   if(!isScratching||scratchTrack!==state||event.pointerId!==scratchPointerId)return;
@@ -5097,26 +5106,44 @@ tracks.forEach(state=>{
     scratchVisualTime=getEstimatedEnginePosition();scratchVelocity=engineSpeed;scratchLastAngle=pointerAngle(state,event);
     scratchLastEventTime=Number.isFinite(event.timeStamp)?event.timeStamp:performance.now();lastManualMoveAt=performance.now();
     state.recordDisc.setPointerCapture(event.pointerId);state.el.classList.add("is-scratching");
-    if(playIntent)sendMode("grab_brake");else{setManualSpeed(0);sendMode("hold")}
+    if(playIntent)sendMode("grab_brake");
+    else if(scratchStartedFromParkedStop){
+      /* Parked STOP: hand rotation is visual/silent positioning only. */
+      setManualSpeed(0);
+      sendMode("paused");
+      setTonearmAudioContact(state,false);
+      setTonearmAngle(state,ARM_PARK_ANGLE);
+    }else{
+      /* Paused with the needle still down: preserve audible hand scratch. */
+      setManualSpeed(0);
+      sendMode("hold");
+    }
   });
   state.recordDisc.addEventListener(scratchMoveEvent,event=>handleScratchMotion(state,event),{passive:false});
   const finishScratch=async event=>{
     if(!isScratching||scratchTrack!==state)return;if(event&&event.pointerId!==scratchPointerId)return;
     clearManualIdle();isScratching=false;state.el.classList.remove("is-scratching");
     if(event&&state.recordDisc.hasPointerCapture(event.pointerId))state.recordDisc.releasePointerCapture(event.pointerId);
-    const parkedStopCue=!!(scratchStartedFromParkedStop&&manualMovementStarted&&(!event||event.type==="pointerup"));
+    const parkedStopCue=!!(scratchStartedFromParkedStop&&manualMovementStarted);
     const parkedCueTime=clampTime(state,scratchVisualTime);
     scratchPointerId=null;scratchTrack=null;scratchStartedFromParkedStop=false;
 
-    /* STOP mode behaves like a real deck cue. If the arm was parked when the
-       user manually scrubbed the record, releasing it immediately drops the
-       arm at that selected groove and starts playback from the selected time.
-       No free-spin branch is used here: the gesture is interpreted as a cue. */
+    /* Parked STOP stays parked after hand rotation. The gesture only selects a
+       new groove silently; it never drops the arm and never starts playback. */
     if(parkedStopCue){
       manualMovementStarted=false;
       setManualSpeed(0);
       sendMode("paused");
-      await startFromParkedStopAt(state,parkedCueTime,"MANUAL CUE");
+      seekEngine(state,parkedCueTime);
+      state.position=parkedCueTime;
+      updateProgressUI(state,parkedCueTime);
+      setVinylAngle(state,angleFromAudioTime(parkedCueTime));
+      state.tonearmEngaged=false;
+      setTonearmAngle(state,ARM_PARK_ANGLE);
+      setTonearmAudioContact(state,false);
+      playIntent=false;
+      setPlayIcon(state,false);
+      microstatus.textContent=`HAND CUE // ${fmt(parkedCueTime)} // READY`;
       return;
     }
 
@@ -5133,10 +5160,10 @@ tracks.forEach(state=>{
    SEEK / CUE
 ===================================================== */
 /* STOP -> DIRECT CUE START
-   A parked tonearm means the deck is physically stopped. In that state a
-   waveform/section cue (or a manual vinyl scrub released by the user) should
-   not run the old rewind animation. The needle is placed immediately on the
-   requested groove and playback starts from exactly that time. */
+   A parked tonearm means the deck is physically stopped. Waveform/section
+   clicks are active cues: the needle is placed immediately on the requested
+   groove and playback starts from exactly that time. Manual hand rotation is
+   intentionally different: it only repositions the record silently. */
 async function startFromParkedStopAt(state,targetTime,source="CUE"){
   if(!state||state!==activeTrack||state.isPacking||isHeroRecordPacked(state))return false;
   targetTime=clampTime(state,targetTime);
