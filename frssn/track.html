@@ -296,11 +296,11 @@ button,input{font:inherit}
   background:conic-gradient(from 10deg,transparent,rgba(255,255,255,.035),transparent 65deg,transparent 180deg,rgba(214,255,40,.025),transparent 250deg);
 }
 .recordLabel{
-  position:absolute;left:50%;top:50%;width:54px;height:54px;transform:translate(-50%,-50%);
+  position:absolute;left:50%;top:50%;width:45.7627%;height:45.7627%;transform:translate(-50%,-50%);
   border-radius:50%;overflow:hidden;box-shadow:0 0 0 6px rgba(214,255,40,.045);z-index:2;pointer-events:none;
 }
 .recordLabel img{width:100%;height:100%;object-fit:cover;display:block}
-.recordHole{position:absolute;left:50%;top:50%;width:7px;height:7px;transform:translate(-50%,-50%);border-radius:50%;background:#ddd;z-index:3;pointer-events:none}
+.recordHole{position:absolute;left:50%;top:50%;width:5.9322%;height:5.9322%;transform:translate(-50%,-50%);border-radius:50%;background:#ddd;z-index:3;pointer-events:none}
 .sleeve{
   width:132px;height:132px;position:relative;z-index:6;overflow:hidden;border:1px solid rgba(255,255,255,.08);
   background:#090a09;box-shadow:0 8px 22px rgba(0,0,0,.28);
@@ -495,7 +495,7 @@ body.is-android .bar{min-width:1.05px;max-width:4px}
   .vinylUnit{width:112px;height:86px}
   .recordCarrier{width:76px;height:76px;left:4px}
   .recordDisc{width:76px;height:76px}
-  .recordLabel{width:36px;height:36px}
+  .recordLabel{width:45.7627%;height:45.7627%}
   .sleeve{width:86px;height:86px}
   .tonearmMechanism{left:78px;top:1px;transform:translate(-49px,16px) scale(.63);transform-origin:0 0}
   .track.is-open .tonearmMechanism{animation:mechanismDeployMobile 1.45s cubic-bezier(.22,.8,.22,1) both}
@@ -579,12 +579,12 @@ body.is-android .bar{min-width:1.05px;max-width:4px}
   pointer-events:none!important;
 }
 .signalTileDisc.recordDisc .recordLabel{
-  width:45.76%;
-  height:45.76%;
+  width:45.7627%;
+  height:45.7627%;
 }
 .signalTileDisc.recordDisc .recordHole{
-  width:5.93%;
-  height:5.93%;
+  width:5.9322%;
+  height:5.9322%;
 }
 .signalTileSleeve{position:absolute;left:0;top:0;width:83%;aspect-ratio:1;z-index:2;background:#090b09;border:1px solid rgba(255,255,255,.08);box-shadow:0 10px 20px rgba(0,0,0,.34);overflow:hidden}
 .signalTileSleeve img{width:100%;height:100%;object-fit:cover;display:block}
@@ -988,6 +988,14 @@ body.is-android .bar{min-width:1.05px;max-width:4px}
   height:100%!important;
   margin:0!important;
   pointer-events:none!important;
+}
+.vinylFlightDiscVisual .recordLabel{
+  width:45.7627%!important;
+  height:45.7627%!important;
+}
+.vinylFlightDiscVisual .recordHole{
+  width:5.9322%!important;
+  height:5.9322%!important;
 }
 
 /* Front copy of the hero sleeve. It masks the moving disc only where the
@@ -5629,8 +5637,14 @@ function cloneUnifiedRecordDisc(state,{preserveRotation=false}={}){
   /* Strip transient interaction classes/state from the clone. */
   visual.classList.remove("vinylFlightDiscVisual","signalTileDisc");
 
+  const liveStyle=getComputedStyle(state.recordDisc);
+  visual.style.background=liveStyle.background;
+  visual.style.border=liveStyle.border;
+  visual.style.borderRadius=liveStyle.borderRadius;
+  visual.style.boxShadow=liveStyle.boxShadow;
+
   if(preserveRotation){
-    const liveTransform=getComputedStyle(state.recordDisc).transform;
+    const liveTransform=liveStyle.transform;
     visual.style.transform=(liveTransform&&liveTransform!=="none")?liveTransform:"rotate(0deg)";
   }else{
     visual.style.transform="rotate(0deg)";
