@@ -297,16 +297,16 @@ button,input{font:inherit}
   width:100%;
   display:flex;
   align-items:center;
-  gap:1px;
+  gap:.65px;
   overflow:hidden;
 }
 .bar{
   flex:1 1 0;
-  min-width:1px;
-  max-width:4px;
+  min-width:.6px;
+  max-width:3px;
   background:rgba(86,90,82,.78);
   opacity:1;
-  border-radius:.5px;
+  border-radius:.35px;
   box-shadow:none;
 }
 .bar.is-played{
@@ -316,8 +316,8 @@ button,input{font:inherit}
 /* Legacy overlay is intentionally disabled. Progress is now painted directly
    onto the original waveform bars, so there is no second compressed waveform. */
 .waveProgress{display:none!important}
-body.is-android .wave{gap:2px}
-body.is-android .bar{min-width:2px;max-width:6px}
+body.is-android .wave{gap:1px}
+body.is-android .bar{min-width:1.4px;max-width:4px}
 .time{color:var(--muted);font:600 10px/1 monospace;white-space:nowrap}
 .meta{margin-top:12px;display:flex;gap:15px;flex-wrap:wrap;color:var(--muted);font:9px/1 monospace;letter-spacing:.12em;text-transform:uppercase}
 .buyCol{display:flex;flex-direction:column;gap:8px;min-width:170px}
@@ -3842,8 +3842,8 @@ function createReversedBuffer(original,context){
   return reversed;
 }
 
-const WAVE_BARS=IS_ANDROID?80:192;
-const WAVE_ANALYSIS_SAMPLES_PER_BAR=IS_ANDROID?240:720;
+const WAVE_BARS=IS_ANDROID?96:320;
+const WAVE_ANALYSIS_SAMPLES_PER_BAR=IS_ANDROID?320:960;
 
 /* DEV CACHE BUST
    During active BeatStore development we deliberately request
@@ -3905,14 +3905,14 @@ function buildDetailedWaveHeights(decoded){
     const rms=Math.sqrt(sumSq/Math.max(1,samples));
     /* RMS carries the body, peak preserves transients. This is calculated once
        per loaded asset; playback progress itself does no amplitude math. */
-    levels.push(Math.max(rms*1.65,peak*.58));
+    levels.push(Math.max(rms*1.72,peak*.62));
   }
 
   const sorted=levels.slice().sort((a,b)=>a-b);
-  const reference=sorted[Math.min(sorted.length-1,Math.floor(sorted.length*.97))]||Math.max(...levels)||1;
+  const reference=sorted[Math.min(sorted.length-1,Math.floor(sorted.length*.985))]||Math.max(...levels)||1;
   return levels.map(level=>{
     const normalized=Math.max(0,Math.min(1,level/reference));
-    const shaped=Math.pow(normalized,.72);
+    const shaped=Math.pow(normalized,.68);
     return 6+shaped*94;
   });
 }
