@@ -417,6 +417,230 @@ button,input{font:inherit}
   .buyCol{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr}
   .time{display:none}
 }
+
+
+/* =====================================================
+   STORE CARD V2 // mirrors the inner track information
+   Global VU stays in the page header — no meter in cards.
+===================================================== */
+.track.storeCardV2{
+  grid-template-columns:178px minmax(0,1fr);
+  gap:24px;
+  padding:18px;
+  align-items:center;
+}
+.storeCardV2 .trackInfo{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.storeCardV2 .topline{
+  margin:0;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:18px;
+}
+.storeCardV2 .titleAnchor{min-width:0}
+.storeCardV2 .trackTitle{
+  margin:0;
+  font-size:29px;
+  line-height:1;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+}
+.storeCardV2 .typeCode{
+  display:block;
+  margin-top:7px;
+  color:rgba(243,244,239,.88);
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:14px;
+  font-weight:500;
+  line-height:1.1;
+  letter-spacing:.055em;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  text-transform:uppercase;
+}
+.storeCardV2 .commercialStatusRail{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:6px;
+}
+.storeCardV2 .statusChip{
+  min-width:0;
+  height:28px;
+  padding:0 9px;
+  border:1px solid rgba(214,255,40,.48);
+  background:rgba(7,9,7,.62);
+  color:var(--accent);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  font:800 8px/1 Arial,Helvetica,sans-serif;
+  letter-spacing:.015em;
+  white-space:nowrap;
+  overflow:hidden;
+  text-transform:uppercase;
+}
+.storeCardV2 .statusValue{color:rgba(243,244,239,.72);font-weight:700}
+.storeCardV2 .statusChipIcon{
+  width:11px;height:11px;flex:0 0 11px;display:grid;place-items:center;color:var(--accent);
+}
+.storeCardV2 .statusChipIcon.dot{
+  width:9px;height:9px;flex-basis:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px rgba(214,255,40,.66);
+}
+.storeCardV2 .statusChipIcon svg{width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.storeCardV2 .trackStructure{
+  display:flex;
+  width:100%;
+  height:25px;
+  border:1px solid rgba(214,255,40,.20);
+  background:rgba(8,10,8,.66);
+  overflow:hidden;
+}
+.storeCardV2 .structureSegment{
+  min-width:0;
+  height:100%;
+  padding:0 5px;
+  border:0;
+  border-right:1px solid rgba(214,255,40,.12);
+  background:transparent;
+  color:rgba(243,244,239,.60);
+  cursor:pointer;
+  font:800 8px/1 Arial,Helvetica,sans-serif;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+  white-space:nowrap;
+  overflow:hidden;
+}
+.storeCardV2 .structureSegment:last-child{border-right:0}
+.storeCardV2 .structureSegment:hover{color:var(--accent);background:rgba(214,255,40,.045)}
+.storeCardV2 .structureSegment.is-current{
+  color:var(--accent);
+  background:rgba(214,255,40,.055);
+  box-shadow:inset 0 -2px 0 var(--accent);
+}
+.storeCardV2 .waveRow{
+  display:grid;
+  grid-template-columns:34px minmax(0,1fr) 44px;
+  gap:10px;
+  align-items:center;
+}
+.storeCardV2 .iconBtn{width:34px;height:34px}
+.storeCardV2 .waveBox{height:58px}
+.storeCardV2 .time{
+  min-width:44px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:5px;
+  color:rgba(236,241,229,.48);
+  font:700 10px/1 Arial,Helvetica,sans-serif;
+  white-space:nowrap;
+}
+.storeCardV2 .time .js-current{color:rgba(236,241,229,.90)}
+.storeCardV2 .trackDataStrip{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  min-width:0;
+}
+.storeCardV2 .storeMetaCluster{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  min-width:0;
+}
+.storeCardV2 .coreProperty,
+.storeCardV2 .moodTag{
+  height:36px;
+  border:1px solid rgba(214,255,40,.34);
+  background:rgba(7,9,7,.68);
+  display:flex;
+  align-items:center;
+}
+.storeCardV2 .coreProperty{gap:10px;padding:0 11px;white-space:nowrap}
+.storeCardV2 .coreLabel{color:rgba(243,244,239,.48);font:800 9px/1 Arial,Helvetica,sans-serif;letter-spacing:.04em}
+.storeCardV2 .coreValue{color:rgba(243,244,239,.88);font:900 10px/1 Arial,Helvetica,sans-serif;letter-spacing:.02em}
+.storeCardV2 .moodBlock{display:flex;gap:7px;min-width:0}
+.storeCardV2 .moodTag{
+  padding:0 12px;
+  color:var(--accent);
+  font:900 10px/1 Arial,Helvetica,sans-serif;
+  letter-spacing:.015em;
+  white-space:nowrap;
+}
+.storeCardV2 .buyCol{
+  min-width:0;
+  display:grid;
+  grid-template-columns:42px repeat(3,minmax(92px,1fr));
+  gap:7px;
+  flex:0 1 430px;
+}
+.storeCardV2 .purchaseCartStandalone,
+.storeCardV2 .purchaseOption{height:36px}
+.storeCardV2 .purchaseCartStandalone{
+  display:grid;place-items:center;
+  background:var(--accent);
+  border:1px solid var(--accent);
+  color:#050605;
+}
+.storeCardV2 .purchaseCartStandalone svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.storeCardV2 .purchaseOption{
+  min-width:0;
+  padding:0 11px;
+  border:1px solid rgba(214,255,40,.62);
+  background:#060806;
+  color:var(--text);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  text-decoration:none;
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:9px;
+  font-weight:900;
+  line-height:1;
+  white-space:nowrap;
+}
+.storeCardV2 .purchaseOption .tierPrice{color:var(--accent);font-size:10px}
+.storeCardV2 .purchaseOption:hover{background:var(--accent);color:#050605}
+.storeCardV2 .purchaseOption:hover .tierPrice{color:#050605}
+.storeCardV2 .meta,.storeCardV2 .artist,.storeCardV2>.buyCol{display:none!important}
+
+@media(max-width:1050px){
+  .storeCardV2 .trackDataStrip{align-items:flex-start;flex-direction:column}
+  .storeCardV2 .buyCol{width:100%;flex-basis:auto;grid-template-columns:42px repeat(3,minmax(86px,1fr))}
+}
+@media(max-width:760px){
+  .track.storeCardV2{grid-template-columns:100px minmax(0,1fr);gap:12px;padding:12px}
+  .storeCardV2 .vinylUnit{width:100px;height:86px}
+  .storeCardV2 .topline{display:block}
+  .storeCardV2 .trackTitle{font-size:19px}
+  .storeCardV2 .typeCode{font-size:10px;margin-top:5px}
+  .storeCardV2 .commercialStatusRail{grid-template-columns:1fr;gap:4px}
+  .storeCardV2 .statusChip{justify-content:flex-start;height:24px;padding:0 7px;font-size:7px}
+  .storeCardV2 .trackStructure{height:23px}
+  .storeCardV2 .structureSegment{font-size:6.5px;padding:0 2px}
+  .storeCardV2 .waveRow{grid-template-columns:30px minmax(0,1fr);gap:8px}
+  .storeCardV2 .iconBtn{width:30px;height:30px}
+  .storeCardV2 .waveBox{height:48px}
+  .storeCardV2 .time{display:none}
+  .storeCardV2 .storeMetaCluster{flex-wrap:wrap}
+  .storeCardV2 .coreProperty,.storeCardV2 .moodTag{height:30px}
+  .storeCardV2 .coreProperty{padding:0 8px;gap:6px}
+  .storeCardV2 .moodTag{padding:0 8px;font-size:8px}
+  .storeCardV2 .buyCol{grid-template-columns:36px repeat(3,minmax(0,1fr));gap:4px}
+  .storeCardV2 .purchaseCartStandalone,.storeCardV2 .purchaseOption{height:32px}
+  .storeCardV2 .purchaseOption{padding:0 6px;font-size:7px}
+  .storeCardV2 .purchaseOption .tierPrice{font-size:8px}
+}
+
 </style>
 </head>
 
@@ -454,58 +678,69 @@ button,input{font:inherit}
         <!-- =================================================
              TRACK 01 // OLD
         ================================================== -->
-        <article class="track" data-track-id="old" data-audio="old.mp3">
+        <article class="track storeCardV2" data-track-id="old" data-audio="old.mp3">
           <div class="vinylUnit">
             <div class="tonearmMechanism">
               <div class="tonearmBase"></div>
               <div class="tonearmPivot"></div>
-              <div class="tonearmArm">
-                <div class="cartridge"><div class="needle"></div></div>
-              </div>
+              <div class="tonearmArm"><div class="cartridge"><div class="needle"></div></div></div>
             </div>
-
             <div class="recordCarrier">
               <div class="recordDisc">
                 <div class="recordLabel"><img src="old-cover.png" alt="OLD"></div>
                 <div class="recordHole"></div>
               </div>
             </div>
-
-            <div class="sleeve">
-              <img class="cover" src="old-cover.png" alt="OLD cover">
-            </div>
+            <div class="sleeve"><img class="cover" src="old-cover.png" alt="OLD cover"></div>
           </div>
 
           <div class="trackInfo">
             <div class="topline">
-              <div>
+              <div class="titleAnchor">
                 <h3 class="trackTitle"><a class="trackTitleLink" href="track.html?track=old">OLD</a></h3>
-                <div class="artist">FRSSN</div>
+                <span class="typeCode">TRAVIS SCOTT × KANYE WEST</span>
               </div>
-              <div class="badge">NEW SIGNAL</div>
+            </div>
+
+            <div class="commercialStatusRail" aria-label="Track commercial status">
+              <span class="statusChip"><span class="statusChipIcon dot"></span><span>FIRST LICENSE</span><span class="statusValue">// AVAILABLE</span></span>
+              <span class="statusChip"><span class="statusChipIcon"><svg viewBox="0 0 24 24"><path d="M12 3 19 6v5c0 4.6-2.8 8.1-7 10-4.2-1.9-7-5.4-7-10V6l7-3Z"/><path d="m9.2 12 1.8 1.8 3.9-4"/></svg></span><span>ORIGINAL SOURCE</span></span>
+              <span class="statusChip"><span class="statusChipIcon"><svg viewBox="0 0 24 24"><path d="m4 8 4 4 4-6 4 6 4-4-2 9H6L4 8Z"/><path d="M6 20h12"/></svg></span><span>EXCLUSIVE</span><span class="statusValue">// AVAILABLE</span></span>
+            </div>
+
+            <div class="trackStructure" aria-label="Track sections">
+              <button class="structureSegment is-current" type="button" data-section-start="0" style="flex:0 0 11%">INTRO</button>
+              <button class="structureSegment" type="button" data-section-start=".11" style="flex:0 0 16%">HOOK</button>
+              <button class="structureSegment" type="button" data-section-start=".27" style="flex:0 0 25%">VERSE</button>
+              <button class="structureSegment" type="button" data-section-start=".52" style="flex:0 0 16%">HOOK</button>
+              <button class="structureSegment" type="button" data-section-start=".68" style="flex:0 0 23%">VERSE</button>
+              <button class="structureSegment" type="button" data-section-start=".91" style="flex:0 0 9%">OUTRO</button>
             </div>
 
             <div class="waveRow">
               <button class="iconBtn js-play" type="button" aria-label="Play">
                 <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
               </button>
-
               <div class="waveBox js-seek" role="slider">
                 <div class="wave js-wave"></div>
                 <div class="waveProgress js-progress"><div class="wave js-wave-clone"></div></div>
               </div>
-
-              <div class="time"><span class="js-current">0:00</span> / <span class="js-total">0:00</span></div>
+              <div class="time"><span class="js-current">0:00</span><span class="js-total">0:00</span></div>
             </div>
 
-            <div class="meta">
-              <span>Signal // 001</span><span>45 RPM</span><span>SCRATCH ENABLED</span><span>MP3 LICENSE</span>
+            <div class="trackDataStrip">
+              <div class="storeMetaCluster">
+                <span class="coreProperty"><span class="coreLabel">BPM</span><b class="coreValue">142</b></span>
+                <span class="coreProperty"><span class="coreLabel">KEY</span><b class="coreValue">F# MIN</b></span>
+                <div class="moodBlock"><span class="moodTag">DARK</span><span class="moodTag">CINEMATIC</span><span class="moodTag">ATMOSPHERIC</span></div>
+              </div>
+              <div class="buyCol purchaseControls">
+                <span class="purchaseCartStandalone" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 4h2l2.1 10.1a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L20 8H7"/><circle cx="10" cy="19" r="1.35"/><circle cx="18" cy="19" r="1.35"/></svg></span>
+                <a class="purchaseOption" href="https://traktrain.com/cart-single-track/1679177" target="_blank" rel="noopener noreferrer"><span>MP3</span><b class="tierPrice">$40</b></a>
+                <a class="purchaseOption" href="#" data-placeholder-checkout="1"><span>WAV</span><b class="tierPrice">$80</b></a>
+                <a class="purchaseOption" href="#" data-placeholder-checkout="1"><span>STEMS</span><b class="tierPrice">$150</b></a>
+              </div>
             </div>
-          </div>
-
-          <div class="buyCol">
-            <a class="license" href="https://traktrain.com/cart-single-track/1679177" target="_blank" rel="noopener noreferrer">License <small>// checkout ↗</small></a>
-            <a class="secondary" href="https://traktrain.com/cart-single-track/1679177" target="_blank" rel="noopener noreferrer">TRAKTRAIN CHECKOUT</a>
           </div>
         </article>
 
@@ -515,58 +750,69 @@ button,input{font:inherit}
              track-02.mp3
              track-02-cover.png
         ================================================== -->
-        <article class="track" data-track-id="track-02" data-audio="track-02.mp3">
+        <article class="track storeCardV2" data-track-id="track-02" data-audio="track-02.mp3">
           <div class="vinylUnit">
             <div class="tonearmMechanism">
               <div class="tonearmBase"></div>
               <div class="tonearmPivot"></div>
-              <div class="tonearmArm">
-                <div class="cartridge"><div class="needle"></div></div>
-              </div>
+              <div class="tonearmArm"><div class="cartridge"><div class="needle"></div></div></div>
             </div>
-
             <div class="recordCarrier">
               <div class="recordDisc">
                 <div class="recordLabel"><img src="track-02-cover.png" alt="TRACK 02"></div>
                 <div class="recordHole"></div>
               </div>
             </div>
-
-            <div class="sleeve">
-              <img class="cover" src="track-02-cover.png" alt="TRACK 02 cover">
-            </div>
+            <div class="sleeve"><img class="cover" src="track-02-cover.png" alt="TRACK 02 cover"></div>
           </div>
 
           <div class="trackInfo">
             <div class="topline">
-              <div>
+              <div class="titleAnchor">
                 <h3 class="trackTitle"><a class="trackTitleLink" href="track.html?track=track-02">TRACK 02</a></h3>
-                <div class="artist">FRSSN</div>
+                <span class="typeCode">TRAVIS SCOTT × DON TOLIVER</span>
               </div>
-              <div class="badge">NEW SIGNAL</div>
+            </div>
+
+            <div class="commercialStatusRail" aria-label="Track commercial status">
+              <span class="statusChip"><span class="statusChipIcon dot"></span><span>FIRST LICENSE</span><span class="statusValue">// AVAILABLE</span></span>
+              <span class="statusChip"><span class="statusChipIcon"><svg viewBox="0 0 24 24"><path d="M12 3 19 6v5c0 4.6-2.8 8.1-7 10-4.2-1.9-7-5.4-7-10V6l7-3Z"/><path d="m9.2 12 1.8 1.8 3.9-4"/></svg></span><span>ORIGINAL SOURCE</span></span>
+              <span class="statusChip"><span class="statusChipIcon"><svg viewBox="0 0 24 24"><path d="m4 8 4 4 4-6 4 6 4-4-2 9H6L4 8Z"/><path d="M6 20h12"/></svg></span><span>EXCLUSIVE</span><span class="statusValue">// AVAILABLE</span></span>
+            </div>
+
+            <div class="trackStructure" aria-label="Track sections">
+              <button class="structureSegment is-current" type="button" data-section-start="0" style="flex:0 0 9%">INTRO</button>
+              <button class="structureSegment" type="button" data-section-start=".09" style="flex:0 0 24%">VERSE</button>
+              <button class="structureSegment" type="button" data-section-start=".33" style="flex:0 0 17%">HOOK</button>
+              <button class="structureSegment" type="button" data-section-start=".50" style="flex:0 0 24%">VERSE</button>
+              <button class="structureSegment" type="button" data-section-start=".74" style="flex:0 0 10%">BRIDGE</button>
+              <button class="structureSegment" type="button" data-section-start=".84" style="flex:0 0 16%">HOOK</button>
             </div>
 
             <div class="waveRow">
               <button class="iconBtn js-play" type="button" aria-label="Play">
                 <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
               </button>
-
               <div class="waveBox js-seek" role="slider">
                 <div class="wave js-wave"></div>
                 <div class="waveProgress js-progress"><div class="wave js-wave-clone"></div></div>
               </div>
-
-              <div class="time"><span class="js-current">0:00</span> / <span class="js-total">0:00</span></div>
+              <div class="time"><span class="js-current">0:00</span><span class="js-total">0:00</span></div>
             </div>
 
-            <div class="meta">
-              <span>Signal // 002</span><span>45 RPM</span><span>SCRATCH ENABLED</span><span>MP3 LICENSE</span>
+            <div class="trackDataStrip">
+              <div class="storeMetaCluster">
+                <span class="coreProperty"><span class="coreLabel">BPM</span><b class="coreValue">136</b></span>
+                <span class="coreProperty"><span class="coreLabel">KEY</span><b class="coreValue">D MIN</b></span>
+                <div class="moodBlock"><span class="moodTag">NOCTURNAL</span><span class="moodTag">TENSE</span><span class="moodTag">SPACIOUS</span></div>
+              </div>
+              <div class="buyCol purchaseControls">
+                <span class="purchaseCartStandalone" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 4h2l2.1 10.1a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L20 8H7"/><circle cx="10" cy="19" r="1.35"/><circle cx="18" cy="19" r="1.35"/></svg></span>
+                <a class="purchaseOption" href="#" data-placeholder-checkout="1"><span>MP3</span><b class="tierPrice">$40</b></a>
+                <a class="purchaseOption" href="#" data-placeholder-checkout="1"><span>WAV</span><b class="tierPrice">$80</b></a>
+                <a class="purchaseOption" href="#" data-placeholder-checkout="1"><span>STEMS</span><b class="tierPrice">$150</b></a>
+              </div>
             </div>
-          </div>
-
-          <div class="buyCol">
-            <a class="license" href="#" data-placeholder-checkout="1">License <small>// checkout ↗</small></a>
-            <a class="secondary" href="#" data-placeholder-checkout="1">TRAKTRAIN CHECKOUT</a>
           </div>
         </article>
       </div>
@@ -662,6 +908,7 @@ const tracks = [...document.querySelectorAll(".track")].map((el,index)=>({
   progress:el.querySelector(".js-progress"),
   current:el.querySelector(".js-current"),
   total:el.querySelector(".js-total"),
+  sectionButtons:[...el.querySelectorAll(".structureSegment")],
   recordCarrier:el.querySelector(".recordCarrier"),
   recordDisc:el.querySelector(".recordDisc"),
   tonearmArm:el.querySelector(".tonearmArm"),
@@ -779,6 +1026,14 @@ function updateProgressUI(state,time){
   const ratio=d?Math.max(0,Math.min(1,time/d)):0;
   state.progress.style.transform=`scaleX(${ratio})`;
   state.current.textContent=fmt(time);
+  if(state.sectionButtons?.length){
+    let activeIndex=0;
+    state.sectionButtons.forEach((button,index)=>{
+      const start=Math.max(0,Math.min(1,Number(button.dataset.sectionStart)||0));
+      if(ratio>=start)activeIndex=index;
+    });
+    state.sectionButtons.forEach((button,index)=>button.classList.toggle("is-current",index===activeIndex));
+  }
 }
 function armAngleFromTime(state,time){
   const d=getDuration(state);
@@ -1644,6 +1899,15 @@ tracks.forEach(state=>{
   state.seek.addEventListener("click",event=>{
     const d=getDuration(state);if(!d||state.loadError)return;
     const rect=state.seek.getBoundingClientRect();const ratio=Math.max(0,Math.min(1,(event.clientX-rect.left)/rect.width));seekTo(state,ratio*d);
+  });
+  state.sectionButtons?.forEach(button=>{
+    button.addEventListener("click",event=>{
+      event.preventDefault();
+      event.stopPropagation();
+      const d=getDuration(state);if(!d||state.loadError)return;
+      const ratio=Math.max(0,Math.min(1,Number(button.dataset.sectionStart)||0));
+      seekTo(state,ratio*d);
+    });
   });
 });
 
