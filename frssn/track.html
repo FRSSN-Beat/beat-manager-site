@@ -661,20 +661,33 @@ body.is-android .bar{min-width:1.05px;max-width:4px}
   margin-bottom:25px;
 }
 
+/* TITLE + TYPE CODE live in a stable anchor. Both visible modules are absolute,
+   so moving/resizing either one in debug never reflows STATUS / SECTIONS / WAVE. */
+.detailPage .featuredSlot .titleAnchor{
+  position:relative;
+  flex:1 1 auto;
+  min-width:0;
+  height:46px;
+  overflow:visible;
+}
 .detailPage .featuredSlot .trackTitle{
+  position:absolute;
+  left:0;
+  top:0;
+  margin:0;
   font-size:44px;
   line-height:.95;
   letter-spacing:.14em;
+  overflow:visible!important;
 }
-
-.detailPage .featuredSlot .trackTitle{overflow:visible!important}
 .detailPage .featuredSlot .trackTitleLink{display:inline-block;max-width:100%;white-space:nowrap}
 .detailPage .featuredSlot .typeCode{
   display:block;
   position:absolute;
   left:0;
-  top:100%;
-  margin-top:7px;
+  top:43px;
+  margin:0;
+  width:max-content;
   max-width:420px;
   color:rgba(248,250,244,.92);
   font-family:Arial,Helvetica,sans-serif;
@@ -686,7 +699,7 @@ body.is-android .bar{min-width:1.05px;max-width:4px}
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
-  pointer-events:none;
+  pointer-events:auto;
 }
 
 .detailPage .featuredSlot .artist{
@@ -1666,6 +1679,8 @@ body.is-android .bar{min-width:1.05px;max-width:4px}
 .detailPage .featuredSlot .meta{display:none}
 
 @media(max-width:900px){
+  .detailPage .featuredSlot .titleAnchor{height:40px}
+  .detailPage .featuredSlot .typeCode{top:35px;max-width:80vw;font-size:10px}
   .detailPage .featuredSlot .trackStructure{height:25px}
   .detailPage .featuredSlot .structureSegment{font-size:6px;padding:0 4px;letter-spacing:.08em}
   .detailPage .featuredSlot .trackDataStrip{gap:7px;margin-top:7px;min-height:34px}
@@ -1690,6 +1705,7 @@ body.is-android .bar{min-width:1.05px;max-width:4px}
   --dbg-play-scale:1;
   --dbg-time-scale:1;
   --dbg-title-scale:1;
+  --dbg-type-scale:1;
   --dbg-structure-scale:1;
   --dbg-core-scale:1;
   --dbg-mood-scale:1;
@@ -1704,6 +1720,7 @@ body.is-android .bar{min-width:1.05px;max-width:4px}
   --dbg-play-x:0px;--dbg-play-y:0px;
   --dbg-time-x:0px;--dbg-time-y:0px;
   --dbg-title-x:0px;--dbg-title-y:0px;
+  --dbg-type-x:0px;--dbg-type-y:0px;
   --dbg-structure-x:0px;--dbg-structure-y:0px;
   --dbg-core-x:0px;--dbg-core-y:0px;
   --dbg-mood-x:0px;--dbg-mood-y:0px;
@@ -1717,6 +1734,7 @@ body.is-android .bar{min-width:1.05px;max-width:4px}
   --dbg-play-stretch-x:1;--dbg-play-stretch-y:1;
   --dbg-time-stretch-x:1;--dbg-time-stretch-y:1;
   --dbg-title-stretch-x:1;--dbg-title-stretch-y:1;
+  --dbg-type-stretch-x:1;--dbg-type-stretch-y:1;
   --dbg-structure-stretch-x:1;--dbg-structure-stretch-y:1;
   --dbg-core-stretch-x:1;--dbg-core-stretch-y:1;
   --dbg-mood-stretch-x:1;--dbg-mood-stretch-y:1;
@@ -1737,6 +1755,7 @@ body.is-android .bar{min-width:1.05px;max-width:4px}
 .detailPage.layout-debug-active .featuredSlot .iconBtn.js-play{zoom:var(--dbg-play-scale);translate:var(--dbg-play-x) var(--dbg-play-y);scale:1 1}
 .detailPage.layout-debug-active .featuredSlot .time{zoom:var(--dbg-time-scale);translate:var(--dbg-time-x) var(--dbg-time-y);scale:1 1}
 .detailPage.layout-debug-active .featuredSlot .trackTitle{zoom:var(--dbg-title-scale);translate:var(--dbg-title-x) var(--dbg-title-y);scale:1 1}
+.detailPage.layout-debug-active .featuredSlot .typeCode{zoom:var(--dbg-type-scale);translate:var(--dbg-type-x) var(--dbg-type-y);scale:1 1}
 .detailPage.layout-debug-active .featuredSlot .trackStructure{zoom:var(--dbg-structure-scale);translate:var(--dbg-structure-x) var(--dbg-structure-y);scale:1 1}
 .detailPage.layout-debug-active .featuredSlot .beatCoreBlock{zoom:var(--dbg-core-scale);translate:var(--dbg-core-x) var(--dbg-core-y);scale:1 1}
 .detailPage.layout-debug-active .featuredSlot .moodBlock{zoom:var(--dbg-mood-scale);translate:var(--dbg-mood-x) var(--dbg-mood-y);scale:1 1}
@@ -1847,6 +1866,7 @@ body.layout-mouse-edit .featuredSlot .waveBox,
 body.layout-mouse-edit .featuredSlot .iconBtn.js-play,
 body.layout-mouse-edit .featuredSlot .time,
 body.layout-mouse-edit .featuredSlot .trackTitle,
+body.layout-mouse-edit .featuredSlot .typeCode,
 body.layout-mouse-edit .featuredSlot .trackStructure,
 body.layout-mouse-edit .featuredSlot .beatCoreBlock,
 body.layout-mouse-edit .featuredSlot .moodBlock,
@@ -1986,6 +2006,7 @@ body.layout-mouse-edit .layout-debug-selected{
 ===================================================== */
 @media(min-width:901px){
   .detailPage.hero-frame-lock .featuredSlot .trackTitle,
+  .detailPage.hero-frame-lock .featuredSlot .typeCode,
   .detailPage.hero-frame-lock .featuredSlot .trackStructure,
   .detailPage.hero-frame-lock .featuredSlot .waveRow,
   .detailPage.hero-frame-lock .featuredSlot .waveBox,
@@ -2393,8 +2414,9 @@ body.layout-mouse-edit .layout-debug-selected{
 
           <div class="trackInfo">
             <div class="topline">
-              <div>
-                <h3 class="trackTitle"><a class="trackTitleLink" href="track.html?track=old">OLD</a><span class="typeCode">TRAVIS SCOTT × KANYE WEST</span></h3>
+              <div class="titleAnchor">
+                <h3 class="trackTitle"><a class="trackTitleLink" href="track.html?track=old">OLD</a></h3>
+                <span class="typeCode">TRAVIS SCOTT × KANYE WEST</span>
                 <div class="artist">FRSSN</div>
               </div>
               <div class="badge commercialStatus">
@@ -2457,8 +2479,9 @@ body.layout-mouse-edit .layout-debug-selected{
 
           <div class="trackInfo">
             <div class="topline">
-              <div>
-                <h3 class="trackTitle"><a class="trackTitleLink" href="track.html?track=track-02">TRACK 02</a><span class="typeCode">TRAVIS SCOTT × DON TOLIVER</span></h3>
+              <div class="titleAnchor">
+                <h3 class="trackTitle"><a class="trackTitleLink" href="track.html?track=track-02">TRACK 02</a></h3>
+                <span class="typeCode">TRAVIS SCOTT × DON TOLIVER</span>
                 <div class="artist">FRSSN</div>
               </div>
               <div class="badge commercialStatus">
@@ -2593,6 +2616,10 @@ body.layout-mouse-edit .layout-debug-selected{
     <input id="dbgTitleScale" type="range" min="55" max="180" step="1" value="79">
   </div>
   <div class="layoutDebugRow">
+    <div class="layoutDebugHead"><span>TYPE CODE</span><b id="dbgTypeScaleValue">79%</b></div>
+    <input id="dbgTypeScale" type="range" min="45" max="180" step="1" value="79">
+  </div>
+  <div class="layoutDebugRow">
     <div class="layoutDebugHead"><span>SECTIONS</span><b id="dbgStructureScaleValue">75%</b></div>
     <input id="dbgStructureScale" type="range" min="55" max="165" step="1" value="75">
   </div>
@@ -2644,7 +2671,7 @@ body.layout-mouse-edit .layout-debug-selected{
     <button id="layoutDebugRelock" type="button">RELOCK FRAMES</button>
     <button id="layoutDebugCopy" type="button">COPY VALUES</button>
   </div>
-  <div class="layoutDebugHint">CURRENT MODULE RECTANGLES ARE THE ZERO POINT. Width/height handles resize the FRAME only; text and icons never deform. WAVEFORM width is unlocked and may be stretched horizontally independently.</div>
+  <div class="layoutDebugHint">CURRENT MODULE RECTANGLES ARE THE ZERO POINT. TITLE and TYPE CODE are independent absolute modules: editing either one never reflows STATUS / SECTIONS / WAVE. Width/height handles resize the FRAME only; text and icons never deform. WAVEFORM width is unlocked.</div>
 </div>
 <button class="layoutDebugReopen" id="layoutDebugReopen" type="button">LAYOUT DEBUG</button>
 <div class="layoutScaleHandle" id="layoutScaleHandle" aria-hidden="true"></div>
@@ -2687,6 +2714,7 @@ const LAYOUT_DEBUG_DEFAULTS={
   playScale:101,playX:0,playY:0,
   timeScale:141,timeX:0,timeY:0,
   titleScale:79,titleX:0,titleY:0,
+  typeScale:79,typeX:0,typeY:0,
   structureScale:75,structureX:0,structureY:0,
   coreScale:88,coreX:0,coreY:0,
   moodScale:84,moodX:0,moodY:0,
@@ -2701,6 +2729,7 @@ const LAYOUT_DEBUG_DEFAULTS={
   playStretchX:100,playStretchY:100,
   timeStretchX:100,timeStretchY:100,
   titleStretchX:100,titleStretchY:100,
+  typeStretchX:100,typeStretchY:100,
   structureStretchX:100,structureStretchY:100,
   coreStretchX:100,coreStretchY:100,
   moodStretchX:100,moodStretchY:100,
@@ -2735,6 +2764,7 @@ const debugInputs={
   playScale:document.getElementById("dbgPlayScale"),
   timeScale:document.getElementById("dbgTimeScale"),
   titleScale:document.getElementById("dbgTitleScale"),
+  typeScale:document.getElementById("dbgTypeScale"),
   structureScale:document.getElementById("dbgStructureScale"),
   coreScale:document.getElementById("dbgCoreScale"),
   moodScale:document.getElementById("dbgMoodScale"),
@@ -2753,6 +2783,7 @@ const debugValues={
   playScale:document.getElementById("dbgPlayScaleValue"),
   timeScale:document.getElementById("dbgTimeScaleValue"),
   titleScale:document.getElementById("dbgTitleScaleValue"),
+  typeScale:document.getElementById("dbgTypeScaleValue"),
   structureScale:document.getElementById("dbgStructureScaleValue"),
   coreScale:document.getElementById("dbgCoreScaleValue"),
   moodScale:document.getElementById("dbgMoodScaleValue"),
@@ -2770,6 +2801,7 @@ const LAYOUT_MOUSE_TARGETS=[
   {id:"wave",label:"WAVEFORM",selector:".featuredSlot .waveBox",scale:"waveScale",x:"waveX",y:"waveY",sx:"waveStretchX",sy:"waveStretchY",min:55,max:180},
   {id:"time",label:"TIMECODE",selector:".featuredSlot .time",scale:"timeScale",x:"timeX",y:"timeY",sx:"timeStretchX",sy:"timeStretchY",min:55,max:180},
   {id:"title",label:"TRACK TITLE",selector:".featuredSlot .trackTitle",scale:"titleScale",x:"titleX",y:"titleY",sx:"titleStretchX",sy:"titleStretchY",min:55,max:180},
+  {id:"type",label:"TYPE CODE",selector:".featuredSlot .typeCode",scale:"typeScale",x:"typeX",y:"typeY",sx:"typeStretchX",sy:"typeStretchY",min:45,max:180},
   {id:"structure",label:"SECTIONS",selector:".featuredSlot .trackStructure",scale:"structureScale",x:"structureX",y:"structureY",sx:"structureStretchX",sy:"structureStretchY",min:55,max:165},
   {id:"core",label:"BPM + KEY",selector:".featuredSlot .beatCoreBlock",scale:"coreScale",x:"coreX",y:"coreY",sx:"coreStretchX",sy:"coreStretchY",min:55,max:165},
   {id:"mood",label:"MOOD",selector:".featuredSlot .moodBlock",scale:"moodScale",x:"moodX",y:"moodY",sx:"moodStretchX",sy:"moodStretchY",min:40,max:165},
@@ -2798,6 +2830,16 @@ function loadLayoutDebug(){
     Object.keys(LAYOUT_DEBUG_DEFAULTS).forEach(key=>{
       if(Number.isFinite(Number(parsed[key])))layoutDebugState[key]=Number(parsed[key]);
     });
+    /* TYPE CODE used to be a child of TRACK TITLE. On first load after V25,
+       inherit the former title transform so the live visual position is preserved;
+       from then on it is stored and edited as a completely independent module. */
+    if(!Number.isFinite(Number(parsed.typeScale))){
+      layoutDebugState.typeScale=Number(parsed.titleScale)||LAYOUT_DEBUG_DEFAULTS.typeScale;
+      layoutDebugState.typeX=Number(parsed.titleX)||0;
+      layoutDebugState.typeY=Number(parsed.titleY)||0;
+      layoutDebugState.typeStretchX=100;
+      layoutDebugState.typeStretchY=100;
+    }
     /* Migration from the former combined BEAT PROPERTIES module.
        The current tuned transform is copied to both new modules so the row stays
        in the same place on the user's existing browser. */
@@ -2825,6 +2867,7 @@ function applyLayoutDebug(){
   root.setProperty("--dbg-play-scale",String(layoutDebugState.playScale/100));
   root.setProperty("--dbg-time-scale",String(layoutDebugState.timeScale/100));
   root.setProperty("--dbg-title-scale",String(layoutDebugState.titleScale/100));
+  root.setProperty("--dbg-type-scale",String(layoutDebugState.typeScale/100));
   root.setProperty("--dbg-structure-scale",String(layoutDebugState.structureScale/100));
   root.setProperty("--dbg-core-scale",String(layoutDebugState.coreScale/100));
   root.setProperty("--dbg-mood-scale",String(layoutDebugState.moodScale/100));
@@ -2833,7 +2876,7 @@ function applyLayoutDebug(){
   root.setProperty("--dbg-buy-scale",String(layoutDebugState.buyScale/100));
   root.setProperty("--dbg-meter-scale",String(layoutDebugState.meterScale/100));
 
-  ["turntable","player","wave","play","time","title","structure","core","mood","release","status","buy","meter"].forEach(id=>{
+  ["turntable","player","wave","play","time","title","type","structure","core","mood","release","status","buy","meter"].forEach(id=>{
     root.setProperty(`--dbg-${id}-x`,`${layoutDebugState[id+"X"]}px`);
     root.setProperty(`--dbg-${id}-y`,`${layoutDebugState[id+"Y"]}px`);
     root.setProperty(`--dbg-${id}-stretch-x`,String(layoutDebugState[id+"StretchX"]/100));
@@ -2842,7 +2885,7 @@ function applyLayoutDebug(){
 
   Object.entries(debugInputs).forEach(([key,input])=>{if(input)input.value=String(layoutDebugState[key])});
   if(debugValues.headerHeight)debugValues.headerHeight.textContent=`${Math.round(layoutDebugState.headerHeight)} px`;
-  ["tileScale","turntableScale","waveScale","playScale","timeScale","titleScale","structureScale","coreScale","moodScale","releaseScale","statusScale","buyScale","meterScale"].forEach(key=>{
+  ["tileScale","turntableScale","waveScale","playScale","timeScale","titleScale","typeScale","structureScale","coreScale","moodScale","releaseScale","statusScale","buyScale","meterScale"].forEach(key=>{
     if(debugValues[key])debugValues[key].textContent=`${Math.round(layoutDebugState[key])}%`;
   });
   if(debugValues.bpmValueFont)debugValues.bpmValueFont.textContent=`${Number(layoutDebugState.bpmValueFont).toFixed(1).replace(/\.0$/,"")} px`;
@@ -3035,6 +3078,7 @@ const HERO_FRAME_LOCK_TARGETS=[
   {id:"play",selector:".featuredSlot .iconBtn.js-play",debugId:"play"},
   {id:"time",selector:".featuredSlot .time",debugId:"time"},
   {id:"title",selector:".featuredSlot .trackTitle",debugId:"title"},
+  {id:"type",selector:".featuredSlot .typeCode",debugId:"type"},
   {id:"structure",selector:".featuredSlot .trackStructure",debugId:"structure"},
   {id:"core",selector:".featuredSlot .beatCoreBlock",debugId:"core"},
   {id:"mood",selector:".featuredSlot .moodBlock",debugId:"mood"},
@@ -3526,6 +3570,7 @@ if(IS_DETAIL_PAGE&&layoutDebugPanel){
       `PLAY BUTTON = ${layoutDebugState.playScale}% | X ${layoutDebugState.playX} | Y ${layoutDebugState.playY} | W ${layoutDebugState.playStretchX}% | H ${layoutDebugState.playStretchY}%`,
       `TIMECODE = ${layoutDebugState.timeScale}% | X ${layoutDebugState.timeX} | Y ${layoutDebugState.timeY} | W ${layoutDebugState.timeStretchX}% | H ${layoutDebugState.timeStretchY}%`,
       `TRACK TITLE = ${layoutDebugState.titleScale}% | X ${layoutDebugState.titleX} | Y ${layoutDebugState.titleY} | W ${layoutDebugState.titleStretchX}% | H ${layoutDebugState.titleStretchY}%`,
+      `TYPE CODE = ${layoutDebugState.typeScale}% | X ${layoutDebugState.typeX} | Y ${layoutDebugState.typeY} | W ${layoutDebugState.typeStretchX}% | H ${layoutDebugState.typeStretchY}%`,
       `SECTIONS = ${layoutDebugState.structureScale}% | X ${layoutDebugState.structureX} | Y ${layoutDebugState.structureY} | W ${layoutDebugState.structureStretchX}% | H ${layoutDebugState.structureStretchY}%`,
       `BPM + KEY = ${layoutDebugState.coreScale}% | X ${layoutDebugState.coreX} | Y ${layoutDebugState.coreY} | W ${layoutDebugState.coreStretchX}% | H ${layoutDebugState.coreStretchY}%`,
       `BPM VALUE FONT = ${layoutDebugState.bpmValueFont}px`,
@@ -5032,12 +5077,22 @@ function ensureTrackEssentials(state){
 
   const titleEl=info.querySelector(".trackTitle");
   if(titleEl){
-    let typeCodeEl=titleEl.querySelector(".typeCode");
+    let anchor=titleEl.closest(".titleAnchor");
+    if(!anchor){
+      anchor=document.createElement("div");
+      anchor.className="titleAnchor";
+      const parent=titleEl.parentElement;
+      parent?.insertBefore(anchor,titleEl);
+      anchor.appendChild(titleEl);
+      const artist=info.querySelector(".artist");
+      if(artist)anchor.appendChild(artist);
+    }
+    let typeCodeEl=anchor.querySelector(":scope > .typeCode")||titleEl.querySelector(".typeCode");
     if(!typeCodeEl){
       typeCodeEl=document.createElement("span");
       typeCodeEl.className="typeCode";
-      titleEl.appendChild(typeCodeEl);
     }
+    if(typeCodeEl.parentElement!==anchor)anchor.insertBefore(typeCodeEl,anchor.querySelector(".artist"));
     typeCodeEl.textContent=m.typeCode||"";
     typeCodeEl.title=m.typeCode||"";
   }
