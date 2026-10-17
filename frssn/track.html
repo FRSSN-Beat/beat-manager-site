@@ -561,7 +561,8 @@ button,input{font:inherit}
   content:"SINGLE TRACK // DIRECT SIGNAL";
   left:auto;
   right:20px;
-  bottom:12px;
+  top:12px;
+  bottom:auto;
   color:rgba(214,255,40,.24);
   font:8px/1 monospace;
   letter-spacing:.22em;
@@ -641,9 +642,7 @@ button,input{font:inherit}
 }
 
 .detailPage .featuredSlot .artist{
-  margin-top:10px;
-  font-size:11px;
-  letter-spacing:.16em;
+  display:none!important;
 }
 
 .detailPage .featuredSlot .badge{
@@ -2005,7 +2004,8 @@ body.layout-mouse-edit .layout-debug-selected{
   }
   .detailPage.hero-frame-lock .featuredSlot .waveBox{
     min-width:0!important;
-    width:auto!important;
+    max-width:none!important;
+    justify-self:start!important;
   }
   .detailPage.hero-frame-lock .featuredSlot .time{
     min-width:0!important;
@@ -2586,7 +2586,7 @@ body.layout-mouse-edit .layout-debug-selected{
     <button id="layoutDebugRelock" type="button">RELOCK FRAMES</button>
     <button id="layoutDebugCopy" type="button">COPY VALUES</button>
   </div>
-  <div class="layoutDebugHint">CURRENT MODULE RECTANGLES ARE THE ZERO POINT. Width/height handles resize the FRAME only; text, icons and internal controls are never stretched. We can now tune typography inside each locked frame independently.</div>
+  <div class="layoutDebugHint">CURRENT MODULE RECTANGLES ARE THE ZERO POINT. Width/height handles resize the FRAME only; text and icons never deform. WAVEFORM width is unlocked and may be stretched horizontally independently.</div>
 </div>
 <button class="layoutDebugReopen" id="layoutDebugReopen" type="button">LAYOUT DEBUG</button>
 <div class="layoutScaleHandle" id="layoutScaleHandle" aria-hidden="true"></div>
@@ -2624,17 +2624,17 @@ const LAYOUT_DEBUG_DEFAULTS={
   tileScale:112,
   turntableScale:94,turntableX:0,turntableY:0,
   playerScale:84,playerX:0,playerY:0, /* frozen legacy wave-row baseline */
-  waveScale:100,waveX:0,waveY:0,
+  waveScale:86,waveX:0,waveY:0,
   playScale:100,playX:0,playY:0,
-  timeScale:100,timeX:0,timeY:0,
+  timeScale:141,timeX:0,timeY:0,
   titleScale:79,titleX:0,titleY:0,
   structureScale:75,structureX:0,structureY:0,
-  coreScale:55,coreX:0,coreY:0,
-  moodScale:66,moodX:0,moodY:0,
-  releaseScale:85,releaseX:0,releaseY:0,
+  coreScale:87,coreX:0,coreY:0,
+  moodScale:84,moodX:0,moodY:0,
+  releaseScale:132,releaseX:0,releaseY:0,
   bpmValueFont:21,keyValueFont:21,
   statusScale:86,statusX:0,statusY:0,
-  buyScale:89,buyX:0,buyY:0,
+  buyScale:90,buyX:0,buyY:0,
   meterScale:100,meterX:0,meterY:0,
   turntableStretchX:100,turntableStretchY:100,
   playerStretchX:100,playerStretchY:100,
@@ -2922,6 +2922,10 @@ function endLayoutScale(event){
 }
 
 function clampLayoutStretch(value){return Math.max(30,Math.min(260,value))}
+function clampLayoutStretchFor(def,axis,value){
+  if(def?.id==="wave"&&axis==="x")return Math.max(20,Math.min(500,value));
+  return clampLayoutStretch(value);
+}
 function beginLayoutAxisResize(event,axis){
   if(!layoutMouseEdit||!layoutSelectedDef)return;
   const d=layoutSelectedDef;
@@ -2945,10 +2949,10 @@ function resizeSelectedLayoutAxis(event){
   const d=layoutAxisDrag.def;
   if(layoutAxisDrag.axis==="x"){
     const dx=event.clientX-layoutAxisDrag.startX;
-    layoutDebugState[d.sx]=Math.round(clampLayoutStretch(layoutAxisDrag.sx+(dx/layoutAxisDrag.width)*100));
+    layoutDebugState[d.sx]=Math.round(clampLayoutStretchFor(d,"x",layoutAxisDrag.sx+(dx/layoutAxisDrag.width)*100));
   }else{
     const dy=event.clientY-layoutAxisDrag.startY;
-    layoutDebugState[d.sy]=Math.round(clampLayoutStretch(layoutAxisDrag.sy+(dy/layoutAxisDrag.height)*100));
+    layoutDebugState[d.sy]=Math.round(clampLayoutStretchFor(d,"y",layoutAxisDrag.sy+(dy/layoutAxisDrag.height)*100));
   }
   applyLayoutDebug();
 }
