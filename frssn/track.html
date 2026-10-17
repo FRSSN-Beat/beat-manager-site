@@ -560,22 +560,36 @@ body.is-android .bar{min-width:1.05px;max-width:4px}
 }
 .signalTile:hover{border-color:rgba(214,255,40,.45);transform:translateY(-2px);background:rgba(10,13,8,.92)}
 .signalTileVisual{position:relative;aspect-ratio:1/.94;overflow:hidden;margin-bottom:10px}
-.signalTileDisc{
-  position:absolute;left:3%;top:2.5%;width:78%;aspect-ratio:1;border-radius:50%;z-index:1;
-  background:repeating-radial-gradient(circle at 50% 50%,#0f1010 0 2px,#151716 2px 4px,#0c0d0d 4px 6px);
-  box-shadow:0 7px 18px rgba(0,0,0,.42);
-  transform:translateX(0);
-  transition:transform .34s cubic-bezier(.22,.8,.22,1),opacity .18s ease;
+/* UNIVERSAL VINYL VISUAL // the shelf preview is now the same .recordDisc
+   component that is used on the platter and during every flight. No second
+   "preview record" texture exists anymore. */
+.signalTileDisc.recordDisc{
+  position:absolute!important;
+  left:3%!important;
+  top:2.5%!important;
+  width:78%!important;
+  height:auto!important;
+  aspect-ratio:1!important;
+  z-index:1!important;
+  margin:0!important;
+  transform:translateX(0) rotate(0deg)!important;
+  transform-origin:50% 50%!important;
+  transition:transform .34s cubic-bezier(.22,.8,.22,1),opacity .18s ease!important;
   will-change:transform,opacity;
+  pointer-events:none!important;
 }
-.signalTileDisc::after{
-  content:"";position:absolute;left:50%;top:50%;width:40%;height:40%;transform:translate(-50%,-50%);border-radius:50%;
-  background:var(--tile-cover) center/cover no-repeat;box-shadow:0 0 0 5px rgba(214,255,40,.035);
+.signalTileDisc.recordDisc .recordLabel{
+  width:45.76%;
+  height:45.76%;
+}
+.signalTileDisc.recordDisc .recordHole{
+  width:5.93%;
+  height:5.93%;
 }
 .signalTileSleeve{position:absolute;left:0;top:0;width:83%;aspect-ratio:1;z-index:2;background:#090b09;border:1px solid rgba(255,255,255,.08);box-shadow:0 10px 20px rgba(0,0,0,.34);overflow:hidden}
 .signalTileSleeve img{width:100%;height:100%;object-fit:cover;display:block}
 .signalTile:hover .signalTileDisc,
-.signalTile.is-launching .signalTileDisc{transform:translateX(29%)}
+.signalTile.is-launching .signalTileDisc{transform:translateX(29%) rotate(0deg)!important}
 .signalTile.is-featured{cursor:default;border-color:rgba(214,255,40,.24);transform:none!important}
 .signalTile.is-featured:hover{transform:none;background:rgba(5,7,5,.88);border-color:rgba(214,255,40,.24)}
 .signalTile.is-featured .signalTileDisc{opacity:0;transform:translateX(0)!important}
@@ -1335,18 +1349,18 @@ body.is-android .bar{min-width:1.05px;max-width:4px}
 
 /* Other records are completely inside their sleeves until hover. */
 .detailPage .signalTile .signalTileDisc{
-  transform:translateX(0);
+  transform:translateX(0) rotate(0deg)!important;
   opacity:1;
 }
 
 .detailPage .signalTile:hover .signalTileDisc{
-  transform:translateX(31%);
+  transform:translateX(31%) rotate(0deg)!important;
 }
 
 /* After click the preview disc first slides BACK INSIDE the package.
    This override wins even while the mouse cursor is still hovering it. */
 .detailPage .signalTile.is-preparing-transfer .signalTileDisc{
-  transform:translateX(0)!important;
+  transform:translateX(0) rotate(0deg)!important;
   transition:transform .28s cubic-bezier(.22,.8,.22,1)!important;
 }
 
@@ -5506,11 +5520,18 @@ function renderSignalTiles(){
 
     tile.innerHTML=`
       <div class="signalTileVisual">
-        <div class="signalTileDisc"></div>
         <div class="signalTileSleeve"><img src="${cover}" alt="${title}"></div>
       </div>
       <div class="signalTileTitle">${title}</div>
       <div class="signalTileMeta">${m.typeCode||""}</div>`;
+
+    /* Shelf half-open preview is not a second fake record anymore. Insert an
+       exact clone of the same live platter record behind the sleeve. */
+    const tileVisual=tile.querySelector(".signalTileVisual");
+    const tileSleeve=tile.querySelector(".signalTileSleeve");
+    const tileDisc=cloneUnifiedRecordDisc(state,{preserveRotation:false});
+    tileDisc.classList.add("signalTileDisc");
+    tileVisual.insertBefore(tileDisc,tileSleeve);
 
     tile.addEventListener("click",async event=>{
       event.preventDefault();
@@ -5597,6 +5618,26 @@ function ensureFlightLayer(className,id){
   return layer;
 }
 
+function cloneUnifiedRecordDisc(state,{preserveRotation=false}={}){
+  /* One physical vinyl visual for every context: platter, shelf preview and
+     flight. Any future groove/label/hole change only needs to be made on the
+     live .recordDisc component and every other representation inherits it. */
+  const visual=state.recordDisc.cloneNode(true);
+  visual.removeAttribute("id");
+  visual.querySelectorAll("[id]").forEach(el=>el.removeAttribute("id"));
+
+  /* Strip transient interaction classes/state from the clone. */
+  visual.classList.remove("vinylFlightDiscVisual","signalTileDisc");
+
+  if(preserveRotation){
+    const liveTransform=getComputedStyle(state.recordDisc).transform;
+    visual.style.transform=(liveTransform&&liveTransform!=="none")?liveTransform:"rotate(0deg)";
+  }else{
+    visual.style.transform="rotate(0deg)";
+  }
+  return visual;
+}
+
 function createFlightDisc(state,rect){
   const node=document.createElement("div");
   node.className="vinylFlightDisc";
@@ -5605,15 +5646,9 @@ function createFlightDisc(state,rect){
   node.style.width=`${rect.width}px`;
   node.style.height=`${rect.height}px`;
 
-  /* Do not redraw an approximation of the record for flight. Clone the exact
-     live record instead. This guarantees the same groove texture, conic sheen,
-     label image/crop, centre hole and orientation at the landing frame. */
-  const visual=state.recordDisc.cloneNode(true);
+  /* Flight uses the very same universal record visual as the platter. */
+  const visual=cloneUnifiedRecordDisc(state,{preserveRotation:true});
   visual.classList.add("vinylFlightDiscVisual");
-  visual.removeAttribute("id");
-  visual.querySelectorAll("[id]").forEach(el=>el.removeAttribute("id"));
-  const liveTransform=getComputedStyle(state.recordDisc).transform;
-  visual.style.transform=(liveTransform&&liveTransform!=="none")?liveTransform:"rotate(0deg)";
   node.appendChild(visual);
 
   ensureFlightLayer("vinylFlightLayer","vinylFlightLayer").appendChild(node);
