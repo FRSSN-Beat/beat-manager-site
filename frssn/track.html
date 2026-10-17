@@ -3818,6 +3818,7 @@ const tracks = [...document.querySelectorAll(".track")].map((el,index)=>({
   vinylOpened:false,
   mechanismDeployed:false,
   tonearmEngaged:false,
+  tonearmAudioContact:false,
   isPacking:false,
   openingPromise:null,
   armDeployTimer:null,
@@ -4214,6 +4215,9 @@ async function loadTrackData(state){
 ===================================================== */
 let workletNode=null;
 let workletOutputGain=null;
+let tonearmAudioGate=null;
+const TONEARM_GATE_OPEN=1;
+const TONEARM_GATE_CLOSED=0;
 let workletLimiter=null;
 let manualSpeedParam=null;
 let workletReady=false;
@@ -4359,6 +4363,36 @@ class FRSSNVarispeedProcessor extends AudioWorkletProcessor{
 registerProcessor("frssn-varispeed",FRSSNVarispeedProcessor);
 `;
 
+function setTonearmAudioGate(audible,{instant=false}={}){
+  if(!tonearmAudioGate||!audioContext)return;
+  const now=audioContext.currentTime;
+  const param=tonearmAudioGate.gain;
+  const target=audible?TONEARM_GATE_OPEN:TONEARM_GATE_CLOSED;
+  try{
+    param.cancelScheduledValues(now);
+    if(instant){
+      param.setValueAtTime(target,now);
+    }else{
+      const current=Number.isFinite(param.value)?param.value:(audible?0:1);
+      param.setValueAtTime(current,now);
+      param.setTargetAtTime(target,now,audible?.010:.006);
+    }
+  }catch(_){
+    try{param.value=target}catch(__){}
+  }
+}
+function setTonearmAudioContact(state,contact){
+  if(!state)return;
+  state.tonearmAudioContact=!!contact;
+  if(state===activeTrack){
+    setTonearmAudioGate(!!contact&&!!playIntent);
+  }
+}
+function syncTonearmAudioGate(){
+  const audible=!!(activeTrack&&activeTrack.tonearmAudioContact&&playIntent);
+  setTonearmAudioGate(audible);
+}
+
 async function initWorklet(){
   if(workletReady)return;
   const ctx=getAudioContext();
@@ -4368,9 +4402,10 @@ async function initWorklet(){
   workletNode=new AudioWorkletNode(ctx,"frssn-varispeed",{numberOfInputs:0,numberOfOutputs:1,outputChannelCount:[2],parameterData:{manualSpeed:0}});
   manualSpeedParam=workletNode.parameters.get("manualSpeed");
   workletOutputGain=ctx.createGain();workletOutputGain.gain.value=.92;
+  tonearmAudioGate=ctx.createGain();tonearmAudioGate.gain.value=0;
   workletLimiter=ctx.createDynamicsCompressor();
   workletLimiter.threshold.value=-2;workletLimiter.knee.value=0;workletLimiter.ratio.value=20;workletLimiter.attack.value=.001;workletLimiter.release.value=.05;
-  workletNode.connect(workletOutputGain).connect(workletLimiter).connect(ctx.destination);
+  workletNode.connect(workletOutputGain).connect(tonearmAudioGate).connect(workletLimiter).connect(ctx.destination);
   workletNode.port.onmessage=handleWorkletMessage;
   workletReady=true;
   initVuAnalyser();
@@ -4637,7 +4672,9 @@ function getTrackPosition(state){return state===activeTrack?getEstimatedEnginePo
 async function engageTonearm(state){
   if(state.tonearmEngaged||state.isPacking||!state.vinylOpened)return;
   state.tonearmEngaged=true;
+  setTonearmAudioContact(state,false);
   await animateTonearmTo(state,armAngleFromTime(state,getTrackPosition(state)),ARM_MOVE_DURATION_MS);
+  setTonearmAudioContact(state,true);
 }
 function scheduleTonearmEngageFromOpenStart(state){
   cancelScheduledTonearmEngage(state);const generation=state.armEngageGeneration;
@@ -4666,6 +4703,7 @@ async function ensureVinylOpen(state){
 async function packTrack(state,{reset=true}={}){
   if(!state.vinylOpened||state.isPacking)return;
   cancelScheduledTonearmEngage(state);state.isPacking=true;state.el.classList.remove("is-scratching","is-seeking","is-precue");
+  setTonearmAudioContact(state,false);
   if(state.tonearmEngaged)await animateTonearmTo(state,ARM_PARK_ANGLE,600);
   state.el.classList.remove("arm-on-top");state.tonearmEngaged=false;
   await wait(90);playPaperOut();state.el.classList.add("is-closing");
@@ -4753,7 +4791,7 @@ async function switchToTrack(next,{startTime=0,cue=false}={}){
   }
   if(next===activeTrack){
     if(cue)return seekTo(next,startTime);
-    if(playIntent){playIntent=false;setPlayIcon(next,false);setManualSpeed(0);sendMode("pause_brake");return}
+    if(playIntent){playIntent=false;syncTonearmAudioGate();setPlayIcon(next,false);setManualSpeed(0);sendMode("pause_brake");return}
     await resumeAudioContext();
 
     if(IS_DETAIL_PAGE){
@@ -4779,6 +4817,7 @@ async function switchToTrack(next,{startTime=0,cue=false}={}){
       next.el.classList.remove("hero-record-hidden","hero-record-packed");
       next.el.classList.add("hero-mounted","is-open","arm-on-top");
       next.tonearmEngaged=false;
+      setTonearmAudioContact(next,false);
       setTonearmAngle(next,ARM_PARK_ANGLE);
       playIntent=true;
       next.hasPlaybackEverStarted=true;
@@ -4786,6 +4825,7 @@ async function switchToTrack(next,{startTime=0,cue=false}={}){
       sendMode("play_start");
       await animateTonearmTo(next,armAngleFromTime(next,restartPosition),ARM_MOVE_DURATION_MS);
       next.tonearmEngaged=true;
+      setTonearmAudioContact(next,true);
       return;
     }
 
@@ -4835,6 +4875,7 @@ async function switchToTrack(next,{startTime=0,cue=false}={}){
   }catch(error){
     console.warn(error);
     playIntent=false;
+    syncTonearmAudioGate();
     if(activeTrack===next)setPlayIcon(next,false);
   }finally{
     switchInProgress=false;
@@ -4849,6 +4890,7 @@ async function stopAndPackActive(){
      Natural end parks the arm but does NOT hide the disc back under a sleeve. */
   if(IS_DETAIL_PAGE){
     microstatus.textContent="PLAYBACK COMPLETE // ARM RETURN";
+    setTonearmAudioContact(state,false);
     state.tonearmEngaged=false;
     await animateTonearmTo(state,ARM_PARK_ANGLE,420);
     state.vinylOpened=true;
@@ -5874,6 +5916,7 @@ function syncHeroPackedUI(state){
 async function parkHeroTonearm(state,duration=390){
   if(!state)return;
   cancelScheduledTonearmEngage(state);
+  setTonearmAudioContact(state,false);
   state.tonearmEngaged=false;
   await animateTonearmTo(state,ARM_PARK_ANGLE,duration);
   state.mechanismDeployed=true;
@@ -5910,6 +5953,7 @@ async function packHeroRecordToSleeve(state){
     state.heroRecordPacked=true;
     state.vinylOpened=false;
     state.tonearmEngaged=false;
+    setTonearmAudioContact(state,false);
     state.el.classList.add("hero-record-hidden","hero-record-packed");
     syncHeroPackedUI(state);
     await flight;
@@ -5945,10 +5989,11 @@ async function unpackHeroRecordToPlatter(state,{autoplay=false,targetTime=null}=
       updateProgressUI(state,target);
       await resumeAudioContext();
       playIntent=true;state.hasPlaybackEverStarted=true;setPlayIcon(state,true);
-      state.tonearmEngaged=false;setTonearmAngle(state,ARM_PARK_ANGLE);
+      state.tonearmEngaged=false;setTonearmAudioContact(state,false);setTonearmAngle(state,ARM_PARK_ANGLE);
       sendMode("play_start");
       await animateTonearmTo(state,armAngleFromTime(state,target),ARM_MOVE_DURATION_MS);
       state.tonearmEngaged=true;
+      setTonearmAudioContact(state,true);
     }
     return true;
   }
@@ -5964,6 +6009,7 @@ async function unpackHeroRecordToPlatter(state,{autoplay=false,targetTime=null}=
     sendMode("paused");
     setTonearmAngle(state,ARM_PARK_ANGLE);
     state.tonearmEngaged=false;
+    setTonearmAudioContact(state,false);
 
     const fromRect=heroSleeveDiscRect(state);
     const toRect=heroPlatterDiscRect(state);
@@ -6007,6 +6053,7 @@ async function unpackHeroRecordToPlatter(state,{autoplay=false,targetTime=null}=
     sendMode("play_start");
     await animateTonearmTo(state,armAngleFromTime(state,target),ARM_MOVE_DURATION_MS);
     state.tonearmEngaged=true;
+    setTonearmAudioContact(state,true);
     microstatus.textContent=`${trackTitleOf(state)} // MOTOR START`;
     return true;
   }finally{
@@ -6026,6 +6073,7 @@ async function parkHeroArmForSwap(state){
 
 async function stopCurrentForSwap(state){
   if(!state)return;
+  setTonearmAudioContact(state,false);
   playIntent=false;
   setPlayIcon(state,false);
   setManualSpeed(0);
@@ -6051,6 +6099,7 @@ async function startHeroPlayback(state,{autoplay=false,bufferReady=false}={}){
   state.vinylOpened=true;
   state.mechanismDeployed=true;
   state.tonearmEngaged=false;
+  setTonearmAudioContact(state,false);
   setVinylAngle(state,0);
   if(!state.platterCoupled)coupleRecordToPlatter(state,0);
   setVinylAngle(state,0);
@@ -6067,6 +6116,7 @@ async function startHeroPlayback(state,{autoplay=false,bufferReady=false}={}){
     ARM_MOVE_DURATION_MS
   ).then(()=>{
     state.tonearmEngaged=true;
+    setTonearmAudioContact(state,true);
   });
 
   if(autoplay){
