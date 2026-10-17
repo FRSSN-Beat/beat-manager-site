@@ -4799,7 +4799,24 @@ async function switchToTrack(next,{startTime=0,cue=false}={}){
     await resumeAudioContext();
 
     if(IS_DETAIL_PAGE){
-      let restartPosition=clampTime(next,next.position);
+      let restartPosition=clampTime(next,getEstimatedEnginePosition());
+
+      /* Ordinary PAUSE keeps the needle physically on the groove. Resuming from
+         that state must not lift/park/re-drop the arm. Recover the motor from
+         its exact current speed instead, which also makes a quick Pause -> Play
+         press continuous even if the brake has not quite finished yet. */
+      if(next.tonearmEngaged&&!isHeroRecordPacked(next)){
+        /* Do not seek or rewrite visual angles here: the worklet and the visual
+           loop already hold the exact paused/braking position. Touching either
+           position at resume creates the tiny mechanical/audio jerk we want to
+           avoid. Just re-energize the motor from its current instantaneous speed. */
+        setTonearmAudioContact(next,true);
+        playIntent=true;
+        next.hasPlaybackEverStarted=true;
+        setPlayIcon(next,true);
+        sendMode("motor_recovery");
+        return;
+      }
       /* Natural end leaves the disc on the deck with the arm parked. Starting
          again must explicitly return both the engine and the arm to the groove. */
       if(restartPosition>=Math.max(0,getDuration(next)-.08)){
@@ -5128,12 +5145,16 @@ tracks.forEach(state=>{
     const parkedCueTime=clampTime(state,scratchVisualTime);
     scratchPointerId=null;scratchTrack=null;scratchStartedFromParkedStop=false;
 
-    /* Parked STOP stays parked after hand rotation. The gesture only selects a
-       new groove silently; it never drops the arm and never starts playback. */
+    /* Parked STOP stays parked and silent, but the record is still a physical
+       object: after a hand flick it may coast with inertia. The worklet is
+       allowed to advance the groove position in FREE SPIN while the tonearm
+       contact gate remains closed. This changes only record/platter position
+       and waveform cue; it never starts PLAY or moves the arm off PARK. */
     if(parkedStopCue){
+      const recent=(performance.now()-lastManualMoveAt)<FREE_SPIN_RELEASE_WINDOW;
+      const coast=recent&&Math.abs(scratchVelocity)>=FREE_SPIN_RELEASE_THRESHOLD;
       manualMovementStarted=false;
       setManualSpeed(0);
-      sendMode("paused");
       seekEngine(state,parkedCueTime);
       state.position=parkedCueTime;
       updateProgressUI(state,parkedCueTime);
@@ -5143,7 +5164,13 @@ tracks.forEach(state=>{
       setTonearmAudioContact(state,false);
       playIntent=false;
       setPlayIcon(state,false);
-      microstatus.textContent=`HAND CUE // ${fmt(parkedCueTime)} // READY`;
+      if(coast){
+        sendMode("free_spin",{speed:scratchVelocity});
+        microstatus.textContent=`HAND CUE // SILENT FREE SPIN // ${scratchVelocity>=0?"+":"−"}${Math.abs(scratchVelocity).toFixed(2)}×`;
+      }else{
+        sendMode("paused");
+        microstatus.textContent=`HAND CUE // ${fmt(parkedCueTime)} // READY`;
+      }
       return;
     }
 
