@@ -947,6 +947,9 @@ body.is-android .bar{min-width:1.05px;max-width:4px}
   pointer-events:none;
   overflow:visible;
 }
+/* Flight wrapper is visually empty. The travelling record inside it is an
+   actual clone of the live .recordDisc, so the grooves, sheen, label crop,
+   centre hole and current rotation are pixel-identical before/after landing. */
 .vinylFlightDisc{
   position:fixed;
   left:0;
@@ -955,31 +958,22 @@ body.is-android .bar{min-width:1.05px;max-width:4px}
   height:120px;
   border-radius:50%;
   transform-origin:50% 50%;
-  background:
-    radial-gradient(circle at 50% 50%,rgba(255,255,255,.055) 0 8%,transparent 8.5%),
-    repeating-radial-gradient(circle at 50% 50%,#0f1010 0 2px,#111313 2px 4px,#0d0e0e 4px 6px);
-  border:1px solid rgba(255,255,255,.06);
-  box-shadow:0 4px 24px rgba(0,0,0,.45),inset 0 0 0 1px rgba(255,255,255,.04);
+  background:transparent;
+  border:0;
+  box-shadow:none;
   will-change:transform,opacity;
+  overflow:visible;
 }
-.vinylFlightDisc::before{
-  content:"";
-  position:absolute;
-  left:50%;top:50%;
-  width:46%;height:46%;
-  transform:translate(-50%,-50%);
-  border-radius:50%;
-  background:var(--flight-cover) center/cover no-repeat;
-  box-shadow:0 0 0 6px rgba(214,255,40,.035);
-}
-.vinylFlightDisc::after{
-  content:"";
-  position:absolute;
-  left:50%;top:50%;
-  width:6%;height:6%;
-  transform:translate(-50%,-50%);
-  border-radius:50%;
-  background:#ddd;
+.vinylFlightDisc::before,
+.vinylFlightDisc::after{content:none!important}
+.vinylFlightDiscVisual{
+  position:absolute!important;
+  left:0!important;
+  top:0!important;
+  width:100%!important;
+  height:100%!important;
+  margin:0!important;
+  pointer-events:none!important;
 }
 
 /* Front copy of the hero sleeve. It masks the moving disc only where the
@@ -3809,6 +3803,9 @@ const tracks = [...document.querySelectorAll(".track")].map((el,index)=>({
   currentTonearmAngle:-8,
   hasPlaybackEverStarted:false,
   heroRecordPacked:false,
+  vinylVisualAngle:0,
+  platterCoupled:false,
+  platterCouplingOffset:0,
   platterBaseAngle:0,
   platterSpinRAF:0
 }));
@@ -3963,7 +3960,38 @@ function setPlayIcon(state,playing){
     ? '<svg viewBox="0 0 24 24"><path d="M7 5h4v14H7zm6 0h4v14h-4z"/></svg>'
     : '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
 }
-function setVinylAngle(state,angle){state.recordDisc.style.transform=`rotate(${angle}deg)`}
+/* =====================================================
+   PHYSICAL PLATTER COUPLING
+   The lower platter is hardware, not a property of a particular record.
+   Its angle survives record swaps. While a record is on the platter both
+   surfaces receive exactly the same angular delta, preserving their physical
+   relative orientation. When the record is packed, the platter can move alone.
+===================================================== */
+let physicalPlatterAngle=0;
+
+function applyPhysicalPlatterAngle(state){
+  if(!state?.platterBase)return;
+  state.platterBaseAngle=physicalPlatterAngle;
+  state.platterBase.style.transform=`rotate(${physicalPlatterAngle}deg)`;
+}
+function coupleRecordToPlatter(state,recordAngle=state?.vinylVisualAngle||0){
+  if(!state)return;
+  applyPhysicalPlatterAngle(state);
+  state.platterCouplingOffset=physicalPlatterAngle-recordAngle;
+  state.platterCoupled=true;
+}
+function uncoupleRecordFromPlatter(state){
+  if(!state)return;
+  state.platterCoupled=false;
+}
+function setVinylAngle(state,angle){
+  if(!state?.recordDisc)return;
+  state.vinylVisualAngle=angle;
+  state.recordDisc.style.transform=`rotate(${angle}deg)`;
+  if(state.platterCoupled&&!isHeroRecordPacked(state)){
+    setPlatterBaseAngle(state,angle+state.platterCouplingOffset);
+  }
+}
 function getDuration(state){return state?.duration || 0}
 function clampTime(state,time){const d=getDuration(state);return d?Math.max(0,Math.min(d,time)):Math.max(0,time||0)}
 function paintWaveProgress(state,ratio){
@@ -4843,6 +4871,7 @@ function platterPointerAngle(state,event){
   return Math.atan2(event.clientY-cy,event.clientX-cx);
 }
 function setPlatterBaseAngle(state,angle){
+  physicalPlatterAngle=angle;
   if(!state?.platterBase)return;
   state.platterBaseAngle=angle;
   state.platterBase.style.transform=`rotate(${angle}deg)`;
@@ -5514,6 +5543,9 @@ function renderSignalTiles(){
 
 function mountHeroInstant(state,{hideRecord=true}={}){
   cancelScheduledTonearmEngage(state);
+  stopPlatterBaseInertia(state);
+  uncoupleRecordFromPlatter(state);
+  applyPhysicalPlatterAngle(state);
   state.isPacking=false;
   state.vinylOpened=true;
   state.mechanismDeployed=true;
@@ -5533,6 +5565,8 @@ function mountHeroInstant(state,{hideRecord=true}={}){
 function releaseHeroToSource(state){
   if(!state)return;
   cancelScheduledTonearmEngage(state);
+  stopPlatterBaseInertia(state);
+  uncoupleRecordFromPlatter(state);
   state.el.classList.remove(
     "hero-mounted","hero-record-hidden","is-open","arm-on-top","is-active","is-closing",
     "is-scratching","is-seeking","is-precue","is-play-starting","is-pause-braking",
@@ -5566,11 +5600,22 @@ function ensureFlightLayer(className,id){
 function createFlightDisc(state,rect){
   const node=document.createElement("div");
   node.className="vinylFlightDisc";
-  node.style.setProperty("--flight-cover",`url("${trackLabelOf(state)}")`);
   node.style.left=`${rect.left}px`;
   node.style.top=`${rect.top}px`;
   node.style.width=`${rect.width}px`;
   node.style.height=`${rect.height}px`;
+
+  /* Do not redraw an approximation of the record for flight. Clone the exact
+     live record instead. This guarantees the same groove texture, conic sheen,
+     label image/crop, centre hole and orientation at the landing frame. */
+  const visual=state.recordDisc.cloneNode(true);
+  visual.classList.add("vinylFlightDiscVisual");
+  visual.removeAttribute("id");
+  visual.querySelectorAll("[id]").forEach(el=>el.removeAttribute("id"));
+  const liveTransform=getComputedStyle(state.recordDisc).transform;
+  visual.style.transform=(liveTransform&&liveTransform!=="none")?liveTransform:"rotate(0deg)";
+  node.appendChild(visual);
+
   ensureFlightLayer("vinylFlightLayer","vinylFlightLayer").appendChild(node);
   return node;
 }
@@ -5792,6 +5837,10 @@ async function packHeroRecordToSleeve(state){
 
     const fromRect=heroPlatterDiscRect(state);
     const toRect=heroSleeveDiscRect(state);
+    /* Freeze the physical platter at the exact angle it had under the record.
+       The record now leaves the hardware, so subsequent record resets must not
+       reset the platter. */
+    uncoupleRecordFromPlatter(state);
     playPaperOut();
     const flight=flyDiscBetween(state,fromRect,toRect,{duration:DISC_TO_SLEEVE_DURATION});
     state.heroRecordPacked=true;
@@ -5823,6 +5872,7 @@ async function unpackHeroRecordToPlatter(state,{autoplay=false,targetTime=null}=
   stopPlatterBaseInertia(state);
   if(!IS_DETAIL_PAGE||!state||state!==featuredTrack||heroSleeveToggleBusy||detailSwitchBusy||switchInProgress)return false;
   if(!isHeroRecordPacked(state)){
+    if(!state.platterCoupled)coupleRecordToPlatter(state,state.vinylVisualAngle||angleFromAudioTime(state.position||0));
     if(autoplay&&!playIntent){
       const target=targetTime==null?state.position:clampTime(state,targetTime);
       seekEngine(state,target);
@@ -5864,6 +5914,11 @@ async function unpackHeroRecordToPlatter(state,{autoplay=false,targetTime=null}=
     state.mechanismDeployed=true;
     state.el.classList.remove("hero-record-hidden","hero-record-packed");
     state.el.classList.add("hero-mounted","is-open","arm-on-top");
+    /* The record lands onto the platter at its current visual angle. From this
+       point both objects share the same angular delta, but the platter keeps
+       the absolute angle it had before the landing. */
+    coupleRecordToPlatter(state,angleFromAudioTime(target));
+    setVinylAngle(state,angleFromAudioTime(target));
     syncHeroPackedUI(state);
 
     /* Keep the identical flight clone over the real record for two painted
@@ -5932,6 +5987,8 @@ async function startHeroPlayback(state,{autoplay=false,bufferReady=false}={}){
   state.vinylOpened=true;
   state.mechanismDeployed=true;
   state.tonearmEngaged=false;
+  setVinylAngle(state,0);
+  if(!state.platterCoupled)coupleRecordToPlatter(state,0);
   setVinylAngle(state,0);
   setTonearmAngle(state,ARM_PARK_ANGLE);
   updateProgressUI(state,0);
@@ -6015,6 +6072,7 @@ async function initialUnpackAndStart(state){
   state.heroRecordPacked=false;
   state.vinylOpened=true;
   state.el.classList.remove("hero-record-hidden","hero-record-packed");
+  coupleRecordToPlatter(state,0);
   syncHeroPackedUI(state);
   setVinylAngle(state,0);
   updateProgressUI(state,0);
@@ -6074,6 +6132,9 @@ async function featureTrack(next,{push=false,replace=false,sourceSleeveRect=null
         heroSleeveDiscRect(previous),
         {duration:DISC_TO_SLEEVE_DURATION}
       );
+      /* This is a hardware platter shared across records. Detach the old record
+         before resetting or releasing its own visual state. */
+      uncoupleRecordFromPlatter(previous);
       previous.heroRecordPacked=true;
       previous.vinylOpened=false;
       previous.el.classList.add("hero-record-hidden","hero-record-packed");
@@ -6114,6 +6175,7 @@ async function featureTrack(next,{push=false,replace=false,sourceSleeveRect=null
     activeTrack=next;
     featuredSlot.appendChild(next.el);
     mountHeroInstant(next,{hideRecord:true});
+    applyPhysicalPlatterAngle(next);
     setHeroSleeve(next,{visible:true});
     updateDetailHeader(next);
     applyHeroFrameLocks();
@@ -6148,6 +6210,10 @@ async function featureTrack(next,{push=false,replace=false,sourceSleeveRect=null
     next.heroRecordPacked=false;
     next.vinylOpened=true;
     next.el.classList.remove("hero-record-hidden","hero-record-packed");
+    /* The new record lands on the SAME physical platter angle left by the old
+       record. Its own label orientation may differ, but from now on both spin
+       together exactly like coupled physical surfaces. */
+    coupleRecordToPlatter(next,0);
     syncHeroPackedUI(next);
     next.position=0;
     setVinylAngle(next,0);
