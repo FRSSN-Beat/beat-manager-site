@@ -284,15 +284,40 @@ button,input{font:inherit}
   display:grid;place-items:center;color:var(--accent);cursor:pointer;
 }
 .iconBtn svg{width:13px;height:13px;fill:currentColor}
-.waveBox{height:56px;position:relative;cursor:pointer;overflow:hidden;touch-action:none}
-.wave{height:100%;display:flex;align-items:center;gap:2px}
-.bar{flex:1;min-width:1px;background:#565a52;opacity:.76}
-.waveProgress{
-  position:absolute;left:0;top:0;bottom:0;width:100%;transform:scaleX(0);transform-origin:left center;
-  will-change:transform;pointer-events:none;overflow:hidden;
+.waveBox{
+  height:56px;
+  position:relative;
+  cursor:pointer;
+  overflow:hidden;
+  touch-action:none;
+  contain:layout paint;
 }
-.waveProgress .wave{position:absolute;left:0;top:0;bottom:0;width:100%}
-.waveProgress .bar{background:var(--accent)}
+.wave{
+  height:100%;
+  width:100%;
+  display:flex;
+  align-items:center;
+  gap:1px;
+  overflow:hidden;
+}
+.bar{
+  flex:1 1 0;
+  min-width:1px;
+  max-width:4px;
+  background:rgba(86,90,82,.78);
+  opacity:1;
+  border-radius:.5px;
+  box-shadow:none;
+}
+.bar.is-played{
+  background:var(--accent);
+  box-shadow:none;
+}
+/* Legacy overlay is intentionally disabled. Progress is now painted directly
+   onto the original waveform bars, so there is no second compressed waveform. */
+.waveProgress{display:none!important}
+body.is-android .wave{gap:2px}
+body.is-android .bar{min-width:2px;max-width:6px}
 .time{color:var(--muted);font:600 10px/1 monospace;white-space:nowrap}
 .meta{margin-top:12px;display:flex;gap:15px;flex-wrap:wrap;color:var(--muted);font:9px/1 monospace;letter-spacing:.12em;text-transform:uppercase}
 .buyCol{display:flex;flex-direction:column;gap:8px;min-width:170px}
@@ -2347,9 +2372,8 @@ body.layout-mouse-edit .layout-debug-selected{
                 <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
               </button>
 
-              <div class="waveBox js-seek" role="slider">
+              <div class="waveBox js-seek" role="slider" aria-label="Track waveform">
                 <div class="wave js-wave"></div>
-                <div class="waveProgress js-progress"><div class="wave js-wave-clone"></div></div>
               </div>
 
               <div class="time"><span class="timeCurrent js-current">0:00</span><span class="timeTotal js-total">0:00</span></div>
@@ -2412,9 +2436,8 @@ body.layout-mouse-edit .layout-debug-selected{
                 <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
               </button>
 
-              <div class="waveBox js-seek" role="slider">
+              <div class="waveBox js-seek" role="slider" aria-label="Track waveform">
                 <div class="wave js-wave"></div>
-                <div class="waveProgress js-progress"><div class="wave js-wave-clone"></div></div>
               </div>
 
               <div class="time"><span class="timeCurrent js-current">0:00</span><span class="timeTotal js-total">0:00</span></div>
@@ -2519,16 +2542,16 @@ body.layout-mouse-edit .layout-debug-selected{
     <input id="dbgTurntableScale" type="range" min="55" max="165" step="1" value="94">
   </div>
   <div class="layoutDebugRow">
-    <div class="layoutDebugHead"><span>WAVEFORM</span><b id="dbgWaveScaleValue">100%</b></div>
-    <input id="dbgWaveScale" type="range" min="55" max="180" step="1" value="100">
+    <div class="layoutDebugHead"><span>WAVEFORM</span><b id="dbgWaveScaleValue">86%</b></div>
+    <input id="dbgWaveScale" type="range" min="55" max="180" step="1" value="86">
   </div>
   <div class="layoutDebugRow">
-    <div class="layoutDebugHead"><span>PLAY BUTTON</span><b id="dbgPlayScaleValue">100%</b></div>
-    <input id="dbgPlayScale" type="range" min="55" max="180" step="1" value="100">
+    <div class="layoutDebugHead"><span>PLAY BUTTON</span><b id="dbgPlayScaleValue">101%</b></div>
+    <input id="dbgPlayScale" type="range" min="55" max="180" step="1" value="101">
   </div>
   <div class="layoutDebugRow">
-    <div class="layoutDebugHead"><span>TIMECODE</span><b id="dbgTimeScaleValue">100%</b></div>
-    <input id="dbgTimeScale" type="range" min="55" max="180" step="1" value="100">
+    <div class="layoutDebugHead"><span>TIMECODE</span><b id="dbgTimeScaleValue">141%</b></div>
+    <input id="dbgTimeScale" type="range" min="55" max="180" step="1" value="141">
   </div>
   <div class="layoutDebugRow">
     <div class="layoutDebugHead"><span>TRACK TITLE</span><b id="dbgTitleScaleValue">79%</b></div>
@@ -2539,8 +2562,8 @@ body.layout-mouse-edit .layout-debug-selected{
     <input id="dbgStructureScale" type="range" min="55" max="165" step="1" value="75">
   </div>
   <div class="layoutDebugRow">
-    <div class="layoutDebugHead"><span>BPM + KEY</span><b id="dbgCoreScaleValue">55%</b></div>
-    <input id="dbgCoreScale" type="range" min="55" max="165" step="1" value="55">
+    <div class="layoutDebugHead"><span>BPM + KEY</span><b id="dbgCoreScaleValue">88%</b></div>
+    <input id="dbgCoreScale" type="range" min="55" max="165" step="1" value="88">
   </div>
   <div class="layoutDebugRow compactDebugRow">
     <div class="layoutDebugHead"><span>BPM VALUE FONT</span><b id="dbgBpmValueFontValue">21 px</b></div>
@@ -2551,20 +2574,20 @@ body.layout-mouse-edit .layout-debug-selected{
     <input id="dbgKeyValueFont" type="range" min="10" max="32" step="0.5" value="21">
   </div>
   <div class="layoutDebugRow">
-    <div class="layoutDebugHead"><span>MOOD</span><b id="dbgMoodScaleValue">66%</b></div>
-    <input id="dbgMoodScale" type="range" min="40" max="165" step="1" value="66">
+    <div class="layoutDebugHead"><span>MOOD</span><b id="dbgMoodScaleValue">84%</b></div>
+    <input id="dbgMoodScale" type="range" min="40" max="165" step="1" value="84">
   </div>
   <div class="layoutDebugRow">
-    <div class="layoutDebugHead"><span>RELEASE DATE</span><b id="dbgReleaseScaleValue">85%</b></div>
-    <input id="dbgReleaseScale" type="range" min="45" max="165" step="1" value="85">
+    <div class="layoutDebugHead"><span>RELEASE DATE</span><b id="dbgReleaseScaleValue">140%</b></div>
+    <input id="dbgReleaseScale" type="range" min="45" max="165" step="1" value="140">
   </div>
   <div class="layoutDebugRow">
-    <div class="layoutDebugHead"><span>TRACK STATUS</span><b id="dbgStatusScaleValue">86%</b></div>
-    <input id="dbgStatusScale" type="range" min="55" max="165" step="1" value="86">
+    <div class="layoutDebugHead"><span>TRACK STATUS</span><b id="dbgStatusScaleValue">79%</b></div>
+    <input id="dbgStatusScale" type="range" min="55" max="165" step="1" value="79">
   </div>
   <div class="layoutDebugRow">
-    <div class="layoutDebugHead"><span>PURCHASE ROW</span><b id="dbgBuyScaleValue">89%</b></div>
-    <input id="dbgBuyScale" type="range" min="55" max="165" step="1" value="123">
+    <div class="layoutDebugHead"><span>PURCHASE ROW</span><b id="dbgBuyScaleValue">90%</b></div>
+    <input id="dbgBuyScale" type="range" min="55" max="165" step="1" value="90">
   </div>
   <div class="layoutDebugRow">
     <div class="layoutDebugHead"><span>METER BLOCK</span><b id="dbgMeterScaleValue">100%</b></div>
@@ -2601,6 +2624,7 @@ body.layout-mouse-edit .layout-debug-selected{
 ===================================================== */
 const IS_ANDROID = /Android/i.test(navigator.userAgent || "");
 const IS_DETAIL_PAGE = document.body.classList.contains("detailPage");
+if(IS_ANDROID)document.body.classList.add("is-android");
 
 /* =====================================================
    GLOBAL DOM
@@ -2625,15 +2649,15 @@ const LAYOUT_DEBUG_DEFAULTS={
   turntableScale:94,turntableX:0,turntableY:0,
   playerScale:84,playerX:0,playerY:0, /* frozen legacy wave-row baseline */
   waveScale:86,waveX:0,waveY:0,
-  playScale:100,playX:0,playY:0,
+  playScale:101,playX:0,playY:0,
   timeScale:141,timeX:0,timeY:0,
   titleScale:79,titleX:0,titleY:0,
   structureScale:75,structureX:0,structureY:0,
-  coreScale:87,coreX:0,coreY:0,
+  coreScale:88,coreX:0,coreY:0,
   moodScale:84,moodX:0,moodY:0,
-  releaseScale:132,releaseX:0,releaseY:0,
+  releaseScale:140,releaseX:0,releaseY:0,
   bpmValueFont:21,keyValueFont:21,
-  statusScale:86,statusX:0,statusY:0,
+  statusScale:79,statusX:0,statusY:0,
   buyScale:90,buyX:0,buyY:0,
   meterScale:100,meterX:0,meterY:0,
   turntableStretchX:100,turntableStretchY:100,
@@ -3589,8 +3613,8 @@ const tracks = [...document.querySelectorAll(".track")].map((el,index)=>({
   playButton:el.querySelector(".js-play"),
   seek:el.querySelector(".js-seek"),
   wave:el.querySelector(".js-wave"),
-  waveClone:el.querySelector(".js-wave-clone"),
-  progress:el.querySelector(".js-progress"),
+  waveBars:[],
+  wavePlayedCount:0,
   current:el.querySelector(".js-current"),
   total:el.querySelector(".js-total"),
   recordCarrier:el.querySelector(".recordCarrier"),
@@ -3765,10 +3789,22 @@ function setPlayIcon(state,playing){
 function setVinylAngle(state,angle){state.recordDisc.style.transform=`rotate(${angle}deg)`}
 function getDuration(state){return state?.duration || 0}
 function clampTime(state,time){const d=getDuration(state);return d?Math.max(0,Math.min(d,time)):Math.max(0,time||0)}
+function paintWaveProgress(state,ratio){
+  const bars=state?.waveBars||[];
+  if(!bars.length)return;
+  const nextCount=Math.max(0,Math.min(bars.length,Math.floor(ratio*bars.length+1e-6)));
+  const prevCount=Math.max(0,Math.min(bars.length,state.wavePlayedCount||0));
+  if(nextCount>prevCount){
+    for(let i=prevCount;i<nextCount;i++)bars[i]?.classList.add("is-played");
+  }else if(nextCount<prevCount){
+    for(let i=nextCount;i<prevCount;i++)bars[i]?.classList.remove("is-played");
+  }
+  state.wavePlayedCount=nextCount;
+}
 function updateProgressUI(state,time){
   const d=getDuration(state);
   const ratio=d?Math.max(0,Math.min(1,time/d)):0;
-  state.progress.style.transform=`scaleX(${ratio})`;
+  paintWaveProgress(state,ratio);
   state.current.textContent=fmt(time);
   if(typeof updateStructureHighlight==="function")updateStructureHighlight(state,time);
 }
@@ -3806,7 +3842,8 @@ function createReversedBuffer(original,context){
   return reversed;
 }
 
-const WAVE_BARS=96;
+const WAVE_BARS=IS_ANDROID?80:192;
+const WAVE_ANALYSIS_SAMPLES_PER_BAR=IS_ANDROID?240:720;
 
 /* DEV CACHE BUST
    During active BeatStore development we deliberately request
@@ -3818,18 +3855,66 @@ function freshAssetUrl(url){
   return `${url}${separator}_frssn=${DEV_ASSET_VERSION}`;
 }
 
-function renderBars(element,heights){
+function renderBars(state,heights){
+  const element=state.wave;
   element.innerHTML="";
+  const fragment=document.createDocumentFragment();
   heights.forEach(height=>{
     const bar=document.createElement("span");
     bar.className="bar";
-    bar.style.height=Math.max(4,height)+"%";
-    element.appendChild(bar);
+    bar.style.height=Math.max(5,Math.min(100,height))+"%";
+    fragment.appendChild(bar);
   });
+  element.appendChild(fragment);
+  state.waveBars=[...element.querySelectorAll(".bar")];
+  state.wavePlayedCount=0;
 }
 function fallbackWave(state){
-  const fallback=Array.from({length:WAVE_BARS},(_,i)=>16+((i*37+state.index*19)%68));
-  renderBars(state.wave,fallback);renderBars(state.waveClone,fallback);
+  const fallback=Array.from({length:WAVE_BARS},(_,i)=>14+((i*37+state.index*19)%72));
+  renderBars(state,fallback);
+}
+function buildDetailedWaveHeights(decoded){
+  const channels=[];
+  for(let c=0;c<decoded.numberOfChannels;c++)channels.push(decoded.getChannelData(c));
+  const blockSize=Math.max(1,Math.floor(decoded.length/WAVE_BARS));
+  const levels=[];
+
+  for(let i=0;i<WAVE_BARS;i++){
+    const start=i*blockSize;
+    const end=i===WAVE_BARS-1?decoded.length:Math.min(decoded.length,start+blockSize);
+    const length=Math.max(1,end-start);
+    const stride=Math.max(1,Math.floor(length/WAVE_ANALYSIS_SAMPLES_PER_BAR));
+    let peak=0;
+    let sumSq=0;
+    let samples=0;
+
+    for(let sample=start;sample<end;sample+=stride){
+      let framePeak=0;
+      let frameSq=0;
+      for(let c=0;c<channels.length;c++){
+        const v=channels[c][sample]||0;
+        const a=Math.abs(v);
+        if(a>framePeak)framePeak=a;
+        frameSq+=v*v;
+      }
+      peak=Math.max(peak,framePeak);
+      sumSq+=frameSq/Math.max(1,channels.length);
+      samples++;
+    }
+
+    const rms=Math.sqrt(sumSq/Math.max(1,samples));
+    /* RMS carries the body, peak preserves transients. This is calculated once
+       per loaded asset; playback progress itself does no amplitude math. */
+    levels.push(Math.max(rms*1.65,peak*.58));
+  }
+
+  const sorted=levels.slice().sort((a,b)=>a-b);
+  const reference=sorted[Math.min(sorted.length-1,Math.floor(sorted.length*.97))]||Math.max(...levels)||1;
+  return levels.map(level=>{
+    const normalized=Math.max(0,Math.min(1,level/reference));
+    const shaped=Math.pow(normalized,.72);
+    return 6+shaped*94;
+  });
 }
 const decodedAudioAssetCache = new Map();
 
@@ -3845,27 +3930,7 @@ async function getDecodedAudioAsset(audioUrl){
     const arrayBuffer=await response.arrayBuffer();
     const ctx=getAudioContext();
     const decoded=await ctx.decodeAudioData(arrayBuffer.slice(0));
-
-    const channels=[];
-    for(let c=0;c<decoded.numberOfChannels;c++)channels.push(decoded.getChannelData(c));
-
-    const blockSize=Math.max(1,Math.floor(decoded.length/WAVE_BARS));
-    const peaks=[];
-    for(let i=0;i<WAVE_BARS;i++){
-      const start=i*blockSize;
-      const end=Math.min(decoded.length,start+blockSize);
-      let peak=0;
-      const stride=Math.max(1,Math.floor((end-start)/900));
-      for(let c=0;c<channels.length;c++){
-        for(let sample=start;sample<end;sample+=stride){
-          peak=Math.max(peak,Math.abs(channels[c][sample]));
-        }
-      }
-      peaks.push(peak);
-    }
-
-    const maxPeak=Math.max(...peaks)||1;
-    const heights=peaks.map(peak=>peak/maxPeak*100);
+    const heights=buildDetailedWaveHeights(decoded);
     return {decoded,duration:decoded.duration,heights};
   })();
 
@@ -3884,8 +3949,8 @@ async function loadTrackData(state){
     state.decoded=asset.decoded;
     state.duration=asset.duration;
     state.total.textContent=fmt(state.duration);
-    renderBars(state.wave,asset.heights);
-    renderBars(state.waveClone,asset.heights);
+    renderBars(state,asset.heights);
+    paintWaveProgress(state,state.duration?state.position/state.duration:0);
   }catch(error){
     console.warn(error);
     state.loadError=true;
