@@ -675,8 +675,20 @@ button,input{font:inherit}
 }
 
 .detailPage .featuredSlot .time{
+  min-width:42px;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:center;
+  gap:3px;
+  padding:0;
+  border:0;
+  background:transparent;
   font-size:11px;
+  line-height:1;
 }
+.detailPage .featuredSlot .timeCurrent{color:rgba(236,241,229,.86)}
+.detailPage .featuredSlot .timeTotal{color:rgba(236,241,229,.42)}
 
 .detailPage .featuredSlot .meta{
   margin-top:18px;
@@ -1615,7 +1627,10 @@ button,input{font:inherit}
 :root{
   --dbg-tile-block-scale:1;
   --dbg-turntable-scale:1;
-  --dbg-player-scale:1;
+  --dbg-player-scale:1; /* frozen legacy row baseline */
+  --dbg-wave-scale:1;
+  --dbg-play-scale:1;
+  --dbg-time-scale:1;
   --dbg-title-scale:1;
   --dbg-structure-scale:1;
   --dbg-core-scale:1;
@@ -1626,7 +1641,10 @@ button,input{font:inherit}
   --dbg-meter-scale:1;
   --dbg-hero-height:430px;
   --dbg-turntable-x:0px;--dbg-turntable-y:0px;
-  --dbg-player-x:0px;--dbg-player-y:0px;
+  --dbg-player-x:0px;--dbg-player-y:0px; /* frozen legacy row baseline */
+  --dbg-wave-x:0px;--dbg-wave-y:0px;
+  --dbg-play-x:0px;--dbg-play-y:0px;
+  --dbg-time-x:0px;--dbg-time-y:0px;
   --dbg-title-x:0px;--dbg-title-y:0px;
   --dbg-structure-x:0px;--dbg-structure-y:0px;
   --dbg-core-x:0px;--dbg-core-y:0px;
@@ -1636,7 +1654,10 @@ button,input{font:inherit}
   --dbg-buy-x:0px;--dbg-buy-y:0px;
   --dbg-meter-x:0px;--dbg-meter-y:0px;
   --dbg-turntable-stretch-x:1;--dbg-turntable-stretch-y:1;
-  --dbg-player-stretch-x:1;--dbg-player-stretch-y:1;
+  --dbg-player-stretch-x:1;--dbg-player-stretch-y:1; /* frozen legacy row baseline */
+  --dbg-wave-stretch-x:1;--dbg-wave-stretch-y:1;
+  --dbg-play-stretch-x:1;--dbg-play-stretch-y:1;
+  --dbg-time-stretch-x:1;--dbg-time-stretch-y:1;
   --dbg-title-stretch-x:1;--dbg-title-stretch-y:1;
   --dbg-structure-stretch-x:1;--dbg-structure-stretch-y:1;
   --dbg-core-stretch-x:1;--dbg-core-stretch-y:1;
@@ -1654,6 +1675,9 @@ button,input{font:inherit}
 .detailPage.layout-debug-active .signalTiles{zoom:var(--dbg-tile-block-scale)}
 .detailPage.layout-debug-active .featuredSlot .vinylUnit{zoom:var(--dbg-turntable-scale);translate:var(--dbg-turntable-x) var(--dbg-turntable-y);scale:var(--dbg-turntable-stretch-x) var(--dbg-turntable-stretch-y)}
 .detailPage.layout-debug-active .featuredSlot .waveRow{zoom:var(--dbg-player-scale);translate:var(--dbg-player-x) var(--dbg-player-y);scale:1 1}
+.detailPage.layout-debug-active .featuredSlot .waveBox{zoom:var(--dbg-wave-scale);translate:var(--dbg-wave-x) var(--dbg-wave-y);scale:1 1}
+.detailPage.layout-debug-active .featuredSlot .iconBtn.js-play{zoom:var(--dbg-play-scale);translate:var(--dbg-play-x) var(--dbg-play-y);scale:1 1}
+.detailPage.layout-debug-active .featuredSlot .time{zoom:var(--dbg-time-scale);translate:var(--dbg-time-x) var(--dbg-time-y);scale:1 1}
 .detailPage.layout-debug-active .featuredSlot .trackTitle{zoom:var(--dbg-title-scale);translate:var(--dbg-title-x) var(--dbg-title-y);scale:1 1}
 .detailPage.layout-debug-active .featuredSlot .trackStructure{zoom:var(--dbg-structure-scale);translate:var(--dbg-structure-x) var(--dbg-structure-y);scale:1 1}
 .detailPage.layout-debug-active .featuredSlot .beatCoreBlock{zoom:var(--dbg-core-scale);translate:var(--dbg-core-x) var(--dbg-core-y);scale:1 1}
@@ -1698,7 +1722,11 @@ button,input{font:inherit}
   margin-bottom:10px;
   font-weight:800;
   letter-spacing:.13em;
+  cursor:move;
+  user-select:none;
+  touch-action:none;
 }
+.layoutDebugTitle button{cursor:pointer;touch-action:auto}
 .layoutDebugTitle button,
 .layoutDebugActions button,
 .layoutDebugReopen{
@@ -1754,9 +1782,12 @@ button,input{font:inherit}
   letter-spacing:.06em;white-space:normal;
 }
 
-/* Direct mouse edit: selected hero element receives a real outline. */
+/* Direct mouse edit. Every editable module gets a DEBUG rectangle exactly on
+   its own border box. No outline offset: the rectangle is the real module area. */
 body.layout-mouse-edit .featuredSlot .vinylUnit,
-body.layout-mouse-edit .featuredSlot .waveRow,
+body.layout-mouse-edit .featuredSlot .waveBox,
+body.layout-mouse-edit .featuredSlot .iconBtn.js-play,
+body.layout-mouse-edit .featuredSlot .time,
 body.layout-mouse-edit .featuredSlot .trackTitle,
 body.layout-mouse-edit .featuredSlot .trackStructure,
 body.layout-mouse-edit .featuredSlot .beatCoreBlock,
@@ -1766,10 +1797,13 @@ body.layout-mouse-edit .featuredSlot .badge,
 body.layout-mouse-edit .featuredSlot .buyCol,
 body.layout-mouse-edit #heroMeterBlock{
   cursor:move!important;
+  outline:1px dashed rgba(214,255,40,.32)!important;
+  outline-offset:0!important;
 }
 body.layout-mouse-edit .layout-debug-selected{
-  outline:1px dashed rgba(214,255,40,.88)!important;
-  outline-offset:5px!important;
+  outline:1px solid rgba(214,255,40,.98)!important;
+  outline-offset:0!important;
+  box-shadow:0 0 0 1px rgba(214,255,40,.14) inset!important;
 }
 .layoutScaleHandle{
   position:fixed;
@@ -1896,6 +1930,9 @@ body.layout-mouse-edit .layout-debug-selected{
   .detailPage.hero-frame-lock .featuredSlot .trackTitle,
   .detailPage.hero-frame-lock .featuredSlot .trackStructure,
   .detailPage.hero-frame-lock .featuredSlot .waveRow,
+  .detailPage.hero-frame-lock .featuredSlot .waveBox,
+  .detailPage.hero-frame-lock .featuredSlot .iconBtn.js-play,
+  .detailPage.hero-frame-lock .featuredSlot .time,
   .detailPage.hero-frame-lock .featuredSlot .beatCoreBlock,
   .detailPage.hero-frame-lock .featuredSlot .moodBlock,
   .detailPage.hero-frame-lock .featuredSlot .releaseBlock,
@@ -1964,6 +2001,7 @@ body.layout-mouse-edit .layout-debug-selected{
 
   .detailPage.hero-frame-lock .featuredSlot .waveRow{
     align-items:center!important;
+    overflow:visible!important;
   }
   .detailPage.hero-frame-lock .featuredSlot .waveBox{
     min-width:0!important;
@@ -2314,7 +2352,7 @@ body.layout-mouse-edit .layout-debug-selected{
                 <div class="waveProgress js-progress"><div class="wave js-wave-clone"></div></div>
               </div>
 
-              <div class="time"><span class="js-current">0:00</span> / <span class="js-total">0:00</span></div>
+              <div class="time"><span class="timeCurrent js-current">0:00</span><span class="timeTotal js-total">0:00</span></div>
             </div>
 
             <div class="meta">
@@ -2379,7 +2417,7 @@ body.layout-mouse-edit .layout-debug-selected{
                 <div class="waveProgress js-progress"><div class="wave js-wave-clone"></div></div>
               </div>
 
-              <div class="time"><span class="js-current">0:00</span> / <span class="js-total">0:00</span></div>
+              <div class="time"><span class="timeCurrent js-current">0:00</span><span class="timeTotal js-total">0:00</span></div>
             </div>
 
             <div class="meta">
@@ -2463,7 +2501,7 @@ body.layout-mouse-edit .layout-debug-selected{
   </div>
 
   <div class="layoutDebugMouseRow">
-    <span>DIRECT EDIT // drag block = move. Corner = proportional scale. Right handle = FRAME WIDTH. Bottom handle = FRAME HEIGHT. Content proportions stay locked.</span>
+    <span>DIRECT EDIT // drag module = move. Corner = proportional scale. Right handle = FRAME WIDTH. Bottom handle = FRAME HEIGHT. Drag this panel by its title. Debug outlines equal the exact module area.</span>
     <button class="layoutDebugMouseToggle is-on" id="layoutDebugMouseToggle" type="button">MOUSE ON</button>
   </div>
   <div class="layoutDebugSelectedReadout" id="layoutDebugSelectedReadout">SELECTED // NONE</div>
@@ -2481,8 +2519,16 @@ body.layout-mouse-edit .layout-debug-selected{
     <input id="dbgTurntableScale" type="range" min="55" max="165" step="1" value="94">
   </div>
   <div class="layoutDebugRow">
-    <div class="layoutDebugHead"><span>PLAY + WAVE</span><b id="dbgPlayerScaleValue">84%</b></div>
-    <input id="dbgPlayerScale" type="range" min="55" max="165" step="1" value="84">
+    <div class="layoutDebugHead"><span>WAVEFORM</span><b id="dbgWaveScaleValue">100%</b></div>
+    <input id="dbgWaveScale" type="range" min="55" max="180" step="1" value="100">
+  </div>
+  <div class="layoutDebugRow">
+    <div class="layoutDebugHead"><span>PLAY BUTTON</span><b id="dbgPlayScaleValue">100%</b></div>
+    <input id="dbgPlayScale" type="range" min="55" max="180" step="1" value="100">
+  </div>
+  <div class="layoutDebugRow">
+    <div class="layoutDebugHead"><span>TIMECODE</span><b id="dbgTimeScaleValue">100%</b></div>
+    <input id="dbgTimeScale" type="range" min="55" max="180" step="1" value="100">
   </div>
   <div class="layoutDebugRow">
     <div class="layoutDebugHead"><span>TRACK TITLE</span><b id="dbgTitleScaleValue">79%</b></div>
@@ -2577,7 +2623,10 @@ const LAYOUT_DEBUG_DEFAULTS={
   headerHeight:398,
   tileScale:112,
   turntableScale:94,turntableX:0,turntableY:0,
-  playerScale:84,playerX:0,playerY:0,
+  playerScale:84,playerX:0,playerY:0, /* frozen legacy wave-row baseline */
+  waveScale:100,waveX:0,waveY:0,
+  playScale:100,playX:0,playY:0,
+  timeScale:100,timeX:0,timeY:0,
   titleScale:79,titleX:0,titleY:0,
   structureScale:75,structureX:0,structureY:0,
   coreScale:55,coreX:0,coreY:0,
@@ -2589,6 +2638,9 @@ const LAYOUT_DEBUG_DEFAULTS={
   meterScale:100,meterX:0,meterY:0,
   turntableStretchX:100,turntableStretchY:100,
   playerStretchX:100,playerStretchY:100,
+  waveStretchX:100,waveStretchY:100,
+  playStretchX:100,playStretchY:100,
+  timeStretchX:100,timeStretchY:100,
   titleStretchX:100,titleStretchY:100,
   structureStretchX:100,structureStretchY:100,
   coreStretchX:100,coreStretchY:100,
@@ -2601,6 +2653,9 @@ const LAYOUT_DEBUG_DEFAULTS={
 let layoutDebugState={...LAYOUT_DEBUG_DEFAULTS};
 
 const layoutDebugPanel=document.getElementById("layoutDebugPanel");
+const layoutDebugTitleBar=layoutDebugPanel?.querySelector(".layoutDebugTitle");
+const LAYOUT_DEBUG_PANEL_POS_KEY="frssnLayoutDebugPanelPosV1";
+let layoutPanelDrag=null;
 const layoutDebugHide=document.getElementById("layoutDebugHide");
 const layoutDebugReopen=document.getElementById("layoutDebugReopen");
 const layoutDebugReset=document.getElementById("layoutDebugReset");
@@ -2617,7 +2672,9 @@ const debugInputs={
   headerHeight:document.getElementById("dbgHeaderHeight"),
   tileScale:document.getElementById("dbgTileScale"),
   turntableScale:document.getElementById("dbgTurntableScale"),
-  playerScale:document.getElementById("dbgPlayerScale"),
+  waveScale:document.getElementById("dbgWaveScale"),
+  playScale:document.getElementById("dbgPlayScale"),
+  timeScale:document.getElementById("dbgTimeScale"),
   titleScale:document.getElementById("dbgTitleScale"),
   structureScale:document.getElementById("dbgStructureScale"),
   coreScale:document.getElementById("dbgCoreScale"),
@@ -2633,7 +2690,9 @@ const debugValues={
   headerHeight:document.getElementById("dbgHeaderHeightValue"),
   tileScale:document.getElementById("dbgTileScaleValue"),
   turntableScale:document.getElementById("dbgTurntableScaleValue"),
-  playerScale:document.getElementById("dbgPlayerScaleValue"),
+  waveScale:document.getElementById("dbgWaveScaleValue"),
+  playScale:document.getElementById("dbgPlayScaleValue"),
+  timeScale:document.getElementById("dbgTimeScaleValue"),
   titleScale:document.getElementById("dbgTitleScaleValue"),
   structureScale:document.getElementById("dbgStructureScaleValue"),
   coreScale:document.getElementById("dbgCoreScaleValue"),
@@ -2648,7 +2707,9 @@ const debugValues={
 
 const LAYOUT_MOUSE_TARGETS=[
   {id:"turntable",label:"TURNTABLE BLOCK",selector:".featuredSlot .vinylUnit",scale:"turntableScale",x:"turntableX",y:"turntableY",sx:"turntableStretchX",sy:"turntableStretchY",min:55,max:165},
-  {id:"player",label:"PLAY + WAVE",selector:".featuredSlot .waveRow",scale:"playerScale",x:"playerX",y:"playerY",sx:"playerStretchX",sy:"playerStretchY",min:55,max:165},
+  {id:"play",label:"PLAY BUTTON",selector:".featuredSlot .iconBtn.js-play",scale:"playScale",x:"playX",y:"playY",sx:"playStretchX",sy:"playStretchY",min:55,max:180},
+  {id:"wave",label:"WAVEFORM",selector:".featuredSlot .waveBox",scale:"waveScale",x:"waveX",y:"waveY",sx:"waveStretchX",sy:"waveStretchY",min:55,max:180},
+  {id:"time",label:"TIMECODE",selector:".featuredSlot .time",scale:"timeScale",x:"timeX",y:"timeY",sx:"timeStretchX",sy:"timeStretchY",min:55,max:180},
   {id:"title",label:"TRACK TITLE",selector:".featuredSlot .trackTitle",scale:"titleScale",x:"titleX",y:"titleY",sx:"titleStretchX",sy:"titleStretchY",min:55,max:180},
   {id:"structure",label:"SECTIONS",selector:".featuredSlot .trackStructure",scale:"structureScale",x:"structureX",y:"structureY",sx:"structureStretchX",sy:"structureStretchY",min:55,max:165},
   {id:"core",label:"BPM + KEY",selector:".featuredSlot .beatCoreBlock",scale:"coreScale",x:"coreX",y:"coreY",sx:"coreStretchX",sy:"coreStretchY",min:55,max:165},
@@ -2701,6 +2762,9 @@ function applyLayoutDebug(){
   root.setProperty("--dbg-tile-block-scale",String(layoutDebugState.tileScale/100));
   root.setProperty("--dbg-turntable-scale",String(layoutDebugState.turntableScale/100));
   root.setProperty("--dbg-player-scale",String(layoutDebugState.playerScale/100));
+  root.setProperty("--dbg-wave-scale",String(layoutDebugState.waveScale/100));
+  root.setProperty("--dbg-play-scale",String(layoutDebugState.playScale/100));
+  root.setProperty("--dbg-time-scale",String(layoutDebugState.timeScale/100));
   root.setProperty("--dbg-title-scale",String(layoutDebugState.titleScale/100));
   root.setProperty("--dbg-structure-scale",String(layoutDebugState.structureScale/100));
   root.setProperty("--dbg-core-scale",String(layoutDebugState.coreScale/100));
@@ -2710,7 +2774,7 @@ function applyLayoutDebug(){
   root.setProperty("--dbg-buy-scale",String(layoutDebugState.buyScale/100));
   root.setProperty("--dbg-meter-scale",String(layoutDebugState.meterScale/100));
 
-  ["turntable","player","title","structure","core","mood","release","status","buy","meter"].forEach(id=>{
+  ["turntable","player","wave","play","time","title","structure","core","mood","release","status","buy","meter"].forEach(id=>{
     root.setProperty(`--dbg-${id}-x`,`${layoutDebugState[id+"X"]}px`);
     root.setProperty(`--dbg-${id}-y`,`${layoutDebugState[id+"Y"]}px`);
     root.setProperty(`--dbg-${id}-stretch-x`,String(layoutDebugState[id+"StretchX"]/100));
@@ -2719,7 +2783,7 @@ function applyLayoutDebug(){
 
   Object.entries(debugInputs).forEach(([key,input])=>{if(input)input.value=String(layoutDebugState[key])});
   if(debugValues.headerHeight)debugValues.headerHeight.textContent=`${Math.round(layoutDebugState.headerHeight)} px`;
-  ["tileScale","turntableScale","playerScale","titleScale","structureScale","coreScale","moodScale","releaseScale","statusScale","buyScale","meterScale"].forEach(key=>{
+  ["tileScale","turntableScale","waveScale","playScale","timeScale","titleScale","structureScale","coreScale","moodScale","releaseScale","statusScale","buyScale","meterScale"].forEach(key=>{
     if(debugValues[key])debugValues[key].textContent=`${Math.round(layoutDebugState[key])}%`;
   });
   if(debugValues.bpmValueFont)debugValues.bpmValueFont.textContent=`${Number(layoutDebugState.bpmValueFont).toFixed(1).replace(/\.0$/,"")} px`;
@@ -2903,7 +2967,10 @@ function endLayoutAxisResize(event){
 ===================================================== */
 const HERO_FRAME_LOCK_KEY="frssnHeroModuleFramesV2";
 const HERO_FRAME_LOCK_TARGETS=[
-  {id:"player",selector:".featuredSlot .waveRow",debugId:"player"},
+  {id:"player",selector:".featuredSlot .waveRow",debugId:"player"}, /* frozen shell */
+  {id:"wave",selector:".featuredSlot .waveBox",debugId:"wave"},
+  {id:"play",selector:".featuredSlot .iconBtn.js-play",debugId:"play"},
+  {id:"time",selector:".featuredSlot .time",debugId:"time"},
   {id:"title",selector:".featuredSlot .trackTitle",debugId:"title"},
   {id:"structure",selector:".featuredSlot .trackStructure",debugId:"structure"},
   {id:"core",selector:".featuredSlot .beatCoreBlock",debugId:"core"},
@@ -2916,14 +2983,20 @@ let heroFrameLockState={};
 let heroFrameLockReady=false;
 let heroFitRAF=0;
 
-function frameDebugDef(id){return LAYOUT_MOUSE_TARGETS.find(d=>d.id===id)||null}
+function frameDebugDef(id){
+  if(id==="player")return {id:"player",scale:"playerScale",x:"playerX",y:"playerY",sx:"playerStretchX",sy:"playerStretchY",min:55,max:165};
+  return LAYOUT_MOUSE_TARGETS.find(d=>d.id===id)||null;
+}
 function frameScaleFactors(id){
   const d=frameDebugDef(id);
   if(!d)return {x:1,y:1};
   const zoom=Math.max(.01,(Number(layoutDebugState[d.scale])||100)/100);
   const sx=Math.max(.01,(Number(layoutDebugState[d.sx])||100)/100);
   const sy=Math.max(.01,(Number(layoutDebugState[d.sy])||100)/100);
-  return {x:zoom*sx,y:zoom*sy};
+  const parentZoom=(id==="wave"||id==="play"||id==="time")
+    ? Math.max(.01,(Number(layoutDebugState.playerScale)||100)/100)
+    : 1;
+  return {x:parentZoom*zoom*sx,y:parentZoom*zoom*sy};
 }
 function saveHeroFrameLocks(){
   try{localStorage.setItem(HERO_FRAME_LOCK_KEY,JSON.stringify(heroFrameLockState))}catch(_){}
@@ -2935,8 +3008,27 @@ function loadHeroFrameLocks(){
     const parsed=JSON.parse(raw);
     if(!parsed||typeof parsed!=="object")return false;
     heroFrameLockState=parsed;
-    return HERO_FRAME_LOCK_TARGETS.every(d=>parsed[d.id]&&Number(parsed[d.id].width)>0&&Number(parsed[d.id].height)>0);
+    const legacyRequired=["player","title","structure","core","mood","release","status","buy"];
+    return legacyRequired.every(id=>parsed[id]&&Number(parsed[id].width)>0&&Number(parsed[id].height)>0);
   }catch(_){return false}
+}
+function captureMissingHeroFrameLocks(){
+  let changed=false;
+  HERO_FRAME_LOCK_TARGETS.forEach(d=>{
+    const existing=heroFrameLockState[d.id];
+    if(existing&&Number(existing.width)>0&&Number(existing.height)>0)return;
+    const el=document.querySelector(d.selector);
+    if(!el)return;
+    const r=el.getBoundingClientRect();
+    const f=frameScaleFactors(d.debugId);
+    heroFrameLockState[d.id]={
+      width:Math.round(Math.max(1,r.width/f.x)*10)/10,
+      height:Math.round(Math.max(1,r.height/f.y)*10)/10
+    };
+    changed=true;
+  });
+  if(changed)saveHeroFrameLocks();
+  return changed;
 }
 function clearHeroFitInlineStyles(){
   const title=document.querySelector(".featuredSlot .trackTitle");
@@ -3193,6 +3285,8 @@ function ensureHeroFrameLocks(){
   if(!IS_DETAIL_PAGE||window.innerWidth<901)return;
   if(loadHeroFrameLocks()){
     heroFrameLockReady=true;
+    applyHeroFrameLocks();
+    captureMissingHeroFrameLocks();
     normalizeHeroFrameGeometryOnce();
     applyHeroFrameLocks();
     updateHeroFrameLockStatus();
@@ -3201,9 +3295,59 @@ function ensureHeroFrameLocks(){
   requestAnimationFrame(()=>requestAnimationFrame(()=>captureHeroFrameLocks({force:true})));
 }
 
+function loadLayoutDebugPanelPosition(){
+  if(!layoutDebugPanel)return;
+  try{
+    const raw=localStorage.getItem(LAYOUT_DEBUG_PANEL_POS_KEY);
+    if(!raw)return;
+    const pos=JSON.parse(raw);
+    if(!Number.isFinite(Number(pos.left))||!Number.isFinite(Number(pos.top)))return;
+    const maxLeft=Math.max(0,window.innerWidth-layoutDebugPanel.offsetWidth);
+    const maxTop=Math.max(0,window.innerHeight-Math.min(layoutDebugPanel.offsetHeight,window.innerHeight));
+    layoutDebugPanel.style.left=`${Math.max(0,Math.min(maxLeft,Number(pos.left)))}px`;
+    layoutDebugPanel.style.top=`${Math.max(0,Math.min(maxTop,Number(pos.top)))}px`;
+    layoutDebugPanel.style.right="auto";
+    layoutDebugPanel.style.bottom="auto";
+  }catch(_){}
+}
+function saveLayoutDebugPanelPosition(){
+  if(!layoutDebugPanel)return;
+  const r=layoutDebugPanel.getBoundingClientRect();
+  try{localStorage.setItem(LAYOUT_DEBUG_PANEL_POS_KEY,JSON.stringify({left:r.left,top:r.top}))}catch(_){}
+}
+function beginLayoutPanelDrag(event){
+  if(!layoutDebugPanel||event.button!==0)return;
+  if(event.target instanceof Element&&event.target.closest("button"))return;
+  const r=layoutDebugPanel.getBoundingClientRect();
+  layoutPanelDrag={pointerId:event.pointerId,startX:event.clientX,startY:event.clientY,left:r.left,top:r.top};
+  layoutDebugPanel.style.left=`${r.left}px`;
+  layoutDebugPanel.style.top=`${r.top}px`;
+  layoutDebugPanel.style.right="auto";
+  layoutDebugPanel.style.bottom="auto";
+  try{layoutDebugTitleBar?.setPointerCapture(event.pointerId)}catch(_){}
+  event.preventDefault();
+}
+function moveLayoutPanelDrag(event){
+  if(!layoutPanelDrag||event.pointerId!==layoutPanelDrag.pointerId||!layoutDebugPanel)return;
+  const dx=event.clientX-layoutPanelDrag.startX;
+  const dy=event.clientY-layoutPanelDrag.startY;
+  const maxLeft=Math.max(0,window.innerWidth-layoutDebugPanel.offsetWidth);
+  const maxTop=Math.max(0,window.innerHeight-Math.min(layoutDebugPanel.offsetHeight,window.innerHeight));
+  layoutDebugPanel.style.left=`${Math.max(0,Math.min(maxLeft,layoutPanelDrag.left+dx))}px`;
+  layoutDebugPanel.style.top=`${Math.max(0,Math.min(maxTop,layoutPanelDrag.top+dy))}px`;
+  event.preventDefault();
+}
+function endLayoutPanelDrag(event){
+  if(!layoutPanelDrag||event.pointerId!==layoutPanelDrag.pointerId)return;
+  try{layoutDebugTitleBar?.releasePointerCapture(event.pointerId)}catch(_){}
+  layoutPanelDrag=null;
+  saveLayoutDebugPanelPosition();
+}
+
 if(IS_DETAIL_PAGE&&layoutDebugPanel){
   loadLayoutDebug();
   applyLayoutDebug();
+  loadLayoutDebugPanelPosition();
   updateHeroFrameLockStatus();
   /* Current geometry is treated as the fixed baseline. Turn MOUSE ON only for a deliberate edit. */
   setLayoutMouseEdit(false);
@@ -3217,6 +3361,10 @@ if(IS_DETAIL_PAGE&&layoutDebugPanel){
   });
 
   layoutDebugMouseToggle?.addEventListener("click",()=>setLayoutMouseEdit(!layoutMouseEdit));
+  layoutDebugTitleBar?.addEventListener("pointerdown",beginLayoutPanelDrag);
+  layoutDebugTitleBar?.addEventListener("pointermove",moveLayoutPanelDrag,{passive:false});
+  layoutDebugTitleBar?.addEventListener("pointerup",endLayoutPanelDrag);
+  layoutDebugTitleBar?.addEventListener("pointercancel",endLayoutPanelDrag);
 
   /* Capture phase is intentional: while MOUSE ON is active the layout editor
      owns these pointer gestures instead of Play/Seek/Scratch/Checkout. */
@@ -3306,7 +3454,10 @@ if(IS_DETAIL_PAGE&&layoutDebugPanel){
       `HEADER HEIGHT = ${layoutDebugState.headerHeight}px`,
       `TILE BLOCK = ${layoutDebugState.tileScale}%`,
       `TURNTABLE = ${layoutDebugState.turntableScale}% | X ${layoutDebugState.turntableX} | Y ${layoutDebugState.turntableY} | W ${layoutDebugState.turntableStretchX}% | H ${layoutDebugState.turntableStretchY}%`,
-      `PLAY + WAVE = ${layoutDebugState.playerScale}% | X ${layoutDebugState.playerX} | Y ${layoutDebugState.playerY} | W ${layoutDebugState.playerStretchX}% | H ${layoutDebugState.playerStretchY}%`,
+      `PLAYER BASELINE = ${layoutDebugState.playerScale}% | X ${layoutDebugState.playerX} | Y ${layoutDebugState.playerY}`,
+      `WAVEFORM = ${layoutDebugState.waveScale}% | X ${layoutDebugState.waveX} | Y ${layoutDebugState.waveY} | W ${layoutDebugState.waveStretchX}% | H ${layoutDebugState.waveStretchY}%`,
+      `PLAY BUTTON = ${layoutDebugState.playScale}% | X ${layoutDebugState.playX} | Y ${layoutDebugState.playY} | W ${layoutDebugState.playStretchX}% | H ${layoutDebugState.playStretchY}%`,
+      `TIMECODE = ${layoutDebugState.timeScale}% | X ${layoutDebugState.timeX} | Y ${layoutDebugState.timeY} | W ${layoutDebugState.timeStretchX}% | H ${layoutDebugState.timeStretchY}%`,
       `TRACK TITLE = ${layoutDebugState.titleScale}% | X ${layoutDebugState.titleX} | Y ${layoutDebugState.titleY} | W ${layoutDebugState.titleStretchX}% | H ${layoutDebugState.titleStretchY}%`,
       `SECTIONS = ${layoutDebugState.structureScale}% | X ${layoutDebugState.structureX} | Y ${layoutDebugState.structureY} | W ${layoutDebugState.structureStretchX}% | H ${layoutDebugState.structureStretchY}%`,
       `BPM + KEY = ${layoutDebugState.coreScale}% | X ${layoutDebugState.coreX} | Y ${layoutDebugState.coreY} | W ${layoutDebugState.coreStretchX}% | H ${layoutDebugState.coreStretchY}%`,
