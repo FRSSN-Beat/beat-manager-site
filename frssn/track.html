@@ -213,7 +213,56 @@ button,input{font:inherit}
 .recordCarrier{
   position:absolute;left:7px;top:50%;width:118px;height:118px;transform:translate(0,-50%);z-index:2;pointer-events:auto;
 }
+/* Physical platter / felt mat under the vinyl. It is normally hidden by the
+   record and becomes fully visible when the record is packed into the sleeve. */
+.platterBase{
+  position:absolute;
+  left:-2px;
+  top:-2px;
+  width:122px;
+  height:122px;
+  border-radius:50%;
+  z-index:0;
+  pointer-events:none;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 50%,rgba(255,255,255,.035) 0 4%,transparent 4.5%),
+    radial-gradient(circle at 48% 44%,#181b18 0%,#0c0e0c 46%,#050605 78%,#020302 100%);
+  border:1px solid rgba(255,255,255,.09);
+  box-shadow:
+    0 6px 20px rgba(0,0,0,.55),
+    inset 0 0 0 2px rgba(255,255,255,.018),
+    inset 0 0 28px rgba(0,0,0,.68);
+}
+.platterBase::before{
+  content:"FRSSN";
+  position:absolute;
+  left:50%;
+  top:42%;
+  transform:translate(-50%,-50%);
+  color:rgba(176,184,176,.78);
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:19px;
+  font-weight:800;
+  line-height:1;
+  letter-spacing:.02em;
+  white-space:nowrap;
+  text-shadow:0 1px 1px rgba(0,0,0,.75);
+}
+.platterBase::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:6px;
+  height:6px;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#f0f2ee 0%,#9da39b 38%,#343834 72%,#111311 100%);
+  box-shadow:0 1px 3px rgba(0,0,0,.75),0 0 0 1px rgba(255,255,255,.16);
+}
 .recordDisc{
+  z-index:2;
   width:118px;height:118px;border-radius:50%;position:relative;
   background:
     radial-gradient(circle at 50% 50%,rgba(255,255,255,.055) 0 8%,transparent 8.5%),
@@ -1085,7 +1134,8 @@ body.is-android .bar{min-width:1.05px;max-width:4px}
   height:242px;
   transform:translateY(-50%);
   z-index:8;
-  pointer-events:none;
+  pointer-events:auto;
+  cursor:pointer;
   opacity:1;
   transition:opacity .08s linear;
 }
@@ -1121,6 +1171,14 @@ body.is-android .bar{min-width:1.05px;max-width:4px}
   height:100%;
   display:block;
   object-fit:cover;
+  pointer-events:none;
+}
+.detailPage .heroSleeveDock:not(.is-flight-empty):hover .heroSleeveFrame{
+  border-color:rgba(214,255,40,.34);
+  box-shadow:0 18px 34px rgba(0,0,0,.52),0 0 20px rgba(214,255,40,.045),inset 0 0 0 1px rgba(214,255,40,.055);
+}
+.detailPage .heroSleeveDock.is-record-packed .heroSleeveFrame{
+  border-color:rgba(214,255,40,.24);
 }
 
 /* REAL HERO VU METER // independent layout block */
@@ -1791,6 +1849,13 @@ body.is-android .bar{min-width:1.05px;max-width:4px}
   letter-spacing:.07em;
 }
 .layoutDebugPanel.is-hidden{display:none}
+/* GENERAL LAYOUT DEBUG IS TEMPORARILY RETIRED.
+   The tuned geometry engine remains active so existing localStorage X/Y/W/H and
+   the locked defaults still drive the final layout, but the panel/reopen button
+   stay out of the production UI until a module needs targeted debugging. */
+.layoutDebugPanel,
+.layoutDebugReopen{display:none!important}
+
 .layoutDebugTitle{
   display:flex;
   align-items:center;
@@ -2401,6 +2466,7 @@ body.layout-mouse-edit .layout-debug-selected{
             </div>
 
             <div class="recordCarrier">
+              <div class="platterBase" aria-hidden="true"></div>
               <div class="recordDisc">
                 <div class="recordLabel"><img src="old-label.png" alt="OLD"></div>
                 <div class="recordHole"></div>
@@ -2466,6 +2532,7 @@ body.layout-mouse-edit .layout-debug-selected{
             </div>
 
             <div class="recordCarrier">
+              <div class="platterBase" aria-hidden="true"></div>
               <div class="recordDisc">
                 <div class="recordLabel"><img src="track-02-cover.png" alt="TRACK 02"></div>
                 <div class="recordHole"></div>
@@ -2714,7 +2781,7 @@ const LAYOUT_DEBUG_DEFAULTS={
   playScale:101,playX:0,playY:0,
   timeScale:141,timeX:0,timeY:0,
   titleScale:180,titleX:0,titleY:0,
-  typeScale:169,typeX:0,typeY:0,
+  typeScale:170,typeX:0,typeY:0,
   structureScale:75,structureX:0,structureY:0,
   coreScale:88,coreX:0,coreY:0,
   moodScale:84,moodX:0,moodY:0,
@@ -3456,6 +3523,8 @@ function endLayoutPanelDrag(event){
 }
 
 if(IS_DETAIL_PAGE&&layoutDebugPanel){
+  /* Locked production layout: generic mouse-edit stays off. */
+  setLayoutMouseEdit(false);
   loadLayoutDebug();
   applyLayoutDebug();
   loadLayoutDebugPanelPosition();
@@ -3531,7 +3600,7 @@ if(IS_DETAIL_PAGE&&layoutDebugPanel){
 
   layoutDebugHide?.addEventListener("click",()=>{
     layoutDebugPanel.classList.add("is-hidden");
-    layoutDebugReopen?.classList.add("is-visible");
+    layoutDebugReopen?.classList.remove("is-visible");
     setLayoutMouseEdit(false);
   });
   layoutDebugReopen?.addEventListener("click",()=>{
@@ -3590,6 +3659,9 @@ if(IS_DETAIL_PAGE&&layoutDebugPanel){
       setTimeout(()=>layoutDebugCopy.textContent=old,900);
     }catch(_){}
   });
+  layoutDebugPanel.classList.add("is-hidden");
+  layoutDebugReopen?.classList.remove("is-visible");
+  setLayoutMouseEdit(false);
 }else{
   layoutDebugPanel?.classList.add("is-hidden");
 }
@@ -3717,7 +3789,8 @@ const tracks = [...document.querySelectorAll(".track")].map((el,index)=>({
   armDeployTimer:null,
   armEngageGeneration:0,
   currentTonearmAngle:-8,
-  hasPlaybackEverStarted:false
+  hasPlaybackEverStarted:false,
+  heroRecordPacked:false
 }));
 
 /* =====================================================
@@ -4612,19 +4685,42 @@ async function switchToTrack(next,{startTime=0,cue=false}={}){
     if(cue)return seekTo(next,startTime);
     if(playIntent){playIntent=false;setPlayIcon(next,false);setManualSpeed(0);sendMode("pause_brake");return}
     await resumeAudioContext();
-    if(IS_DETAIL_PAGE&&next.position>=Math.max(0,getDuration(next)-.08)){
-      seekEngine(next,0);next.position=0;updateProgressUI(next,0);setVinylAngle(next,0);
-      next.tonearmEngaged=false;setTonearmAngle(next,ARM_PARK_ANGLE);
-    }
-    playIntent=true;next.hasPlaybackEverStarted=true;setPlayIcon(next,true);await ensureVinylOpen(next);
+
     if(IS_DETAIL_PAGE){
+      let restartPosition=clampTime(next,next.position);
+      /* Natural end leaves the disc on the deck with the arm parked. Starting
+         again must explicitly return both the engine and the arm to the groove. */
+      if(restartPosition>=Math.max(0,getDuration(next)-.08)){
+        restartPosition=0;
+        seekEngine(next,0);
+        next.position=0;
+        updateProgressUI(next,0);
+        setVinylAngle(next,0);
+      }
+
+      if(isHeroRecordPacked(next)){
+        await unpackHeroRecordToPlatter(next,{autoplay:true,targetTime:restartPosition});
+        return;
+      }
+
+      next.vinylOpened=true;
+      next.mechanismDeployed=true;
+      next.heroRecordPacked=false;
+      next.el.classList.remove("hero-record-hidden","hero-record-packed");
+      next.el.classList.add("hero-mounted","is-open","arm-on-top");
       next.tonearmEngaged=false;
+      setTonearmAngle(next,ARM_PARK_ANGLE);
+      playIntent=true;
+      next.hasPlaybackEverStarted=true;
+      setPlayIcon(next,true);
       sendMode("play_start");
-      await animateTonearmTo(next,armAngleFromTime(next,next.position),ARM_MOVE_DURATION_MS);
+      await animateTonearmTo(next,armAngleFromTime(next,restartPosition),ARM_MOVE_DURATION_MS);
       next.tonearmEngaged=true;
-    }else{
-      sendMode("play_start");
+      return;
     }
+
+    playIntent=true;next.hasPlaybackEverStarted=true;setPlayIcon(next,true);await ensureVinylOpen(next);
+    sendMode("play_start");
     return;
   }
 
@@ -4687,6 +4783,8 @@ async function stopAndPackActive(){
     await animateTonearmTo(state,ARM_PARK_ANGLE,420);
     state.vinylOpened=true;
     state.mechanismDeployed=true;
+    state.heroRecordPacked=false;
+    state.el.classList.remove("hero-record-hidden","hero-record-packed");
     state.el.classList.add("hero-mounted","is-open","arm-on-top");
     state.el.classList.remove("is-closing","is-play-starting","is-pause-braking","is-motor-recovering","is-free-spinning");
     state.position=getDuration(state);
@@ -4849,6 +4947,11 @@ async function seekTo(state,targetTime){
 
   if(state!==activeTrack){
     await switchToTrack(state,{startTime:targetTime,cue:true});
+    return;
+  }
+
+  if(IS_DETAIL_PAGE&&isHeroRecordPacked(state)){
+    await unpackHeroRecordToPlatter(state,{autoplay:true,targetTime});
     return;
   }
 
@@ -5224,6 +5327,8 @@ function setHeroSleeve(state,{visible=true}={}){
   heroSleeveImage.src=trackCoverOf(state);
   heroSleeveImage.alt=`${trackTitleOf(state)} sleeve`;
   heroSleeveDock.classList.toggle("is-flight-empty",!visible);
+  heroSleeveDock.classList.toggle("is-record-packed",isHeroRecordPacked(state));
+  heroSleeveDock.setAttribute("aria-label",isHeroRecordPacked(state)?"Unpack record":"Pack record into sleeve");
 }
 
 function tileForTrack(state){
@@ -5302,7 +5407,9 @@ function mountHeroInstant(state,{hideRecord=true}={}){
     "is-play-starting","is-pause-braking","is-motor-recovering","is-free-spinning"
   );
   state.el.classList.add("hero-mounted","is-open","arm-on-top","is-active");
+  state.heroRecordPacked=!!hideRecord;
   state.el.classList.toggle("hero-record-hidden",hideRecord);
+  state.el.classList.toggle("hero-record-packed",hideRecord);
   setTonearmAngle(state,ARM_PARK_ANGLE);
   setVinylAngle(state,0);
 }
@@ -5319,6 +5426,7 @@ function releaseHeroToSource(state){
   state.mechanismDeployed=false;
   state.tonearmEngaged=false;
   state.isPacking=false;
+  state.heroRecordPacked=false;
   state.position=0;
   state.hasPlaybackEverStarted=false;
   setVinylAngle(state,0);
@@ -5522,14 +5630,136 @@ async function waitForVisualPaint(...images){
   await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
 }
 
-async function parkHeroArmForSwap(state){
+let heroSleeveToggleBusy=false;
+
+function isHeroRecordPacked(state){
+  return !!(state&&(state.heroRecordPacked||state.el?.classList.contains("hero-record-hidden")));
+}
+
+function syncHeroPackedUI(state){
+  if(!state||state!==featuredTrack)return;
+  const packed=isHeroRecordPacked(state);
+  heroSleeveDock.classList.toggle("is-record-packed",packed);
+  heroSleeveDock.setAttribute("aria-label",packed?"Unpack record":"Pack record into sleeve");
+}
+
+async function parkHeroTonearm(state,duration=390){
   if(!state)return;
   cancelScheduledTonearmEngage(state);
   state.tonearmEngaged=false;
-  await animateTonearmTo(state,ARM_PARK_ANGLE,390);
+  await animateTonearmTo(state,ARM_PARK_ANGLE,duration);
   state.mechanismDeployed=true;
-  state.vinylOpened=true;
   state.el.classList.add("hero-mounted","is-open","arm-on-top");
+}
+
+async function packHeroRecordToSleeve(state){
+  if(!IS_DETAIL_PAGE||!state||state!==featuredTrack||isHeroRecordPacked(state)||heroSleeveToggleBusy||detailSwitchBusy||switchInProgress)return false;
+  heroSleeveToggleBusy=true;
+  try{
+    const position=clampTime(state,getEstimatedEnginePosition());
+    state.position=position;
+    playIntent=false;
+    setPlayIcon(state,false);
+    setManualSpeed(0);
+
+    const brakeMs=Math.round(PAUSE_BRAKE_BASE_DURATION/PAUSE_BRAKE_SPEED)+30;
+    sendMode("pause_brake");
+    await Promise.all([wait(brakeMs),parkHeroTonearm(state,390)]);
+    seekEngine(state,position);
+    sendMode("paused");
+    updateProgressUI(state,position);
+    setVinylAngle(state,angleFromAudioTime(position));
+
+    const fromRect=heroPlatterDiscRect(state);
+    const toRect=heroSleeveDiscRect(state);
+    playPaperOut();
+    const flight=flyDiscBetween(state,fromRect,toRect,{duration:DISC_TO_SLEEVE_DURATION});
+    state.heroRecordPacked=true;
+    state.vinylOpened=false;
+    state.tonearmEngaged=false;
+    state.el.classList.add("hero-record-hidden","hero-record-packed");
+    syncHeroPackedUI(state);
+    await flight;
+    microstatus.textContent=`${trackTitleOf(state)} // RECORD PACKED`;
+    return true;
+  }finally{
+    heroSleeveToggleBusy=false;
+  }
+}
+
+async function unpackHeroRecordToPlatter(state,{autoplay=false,targetTime=null}={}){
+  if(!IS_DETAIL_PAGE||!state||state!==featuredTrack||heroSleeveToggleBusy||detailSwitchBusy||switchInProgress)return false;
+  if(!isHeroRecordPacked(state)){
+    if(autoplay&&!playIntent){
+      const target=targetTime==null?state.position:clampTime(state,targetTime);
+      seekEngine(state,target);
+      state.position=target;
+      setVinylAngle(state,angleFromAudioTime(target));
+      updateProgressUI(state,target);
+      await resumeAudioContext();
+      playIntent=true;state.hasPlaybackEverStarted=true;setPlayIcon(state,true);
+      state.tonearmEngaged=false;setTonearmAngle(state,ARM_PARK_ANGLE);
+      sendMode("play_start");
+      await animateTonearmTo(state,armAngleFromTime(state,target),ARM_MOVE_DURATION_MS);
+      state.tonearmEngaged=true;
+    }
+    return true;
+  }
+
+  heroSleeveToggleBusy=true;
+  try{
+    let target=targetTime==null?clampTime(state,state.position):clampTime(state,targetTime);
+    if(autoplay&&target>=Math.max(0,getDuration(state)-.08))target=0;
+    seekEngine(state,target);
+    state.position=target;
+    setVinylAngle(state,angleFromAudioTime(target));
+    updateProgressUI(state,target);
+    sendMode("paused");
+    setTonearmAngle(state,ARM_PARK_ANGLE);
+    state.tonearmEngaged=false;
+
+    const fromRect=heroSleeveDiscRect(state);
+    const toRect=heroPlatterDiscRect(state);
+    playPaperIn();
+    await flyDiscBetween(state,fromRect,toRect,{duration:DISC_FROM_SLEEVE_DURATION});
+
+    state.heroRecordPacked=false;
+    state.vinylOpened=true;
+    state.mechanismDeployed=true;
+    state.el.classList.remove("hero-record-hidden","hero-record-packed");
+    state.el.classList.add("hero-mounted","is-open","arm-on-top");
+    syncHeroPackedUI(state);
+
+    if(!autoplay){
+      playIntent=false;
+      setPlayIcon(state,false);
+      sendMode("paused");
+      microstatus.textContent=`${trackTitleOf(state)} // DISC READY`;
+      return true;
+    }
+
+    await resumeAudioContext();
+    playIntent=true;
+    state.hasPlaybackEverStarted=true;
+    setPlayIcon(state,true);
+    sendMode("play_start");
+    await animateTonearmTo(state,armAngleFromTime(state,target),ARM_MOVE_DURATION_MS);
+    state.tonearmEngaged=true;
+    microstatus.textContent=`${trackTitleOf(state)} // MOTOR START`;
+    return true;
+  }finally{
+    heroSleeveToggleBusy=false;
+  }
+}
+
+async function parkHeroArmForSwap(state){
+  if(!state)return;
+  const packed=isHeroRecordPacked(state);
+  await parkHeroTonearm(state,390);
+  state.vinylOpened=!packed;
+  state.heroRecordPacked=packed;
+  state.el.classList.toggle("hero-record-hidden",packed);
+  state.el.classList.toggle("hero-record-packed",packed);
 }
 
 async function stopCurrentForSwap(state){
@@ -5639,7 +5869,10 @@ async function initialUnpackAndStart(state){
   playPaperIn();
   await flyDiscBetween(state,fromRect,toRect,{duration:DISC_FROM_SLEEVE_DURATION});
 
-  state.el.classList.remove("hero-record-hidden");
+  state.heroRecordPacked=false;
+  state.vinylOpened=true;
+  state.el.classList.remove("hero-record-hidden","hero-record-packed");
+  syncHeroPackedUI(state);
   setVinylAngle(state,0);
   updateProgressUI(state,0);
 
@@ -5683,22 +5916,28 @@ async function featureTrack(next,{push=false,replace=false,sourceSleeveRect=null
     const newShelfSource=sourceSleeveRect||tileSleeveRect(clickedTile);
     const heroSleeveRect=heroSleeveDock.getBoundingClientRect();
 
+    const previousWasPacked=isHeroRecordPacked(previous);
     await stopCurrentForSwap(previous);
     if(!operationAlive(generation))return;
 
-    /* 1) Old record goes back into the hero sleeve. */
-    const heroDiscRect=heroPlatterDiscRect(previous);
-    previous.el.classList.add("hero-record-hidden");
-    playPaperOut();
-
-    await flyDiscBetween(
-      previous,
-      heroDiscRect,
-      heroSleeveDiscRect(previous),
-      {duration:DISC_TO_SLEEVE_DURATION}
-    );
-
-    if(!operationAlive(generation))return;
+    /* 1) If the user had already packed the record, it is already physically
+       inside the hero sleeve. Otherwise return it there before the sleeve swap. */
+    if(!previousWasPacked){
+      const heroDiscRect=heroPlatterDiscRect(previous);
+      playPaperOut();
+      const oldRecordFlight=flyDiscBetween(
+        previous,
+        heroDiscRect,
+        heroSleeveDiscRect(previous),
+        {duration:DISC_TO_SLEEVE_DURATION}
+      );
+      previous.heroRecordPacked=true;
+      previous.vinylOpened=false;
+      previous.el.classList.add("hero-record-hidden","hero-record-packed");
+      syncHeroPackedUI(previous);
+      await oldRecordFlight;
+      if(!operationAlive(generation))return;
+    }
 
     /* 2) Complete sleeves swap positions in straight trajectories.
        Neither source disappears before its identical moving clone exists. */
@@ -5763,7 +6002,10 @@ async function featureTrack(next,{push=false,replace=false,sourceSleeveRect=null
 
     if(!operationAlive(generation))return;
 
-    next.el.classList.remove("hero-record-hidden");
+    next.heroRecordPacked=false;
+    next.vinylOpened=true;
+    next.el.classList.remove("hero-record-hidden","hero-record-packed");
+    syncHeroPackedUI(next);
     next.position=0;
     setVinylAngle(next,0);
     updateProgressUI(next,0);
@@ -5780,6 +6022,22 @@ async function featureTrack(next,{push=false,replace=false,sourceSleeveRect=null
     switchInProgress=false;
   }
 }
+
+heroSleeveDock.setAttribute("role","button");
+heroSleeveDock.setAttribute("tabindex","0");
+heroSleeveDock.addEventListener("click",async event=>{
+  event.preventDefault();
+  if(!featuredTrack||heroSleeveDock.classList.contains("is-flight-empty")||detailSwitchBusy||switchInProgress)return;
+  if(isHeroRecordPacked(featuredTrack))await unpackHeroRecordToPlatter(featuredTrack,{autoplay:false});
+  else await packHeroRecordToSleeve(featuredTrack);
+});
+heroSleeveDock.addEventListener("keydown",async event=>{
+  if(event.key!=="Enter"&&event.key!==" ")return;
+  event.preventDefault();
+  if(!featuredTrack||heroSleeveDock.classList.contains("is-flight-empty")||detailSwitchBusy||switchInProgress)return;
+  if(isHeroRecordPacked(featuredTrack))await unpackHeroRecordToPlatter(featuredTrack,{autoplay:false});
+  else await packHeroRecordToSleeve(featuredTrack);
+});
 
 copyTrackLink.addEventListener("click",async()=>{
   if(!featuredTrack)return;
