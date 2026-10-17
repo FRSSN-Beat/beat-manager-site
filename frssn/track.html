@@ -1095,8 +1095,8 @@ button,input{font:inherit}
   position:absolute;
   left:50%;
   bottom:-3px;
-  width:5px;
-  height:5px;
+  width:6px;
+  height:6px;
   transform:translateX(-50%);
   border-radius:50%;
   background:radial-gradient(circle,#403022 0%,#160f0a 60%,#050403 100%);
@@ -1406,10 +1406,10 @@ button,input{font:inherit}
   height:42px;
   flex:0 0 auto;
   display:grid;
-  grid-template-columns:auto minmax(0,1fr);
+  grid-template-columns:42px minmax(0,1fr);
   align-items:center;
-  gap:8px;
-  padding:0 11px;
+  gap:6px;
+  padding:0 9px;
   border:1px solid rgba(214,255,40,.22);
   background:rgba(214,255,40,.028);
   box-sizing:border-box;
@@ -1423,10 +1423,10 @@ button,input{font:inherit}
   flex:0 0 auto;
   color:rgba(236,241,229,.72);
   font-family:"Arial Narrow","Roboto Condensed",Arial,sans-serif;
-  font-size:16px;
+  font-size:14px;
   font-weight:900;
   line-height:1;
-  letter-spacing:.045em;
+  letter-spacing:.03em;
 }
 .detailPage .featuredSlot .coreValueBox{
   min-width:0;
@@ -1442,10 +1442,10 @@ button,input{font:inherit}
   width:100%;
   color:#eef4e7;
   font-family:"Arial Narrow","Roboto Condensed",Arial,sans-serif;
-  font-size:21px;
+  font-size:22px;
   font-weight:900;
   line-height:1;
-  letter-spacing:.02em;
+  letter-spacing:.025em;
   text-align:center;
   white-space:nowrap;
 }
@@ -1478,10 +1478,10 @@ button,input{font:inherit}
   white-space:nowrap;
   text-transform:uppercase;
   font-family:"Arial Narrow","Roboto Condensed",Arial,sans-serif;
-  font-size:16px;
+  font-size:14px;
   font-weight:900;
   line-height:1;
-  letter-spacing:.045em;
+  letter-spacing:.03em;
 }
 /* Release date is its own fixed hero module. */
 .detailPage .featuredSlot .releaseBlock{
@@ -1831,10 +1831,10 @@ body.layout-mouse-edit .layout-debug-selected{
 }
 .detailPage .featuredSlot .structureSegment{
   font-family:"Arial Narrow","Roboto Condensed",Arial,sans-serif;
-  font-size:11px;
+  font-size:12px;
   font-weight:900;
   line-height:1;
-  letter-spacing:.045em;
+  letter-spacing:.035em;
   color:rgba(236,241,229,.70);
 }
 .detailPage .featuredSlot .structureSegment.is-current{
@@ -2007,28 +2007,28 @@ body.layout-mouse-edit .layout-debug-selected{
 .detailPage .featuredSlot .commercialStatusRail{
   display:flex;
   align-items:center;
-  gap:7px;
+  gap:8px;
   width:max-content;
   max-width:none;
-  height:30px;
+  height:34px;
   overflow:visible;
 }
 .detailPage .featuredSlot .statusChip{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  gap:6px;
-  height:30px;
-  padding:0 10px;
+  gap:7px;
+  height:34px;
+  padding:0 12px;
   border:1px solid rgba(214,255,40,.56);
   background:rgba(8,12,5,.80);
   color:#d6ff28;
   box-shadow:inset 0 0 0 1px rgba(214,255,40,.035);
   font-family:"Arial Narrow","Roboto Condensed",Arial,sans-serif;
-  font-size:10px;
+  font-size:12px;
   font-weight:900;
   line-height:1;
-  letter-spacing:.035em;
+  letter-spacing:.03em;
   text-transform:uppercase;
   white-space:nowrap;
   overflow:hidden;
@@ -2038,28 +2038,28 @@ body.layout-mouse-edit .layout-debug-selected{
   font-weight:800;
 }
 .detailPage .featuredSlot .statusChipIcon{
-  width:12px;
-  height:12px;
-  flex:0 0 12px;
+  width:14px;
+  height:14px;
+  flex:0 0 14px;
   display:grid;
   place-items:center;
   color:#d6ff28;
 }
 .detailPage .featuredSlot .statusChipIcon.dot::before{
   content:"";
-  width:5px;
-  height:5px;
+  width:6px;
+  height:6px;
   border-radius:50%;
   background:#d6ff28;
   box-shadow:0 0 8px rgba(214,255,40,.28);
 }
 .detailPage .featuredSlot .statusChipIcon svg{
-  width:12px;
-  height:12px;
+  width:14px;
+  height:14px;
   display:block;
   fill:none;
   stroke:currentColor;
-  stroke-width:1.7;
+  stroke-width:1.9;
   stroke-linecap:round;
   stroke-linejoin:round;
 }
@@ -2071,8 +2071,8 @@ body.layout-mouse-edit .layout-debug-selected{
   gap:10px!important;
 }
 @media(max-width:900px){
-  .detailPage .featuredSlot .commercialStatusRail{height:27px;gap:5px}
-  .detailPage .featuredSlot .statusChip{height:27px;padding:0 7px;font-size:8px;gap:4px}
+  .detailPage .featuredSlot .commercialStatusRail{height:29px;gap:5px}
+  .detailPage .featuredSlot .statusChip{height:29px;padding:0 8px;font-size:9px;gap:5px}
   .detailPage .featuredSlot .purchaseOption{font-size:12px;padding:0 10px;gap:8px}
   .detailPage .featuredSlot .purchaseCartStandalone svg{width:17px;height:17px}
 }
@@ -3033,14 +3033,14 @@ function fitStructureRail(){
   const rail=document.querySelector(".featuredSlot .trackStructure");
   if(!rail||!rail.children.length)return;
   const segs=[...rail.querySelectorAll(".structureSegment")];
-  let lo=6,hi=12,best=6;
+  let lo=8,hi=14,best=8;
   for(let i=0;i<10;i++){
     const mid=(lo+hi)/2;
-    segs.forEach(s=>{s.style.fontSize=`${mid}px`;s.style.paddingLeft=`${Math.max(2,mid*.48)}px`;s.style.paddingRight=`${Math.max(2,mid*.48)}px`});
+    segs.forEach(s=>{s.style.fontSize=`${mid}px`;s.style.paddingLeft=`${Math.max(3,mid*.42)}px`;s.style.paddingRight=`${Math.max(3,mid*.42)}px`});
     const ok=segs.every(s=>s.scrollWidth<=s.clientWidth+.75&&s.scrollHeight<=s.clientHeight+.75);
     if(ok){best=mid;lo=mid}else hi=mid;
   }
-  segs.forEach(s=>{s.style.fontSize=`${best}px`;s.style.paddingLeft=`${Math.max(2,best*.48)}px`;s.style.paddingRight=`${Math.max(2,best*.48)}px`});
+  segs.forEach(s=>{s.style.fontSize=`${best}px`;s.style.paddingLeft=`${Math.max(3,best*.42)}px`;s.style.paddingRight=`${Math.max(3,best*.42)}px`});
 }
 function fitCoreBlock(){
   const block=document.querySelector(".featuredSlot .beatCoreBlock");
@@ -3050,8 +3050,8 @@ function fitCoreBlock(){
      fit may only SHRINK it so the inner frame never changes size. */
   const bpmValue=block.querySelector(".coreProperty.is-bpm .coreValue");
   const keyValue=block.querySelector(".coreProperty.is-key .coreValue");
-  if(bpmValue)fitFontBinary(bpmValue,{min:8,max:Math.max(8,Number(layoutDebugState.bpmValueFont)||21)});
-  if(keyValue)fitFontBinary(keyValue,{min:8,max:Math.max(8,Number(layoutDebugState.keyValueFont)||21)});
+  if(bpmValue)fitFontBinary(bpmValue,{min:12,max:Math.max(12,Number(layoutDebugState.bpmValueFont)||21)});
+  if(keyValue)fitFontBinary(keyValue,{min:11,max:Math.max(11,Number(layoutDebugState.keyValueFont)||21)});
 }
 function fitMoodBlock(){
   const block=document.querySelector(".featuredSlot .moodBlock");
@@ -3134,7 +3134,7 @@ function fitHeroModuleContents(){
 
   const badge=document.querySelector(".featuredSlot .badge");
   if(badge){
-    badge.querySelectorAll(".statusChip").forEach(chip=>fitFontBinary(chip,{min:7,max:11}));
+    badge.querySelectorAll(".statusChip").forEach(chip=>fitFontBinary(chip,{min:9,max:13}));
   }
 
   const time=document.querySelector(".featuredSlot .time");
