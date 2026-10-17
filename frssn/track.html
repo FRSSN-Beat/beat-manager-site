@@ -281,6 +281,7 @@ button,input{font:inherit}
   z-index:2;
   width:118px;height:118px;border-radius:50%;position:relative;
   background:
+    conic-gradient(from 10deg,transparent,rgba(255,255,255,.035),transparent 65deg,transparent 180deg,rgba(214,255,40,.025),transparent 250deg),
     radial-gradient(circle at 50% 50%,rgba(255,255,255,.055) 0 8%,transparent 8.5%),
     repeating-radial-gradient(circle at 50% 50%,#0f1010 0 2px,#111313 2px 4px,#0d0e0e 4px 6px);
   border:1px solid rgba(255,255,255,.06);
@@ -953,12 +954,12 @@ body.is-android .bar{min-width:1.05px;max-width:4px}
   width:120px;
   height:120px;
   border-radius:50%;
-  transform-origin:top left;
+  transform-origin:50% 50%;
   background:
     radial-gradient(circle at 50% 50%,rgba(255,255,255,.055) 0 8%,transparent 8.5%),
-    repeating-radial-gradient(circle at 50% 50%,#0f1010 0 2px,#151716 2px 4px,#0c0d0d 4px 6px);
-  border:1px solid rgba(255,255,255,.07);
-  box-shadow:0 12px 34px rgba(0,0,0,.54),inset 0 0 0 1px rgba(255,255,255,.04);
+    repeating-radial-gradient(circle at 50% 50%,#0f1010 0 2px,#111313 2px 4px,#0d0e0e 4px 6px);
+  border:1px solid rgba(255,255,255,.06);
+  box-shadow:0 4px 24px rgba(0,0,0,.45),inset 0 0 0 1px rgba(255,255,255,.04);
   will-change:transform,opacity;
 }
 .vinylFlightDisc::before{
@@ -5648,8 +5649,8 @@ function createHeroSleeveFlightMask(state){
    A temporary copy of the sleeve sits above the travelling record, so the
    disc looks like it is genuinely sliding out from behind the cardboard.
 */
-async function flyDiscBetween(state,fromRect,toRect,{duration=650}={}){
-  if(!fromRect||!toRect||!fromRect.width||!toRect.width)return;
+async function flyDiscBetween(state,fromRect,toRect,{duration=650,keepAfterLanding=false}={}){
+  if(!fromRect||!toRect||!fromRect.width||!toRect.width)return null;
 
   /* NO SCALE. The start rectangle already contains the physical record diameter.
      We only translate its centre from A to B. */
@@ -5686,8 +5687,11 @@ async function flyDiscBetween(state,fromRect,toRect,{duration=650}={}){
 
   try{await animation.finished}catch(_){}
 
-  node.remove();
-  sleeveMask?.remove();
+  if(!keepAfterLanding){
+    node.remove();
+    sleeveMask?.remove();
+  }
+  return {node,sleeveMask};
 }
 
 /* Sleeve trajectory remains straight. A clone is created FIRST at the exact
@@ -5796,6 +5800,18 @@ async function packHeroRecordToSleeve(state){
     state.el.classList.add("hero-record-hidden","hero-record-packed");
     syncHeroPackedUI(state);
     await flight;
+
+    /* A packed record is a true STOP state: the visual/audio position returns
+       to the beginning so the waveform no longer keeps a stale played section. */
+    state.position=0;
+    seekEngine(state,0);
+    sendMode("paused");
+    updateProgressUI(state,0);
+    setVinylAngle(state,0);
+    setTonearmAngle(state,ARM_PARK_ANGLE);
+    state.tonearmEngaged=false;
+    setPlayIcon(state,false);
+
     microstatus.textContent=`${trackTitleOf(state)} // RECORD PACKED`;
     return true;
   }finally{
@@ -5838,7 +5854,10 @@ async function unpackHeroRecordToPlatter(state,{autoplay=false,targetTime=null}=
     const fromRect=heroSleeveDiscRect(state);
     const toRect=heroPlatterDiscRect(state);
     playPaperIn();
-    await flyDiscBetween(state,fromRect,toRect,{duration:DISC_FROM_SLEEVE_DURATION});
+    const landedFlight=await flyDiscBetween(state,fromRect,toRect,{
+      duration:DISC_FROM_SLEEVE_DURATION,
+      keepAfterLanding:true
+    });
 
     state.heroRecordPacked=false;
     state.vinylOpened=true;
@@ -5846,6 +5865,13 @@ async function unpackHeroRecordToPlatter(state,{autoplay=false,targetTime=null}=
     state.el.classList.remove("hero-record-hidden","hero-record-packed");
     state.el.classList.add("hero-mounted","is-open","arm-on-top");
     syncHeroPackedUI(state);
+
+    /* Keep the identical flight clone over the real record for two painted
+       frames. This removes the texture/label pop exactly at platter landing. */
+    const realLabel=state.recordDisc?.querySelector(".recordLabel img");
+    await waitForVisualPaint(realLabel);
+    landedFlight?.node?.remove();
+    landedFlight?.sleeveMask?.remove();
 
     if(!autoplay){
       playIntent=false;
