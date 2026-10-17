@@ -3953,6 +3953,7 @@ let isPreCueing=false;
 let isScratching=false;
 let scratchTrack=null;
 let scratchPointerId=null;
+let scratchStartedFromParkedStop=false;
 let scratchLastAngle=0;
 let scratchLastEventTime=0;
 let scratchVelocity=0;
@@ -5066,19 +5067,35 @@ tracks.forEach(state=>{
     if(state!==activeTrack||!state.vinylOpened||!state.mechanismDeployed||state.isPacking||isSeeking||isPreCueing||switchInProgress||!workletReady)return;
     event.preventDefault();await resumeAudioContext();
     isScratching=true;scratchTrack=state;manualMovementStarted=false;scratchPointerId=event.pointerId;
+    scratchStartedFromParkedStop=!!(!playIntent&&!state.tonearmEngaged);
     scratchVisualTime=getEstimatedEnginePosition();scratchVelocity=engineSpeed;scratchLastAngle=pointerAngle(state,event);
     scratchLastEventTime=Number.isFinite(event.timeStamp)?event.timeStamp:performance.now();lastManualMoveAt=performance.now();
     state.recordDisc.setPointerCapture(event.pointerId);state.el.classList.add("is-scratching");
     if(playIntent)sendMode("grab_brake");else{setManualSpeed(0);sendMode("hold")}
   });
   state.recordDisc.addEventListener(scratchMoveEvent,event=>handleScratchMotion(state,event),{passive:false});
-  const finishScratch=event=>{
+  const finishScratch=async event=>{
     if(!isScratching||scratchTrack!==state)return;if(event&&event.pointerId!==scratchPointerId)return;
     clearManualIdle();isScratching=false;state.el.classList.remove("is-scratching");
     if(event&&state.recordDisc.hasPointerCapture(event.pointerId))state.recordDisc.releasePointerCapture(event.pointerId);
-    scratchPointerId=null;scratchTrack=null;
+    const parkedStopCue=!!(scratchStartedFromParkedStop&&manualMovementStarted&&(!event||event.type==="pointerup"));
+    const parkedCueTime=clampTime(state,scratchVisualTime);
+    scratchPointerId=null;scratchTrack=null;scratchStartedFromParkedStop=false;
+
+    /* STOP mode behaves like a real deck cue. If the arm was parked when the
+       user manually scrubbed the record, releasing it immediately drops the
+       arm at that selected groove and starts playback from the selected time.
+       No free-spin branch is used here: the gesture is interpreted as a cue. */
+    if(parkedStopCue){
+      manualMovementStarted=false;
+      setManualSpeed(0);
+      sendMode("paused");
+      await startFromParkedStopAt(state,parkedCueTime,"MANUAL CUE");
+      return;
+    }
+
     const recent=(performance.now()-lastManualMoveAt)<FREE_SPIN_RELEASE_WINDOW;
-    if(playIntent){sendMode("motor_recovery");return}
+    if(playIntent){sendMode("motor_recovery");manualMovementStarted=false;return}
     if(manualMovementStarted&&recent&&Math.abs(scratchVelocity)>=FREE_SPIN_RELEASE_THRESHOLD)sendMode("free_spin",{speed:scratchVelocity});
     else{setManualSpeed(0);sendMode("paused")}
     manualMovementStarted=false;
@@ -5089,6 +5106,43 @@ tracks.forEach(state=>{
 /* =====================================================
    SEEK / CUE
 ===================================================== */
+/* STOP -> DIRECT CUE START
+   A parked tonearm means the deck is physically stopped. In that state a
+   waveform/section cue (or a manual vinyl scrub released by the user) should
+   not run the old rewind animation. The needle is placed immediately on the
+   requested groove and playback starts from exactly that time. */
+async function startFromParkedStopAt(state,targetTime,source="CUE"){
+  if(!state||state!==activeTrack||state.isPacking||isHeroRecordPacked(state))return false;
+  targetTime=clampTime(state,targetTime);
+  await resumeAudioContext();
+
+  clearManualIdle();
+  setManualSpeed(0);
+  sendMode("paused");
+  setTonearmAudioContact(state,false);
+
+  seekEngine(state,targetTime);
+  state.position=targetTime;
+  scratchVisualTime=targetTime;
+  setVinylAngle(state,angleFromAudioTime(targetTime));
+  updateProgressUI(state,targetTime);
+
+  /* Instant needle placement is intentional in STOP cue mode. */
+  cancelScheduledTonearmEngage(state);
+  state.vinylOpened=true;
+  state.mechanismDeployed=true;
+  state.el.classList.add("hero-mounted","is-open","arm-on-top");
+  setTonearmAngle(state,armAngleFromTime(state,targetTime));
+  state.tonearmEngaged=true;
+
+  playIntent=true;
+  state.hasPlaybackEverStarted=true;
+  setPlayIcon(state,true);
+  setTonearmAudioContact(state,true);
+  sendMode("play_start");
+  microstatus.textContent=`${source} // ${fmt(targetTime)} // PLAY`;
+  return true;
+}
 async function prePlayCueTo(state,targetTime,generation){
   if(isPreCueing)return false;isPreCueing=true;state.el.classList.add("is-precue");await ensureVinylOpen(state);
   if(!operationAlive(generation)||state.isPacking){isPreCueing=false;state.el.classList.remove("is-precue");return false}
@@ -5161,6 +5215,14 @@ async function seekTo(state,targetTime){
 
   if(IS_DETAIL_PAGE&&isHeroRecordPacked(state)){
     await unpackHeroRecordToPlatter(state,{autoplay:true,targetTime});
+    return;
+  }
+
+  /* If the record is already on the platter but the arm is parked, this is
+     STOP mode. Any waveform click or section/timecode click becomes an
+     immediate cue-and-play operation: needle to groove -> playback from there. */
+  if(!playIntent&&!state.tonearmEngaged&&state.vinylOpened&&state.mechanismDeployed){
+    await startFromParkedStopAt(state,targetTime,"DIRECT CUE");
     return;
   }
 
