@@ -4386,11 +4386,14 @@ function setTonearmAudioContact(state,contact){
   if(!state)return;
   state.tonearmAudioContact=!!contact;
   if(state===activeTrack){
-    setTonearmAudioGate(!!contact&&!!playIntent);
+    /* Physical rule: the needle contact itself is the audio gate.
+       PLAY/PAUSE no longer mutes scratch or brake motion while the needle is
+       physically on the record. A parked/lifted arm is always silent. */
+    setTonearmAudioGate(!!contact);
   }
 }
 function syncTonearmAudioGate(){
-  const audible=!!(activeTrack&&activeTrack.tonearmAudioContact&&playIntent);
+  const audible=!!(activeTrack&&activeTrack.tonearmAudioContact);
   setTonearmAudioGate(audible);
 }
 
@@ -5049,7 +5052,30 @@ function processScratchSample(state,event){
   scratchVelocity=scratchVelocity*.28+instantVelocity*.72;
   scratchVisualTime=clampTime(state,scratchVisualTime+deltaTrackSeconds);
   lastManualMoveAt=performance.now();
-  if(!manualMovementStarted){manualMovementStarted=true;sendMode("manual")}
+
+  if(!manualMovementStarted){
+    manualMovementStarted=true;
+
+    /* STOP + parked arm + hand movement = direct physical cue.
+       The first real movement drops the needle at the current hand-selected
+       position, opens the contact gate and turns the gesture into audible
+       scratch/playback. This mirrors waveform/section cue behavior. */
+    if(scratchStartedFromParkedStop&&!state.tonearmEngaged){
+      seekEngine(state,scratchVisualTime);
+      state.position=scratchVisualTime;
+      setTonearmAngle(state,armAngleFromTime(state,scratchVisualTime));
+      state.tonearmEngaged=true;
+      playIntent=true;
+      state.hasPlaybackEverStarted=true;
+      setPlayIcon(state,true);
+      setTonearmAudioContact(state,true);
+      scratchStartedFromParkedStop=false;
+      microstatus.textContent=`MANUAL CUE // ${fmt(scratchVisualTime)}`;
+    }
+
+    sendMode("manual");
+  }
+
   setManualSpeed(scratchVelocity);scheduleManualIdle();
   microstatus.textContent=`SCRATCH // ${scratchVelocity>=0?"+":"−"}${Math.abs(scratchVelocity).toFixed(2)}×`;
 }
