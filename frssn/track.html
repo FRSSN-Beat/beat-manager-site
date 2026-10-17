@@ -1511,10 +1511,10 @@ button,input{font:inherit}
 /* Purchase controls: no visible outer payment block. One standalone cart icon + three independent price buttons. */
 .detailPage .featuredSlot .buyCol{
   display:grid!important;
-  grid-template-columns:38px repeat(3,minmax(0,1fr))!important;
+  grid-template-columns:46px repeat(3,minmax(108px,1fr))!important;
   grid-template-rows:1fr!important;
   align-items:stretch!important;
-  gap:7px!important;
+  gap:10px!important;
   border:0!important;
   background:transparent!important;
   box-shadow:none!important;
@@ -1527,18 +1527,19 @@ button,input{font:inherit}
   height:100%;
   display:grid;
   place-items:center;
-  border:1px solid rgba(214,255,40,.56);
-  background:rgba(8,12,5,.82);
-  color:#d6ff28;
+  border:1px solid #d6ff28;
+  background:#d6ff28;
+  color:#080a06;
+  box-shadow:0 0 18px rgba(214,255,40,.12), inset 0 0 0 1px rgba(255,255,255,.08);
   box-sizing:border-box;
 }
 .detailPage .featuredSlot .purchaseCartStandalone svg{
-  width:18px;
-  height:18px;
+  width:20px;
+  height:20px;
   display:block;
   fill:none;
   stroke:currentColor;
-  stroke-width:1.65;
+  stroke-width:1.9;
   stroke-linecap:round;
   stroke-linejoin:round;
 }
@@ -1547,46 +1548,50 @@ button,input{font:inherit}
   min-width:0;
   min-height:0;
   height:100%;
-  padding:0 10px;
-  border:1px solid rgba(214,255,40,.56);
-  background:rgba(8,12,5,.82);
-  color:#d6ff28;
-  box-shadow:inset 0 0 0 1px rgba(214,255,40,.03);
+  padding:0 14px;
+  border:1px solid rgba(214,255,40,.62);
+  background:rgba(8,12,5,.88);
+  color:#eff6e7;
+  box-shadow:inset 0 0 0 1px rgba(214,255,40,.04);
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:8px;
+  gap:10px;
   text-decoration:none;
-  font-family:"Arial Narrow","Roboto Condensed",Arial,sans-serif;
-  font-size:12px;
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:15px;
   font-weight:900;
   line-height:1;
-  letter-spacing:.035em;
+  letter-spacing:.015em;
   text-transform:uppercase;
   white-space:nowrap;
   overflow:hidden;
   box-sizing:border-box;
-  transition:background .16s ease,color .16s ease,border-color .16s ease,box-shadow .16s ease;
+  transition:background .16s ease,color .16s ease,border-color .16s ease,box-shadow .16s ease,transform .16s ease;
 }
 .detailPage .featuredSlot .purchaseOption:hover{
   background:#d6ff28;
   color:#080a06;
   border-color:#d6ff28;
-  box-shadow:0 0 18px rgba(214,255,40,.08);
+  box-shadow:0 0 18px rgba(214,255,40,.10);
+  transform:translateY(-1px);
 }
 .detailPage .featuredSlot .purchaseName{
   min-width:0;
   overflow:hidden;
   white-space:nowrap;
+  font-weight:900;
+  color:#d6ff28;
 }
 .detailPage .featuredSlot .purchaseOption .tierPrice{
   flex:0 0 auto;
-  color:rgba(236,241,229,.88);
+  color:#f7fbef;
   font-size:1em;
   font-weight:900;
-  letter-spacing:.02em;
+  letter-spacing:0;
 }
 .detailPage .featuredSlot .purchaseOption:hover .tierPrice{color:#080a06}
+.detailPage .featuredSlot .purchaseOption:hover .purchaseName{color:#080a06}
 .detailPage .featuredSlot .topline{margin-bottom:16px}
 .detailPage .featuredSlot .meta{display:none}
 
@@ -2061,15 +2066,15 @@ body.layout-mouse-edit .layout-debug-selected{
 
 /* Purchase row keeps the status-chip language without a surrounding payment frame. */
 .detailPage .featuredSlot .buyCol{
-  grid-template-columns:38px repeat(3,minmax(0,1fr))!important;
+  grid-template-columns:46px repeat(3,minmax(108px,1fr))!important;
   grid-template-rows:1fr!important;
-  gap:7px!important;
+  gap:10px!important;
 }
 @media(max-width:900px){
   .detailPage .featuredSlot .commercialStatusRail{height:27px;gap:5px}
   .detailPage .featuredSlot .statusChip{height:27px;padding:0 7px;font-size:8px;gap:4px}
-  .detailPage .featuredSlot .purchaseOption{font-size:10px;padding:0 8px;gap:6px}
-  .detailPage .featuredSlot .purchaseCartStandalone svg{width:15px;height:15px}
+  .detailPage .featuredSlot .purchaseOption{font-size:12px;padding:0 10px;gap:8px}
+  .detailPage .featuredSlot .purchaseCartStandalone svg{width:17px;height:17px}
 }
 
 </style>
@@ -2985,8 +2990,8 @@ function fitPaymentBlock(){
   [...buy.querySelectorAll(".purchaseOption")].forEach(btn=>{
     const name=btn.querySelector(".purchaseName");
     const price=btn.querySelector(".tierPrice");
-    if(name)fitFontBinary(name,{min:8,max:14});
-    if(price)fitFontBinary(price,{min:8,max:14});
+    if(name)fitFontBinary(name,{min:11,max:20});
+    if(price)fitFontBinary(price,{min:11,max:20});
   });
 }
 function fitReleaseBlock(){
