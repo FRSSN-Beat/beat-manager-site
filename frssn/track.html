@@ -297,16 +297,16 @@ button,input{font:inherit}
   width:100%;
   display:flex;
   align-items:center;
-  gap:.65px;
+  gap:.32px;
   overflow:hidden;
 }
 .bar{
   flex:1 1 0;
-  min-width:.6px;
-  max-width:3px;
+  min-width:.34px;
+  max-width:2.25px;
   background:rgba(86,90,82,.78);
   opacity:1;
-  border-radius:.35px;
+  border-radius:0;
   box-shadow:none;
 }
 .bar.is-played{
@@ -316,8 +316,8 @@ button,input{font:inherit}
 /* Legacy overlay is intentionally disabled. Progress is now painted directly
    onto the original waveform bars, so there is no second compressed waveform. */
 .waveProgress{display:none!important}
-body.is-android .wave{gap:1px}
-body.is-android .bar{min-width:1.4px;max-width:4px}
+body.is-android .wave{gap:.75px}
+body.is-android .bar{min-width:1.05px;max-width:4px}
 .time{color:var(--muted);font:600 10px/1 monospace;white-space:nowrap}
 .meta{margin-top:12px;display:flex;gap:15px;flex-wrap:wrap;color:var(--muted);font:9px/1 monospace;letter-spacing:.12em;text-transform:uppercase}
 .buyCol{display:flex;flex-direction:column;gap:8px;min-width:170px}
@@ -1389,6 +1389,7 @@ body.is-android .bar{min-width:1.4px;max-width:4px}
   appearance:none;
   position:relative;
   min-width:0;
+  box-sizing:border-box;
   padding:0 7px;
   border:0;
   border-right:1px solid rgba(214,255,40,.13);
@@ -3842,8 +3843,10 @@ function createReversedBuffer(original,context){
   return reversed;
 }
 
-const WAVE_BARS=IS_ANDROID?96:320;
-const WAVE_ANALYSIS_SAMPLES_PER_BAR=IS_ANDROID?320:960;
+/* Detailed DAW-like waveform. Desktop gets a much denser envelope, while
+   Android intentionally stays lighter. Playback itself only recolors bars. */
+const WAVE_BARS=IS_ANDROID?96:400;
+const WAVE_ANALYSIS_SAMPLES_PER_BAR=IS_ANDROID?420:2200;
 
 /* DEV CACHE BUST
    During active BeatStore development we deliberately request
@@ -3876,44 +3879,65 @@ function fallbackWave(state){
 function buildDetailedWaveHeights(decoded){
   const channels=[];
   for(let c=0;c<decoded.numberOfChannels;c++)channels.push(decoded.getChannelData(c));
-  const blockSize=Math.max(1,Math.floor(decoded.length/WAVE_BARS));
-  const levels=[];
 
+  const blockSize=Math.max(1,Math.floor(decoded.length/WAVE_BARS));
+  const rawLevels=[];
+
+  /* A waveform editor does not need an RMS block for every bar.
+     We use a true peak-to-peak envelope for each narrow time slice.
+     This keeps transients, gaps and micro-dynamics visible instead of
+     turning compressed sections into large flat rectangular plateaus. */
   for(let i=0;i<WAVE_BARS;i++){
     const start=i*blockSize;
     const end=i===WAVE_BARS-1?decoded.length:Math.min(decoded.length,start+blockSize);
     const length=Math.max(1,end-start);
     const stride=Math.max(1,Math.floor(length/WAVE_ANALYSIS_SAMPLES_PER_BAR));
-    let peak=0;
-    let sumSq=0;
-    let samples=0;
 
-    for(let sample=start;sample<end;sample+=stride){
-      let framePeak=0;
-      let frameSq=0;
-      for(let c=0;c<channels.length;c++){
-        const v=channels[c][sample]||0;
+    let strongestSpan=0;
+    let strongestAbs=0;
+
+    for(let c=0;c<channels.length;c++){
+      const data=channels[c];
+      let min=1;
+      let max=-1;
+      let absPeak=0;
+
+      for(let sample=start;sample<end;sample+=stride){
+        const v=data[sample]||0;
+        if(v<min)min=v;
+        if(v>max)max=v;
         const a=Math.abs(v);
-        if(a>framePeak)framePeak=a;
-        frameSq+=v*v;
+        if(a>absPeak)absPeak=a;
       }
-      peak=Math.max(peak,framePeak);
-      sumSq+=frameSq/Math.max(1,channels.length);
-      samples++;
+
+      const span=Math.max(0,max-min);
+      if(span>strongestSpan)strongestSpan=span;
+      if(absPeak>strongestAbs)strongestAbs=absPeak;
     }
 
-    const rms=Math.sqrt(sumSq/Math.max(1,samples));
-    /* RMS carries the body, peak preserves transients. This is calculated once
-       per loaded asset; playback progress itself does no amplitude math. */
-    levels.push(Math.max(rms*1.72,peak*.62));
+    /* Mostly true peak-to-peak, with a small absolute-peak contribution so a
+       very asymmetric transient still reads correctly. */
+    rawLevels.push(strongestSpan*.86 + strongestAbs*.28);
   }
 
-  const sorted=levels.slice().sort((a,b)=>a-b);
-  const reference=sorted[Math.min(sorted.length-1,Math.floor(sorted.length*.985))]||Math.max(...levels)||1;
-  return levels.map(level=>{
-    const normalized=Math.max(0,Math.min(1,level/reference));
-    const shaped=Math.pow(normalized,.68);
-    return 6+shaped*94;
+  /* Robust normalization: a handful of extreme transients must not flatten
+     the entire rest of the song. */
+  const sorted=rawLevels.slice().sort((a,b)=>a-b);
+  const reference=sorted[Math.min(sorted.length-1,Math.floor(sorted.length*.992))]||Math.max(...rawLevels)||1;
+
+  const normalized=rawLevels.map(level=>Math.max(0,Math.min(1,level/reference)));
+
+  /* Only very light neighbour smoothing. It removes single-pixel noise but
+     deliberately keeps section-level and transient variation intact. */
+  const smoothed=normalized.map((value,i)=>{
+    const prev=normalized[i-1]??value;
+    const next=normalized[i+1]??value;
+    return value*.82 + prev*.09 + next*.09;
+  });
+
+  return smoothed.map(level=>{
+    const shaped=Math.pow(Math.max(0,Math.min(1,level)),.92);
+    return 4+shaped*96;
   });
 }
 const decodedAudioAssetCache = new Map();
@@ -4965,12 +4989,22 @@ function ensureTrackEssentials(state){
     info.insertBefore(rail,waveRow);
   }
   rail.innerHTML="";
-  (m.sections||STRUCTURE_A).forEach((section,index)=>{
+  const sectionList=m.sections||STRUCTURE_A;
+  const sectionDurations=sectionList.map(section=>Math.max(0,Number(section.end)-Number(section.start)));
+  const sectionDurationTotal=sectionDurations.reduce((sum,value)=>sum+value,0)||1;
+
+  sectionList.forEach((section,index)=>{
     const button=document.createElement("button");
     button.type="button";
     button.className="structureSegment";
     button.textContent=section.name;
-    button.style.flex=`${Math.max(.02,section.end-section.start)} 1 0`;
+
+    /* Exact time geometry: if a section occupies 14.6% of the track, its
+       structure button occupies exactly 14.6% of the waveform rail. No flex
+       redistribution based on text length is allowed. */
+    const sectionWidth=(sectionDurations[index]/sectionDurationTotal)*100;
+    button.style.flex=`0 0 ${sectionWidth}%`;
+    button.style.width=`${sectionWidth}%`;
     button.dataset.start=String(section.start);
     button.dataset.end=String(section.end);
     button.title=`${section.name} // jump to section`;
