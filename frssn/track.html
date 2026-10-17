@@ -1660,7 +1660,7 @@ button,input{font:inherit}
 .detailPage.layout-debug-active .featuredSlot .moodBlock{zoom:var(--dbg-mood-scale);translate:var(--dbg-mood-x) var(--dbg-mood-y);scale:var(--dbg-mood-stretch-x) var(--dbg-mood-stretch-y)}
 .detailPage.layout-debug-active .featuredSlot .releaseBlock{zoom:var(--dbg-release-scale);translate:var(--dbg-release-x) var(--dbg-release-y);scale:var(--dbg-release-stretch-x) var(--dbg-release-stretch-y)}
 .detailPage.layout-debug-active .featuredSlot .badge{zoom:var(--dbg-status-scale);translate:var(--dbg-status-x) var(--dbg-status-y);scale:var(--dbg-status-stretch-x) var(--dbg-status-stretch-y)}
-.detailPage.layout-debug-active .featuredSlot .buyCol{zoom:var(--dbg-buy-scale);translate:var(--dbg-buy-x) var(--dbg-buy-y);scale:var(--dbg-buy-stretch-x) var(--dbg-buy-stretch-y)}
+.detailPage.layout-debug-active .featuredSlot .buyCol{zoom:var(--dbg-buy-scale);translate:var(--dbg-buy-x) var(--dbg-buy-y);scale:1 1}
 .detailPage.layout-debug-active #heroMeterBlock{zoom:var(--dbg-meter-scale);translate:var(--dbg-meter-x) var(--dbg-meter-y);scale:var(--dbg-meter-stretch-x) var(--dbg-meter-stretch-y)}
 
 @media(min-width:901px){
@@ -2075,6 +2075,125 @@ body.layout-mouse-edit .layout-debug-selected{
   .detailPage .featuredSlot .statusChip{height:27px;padding:0 7px;font-size:8px;gap:4px}
   .detailPage .featuredSlot .purchaseOption{font-size:12px;padding:0 10px;gap:8px}
   .detailPage .featuredSlot .purchaseCartStandalone svg{width:17px;height:17px}
+}
+
+
+
+/* =====================================================
+   PURCHASE ROW V16 // CLEAN LICENSE STRIP
+   The cart is a solid acid-yellow tile. License names are large white type;
+   prices are large acid type. Non-uniform debug stretch changes geometry,
+   not glyph proportions, so text never looks horizontally squashed.
+===================================================== */
+.detailPage .featuredSlot .buyCol,
+.detailPage.hero-frame-lock .featuredSlot .buyCol{
+  display:grid!important;
+  grid-template-columns:52px repeat(3,minmax(112px,1fr))!important;
+  grid-template-rows:1fr!important;
+  align-items:stretch!important;
+  gap:9px!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  overflow:visible!important;
+}
+
+.detailPage .featuredSlot .purchaseCartStandalone{
+  width:100%!important;
+  height:100%!important;
+  min-width:0!important;
+  min-height:36px!important;
+  display:grid!important;
+  place-items:center!important;
+  border:1px solid #d6ff28!important;
+  background:#d6ff28!important;
+  color:#050605!important;
+  box-shadow:0 0 16px rgba(214,255,40,.10)!important;
+  overflow:hidden!important;
+}
+.detailPage .featuredSlot .purchaseCartStandalone svg{
+  width:25px!important;
+  height:25px!important;
+  fill:none!important;
+  stroke:#050605!important;
+  stroke-width:2.15!important;
+  stroke-linecap:round!important;
+  stroke-linejoin:round!important;
+}
+
+.detailPage .featuredSlot .purchaseOption{
+  width:100%!important;
+  height:100%!important;
+  min-width:0!important;
+  min-height:36px!important;
+  padding:0 14px!important;
+  border:1px solid rgba(214,255,40,.76)!important;
+  background:rgba(4,6,4,.92)!important;
+  color:#f7f8f2!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:12px!important;
+  overflow:hidden!important;
+  text-decoration:none!important;
+  white-space:nowrap!important;
+  box-sizing:border-box!important;
+  font-family:Arial,Helvetica,sans-serif!important;
+  font-style:normal!important;
+  font-stretch:normal!important;
+  font-weight:900!important;
+  line-height:1!important;
+  letter-spacing:0!important;
+  text-transform:uppercase!important;
+  transform:none!important;
+}
+.detailPage .featuredSlot .purchaseName{
+  display:block!important;
+  flex:1 1 auto!important;
+  min-width:0!important;
+  color:#f7f8f2!important;
+  font-family:Arial,Helvetica,sans-serif!important;
+  font-style:normal!important;
+  font-stretch:normal!important;
+  font-weight:900!important;
+  line-height:1!important;
+  letter-spacing:0!important;
+  overflow:hidden!important;
+  white-space:nowrap!important;
+}
+.detailPage .featuredSlot .purchaseOption .tierPrice{
+  display:block!important;
+  flex:0 0 auto!important;
+  color:#d6ff28!important;
+  font-family:Arial,Helvetica,sans-serif!important;
+  font-style:normal!important;
+  font-stretch:normal!important;
+  font-weight:900!important;
+  line-height:1!important;
+  letter-spacing:0!important;
+  white-space:nowrap!important;
+}
+.detailPage .featuredSlot .purchaseOption:hover{
+  background:#d6ff28!important;
+  border-color:#d6ff28!important;
+  box-shadow:0 0 18px rgba(214,255,40,.11)!important;
+}
+.detailPage .featuredSlot .purchaseOption:hover .purchaseName,
+.detailPage .featuredSlot .purchaseOption:hover .tierPrice{
+  color:#050605!important;
+}
+
+@media(max-width:900px){
+  .detailPage .featuredSlot .buyCol,
+  .detailPage.hero-frame-lock .featuredSlot .buyCol{
+    grid-template-columns:44px repeat(3,minmax(86px,1fr))!important;
+    gap:6px!important;
+  }
+  .detailPage .featuredSlot .purchaseCartStandalone,
+  .detailPage .featuredSlot .purchaseOption{min-height:34px!important}
+  .detailPage .featuredSlot .purchaseCartStandalone svg{width:21px!important;height:21px!important}
+  .detailPage .featuredSlot .purchaseOption{padding:0 9px!important;gap:7px!important}
 }
 
 </style>
@@ -2875,8 +2994,15 @@ function applyHeroFrameLocks(){
     const el=document.querySelector(d.selector);
     const box=heroFrameLockState[d.id];
     if(!el||!box)return;
-    el.style.width=`${box.width}px`;
-    el.style.height=`${box.height}px`;
+    if(d.id==="buy"){
+      const sx=Math.max(.2,(Number(layoutDebugState.buyStretchX)||100)/100);
+      const sy=Math.max(.2,(Number(layoutDebugState.buyStretchY)||100)/100);
+      el.style.width=`${Math.round(box.width*sx*10)/10}px`;
+      el.style.height=`${Math.round(box.height*sy*10)/10}px`;
+    }else{
+      el.style.width=`${box.width}px`;
+      el.style.height=`${box.height}px`;
+    }
   });
   scheduleFitHeroModuleContents();
 }
@@ -2990,8 +3116,8 @@ function fitPaymentBlock(){
   [...buy.querySelectorAll(".purchaseOption")].forEach(btn=>{
     const name=btn.querySelector(".purchaseName");
     const price=btn.querySelector(".tierPrice");
-    if(name)fitFontBinary(name,{min:11,max:20});
-    if(price)fitFontBinary(price,{min:11,max:20});
+    if(name)fitFontBinary(name,{min:13,max:24});
+    if(price)fitFontBinary(price,{min:13,max:24});
   });
 }
 function fitReleaseBlock(){
