@@ -974,7 +974,9 @@ body.androidDebugMode{
   --ad-card-scale:.70;
   --ad-player-scale:1.50;
   --ad-player-debug-scale:1;
-  --ad-info-scale:1.25;
+  --ad-inner-ui-scale:.70;
+  --ad-info-scale:.875;
+  --ad-info-scale-base:1.25;
   --ad-info-width:80%;
   --ad-top-offset:131.2px;
   --ad-player-clear:24.8px;
@@ -1060,7 +1062,8 @@ body.androidDebugMode .track.storeCardV2{
   gap:var(--ad-gap)!important;
   padding:var(--ad-padding)!important;
   align-items:center;
-  zoom:var(--ad-card-scale)!important;
+  /* Outer card frame stays full width. Only modules INSIDE are scaled. */
+  zoom:1!important;
   overflow:hidden;
 }
 body.androidDebugMode .vinylScaleShell{
@@ -1075,7 +1078,7 @@ body.androidDebugMode .vinylScaleShell{
 body.androidDebugMode .vinylScaleShell > .vinylUnit{
   width:178px!important;
   height:132px!important;
-  transform:translateY(-50%) scale(calc(.5618 * var(--ad-player-scale) * var(--ad-player-debug-scale,1)))!important;
+  transform:translateY(-50%) scale(calc(.5618 * var(--ad-player-scale) * var(--ad-inner-ui-scale,1) * var(--ad-player-debug-scale,1)))!important;
   transform-origin:left center!important;
   --frssn-player-scale:1!important;
 }
@@ -1161,8 +1164,8 @@ body.androidDebugMode .codeForm{width:100%}
 body.androidDebugMode .footer{padding:0 14px;gap:10px;font-size:7px}
 body.androidDebugMode .vuModule{display:none!important}
 
-/* V14: all previous debug editors are disabled. Only the isolated player-size
-   control below remains. The player scale never changes the layout footprint. */
+/* Android sandbox: legacy desktop editors stay disabled. V17 exposes only
+   INNER INTERFACE SCALE plus the independent PLAYER ONLY fine-tune control. */
 body.androidDebugMode .trackDebugPanel,
 body.androidDebugMode .trackDebugReopen,
 body.androidDebugMode .playerDebugPanel,
@@ -1201,8 +1204,9 @@ body.androidDebugMode .track.storeCardV2 > .vinylScaleShell{
   overflow:visible!important;
 }
 
-/* INFO SCALE remains a real debug control, but its layout width is
-   compensated in JS so zoom never pushes the right edge outside card. */
+/* The outer card never scales. The complete information interface inside it
+   is zoomed proportionally and its width is compensated so the right edge
+   always stays locked to the card frame. */
 body.androidDebugMode .storeCardV2 > .trackInfo{
   display:block!important;
   width:var(--ad-info-width,100%)!important;
@@ -3166,12 +3170,28 @@ codeForm.addEventListener("submit",event=>{
 
 <div class="androidDebugBadge" id="androidDebugBadge">ANDROID 9:16 // 432 × 768 // V13 LOCKED</div>
 <div class="androidDebugPanel" id="androidDebugPanel">
-  <div class="androidDebugTitle"><span>DEBUG // PLAYER SIZE ONLY</span><button type="button" id="androidDebugCollapse">COLLAPSE</button></div>
+  <div class="androidDebugTitle"><span>DEBUG // INNER UI + PLAYER</span><button type="button" id="androidDebugCollapse">COLLAPSE</button></div>
   <div class="androidDebugBody">
-    <div class="androidDebugDevice" id="androidDebugReadout">REFERENCE LAYOUT // <b>LOCKED</b><br>PLAYER VISUAL SCALE // <b>100%</b></div>
+    <div class="androidDebugDevice" id="androidDebugReadout">ANDROID VIEWPORT // <b>432 × 768 LOCKED</b><br>OUTER TRACK FRAME // <b>100% FIXED</b></div>
 
     <div class="androidDebugRow">
-      <div class="androidDebugHead"><span>VINYL + SLEEVE + TONEARM</span><span id="adPlayerOnlyValue">100%</span></div>
+      <div class="androidDebugHead"><span>INNER INTERFACE SCALE</span><span id="adInnerUiValue">70%</span></div>
+      <input id="adInnerUiScale" type="range" min="60" max="125" step="1" value="70">
+    </div>
+
+    <div class="androidDebugButtons">
+      <button type="button" data-inner-ui="70">70%</button>
+      <button type="button" data-inner-ui="80">80%</button>
+      <button type="button" data-inner-ui="90">90%</button>
+      <button type="button" data-inner-ui="100">100%</button>
+      <button type="button" data-inner-ui="110">110%</button>
+      <button type="button" data-inner-ui="120">120%</button>
+    </div>
+    <button class="androidDebugReset" id="androidInnerUiReset" type="button">RESET INNER UI // 70%</button>
+    <div class="androidDebugHint">Scales only the modules INSIDE every track card: player, title, statuses, sections, waveform, BPM/KEY, moods and purchase row. The 432 × 768 viewport and outer card frame stay fixed.</div>
+
+    <div class="androidDebugRow">
+      <div class="androidDebugHead"><span>VINYL + SLEEVE + TONEARM // EXTRA</span><span id="adPlayerOnlyValue">100%</span></div>
       <input id="adPlayerOnlyScale" type="range" min="60" max="180" step="1" value="100">
     </div>
 
@@ -3183,7 +3203,7 @@ codeForm.addEventListener("submit",event=>{
       <button type="button" data-player-only="125">125%</button>
     </div>
     <button class="androidDebugReset" id="androidPlayerOnlyReset" type="button">RESET PLAYER // 100%</button>
-    <div class="androidDebugHint">Only the physical player is scaled: sleeve + vinyl + tonearm. Its shell, title/status column, sections, waveform, metadata and purchase row keep the locked V13 geometry and never reflow.</div>
+    <div class="androidDebugHint">Optional extra multiplier for the physical player only. Use INNER INTERFACE SCALE first; this control fine-tunes sleeve + vinyl + tonearm independently.</div>
   </div>
 </div>
 
@@ -3191,23 +3211,28 @@ codeForm.addEventListener("submit",event=>{
 <script>
 if(!window.__FRSSN_PREVIEW_HOST__){
 /* =====================================================
-   ANDROID 9:16 // V15 RESTORED-LAYOUT + PLAYER-SIZE-ONLY DEBUG
-   V13 composition is frozen. This control changes only a
-   visual transform multiplier and never changes layout.
+   ANDROID 9:16 // V17 INNER-INTERFACE DEBUG
+   The physical 432×768 viewport and outer card frames stay locked.
+   INNER UI scales all modules inside each track card proportionally.
+   PLAYER ONLY remains an independent fine-tune multiplier.
 ===================================================== */
 (() => {
   const KEY = 'frssn_android_player_only_v14';
+  const INNER_KEY = 'frssn_android_inner_ui_scale_v17';
   const LEGACY_LAYOUT_KEY = 'frssn_android_916_debug_v1';
   const LOCKED_LAYOUT_KEY = 'frssn_android_v13_locked_layout_v15';
   const root = document.body;
   const panel = document.getElementById('androidDebugPanel');
   const slider = document.getElementById('adPlayerOnlyScale');
   const value = document.getElementById('adPlayerOnlyValue');
+  const innerSlider = document.getElementById('adInnerUiScale');
+  const innerValue = document.getElementById('adInnerUiValue');
+  const innerReset = document.getElementById('androidInnerUiReset');
   const readout = document.getElementById('androidDebugReadout');
   const badge = document.getElementById('androidDebugBadge');
   const collapse = document.getElementById('androidDebugCollapse');
   const reset = document.getElementById('androidPlayerOnlyReset');
-  if(!root || !panel || !slider || !value || !readout) return;
+  if(!root || !panel || !slider || !value || !innerSlider || !innerValue || !readout) return;
 
   /* V15 fix:
      V14 froze the values visible in the screenshot instead of restoring the
@@ -3271,8 +3296,11 @@ try{
     root.style.setProperty('--ad-viewport-h',`${viewportHeight}px`);
     root.style.setProperty('--ad-player-w',`${playerVisualW}px`);
     root.style.setProperty('--ad-player-h',`${playerVisualH}px`);
-    root.style.setProperty('--ad-card-scale',String(layout.cardScale/100));
+    /* V17: the outer card frame is never scaled. The old V13 cardScale
+       becomes the INITIAL INNER-INTERFACE scale instead. */
+    root.style.setProperty('--ad-card-scale','1');
     root.style.setProperty('--ad-player-scale',String(playerScale));
+    root.style.setProperty('--ad-info-scale-base',String(infoScale));
     root.style.setProperty('--ad-info-scale',String(infoScale));
     root.style.setProperty('--ad-info-width',`${100/infoScale}%`);
     root.style.setProperty('--ad-top-offset',`${(playerVisualW+14)/infoScale}px`);
@@ -3336,21 +3364,71 @@ try{
   }
 
   let percent = 100;
+  let innerPercent = lockedLayout.cardScale;
   try{
     const saved = Number(localStorage.getItem(KEY));
     if(Number.isFinite(saved) && saved >= 60 && saved <= 180) percent = saved;
+    const savedInner = Number(localStorage.getItem(INNER_KEY));
+    if(Number.isFinite(savedInner) && savedInner >= 60 && savedInner <= 125) innerPercent = savedInner;
   }catch(_){ }
+
+  function updateReadout(){
+    const firstCard = document.querySelector('.track.storeCardV2');
+    const rect = firstCard?.getBoundingClientRect();
+    readout.innerHTML =
+      `ANDROID VIEWPORT // <b>${lockedLayout.width} × ${lockedHeight} LOCKED</b><br>` +
+      `OUTER TRACK FRAME // <b>100% FIXED</b><br>` +
+      `INNER INTERFACE // <b>${innerPercent}%</b>` +
+      (rect ? `<br>FIRST CARD // <b>${Math.round(rect.width)} × ${Math.round(rect.height)} px</b>` : '');
+  }
+
+  function applyInner(next,persist=true){
+    innerPercent = Math.max(60,Math.min(125,Number(next)||lockedLayout.cardScale));
+    const inner = innerPercent/100;
+    const playerScale = lockedLayout.playerScale/100;
+    const infoBase = Math.max(.01,lockedLayout.infoScale/100);
+    const effectiveInfo = Math.max(.01,infoBase*inner);
+
+    /* Scale all inner information modules together while compensating width
+       so their right edge remains locked to the fixed card frame. */
+    root.style.setProperty('--ad-inner-ui-scale',String(inner));
+    root.style.setProperty('--ad-info-scale',String(effectiveInfo));
+    root.style.setProperty('--ad-info-width',`${100/effectiveInfo}%`);
+
+    /* Identity/status must clear the proportionally enlarged player.
+       Gap and player geometry scale together, so the composition stays coherent. */
+    const playerVisualW = 100*playerScale*inner;
+    const playerVisualH = 86*playerScale*inner;
+    const scaledGap = 14*inner;
+    root.style.setProperty('--ad-top-offset',`${(playerVisualW+scaledGap)/effectiveInfo}px`);
+    root.style.setProperty('--ad-player-clear',`${Math.max(4,(playerVisualH+20*inner-118*inner)/effectiveInfo)}px`);
+
+    /* Never allow the old whole-card zoom back in. */
+    root.style.setProperty('--ad-card-scale','1');
+    innerSlider.value = String(innerPercent);
+    innerValue.textContent = `${innerPercent}%`;
+    requestAnimationFrame(updateReadout);
+    if(persist){
+      try{localStorage.setItem(INNER_KEY,String(innerPercent))}catch(_){ }
+    }
+  }
 
   function apply(next, persist=true){
     percent = Math.max(60,Math.min(180,Number(next)||100));
     root.style.setProperty('--ad-player-debug-scale',String(percent/100));
     slider.value = String(percent);
     value.textContent = `${percent}%`;
-    readout.innerHTML = `V13 LAYOUT // <b>${lockedLayout.width} × ${lockedHeight}</b> // RESTORED<br>PLAYER VISUAL SCALE // <b>${percent}%</b>`;
+    requestAnimationFrame(updateReadout);
     if(persist){
       try{localStorage.setItem(KEY,String(percent))}catch(_){ }
     }
   }
+
+  innerSlider.addEventListener('input',()=>applyInner(innerSlider.value,true));
+  panel.querySelectorAll('[data-inner-ui]').forEach(btn=>{
+    btn.addEventListener('click',()=>applyInner(btn.dataset.innerUi,true));
+  });
+  innerReset?.addEventListener('click',()=>applyInner(lockedLayout.cardScale,true));
 
   slider.addEventListener('input',()=>apply(slider.value,true));
   panel.querySelectorAll('[data-player-only]').forEach(btn=>{
@@ -3365,10 +3443,12 @@ try{
   /* Fit the complete 9:16 canvas before the first paint of the debug state,
      then keep it proportional whenever the desktop window changes size. */
   fitAndroidDesktopPreview();
+  applyInner(innerPercent,false);
   apply(percent,false);
 
   window.addEventListener('resize',()=>{
     fitAndroidDesktopPreview();
+    applyInner(innerPercent,false);
     apply(percent,false);
   },{passive:true});
 })();
