@@ -6,6 +6,90 @@
 <meta name="theme-color" content="#050605">
 <title>FRSSN // Tracks</title>
 
+<script>
+/* =====================================================
+   DESKTOP ANDROID PREVIEW HOST // TRUE 432 × 768 IFRAME
+   Desktop no longer approximates a phone with CSS. It embeds this SAME
+   file in a real 432 CSS-pixel iframe, so media queries see the same
+   viewport width as Android. Phone/mobile loads the page normally.
+===================================================== */
+(() => {
+  const params = new URLSearchParams(location.search);
+  const isChild = params.get('__frssn_preview_child') === '1';
+  const coarseMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || '');
+  const desktopHost = !isChild && !coarseMobile && window.matchMedia('(min-width:901px)').matches;
+
+  window.__FRSSN_PREVIEW_CHILD__ = isChild;
+  window.__FRSSN_PREVIEW_HOST__ = desktopHost;
+  document.documentElement.classList.toggle('frssnPreviewHostMode', desktopHost);
+  document.documentElement.classList.toggle('frssnPreviewChildMode', isChild);
+
+  if(!desktopHost) return;
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const host = document.getElementById('frssnPreviewHost');
+    const stage = document.getElementById('frssnPreviewStage');
+    const frameWrap = document.getElementById('frssnPreviewFrameWrap');
+    const frame = document.getElementById('frssnPreviewFrame');
+    const slider = document.getElementById('frssnPreviewScale');
+    const value = document.getElementById('frssnPreviewScaleValue');
+    const readout = document.getElementById('frssnPreviewReadout');
+    const fitButton = document.getElementById('frssnPreviewFit');
+    const reloadButton = document.getElementById('frssnPreviewReload');
+    const openButton = document.getElementById('frssnPreviewOpen');
+    if(!host || !stage || !frameWrap || !frame) return;
+
+    const LOGICAL_W = 432;
+    const LOGICAL_H = 768;
+    let scale = 1;
+    let autoFit = true;
+
+    const childUrl = new URL(location.href);
+    childUrl.searchParams.set('__frssn_preview_child','1');
+    frame.src = childUrl.href;
+
+    function applyScale(next){
+      scale = Math.max(.45, Math.min(1.25, Number(next) || 1));
+      frameWrap.style.transform = `scale(${scale})`;
+      stage.style.width = `${Math.round(LOGICAL_W * scale)}px`;
+      stage.style.height = `${Math.round(LOGICAL_H * scale)}px`;
+      if(slider) slider.value = String(Math.round(scale * 100));
+      if(value) value.textContent = `${Math.round(scale * 100)}%`;
+      if(readout){
+        readout.innerHTML =
+          `IFRAME VIEWPORT // <b>${LOGICAL_W} × ${LOGICAL_H} CSS px</b><br>` +
+          `DISPLAY SIZE // <b>${Math.round(LOGICAL_W*scale)} × ${Math.round(LOGICAL_H*scale)} px</b><br>` +
+          `MEDIA QUERY WIDTH // <b>432 px</b>`;
+      }
+    }
+
+    function fit(){
+      if(!autoFit) return;
+      const panelReserve = 370;
+      const outerPad = 64;
+      const availableW = Math.max(1, window.innerWidth - panelReserve - outerPad);
+      const availableH = Math.max(1, window.innerHeight - outerPad);
+      applyScale(Math.min(1, availableW / LOGICAL_W, availableH / LOGICAL_H));
+    }
+
+    slider?.addEventListener('input', () => {
+      autoFit = false;
+      applyScale(Number(slider.value) / 100);
+    });
+    fitButton?.addEventListener('click', () => { autoFit = true; fit(); });
+    reloadButton?.addEventListener('click', () => {
+      try{ frame.contentWindow.location.reload(); }
+      catch(_){ frame.src = childUrl.href; }
+    });
+    openButton?.addEventListener('click', () => window.open(childUrl.href, '_blank', 'noopener'));
+    window.addEventListener('resize', fit, {passive:true});
+
+    fit();
+  }, {once:true});
+})();
+</script>
+
+
 <style>
 :root{
   --bg:#050605;
@@ -1276,10 +1360,158 @@ body.androidDebugMode .storeCardV2 .sleeve:active{
   .androidDebugBadge{left:10px;top:36px}
 }
 
+
+
+/* =====================================================
+   TRUE ANDROID PREVIEW HOST // DESKTOP ONLY
+   The child iframe itself is ALWAYS 432×768. Only the outside display
+   is scaled. Therefore @media(max-width:760px) and all viewport logic
+   run exactly as they do on the phone.
+===================================================== */
+#frssnPreviewHost{display:none}
+html.frssnPreviewHostMode,
+html.frssnPreviewHostMode body{
+  width:100%;
+  height:100%;
+  min-height:100%;
+  margin:0;
+  overflow:hidden!important;
+  background:#020302!important;
+}
+html.frssnPreviewHostMode body::before,
+html.frssnPreviewHostMode body::after{display:none!important}
+html.frssnPreviewHostMode body > :not(#frssnPreviewHost){display:none!important}
+html.frssnPreviewHostMode #frssnPreviewHost{
+  position:fixed;
+  inset:0;
+  z-index:100000;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 330px;
+  gap:20px;
+  padding:20px;
+  color:#eef4e7;
+  background:
+    linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px),
+    #020302;
+  background-size:32px 32px,32px 32px,auto;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+.frssnPreviewCanvas{
+  min-width:0;
+  min-height:0;
+  display:grid;
+  place-items:center;
+  overflow:auto;
+  border:1px solid rgba(214,255,40,.10);
+  background:radial-gradient(circle at 50% 30%,rgba(214,255,40,.04),transparent 42%);
+}
+.frssnPreviewStage{
+  position:relative;
+  flex:0 0 auto;
+  width:432px;
+  height:768px;
+}
+.frssnPreviewFrameWrap{
+  position:absolute;
+  left:0;
+  top:0;
+  width:432px;
+  height:768px;
+  transform:scale(1);
+  transform-origin:top left;
+  border:1px solid rgba(214,255,40,.60);
+  box-shadow:0 20px 70px rgba(0,0,0,.72),0 0 34px rgba(214,255,40,.04);
+  background:#050605;
+}
+.frssnPreviewFrame{
+  display:block;
+  width:432px;
+  height:768px;
+  border:0;
+  margin:0;
+  background:#050605;
+}
+.frssnPreviewPanel{
+  align-self:start;
+  width:330px;
+  max-height:calc(100vh - 40px);
+  overflow:auto;
+  padding:14px;
+  border:1px solid rgba(214,255,40,.52);
+  background:rgba(3,5,3,.97);
+  color:#d6ff28;
+  box-shadow:0 18px 60px rgba(0,0,0,.62);
+  font-size:8px;
+  line-height:1.5;
+  letter-spacing:.06em;
+}
+.frssnPreviewPanel h2{
+  margin:0 0 12px;
+  font-size:9px;
+  letter-spacing:.13em;
+  color:#d6ff28;
+}
+.frssnPreviewReadout{
+  padding:9px;
+  border:1px solid rgba(214,255,40,.18);
+  background:rgba(214,255,40,.025);
+  color:rgba(255,255,255,.55);
+}
+.frssnPreviewReadout b{color:#fff;font-weight:600}
+.frssnPreviewRow{margin-top:12px}
+.frssnPreviewHead{display:flex;justify-content:space-between;gap:12px;margin-bottom:5px;color:rgba(255,255,255,.50)}
+.frssnPreviewHead b{color:#fff;font-weight:600}
+.frssnPreviewPanel input[type="range"]{width:100%;accent-color:#d6ff28;margin:0}
+.frssnPreviewButtons{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:12px}
+.frssnPreviewButtons button{
+  min-height:30px;
+  border:1px solid rgba(214,255,40,.48);
+  background:transparent;
+  color:#d6ff28;
+  font:700 7px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  letter-spacing:.07em;
+  cursor:pointer;
+}
+.frssnPreviewButtons button:hover{background:#d6ff28;color:#050605}
+.frssnPreviewHint{margin-top:12px;color:rgba(255,255,255,.34);line-height:1.65}
+.frssnPreviewStatus{
+  margin-top:12px;
+  padding-top:10px;
+  border-top:1px solid rgba(214,255,40,.16);
+  color:#d6ff28;
+}
+
 </style>
 </head>
 
 <body class="androidDebugMode">
+
+<div id="frssnPreviewHost" aria-label="Android 432 by 768 iframe preview">
+  <main class="frssnPreviewCanvas">
+    <div class="frssnPreviewStage" id="frssnPreviewStage">
+      <div class="frssnPreviewFrameWrap" id="frssnPreviewFrameWrap">
+        <iframe class="frssnPreviewFrame" id="frssnPreviewFrame" title="FRSSN Android 432x768 preview" src="about:blank"></iframe>
+      </div>
+    </div>
+  </main>
+  <aside class="frssnPreviewPanel">
+    <h2>ANDROID // TRUE IFRAME PREVIEW</h2>
+    <div class="frssnPreviewReadout" id="frssnPreviewReadout">IFRAME VIEWPORT // <b>432 × 768 CSS px</b></div>
+    <div class="frssnPreviewRow">
+      <div class="frssnPreviewHead"><span>DISPLAY SCALE</span><b id="frssnPreviewScaleValue">100%</b></div>
+      <input id="frssnPreviewScale" type="range" min="45" max="125" step="1" value="100">
+    </div>
+    <div class="frssnPreviewButtons">
+      <button id="frssnPreviewFit" type="button">FIT</button>
+      <button id="frssnPreviewReload" type="button">RELOAD</button>
+      <button id="frssnPreviewOpen" type="button">OPEN CHILD</button>
+    </div>
+    <div class="frssnPreviewStatus">432 × 768 IS THE REAL CHILD VIEWPORT. THE OUTER SCALE NEVER CHANGES MEDIA QUERIES.</div>
+    <div class="frssnPreviewHint">This replaces the old desktop CSS emulation. The iframe runs the same HTML, the same Android/mobile media queries and the same layout code as the phone.</div>
+  </aside>
+</div>
+
 <div class="page">
   <header class="topbar">
     <a class="brand" href="index.html">FRSSN SIGNAL // TRACK NODE</a>
@@ -1557,6 +1789,7 @@ body.androidDebugMode .storeCardV2 .sleeve:active{
 
 <script>
 "use strict";
+if(!window.__FRSSN_PREVIEW_HOST__){
 
 /* =====================================================
    PLATFORM
@@ -2927,6 +3160,8 @@ codeForm.addEventListener("submit",event=>{
   setDebugMode(debugEnabled,false);
 })();
 
+
+}
 </script>
 
 <div class="androidDebugBadge" id="androidDebugBadge">ANDROID 9:16 // 432 × 768 // V13 LOCKED</div>
@@ -2954,6 +3189,7 @@ codeForm.addEventListener("submit",event=>{
 
 
 <script>
+if(!window.__FRSSN_PREVIEW_HOST__){
 /* =====================================================
    ANDROID 9:16 // V15 RESTORED-LAYOUT + PLAYER-SIZE-ONLY DEBUG
    V13 composition is frozen. This control changes only a
@@ -3136,6 +3372,8 @@ try{
     apply(percent,false);
   },{passive:true});
 })();
+
+}
 </script>
 
 </body>
