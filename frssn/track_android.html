@@ -2054,7 +2054,7 @@ body.is-android .bar{min-width:1.05px;max-width:4px}
   --dbg-status-scale:.55;
   --dbg-buy-scale:1.10;
   --dbg-meter-scale:.45;
-  --dbg-hero-height:414px;
+  --dbg-hero-height:580px;
   --dbg-turntable-x:0px;--dbg-turntable-y:0px;
   --dbg-player-x:0px;--dbg-player-y:0px; /* frozen legacy row baseline */
   --dbg-wave-x:0px;--dbg-wave-y:0px;
@@ -2672,7 +2672,7 @@ body.layout-mouse-edit .layout-debug-selected{
    Separate mobile composition. Desktop production geometry is untouched.
 ===================================================== */
 body.singleAndroidMode{
-  --sad-hero-height:414px;
+  --sad-hero-height:580px;
   --sad-sleeve-size:128px;
   --sad-turntable-scale:1.28;
   --sad-meter-zoom:.44;
@@ -3394,8 +3394,8 @@ body.layout-mouse-edit #heroMeterBlock{outline:none!important;cursor:default!imp
   <div class="layoutDebugSelectedReadout" id="layoutDebugSelectedReadout">SELECTED // NONE</div>
 
   <div class="layoutDebugRow">
-    <div class="layoutDebugHead"><span>HEADER HEIGHT</span><b id="dbgHeaderHeightValue">414 px</b></div>
-    <input id="dbgHeaderHeight" type="range" min="300" max="760" step="2" value="414">
+    <div class="layoutDebugHead"><span>HEADER HEIGHT</span><b id="dbgHeaderHeightValue">580 px</b></div>
+    <input id="dbgHeaderHeight" type="range" min="300" max="760" step="2" value="580">
   </div>
   <div class="layoutDebugRow">
     <div class="layoutDebugHead"><span>TILE BLOCK</span><b id="dbgTileScaleValue">110%</b></div>
@@ -3513,10 +3513,10 @@ const LAYOUT_DEBUG_KEY="frssnAndroidSingleLayoutV1";
 /* Baseline revision: on first load of this build, replace the complete Android
    Scale + X/Y + W/H state with the approved COPY VALUES snapshot. After this
    one-time migration, later user edits continue to persist normally. */
-const ANDROID_SINGLE_BASELINE_REVISION="2026-10-18-r3-production-locked";
+const ANDROID_SINGLE_BASELINE_REVISION="2026-10-19-r4-production-580-locked";
 const ANDROID_SINGLE_BASELINE_REVISION_KEY="frssnAndroidSingleBaselineRevision";
 const LAYOUT_DEBUG_DEFAULTS={
-  headerHeight:414,
+  headerHeight:580,
   tileScale:110,
   turntableScale:112,turntableX:-4.6,turntableY:-48.9,
   playerScale:100,playerX:0,playerY:0,
