@@ -641,6 +641,112 @@ button,input{font:inherit}
   .storeCardV2 .purchaseOption .tierPrice{font-size:8px}
 }
 
+
+/* =====================================================
+   TRACK CARD DEBUG // proportional whole-block scaling
+   Uses CSS zoom so the visual scale and the real layout
+   footprint change together. Audio/player logic untouched.
+===================================================== */
+.track.storeCardV2{
+  transform-origin:top left;
+}
+body.trackCardDebugMode .track.storeCardV2{
+  outline:1px dashed rgba(214,255,40,.62);
+  outline-offset:4px;
+}
+.trackScaleHandle{
+  display:none;
+  position:absolute;
+  right:3px;
+  bottom:3px;
+  width:20px;
+  height:20px;
+  z-index:60;
+  cursor:nwse-resize;
+  touch-action:none;
+  border-right:2px solid var(--accent);
+  border-bottom:2px solid var(--accent);
+  background:
+    linear-gradient(135deg,transparent 42%,rgba(214,255,40,.22) 43% 48%,transparent 49% 62%,rgba(214,255,40,.5) 63% 68%,transparent 69%);
+  filter:drop-shadow(0 0 5px rgba(214,255,40,.28));
+}
+body.trackCardDebugMode .trackScaleHandle{display:block}
+.trackDebugPanel{
+  position:fixed;
+  right:20px;
+  bottom:20px;
+  z-index:130;
+  width:310px;
+  padding:12px;
+  border:1px solid rgba(214,255,40,.52);
+  background:rgba(3,5,3,.97);
+  box-shadow:0 0 30px rgba(0,0,0,.72);
+  color:var(--accent);
+  font:8px/1.35 monospace;
+  letter-spacing:.07em;
+  user-select:none;
+}
+.trackDebugPanel.hidden{display:none}
+.trackDebugTitle{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:10px;
+  font-weight:700;
+  letter-spacing:.13em;
+}
+.trackDebugTitle span:last-child{color:rgba(255,255,255,.38);font-weight:400}
+.trackDebugRow{margin-top:8px}
+.trackDebugHead{display:flex;justify-content:space-between;gap:12px;margin-bottom:5px}
+.trackDebugHead span:first-child{color:rgba(255,255,255,.48)}
+.trackDebugHead span:last-child{color:#fff}
+.trackDebugPanel input[type="range"]{width:100%;margin:0;accent-color:var(--accent)}
+.trackDebugReadout{
+  margin-top:10px;
+  padding:8px 9px;
+  border:1px solid rgba(214,255,40,.18);
+  background:rgba(214,255,40,.025);
+  color:rgba(255,255,255,.58);
+  line-height:1.6;
+}
+.trackDebugReadout b{color:#fff;font-weight:500}
+.trackDebugButtons{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
+.trackDebugButtons button,
+.trackDebugFooter button{
+  height:27px;
+  border:1px solid rgba(214,255,40,.48);
+  background:transparent;
+  color:var(--accent);
+  font:7px/1 monospace;
+  letter-spacing:.08em;
+  cursor:pointer;
+}
+.trackDebugButtons button:hover,
+.trackDebugFooter button:hover{background:var(--accent);color:#050605}
+.trackDebugFooter{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}
+.trackDebugHint{margin-top:9px;color:rgba(255,255,255,.35);line-height:1.55}
+.trackDebugReopen{
+  position:fixed;
+  right:12px;
+  top:44px;
+  z-index:130;
+  display:none;
+  height:26px;
+  padding:0 9px;
+  border:1px solid rgba(214,255,40,.40);
+  background:rgba(3,5,3,.94);
+  color:var(--accent);
+  font:7px/1 monospace;
+  letter-spacing:.08em;
+  cursor:pointer;
+}
+.trackDebugReopen.visible{display:block}
+@media(max-width:760px){
+  .trackDebugPanel{right:10px;bottom:10px;width:min(300px,calc(100vw - 20px))}
+  .trackDebugReopen{top:44px}
+}
+
 </style>
 </head>
 
@@ -839,6 +945,29 @@ button,input{font:inherit}
 
 <audio id="paperInSfx" preload="auto" src="Paper in.mp3"></audio>
 <audio id="paperOutSfx" preload="auto" src="Paper out.mp3"></audio>
+
+
+<!-- TRACK CARD DEBUG // proportional editor -->
+<div class="trackDebugPanel" id="trackDebugPanel">
+  <div class="trackDebugTitle"><span>DEBUG // TRACK BLOCK</span><span>SYNC ALL CARDS</span></div>
+  <div class="trackDebugRow">
+    <div class="trackDebugHead"><span>BLOCK + ELEMENT SCALE</span><span id="trackScaleValue">100%</span></div>
+    <input id="trackScaleSlider" type="range" min="55" max="150" step="1" value="100">
+  </div>
+  <div class="trackDebugReadout" id="trackDebugReadout">BLOCK // <b>— × — px</b><br>ALL INNER ELEMENTS SCALE PROPORTIONALLY</div>
+  <div class="trackDebugButtons">
+    <button type="button" data-track-scale="75">75%</button>
+    <button type="button" data-track-scale="90">90%</button>
+    <button type="button" data-track-scale="100">100%</button>
+    <button type="button" data-track-scale="115">115%</button>
+  </div>
+  <div class="trackDebugFooter">
+    <button id="trackDebugReset" type="button">RESET 100%</button>
+    <button id="trackDebugOff" type="button">DEBUG OFF</button>
+  </div>
+  <div class="trackDebugHint">Drag the acid corner of any beat block to resize it proportionally. The border, sleeve, vinyl, waveform, typography, statuses and purchase controls scale as one physical module. Value is saved locally.</div>
+</div>
+<button class="trackDebugReopen" id="trackDebugReopen" type="button">TRACK DEBUG</button>
 
 <!-- VU: OLD PNG NAMES ARE INTENTIONALLY KEPT -->
 <div class="vuModule debug-on" id="vuModule">
@@ -1948,6 +2077,123 @@ codeForm.addEventListener("submit",event=>{
   catch(error){console.warn(error);microstatus.textContent="ENGINE ERROR // AUDIOWORKLET INIT FAILED"}
   startVisualLoop();
 })();
+
+
+/* =====================================================
+   TRACK CARD DEBUG // proportional whole-block scaling
+===================================================== */
+(() => {
+  const STORAGE_KEY = "frssn_track_card_debug_v1";
+  const panel = document.getElementById("trackDebugPanel");
+  const reopen = document.getElementById("trackDebugReopen");
+  const slider = document.getElementById("trackScaleSlider");
+  const value = document.getElementById("trackScaleValue");
+  const readout = document.getElementById("trackDebugReadout");
+  const reset = document.getElementById("trackDebugReset");
+  const off = document.getElementById("trackDebugOff");
+  const cards = [...document.querySelectorAll(".track.storeCardV2")];
+  if(!panel || !reopen || !slider || !cards.length) return;
+
+  const clamp = (n,min,max) => Math.max(min,Math.min(max,n));
+  let scale = 1;
+  let debugEnabled = true;
+  let drag = null;
+
+  function loadState(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return;
+      const state = JSON.parse(raw);
+      if(Number.isFinite(state.scale)) scale = clamp(state.scale,.55,1.5);
+      if(typeof state.debugEnabled === "boolean") debugEnabled = state.debugEnabled;
+    }catch(_){}
+  }
+  function saveState(){
+    try{localStorage.setItem(STORAGE_KEY,JSON.stringify({scale,debugEnabled}))}catch(_){}
+  }
+  function setDebugMode(enabled, persist=true){
+    debugEnabled = !!enabled;
+    document.body.classList.toggle("trackCardDebugMode",debugEnabled);
+    panel.classList.toggle("hidden",!debugEnabled);
+    reopen.classList.toggle("visible",!debugEnabled);
+    if(persist) saveState();
+  }
+  function applyScale(next, persist=true){
+    scale = clamp(next,.55,1.5);
+    cards.forEach(card => {
+      /* zoom changes both the rendered module and its layout footprint,
+         unlike transform:scale(), so following cards never overlap. */
+      card.style.zoom = String(scale);
+    });
+    slider.value = String(Math.round(scale*100));
+    value.textContent = Math.round(scale*100) + "%";
+    requestAnimationFrame(updateReadout);
+    if(persist) saveState();
+  }
+  function updateReadout(){
+    const card = cards[0];
+    if(!card) return;
+    const r = card.getBoundingClientRect();
+    readout.innerHTML = `BLOCK // <b>${Math.round(r.width)} × ${Math.round(r.height)} px</b><br>ALL INNER ELEMENTS SCALE PROPORTIONALLY`;
+  }
+
+  cards.forEach(card => {
+    const handle = document.createElement("div");
+    handle.className = "trackScaleHandle";
+    handle.title = "Drag to proportionally scale all track blocks";
+    handle.setAttribute("aria-hidden","true");
+    card.appendChild(handle);
+
+    handle.addEventListener("pointerdown", e => {
+      if(!debugEnabled) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const r = card.getBoundingClientRect();
+      drag = {
+        pointerId:e.pointerId,
+        left:r.left,
+        top:r.top,
+        startWidth:Math.max(1,r.width),
+        startHeight:Math.max(1,r.height),
+        startScale:scale
+      };
+      handle.setPointerCapture(e.pointerId);
+    });
+    handle.addEventListener("pointermove", e => {
+      if(!drag || drag.pointerId !== e.pointerId) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const widthRatio = Math.max(0.1,(e.clientX-drag.left)/drag.startWidth);
+      const heightRatio = Math.max(0.1,(e.clientY-drag.top)/drag.startHeight);
+      /* Use the smaller axis so the gesture remains strictly proportional
+         and never stretches the card in only one direction. */
+      const ratio = Math.min(widthRatio,heightRatio);
+      applyScale(drag.startScale*ratio,false);
+    });
+    const finish = e => {
+      if(!drag || drag.pointerId !== e.pointerId) return;
+      if(handle.hasPointerCapture(e.pointerId)) handle.releasePointerCapture(e.pointerId);
+      drag = null;
+      saveState();
+    };
+    handle.addEventListener("pointerup",finish);
+    handle.addEventListener("pointercancel",finish);
+  });
+
+  slider.addEventListener("input",()=>applyScale(Number(slider.value)/100));
+  panel.querySelectorAll("[data-track-scale]").forEach(btn=>{
+    btn.addEventListener("click",()=>applyScale(Number(btn.dataset.trackScale)/100));
+  });
+  reset.addEventListener("click",()=>applyScale(1));
+  off.addEventListener("click",()=>setDebugMode(false));
+  reopen.addEventListener("click",()=>setDebugMode(true));
+  window.addEventListener("resize",()=>requestAnimationFrame(updateReadout),{passive:true});
+
+  loadState();
+  applyScale(scale,false);
+  setDebugMode(debugEnabled,false);
+})();
+
 </script>
 </body>
 </html>
