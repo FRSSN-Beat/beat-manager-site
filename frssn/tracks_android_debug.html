@@ -1066,6 +1066,136 @@ body.androidDebugMode .codeForm{width:100%}
 body.androidDebugMode .footer{padding:0 14px;gap:10px;font-size:7px}
 body.androidDebugMode .vuModule{display:none!important}
 
+
+/* =====================================================
+   ANDROID 9:16 // COMPOSITION V13
+   Draft-matched card composition:
+   player at upper-left, title/status stack to its right,
+   then sections/wave/meta/purchase use the full card width.
+   Desktop/default build is untouched; these rules only
+   exist inside the isolated Android debug sandbox.
+===================================================== */
+body.androidDebugMode .track.storeCardV2{
+  display:block!important;
+  position:relative!important;
+  width:100%!important;
+  min-width:0!important;
+  padding:var(--ad-padding)!important;
+  overflow:hidden!important;
+}
+
+/* Player becomes a floating physical block in the upper-left corner.
+   It no longer reserves a full grid column, which lets the structure,
+   waveform and lower controls run across the full card width. */
+body.androidDebugMode .track.storeCardV2 > .vinylScaleShell{
+  position:absolute!important;
+  left:var(--ad-padding)!important;
+  top:calc(var(--ad-padding) + 18px)!important;
+  width:var(--ad-player-w)!important;
+  height:var(--ad-player-h)!important;
+  z-index:8!important;
+  overflow:visible!important;
+}
+
+/* INFO SCALE remains a real debug control, but its layout width is
+   compensated in JS so zoom never pushes the right edge outside card. */
+body.androidDebugMode .storeCardV2 > .trackInfo{
+  display:block!important;
+  width:var(--ad-info-width,100%)!important;
+  min-width:0!important;
+  zoom:var(--ad-info-scale)!important;
+}
+
+/* Only the identity + commercial states clear the player.
+   Everything beneath them returns to the full card width, exactly like
+   the supplied draft. */
+body.androidDebugMode .storeCardV2 .topline,
+body.androidDebugMode .storeCardV2 .commercialStatusRail{
+  margin-left:var(--ad-top-offset,112px)!important;
+  width:auto!important;
+}
+body.androidDebugMode .storeCardV2 .topline{
+  margin-bottom:8px!important;
+  min-height:34px!important;
+}
+body.androidDebugMode .storeCardV2 .trackTitle{
+  margin:0!important;
+  font-size:19px!important;
+  line-height:1!important;
+}
+body.androidDebugMode .storeCardV2 .typeCode{
+  display:block!important;
+  margin-top:5px!important;
+  font-size:10px!important;
+  line-height:1.15!important;
+  white-space:nowrap!important;
+}
+body.androidDebugMode .storeCardV2 .commercialStatusRail{
+  display:grid!important;
+  grid-template-columns:1fr!important;
+  gap:4px!important;
+  margin-bottom:8px!important;
+}
+body.androidDebugMode .storeCardV2 .statusChip{
+  width:100%!important;
+  min-width:0!important;
+  justify-content:flex-start!important;
+}
+
+body.androidDebugMode .storeCardV2 .trackStructure,
+body.androidDebugMode .storeCardV2 .waveRow,
+body.androidDebugMode .storeCardV2 .trackDataStrip{
+  width:100%!important;
+  margin-left:0!important;
+  margin-right:0!important;
+}
+body.androidDebugMode .storeCardV2 .trackStructure{
+  margin-top:var(--ad-player-clear,6px)!important;
+  margin-bottom:7px!important;
+}
+body.androidDebugMode .storeCardV2 .waveRow{
+  grid-template-columns:44px minmax(0,1fr)!important;
+  gap:8px!important;
+  align-items:center!important;
+  margin-bottom:8px!important;
+}
+body.androidDebugMode .storeCardV2 .iconBtn{
+  width:42px!important;
+  height:32px!important;
+  border-radius:50%!important;
+}
+body.androidDebugMode .storeCardV2 .waveBox{
+  min-width:0!important;
+  height:var(--ad-wave-h)!important;
+}
+body.androidDebugMode .storeCardV2 .trackDataStrip{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:flex-start!important;
+  gap:8px!important;
+}
+body.androidDebugMode .storeCardV2 .storeMetaCluster{
+  width:100%!important;
+  display:flex!important;
+  flex-wrap:wrap!important;
+  gap:5px!important;
+}
+body.androidDebugMode .storeCardV2 .buyCol{
+  width:100%!important;
+  grid-template-columns:36px repeat(3,minmax(0,1fr))!important;
+  gap:4px!important;
+}
+
+/* The sleeve is an actual transport control on Android: tap the package
+   while it is visible to start/switch to that record. */
+body.androidDebugMode .storeCardV2 .sleeve{
+  cursor:pointer!important;
+  -webkit-tap-highlight-color:transparent;
+}
+body.androidDebugMode .storeCardV2 .sleeve:active{
+  filter:brightness(1.08);
+}
+
 /* Dedicated Android-only debug UI. */
 .androidDebugPanel{
   position:fixed;
@@ -1430,6 +1560,7 @@ const tracks = [...document.querySelectorAll(".track")].map((el,index)=>({
   sectionButtons:[...el.querySelectorAll(".structureSegment")],
   recordCarrier:el.querySelector(".recordCarrier"),
   recordDisc:el.querySelector(".recordDisc"),
+  sleeve:el.querySelector(".sleeve"),
   tonearmArm:el.querySelector(".tonearmArm"),
   decoded:null,
   reversed:null,
@@ -2278,6 +2409,30 @@ tracks.forEach(state=>{
   });
 });
 
+/* Android package = PLAY / track switch.
+   The sleeve only receives the tap while it is physically present; once
+   unpacked it leaves the stage, so vinyl scratch remains independent. */
+tracks.forEach(state=>{
+  if(!state.sleeve)return;
+  state.sleeve.setAttribute("role","button");
+  state.sleeve.setAttribute("tabindex","0");
+  state.sleeve.setAttribute("aria-label",`Play ${state.el.querySelector(".trackTitle")?.textContent?.trim()||state.id}`);
+  const playFromSleeve=async()=>{
+    if(!document.body.classList.contains("androidDebugMode"))return;
+    if(state.vinylOpened||state.isPacking||isSeeking||isPreCueing||isScratching||switchInProgress)return;
+    await switchToTrack(state,{startTime:state===activeTrack?state.position:0,cue:false});
+  };
+  state.sleeve.addEventListener("click",event=>{
+    event.preventDefault();
+    playFromSleeve();
+  });
+  state.sleeve.addEventListener("keydown",event=>{
+    if(event.key!=="Enter"&&event.key!==" ")return;
+    event.preventDefault();
+    playFromSleeve();
+  });
+});
+
 /* =====================================================
    SCRATCH
 ===================================================== */
@@ -2842,6 +2997,14 @@ codeForm.addEventListener("submit",event=>{
     root.style.setProperty('--ad-card-scale',String(state.cardScale/100));
     root.style.setProperty('--ad-player-scale',String(playerScale));
     root.style.setProperty('--ad-info-scale',String(state.infoScale/100));
+    const infoScale = Math.max(.01,state.infoScale/100);
+    const playerVisualW = 100*playerScale;
+    const playerVisualH = 86*playerScale;
+    root.style.setProperty('--ad-info-width',`${100/infoScale}%`);
+    root.style.setProperty('--ad-top-offset',`${(playerVisualW+14)/infoScale}px`);
+    /* title + three status rows consume ~118 visual px in this mobile card.
+       Add only the extra clearance needed by an oversized player. */
+    root.style.setProperty('--ad-player-clear',`${Math.max(4,(playerVisualH+20-118)/infoScale)}px`);
     root.style.setProperty('--ad-gap',`${state.gap}px`);
     root.style.setProperty('--ad-padding',`${state.padding}px`);
     root.style.setProperty('--ad-content-x',`${state.contentX}px`);
