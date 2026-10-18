@@ -287,12 +287,8 @@ button,input{font:inherit}
 .waveBox{height:56px;position:relative;cursor:pointer;overflow:hidden;touch-action:none}
 .wave{height:100%;display:flex;align-items:center;gap:2px}
 .bar{flex:1;min-width:1px;background:#565a52;opacity:.76}
-.waveProgress{
-  position:absolute;left:0;top:0;bottom:0;width:100%;transform:scaleX(0);transform-origin:left center;
-  will-change:transform;pointer-events:none;overflow:hidden;
-}
-.waveProgress .wave{position:absolute;left:0;top:0;bottom:0;width:100%}
-.waveProgress .bar{background:var(--accent)}
+.bar.is-played{background:var(--accent);opacity:1}
+.bar.is-partial{opacity:1}
 .time{color:var(--muted);font:600 10px/1 monospace;white-space:nowrap}
 .meta{margin-top:12px;display:flex;gap:15px;flex-wrap:wrap;color:var(--muted);font:9px/1 monospace;letter-spacing:.12em;text-transform:uppercase}
 .buyCol{display:flex;flex-direction:column;gap:8px;min-width:170px}
@@ -959,7 +955,6 @@ body.playerBlockDebugMode .vinylScaleShell::after{display:none!important}
               </button>
               <div class="waveBox js-seek" role="slider">
                 <div class="wave js-wave"></div>
-                <div class="waveProgress js-progress"><div class="wave js-wave-clone"></div></div>
               </div>
               <div class="time"><span class="js-current">0:00</span><span class="js-total">0:00</span></div>
             </div>
@@ -1031,7 +1026,6 @@ body.playerBlockDebugMode .vinylScaleShell::after{display:none!important}
               </button>
               <div class="waveBox js-seek" role="slider">
                 <div class="wave js-wave"></div>
-                <div class="waveProgress js-progress"><div class="wave js-wave-clone"></div></div>
               </div>
               <div class="time"><span class="js-current">0:00</span><span class="js-total">0:00</span></div>
             </div>
@@ -1185,8 +1179,6 @@ const tracks = [...document.querySelectorAll(".track")].map((el,index)=>({
   playButton:el.querySelector(".js-play"),
   seek:el.querySelector(".js-seek"),
   wave:el.querySelector(".js-wave"),
-  waveClone:el.querySelector(".js-wave-clone"),
-  progress:el.querySelector(".js-progress"),
   current:el.querySelector(".js-current"),
   total:el.querySelector(".js-total"),
   sectionButtons:[...el.querySelectorAll(".structureSegment")],
@@ -1302,10 +1294,35 @@ function setPlayIcon(state,playing){
 function setVinylAngle(state,angle){state.recordDisc.style.transform=`rotate(${angle}deg)`}
 function getDuration(state){return state?.duration || 0}
 function clampTime(state,time){const d=getDuration(state);return d?Math.max(0,Math.min(d,time)):Math.max(0,time||0)}
+function paintWaveProgress(state,ratio){
+  const bars=state.wave?.children;
+  if(!bars?.length)return;
+
+  const exact=Math.max(0,Math.min(1,ratio))*bars.length;
+  const full=Math.floor(exact);
+  const partial=exact-full;
+
+  for(let i=0;i<bars.length;i++){
+    const bar=bars[i];
+    if(i<full){
+      bar.classList.add("is-played");
+      bar.classList.remove("is-partial");
+      bar.style.background="";
+    }else if(i===full && partial>0 && full<bars.length){
+      bar.classList.remove("is-played");
+      bar.classList.add("is-partial");
+      const fill=(partial*100).toFixed(1);
+      bar.style.background=`linear-gradient(90deg,var(--accent) 0 ${fill}%,#565a52 ${fill}% 100%)`;
+    }else{
+      bar.classList.remove("is-played","is-partial");
+      bar.style.background="";
+    }
+  }
+}
 function updateProgressUI(state,time){
   const d=getDuration(state);
   const ratio=d?Math.max(0,Math.min(1,time/d)):0;
-  state.progress.style.transform=`scaleX(${ratio})`;
+  paintWaveProgress(state,ratio);
   state.current.textContent=fmt(time);
   if(state.sectionButtons?.length){
     let activeIndex=0;
@@ -1373,7 +1390,7 @@ function renderBars(element,heights){
 }
 function fallbackWave(state){
   const fallback=Array.from({length:WAVE_BARS},(_,i)=>16+((i*37+state.index*19)%68));
-  renderBars(state.wave,fallback);renderBars(state.waveClone,fallback);
+  renderBars(state.wave,fallback);
 }
 async function loadTrackData(state){
   try{
@@ -1402,7 +1419,6 @@ async function loadTrackData(state){
     const maxPeak=Math.max(...peaks)||1;
     const heights=peaks.map(p=>p/maxPeak*100);
     renderBars(state.wave,heights);
-    renderBars(state.waveClone,heights);
   }catch(error){
     console.warn(error);
     state.loadError=true;
