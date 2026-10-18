@@ -3417,8 +3417,8 @@ html.frssnSinglePreviewHostMode #frssnSingleExternalDebugMount .layoutDebugMouse
     <input id="dbgReleaseScale" type="range" min="45" max="165" step="1" value="121">
   </div>
   <div class="layoutDebugRow">
-    <div class="layoutDebugHead"><span>TRACK STATUS</span><b id="dbgStatusScaleValue">55%</b></div>
-    <input id="dbgStatusScale" type="range" min="55" max="165" step="1" value="55">
+    <div class="layoutDebugHead"><span>TRACK STATUS</span><b id="dbgStatusScaleValue">83%</b></div>
+    <input id="dbgStatusScale" type="range" min="55" max="165" step="1" value="83">
   </div>
   <div class="layoutDebugRow">
     <div class="layoutDebugHead"><span>PURCHASE ROW</span><b id="dbgBuyScaleValue">110%</b></div>
@@ -3477,16 +3477,15 @@ const paperOutSfx = document.getElementById("paperOutSfx");
    - selected block gets a bottom-right scale handle
 ===================================================== */
 const LAYOUT_DEBUG_KEY="frssnAndroidSingleLayoutV1";
-/* Baseline revision: on first load of this build, keep the user's saved X/Y/W/H
-   geometry but replace obsolete scale/font/header values with the newly approved
-   Android 432×768 baseline. This prevents an older localStorage snapshot from
-   overriding the values baked into this file. */
-const ANDROID_SINGLE_BASELINE_REVISION="2026-10-18-r1";
+/* Baseline revision: on first load of this build, replace the complete Android
+   Scale + X/Y + W/H state with the approved COPY VALUES snapshot. After this
+   one-time migration, later user edits continue to persist normally. */
+const ANDROID_SINGLE_BASELINE_REVISION="2026-10-18-r2-full-geometry";
 const ANDROID_SINGLE_BASELINE_REVISION_KEY="frssnAndroidSingleBaselineRevision";
 const LAYOUT_DEBUG_DEFAULTS={
   headerHeight:414,
   tileScale:110,
-  turntableScale:112,turntableX:0,turntableY:0,
+  turntableScale:112,turntableX:-4.6,turntableY:-48.9,
   playerScale:100,playerX:0,playerY:0,
   waveScale:74,waveX:0,waveY:0,
   playScale:81,playX:0,playY:0,
@@ -3498,7 +3497,7 @@ const LAYOUT_DEBUG_DEFAULTS={
   moodScale:89,moodX:0,moodY:0,
   releaseScale:121,releaseX:0,releaseY:0,
   bpmValueFont:21,keyValueFont:21,
-  statusScale:55,statusX:0,statusY:0,
+  statusScale:83,statusX:-20.4,statusY:-36.1,
   buyScale:110,buyX:0,buyY:0,
   meterScale:45,meterX:0,meterY:0,
   turntableStretchX:100,turntableStretchY:100,
@@ -3639,26 +3638,28 @@ function applyApprovedAndroidBaselineOnce(){
   try{alreadyCurrent=localStorage.getItem(ANDROID_SINGLE_BASELINE_REVISION_KEY)===ANDROID_SINGLE_BASELINE_REVISION}catch(_){}
   if(alreadyCurrent)return;
 
-  /* Only the explicitly approved visible tuning values are replaced here.
-     Direct-edit geometry (X/Y and W/H stretch) is deliberately preserved. */
+  /* Full approved Android baseline from COPY VALUES.
+     This revision intentionally replaces old Scale + X/Y + W/H geometry once,
+     so an older localStorage snapshot cannot move modules back to the pre-tuned layout. */
   Object.assign(layoutDebugState,{
     headerHeight:414,
     tileScale:110,
-    turntableScale:112,
-    waveScale:74,
-    playScale:81,
-    timeScale:84,
-    titleScale:100,
-    typeScale:111,
-    structureScale:72,
-    coreScale:100,
-    bpmValueFont:21,
-    keyValueFont:21,
-    moodScale:89,
-    releaseScale:121,
-    statusScale:55,
-    buyScale:110,
-    meterScale:45
+
+    turntableScale:112,turntableX:-4.6,turntableY:-48.9,turntableStretchX:100,turntableStretchY:100,
+    playerScale:100,playerX:0,playerY:0,playerStretchX:100,playerStretchY:100,
+    waveScale:74,waveX:0,waveY:0,waveStretchX:100,waveStretchY:100,
+    playScale:81,playX:0,playY:0,playStretchX:100,playStretchY:100,
+    timeScale:84,timeX:0,timeY:0,timeStretchX:100,timeStretchY:100,
+    titleScale:100,titleX:0,titleY:0,titleStretchX:100,titleStretchY:100,
+    typeScale:111,typeX:0,typeY:0,typeStretchX:100,typeStretchY:100,
+    structureScale:72,structureX:0,structureY:0,structureStretchX:100,structureStretchY:100,
+    coreScale:100,coreX:0,coreY:0,coreStretchX:100,coreStretchY:100,
+    bpmValueFont:21,keyValueFont:21,
+    moodScale:89,moodX:0,moodY:0,moodStretchX:100,moodStretchY:100,
+    releaseScale:121,releaseX:0,releaseY:0,releaseStretchX:100,releaseStretchY:100,
+    statusScale:83,statusX:-20.4,statusY:-36.1,statusStretchX:100,statusStretchY:100,
+    buyScale:110,buyX:0,buyY:0,buyStretchX:100,buyStretchY:100,
+    meterScale:45,meterX:0,meterY:0,meterStretchX:100,meterStretchY:100
   });
 
   try{
