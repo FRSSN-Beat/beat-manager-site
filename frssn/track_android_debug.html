@@ -2585,9 +2585,17 @@ body.singleAndroidMode .featuredSlot .track.hero-mounted .tonearmMechanism{
 
 /* Real meter remains visible, but Android audio analyser stays disabled by JS. */
 body.singleAndroidMode .heroMeterBlock{
-  right:7px!important;
-  top:9px!important;
-  zoom:var(--sad-meter-zoom)!important;
+  display:none!important;
+}
+
+/* Android single page: meter is intentionally removed. */
+body.singleAndroidMode .vuModule,
+body.singleAndroidMode .vuDebugPanel,
+body.singleAndroidMode .vuDebugReopen{
+  display:none!important;
+}
+body.singleAndroidMode .layoutDebugRow:has(#dbgMeterScale){
+  display:none!important;
 }
 
 /* Main information stack. */
@@ -2733,6 +2741,8 @@ body.singleAndroidMode .sectionTitle h2{font-size:12px!important}
 body.singleAndroidMode .sectionTitle span{font-size:6px!important}
 body.singleAndroidMode .signalTiles{
   --tile-column:126px!important;
+  grid-template-rows:repeat(3,auto)!important;
+  grid-auto-flow:row!important;
   gap:8px!important;
   padding:2px 2px 12px!important;
 }
@@ -3316,8 +3326,7 @@ const LAYOUT_MOUSE_TARGETS=[
   {id:"mood",label:"MOOD",selector:".featuredSlot .moodBlock",scale:"moodScale",x:"moodX",y:"moodY",sx:"moodStretchX",sy:"moodStretchY",min:40,max:165},
   {id:"release",label:"RELEASE DATE",selector:".featuredSlot .releaseBlock",scale:"releaseScale",x:"releaseX",y:"releaseY",sx:"releaseStretchX",sy:"releaseStretchY",min:45,max:165},
   {id:"status",label:"TRACK STATUS",selector:".featuredSlot .badge",scale:"statusScale",x:"statusX",y:"statusY",sx:"statusStretchX",sy:"statusStretchY",min:55,max:165},
-  {id:"buy",label:"PURCHASE ROW",selector:".featuredSlot .buyCol",scale:"buyScale",x:"buyX",y:"buyY",sx:"buyStretchX",sy:"buyStretchY",min:55,max:165},
-  {id:"meter",label:"METER BLOCK",selector:"#heroMeterBlock",scale:"meterScale",x:"meterX",y:"meterY",sx:"meterStretchX",sy:"meterStretchY",min:45,max:180}
+  {id:"buy",label:"PURCHASE ROW",selector:".featuredSlot .buyCol",scale:"buyScale",x:"buyX",y:"buyY",sx:"buyStretchX",sy:"buyStretchY",min:55,max:165}
 ];
 
 let layoutMouseEdit=false;
@@ -6099,7 +6108,7 @@ function renderSignalTiles(){
   signalTiles.innerHTML="";
   detailOtherCount.textContent=`VINYL INDEX // ${String(tracks.length).padStart(2,"0")} SIGNAL${tracks.length===1?"":"S"}`;
 
-  const showcaseRows=4;
+  const showcaseRows=document.body.classList.contains("singleAndroidMode")?3:4;
   const showcaseColumns=Math.max(1,Math.ceil(tracks.length/showcaseRows));
   signalTiles.style.gridTemplateColumns=`repeat(${showcaseColumns}, var(--tile-column))`;
   signalTiles.style.gridTemplateRows=`repeat(${showcaseRows}, auto)`;
