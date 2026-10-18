@@ -880,9 +880,11 @@ body.playerBlockDebugMode .vinylScaleShell::after{display:none!important}
 ===================================================== */
 body.androidDebugMode{
   /* V13 MOBILE COMPOSITION LOCKED AS THE ANDROID REFERENCE BASELINE.
-     Only --ad-player-debug-scale is editable in the v14 player-only debug. */
+     The logical Android canvas is always 9:16. On desktop the whole
+     432×768 canvas is fitted proportionally with --ad-preview-fit. */
   --ad-viewport-w:432px;
   --ad-viewport-h:768px;
+  --ad-preview-fit:1;
   --ad-player-w:150px;
   --ad-player-h:129px;
   --ad-card-scale:.70;
@@ -903,9 +905,12 @@ body.androidDebugMode{
 }
 body.androidDebugMode::after{z-index:8}
 body.androidDebugMode .page{
+  /* IMPORTANT: never crop one axis independently. The internal viewport
+     stays exactly 9:16; desktop preview uses one uniform zoom factor. */
   width:var(--ad-viewport-w)!important;
   height:var(--ad-viewport-h)!important;
-  max-height:calc(100vh - 40px);
+  max-height:none!important;
+  zoom:var(--ad-preview-fit);
   margin-top:20px!important;
   margin-right:360px!important;
   margin-bottom:20px!important;
@@ -998,7 +1003,7 @@ body.androidDebugMode .sleeve{width:132px!important;height:132px!important}
 body.androidDebugMode .tonearmMechanism{
   left:126px!important;
   top:4px!important;
-  width:40px!important;
+width:40px!important;
   height:92px!important;
   /* The tonearm uses the exact desktop coordinates INSIDE the same 178x132
      vinylUnit. The whole vinylUnit is scaled as one object, so these coordinates
@@ -1258,8 +1263,15 @@ body.androidDebugMode .storeCardV2 .sleeve:active{
   pointer-events:none;
 }
 @media(max-width:900px){
-  body.androidDebugMode{overflow:auto}
-  body.androidDebugMode .page{margin:54px auto 360px!important;max-height:none}
+  body.androidDebugMode{
+    overflow:auto;
+    --ad-preview-fit:1;
+  }
+  body.androidDebugMode .page{
+    margin:54px auto 360px!important;
+    max-height:none!important;
+    zoom:1!important;
+  }
   .androidDebugPanel{left:10px;right:10px;top:auto;bottom:10px;width:auto;max-height:330px}
   .androidDebugBadge{left:10px;top:36px}
 }
@@ -1998,7 +2010,7 @@ function handleWorkletMessage(event){
   if(typeof data.active==="boolean")engineActive=data.active;
 
   if(data.type==="loaded"){
-    if(pendingEngineLoad && data.token===pendingEngineLoad.token){
+if(pendingEngineLoad && data.token===pendingEngineLoad.token){
       enginePositionSec=data.position||0;engineSpeed=0;engineMode="paused";engineActive=true;
       const resolve=pendingEngineLoad.resolve;pendingEngineLoad=null;resolve();
     }
@@ -2998,7 +3010,7 @@ codeForm.addEventListener("submit",event=>{
   }
   function loadLockedLayout(){
     let layout = null;
-    try{
+try{
       const locked = localStorage.getItem(LOCKED_LAYOUT_KEY);
       if(locked) layout = normalizeLayout(JSON.parse(locked));
       if(!layout){
@@ -3042,6 +3054,51 @@ codeForm.addEventListener("submit",event=>{
   const lockedLayout = loadLockedLayout();
   const lockedHeight = applyLockedLayout(lockedLayout);
 
+  /* =====================================================
+     DESKTOP PREVIEW FIT
+     The real Android canvas stays locked to logical 9:16.
+     If the desktop window is too short/narrow, scale BOTH
+     axes by the same factor instead of clipping only height.
+  ===================================================== */
+  let desktopPreviewFit = 1;
+
+  function fitAndroidDesktopPreview(){
+    /* On the real phone/tablet there is no preview scaling at all. */
+    if(window.innerWidth <= 900){
+      desktopPreviewFit = 1;
+      root.style.setProperty('--ad-preview-fit','1');
+      if(badge){
+        badge.textContent = `ANDROID 9:16 // ${lockedLayout.width} × ${lockedHeight} // V13 RESTORED`;
+      }
+      return;
+    }
+
+    /* Reserve the right side for the 320px debug panel plus breathing room. */
+    const reservedForPanel = 400;
+    const availableWidth = Math.max(1,window.innerWidth - reservedForPanel);
+    const availableHeight = Math.max(1,window.innerHeight - 40);
+
+    desktopPreviewFit = Math.min(
+      1,
+      availableWidth / lockedLayout.width,
+      availableHeight / lockedHeight
+    );
+
+    /* Keep the preview usable even in a very small desktop window. */
+    desktopPreviewFit = Math.max(.35,desktopPreviewFit);
+
+    root.style.setProperty('--ad-preview-fit',desktopPreviewFit.toFixed(4));
+
+    if(badge){
+      const renderedWidth = Math.round(lockedLayout.width * desktopPreviewFit);
+      const renderedHeight = Math.round(lockedHeight * desktopPreviewFit);
+      badge.textContent =
+        `ANDROID 9:16 // ${lockedLayout.width} × ${lockedHeight}` +
+        ` // PREVIEW ${Math.round(desktopPreviewFit*100)}%` +
+        ` // ${renderedWidth} × ${renderedHeight}`;
+    }
+  }
+
   let percent = 100;
   try{
     const saved = Number(localStorage.getItem(KEY));
@@ -3069,7 +3126,15 @@ codeForm.addEventListener("submit",event=>{
     event.currentTarget.textContent = panel.classList.contains('is-collapsed') ? 'OPEN' : 'COLLAPSE';
   });
 
+  /* Fit the complete 9:16 canvas before the first paint of the debug state,
+     then keep it proportional whenever the desktop window changes size. */
+  fitAndroidDesktopPreview();
   apply(percent,false);
+
+  window.addEventListener('resize',()=>{
+    fitAndroidDesktopPreview();
+    apply(percent,false);
+  },{passive:true});
 })();
 </script>
 
