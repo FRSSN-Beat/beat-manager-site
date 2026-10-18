@@ -2943,20 +2943,104 @@ codeForm.addEventListener("submit",event=>{
 
 <script>
 /* =====================================================
-   ANDROID 9:16 // V14 PLAYER-SIZE-ONLY DEBUG
+   ANDROID 9:16 // V15 RESTORED-LAYOUT + PLAYER-SIZE-ONLY DEBUG
    V13 composition is frozen. This control changes only a
    visual transform multiplier and never changes layout.
 ===================================================== */
 (() => {
   const KEY = 'frssn_android_player_only_v14';
+  const LEGACY_LAYOUT_KEY = 'frssn_android_916_debug_v1';
+  const LOCKED_LAYOUT_KEY = 'frssn_android_v13_locked_layout_v15';
   const root = document.body;
   const panel = document.getElementById('androidDebugPanel');
   const slider = document.getElementById('adPlayerOnlyScale');
   const value = document.getElementById('adPlayerOnlyValue');
   const readout = document.getElementById('androidDebugReadout');
+  const badge = document.getElementById('androidDebugBadge');
   const collapse = document.getElementById('androidDebugCollapse');
   const reset = document.getElementById('androidPlayerOnlyReset');
   if(!root || !panel || !slider || !value || !readout) return;
+
+  /* V15 fix:
+     V14 froze the values visible in the screenshot instead of restoring the
+     user's last V13 Android-layout state from localStorage. The old key is
+     still on the same GitHub origin, so capture it once and keep it locked.
+     No old layout controls are re-enabled. */
+  const fallbackLayout = {
+    width:432,
+    cardScale:70,
+    playerScale:150,
+    infoScale:125,
+    gap:12,
+    padding:6,
+    contentX:6,
+    wave:32,
+    section:18
+  };
+
+  function finite(value, fallback){
+    const n = Number(value);
+    return Number.isFinite(n) ? n : fallback;
+  }
+  function normalizeLayout(raw){
+    const x = raw && typeof raw === 'object' ? raw : {};
+    return {
+      width:Math.max(320,Math.min(432,finite(x.width,fallbackLayout.width))),
+      cardScale:Math.max(70,Math.min(120,finite(x.cardScale,fallbackLayout.cardScale))),
+      playerScale:Math.max(70,Math.min(150,finite(x.playerScale,fallbackLayout.playerScale))),
+      infoScale:Math.max(80,Math.min(125,finite(x.infoScale,fallbackLayout.infoScale))),
+      gap:Math.max(4,Math.min(24,finite(x.gap,fallbackLayout.gap))),
+      padding:Math.max(6,Math.min(20,finite(x.padding,fallbackLayout.padding))),
+      contentX:Math.max(6,Math.min(24,finite(x.contentX,fallbackLayout.contentX))),
+      wave:Math.max(32,Math.min(80,finite(x.wave,fallbackLayout.wave))),
+      section:Math.max(18,Math.min(36,finite(x.section,fallbackLayout.section)))
+    };
+  }
+  function loadLockedLayout(){
+    let layout = null;
+    try{
+      const locked = localStorage.getItem(LOCKED_LAYOUT_KEY);
+      if(locked) layout = normalizeLayout(JSON.parse(locked));
+      if(!layout){
+        const legacy = localStorage.getItem(LEGACY_LAYOUT_KEY);
+        if(legacy) layout = normalizeLayout(JSON.parse(legacy));
+      }
+      if(!layout) layout = {...fallbackLayout};
+      localStorage.setItem(LOCKED_LAYOUT_KEY,JSON.stringify(layout));
+    }catch(_){
+      layout = {...fallbackLayout};
+    }
+    return layout;
+  }
+  function applyLockedLayout(layout){
+    const viewportHeight = Math.round(layout.width * 16 / 9);
+    const playerScale = layout.playerScale / 100;
+    const infoScale = Math.max(.01,layout.infoScale / 100);
+    const playerVisualW = 100 * playerScale;
+    const playerVisualH = 86 * playerScale;
+
+    root.style.setProperty('--ad-viewport-w',`${layout.width}px`);
+    root.style.setProperty('--ad-viewport-h',`${viewportHeight}px`);
+    root.style.setProperty('--ad-player-w',`${playerVisualW}px`);
+    root.style.setProperty('--ad-player-h',`${playerVisualH}px`);
+    root.style.setProperty('--ad-card-scale',String(layout.cardScale/100));
+    root.style.setProperty('--ad-player-scale',String(playerScale));
+    root.style.setProperty('--ad-info-scale',String(infoScale));
+    root.style.setProperty('--ad-info-width',`${100/infoScale}%`);
+    root.style.setProperty('--ad-top-offset',`${(playerVisualW+14)/infoScale}px`);
+    root.style.setProperty('--ad-player-clear',`${Math.max(4,(playerVisualH+20-118)/infoScale)}px`);
+    root.style.setProperty('--ad-gap',`${layout.gap}px`);
+    root.style.setProperty('--ad-padding',`${layout.padding}px`);
+    root.style.setProperty('--ad-content-x',`${layout.contentX}px`);
+    root.style.setProperty('--ad-wave-h',`${layout.wave}px`);
+    root.style.setProperty('--ad-section-h',`${layout.section}px`);
+
+    if(badge) badge.textContent = `ANDROID 9:16 // ${layout.width} × ${viewportHeight} // V13 RESTORED`;
+    return viewportHeight;
+  }
+
+  const lockedLayout = loadLockedLayout();
+  const lockedHeight = applyLockedLayout(lockedLayout);
 
   let percent = 100;
   try{
@@ -2969,7 +3053,7 @@ codeForm.addEventListener("submit",event=>{
     root.style.setProperty('--ad-player-debug-scale',String(percent/100));
     slider.value = String(percent);
     value.textContent = `${percent}%`;
-    readout.innerHTML = `REFERENCE LAYOUT // <b>LOCKED</b><br>PLAYER VISUAL SCALE // <b>${percent}%</b>`;
+    readout.innerHTML = `V13 LAYOUT // <b>${lockedLayout.width} × ${lockedHeight}</b> // RESTORED<br>PLAYER VISUAL SCALE // <b>${percent}%</b>`;
     if(persist){
       try{localStorage.setItem(KEY,String(percent))}catch(_){ }
     }
