@@ -69,6 +69,7 @@
       stage.style.height = `${Math.round(LOGICAL_H*scale)}px`;
       if(slider) slider.value = String(Math.round(scale*100));
       if(value) value.textContent = `${Math.round(scale*100)}%`;
+      requestAnimationFrame(alignExternalDebugToPurchase);
       if(readout){
         readout.innerHTML =
           `IFRAME VIEWPORT // <b>${LOGICAL_W} × ${LOGICAL_H} CSS px</b><br>`+
@@ -119,7 +120,25 @@
         else reopen.style.removeProperty('display');
       }
     }
+    function alignExternalDebugToPurchase(){
+      const host=document.getElementById('frssnSinglePreviewHost');
+      if(!host)return;
+      let top=20;
+      try{
+        const buy=frame.contentDocument?.querySelector('.featuredSlot .buyCol');
+        const frameRect=frame.getBoundingClientRect();
+        if(buy){
+          const buyRect=buy.getBoundingClientRect();
+          top=Math.round(frameRect.top + buyRect.top*scale);
+        }
+      }catch(_){}
+      const maxTop=Math.max(20,window.innerHeight-170);
+      top=Math.max(20,Math.min(maxTop,top));
+      host.style.setProperty('--frssn-debug-top',`${top}px`);
+    }
+
     function syncProxyFromChild(){
+      alignExternalDebugToPurchase();
       if(!proxyPanel)return;
       let doc=null;
       try{doc=frame.contentDocument}catch(_){return}
@@ -224,7 +243,7 @@
 
       externalDebugMount.classList.toggle('is-docked-in',!externalDebugActive);
       setChildPanelSuppressed(externalDebugActive);
-      if(externalDebugStatus)externalDebugStatus.textContent=externalDebugActive?'DEBUG // OUTSIDE PHONE':'DEBUG // INSIDE PHONE';
+      if(externalDebugStatus)externalDebugStatus.textContent=externalDebugActive?'DEBUG // OUTSIDE PHONE // ALIGNED TO PURCHASE ROW':'DEBUG // INSIDE PHONE';
       if(externalDebugToggle)externalDebugToggle.textContent=externalDebugActive?'DOCK DEBUG IN PHONE':'MOVE DEBUG OUTSIDE';
       syncProxyFromChild();
     }
@@ -236,7 +255,7 @@
       externalDebugActive=!!enabled;
       if(externalDebugMount)externalDebugMount.classList.toggle('is-docked-in',!externalDebugActive);
       setChildPanelSuppressed(externalDebugActive);
-      if(externalDebugStatus)externalDebugStatus.textContent=externalDebugActive?'DEBUG // OUTSIDE PHONE':'DEBUG // INSIDE PHONE';
+      if(externalDebugStatus)externalDebugStatus.textContent=externalDebugActive?'DEBUG // OUTSIDE PHONE // ALIGNED TO PURCHASE ROW':'DEBUG // INSIDE PHONE';
       if(externalDebugToggle)externalDebugToggle.textContent=externalDebugActive?'DOCK DEBUG IN PHONE':'MOVE DEBUG OUTSIDE';
       if(externalDebugActive&&!proxyPanel)buildExternalDebug();
     }
@@ -246,6 +265,8 @@
       proxyPanel=null;
       buildExternalDebug();
       startExternalDebugSync();
+      setTimeout(alignExternalDebugToPurchase,250);
+      setTimeout(alignExternalDebugToPurchase,1200);
     });
 
     window.addEventListener('resize',fit,{passive:true});
@@ -2994,7 +3015,7 @@ html.frssnSinglePreviewHostMode #frssnSinglePreviewHost{
 .frssnSinglePreviewStage{position:relative;width:432px;height:768px;flex:0 0 auto}
 .frssnSinglePreviewFrameWrap{position:absolute;left:0;top:0;width:432px;height:768px;transform:scale(1);transform-origin:top left;border:1px solid rgba(214,255,40,.60);box-shadow:0 20px 70px rgba(0,0,0,.72);background:#050605}
 .frssnSinglePreviewFrame{display:block;width:432px;height:768px;border:0;margin:0;background:#050605}
-.frssnSinglePreviewPanel{align-self:start;width:320px;max-height:calc(100vh - 40px);overflow:auto;padding:14px;border:1px solid rgba(214,255,40,.52);background:rgba(3,5,3,.97);color:#d6ff28;box-shadow:0 18px 60px rgba(0,0,0,.62);font-size:8px;line-height:1.5;letter-spacing:.06em}
+.frssnSinglePreviewPanel{position:absolute;right:20px;top:var(--frssn-debug-top,20px);align-self:start;width:320px;max-height:calc(100vh - var(--frssn-debug-top,20px) - 20px);overflow:auto;padding:14px;border:1px solid rgba(214,255,40,.52);background:rgba(3,5,3,.97);color:#d6ff28;box-shadow:0 18px 60px rgba(0,0,0,.62);font-size:8px;line-height:1.5;letter-spacing:.06em}
 .frssnSinglePreviewPanel h2{margin:0 0 12px;font-size:9px;letter-spacing:.13em}
 .frssnSinglePreviewReadout{padding:9px;border:1px solid rgba(214,255,40,.18);background:rgba(214,255,40,.025);color:rgba(255,255,255,.55)}
 .frssnSinglePreviewReadout b{color:#fff}
@@ -3087,7 +3108,7 @@ html.frssnSinglePreviewHostMode #frssnSingleExternalDebugMount .layoutDebugMouse
       <b>LAYOUT DEBUG</b>
       <button id="frssnSingleExternalDebugToggle" type="button">DOCK DEBUG IN PHONE</button>
     </div>
-    <div class="frssnSingleExternalDebugStatus" id="frssnSingleExternalDebugStatus">DEBUG // OUTSIDE PHONE</div>
+    <div class="frssnSingleExternalDebugStatus" id="frssnSingleExternalDebugStatus">DEBUG // OUTSIDE PHONE // ALIGNED TO PURCHASE ROW</div>
     <div id="frssnSingleExternalDebugMount"><div class="frssnExternalDebugWaiting">WAITING FOR CHILD DEBUG…</div></div>
   </aside>
 </div>
@@ -3111,7 +3132,7 @@ html.frssnSinglePreviewHostMode #frssnSingleExternalDebugMount .layoutDebugMouse
       <div class="detailLinkBar">
         <div>
           <div class="detailKicker" id="detailKicker">FRSSN // SIGNAL 001 // DIRECT TRACK LINK</div>
-          <div class="detailUrl" id="detailUrl">track_android_debug.html?track=old</div>
+          <div class="detailUrl" id="detailUrl">track_android_DEBUG_580_ALIGNED.html?track=old</div>
         </div>
         <button class="detailCopy" id="copyTrackLink" type="button">COPY TRACK LINK</button>
       </div>
@@ -3187,7 +3208,7 @@ html.frssnSinglePreviewHostMode #frssnSingleExternalDebugMount .layoutDebugMouse
           <div class="trackInfo">
             <div class="topline">
               <div class="titleAnchor">
-                <h3 class="trackTitle"><a class="trackTitleLink" href="track_android_debug.html?track=old">OLD</a></h3>
+                <h3 class="trackTitle"><a class="trackTitleLink" href="track_android_DEBUG_580_ALIGNED.html?track=old">OLD</a></h3>
                 <span class="typeCode">TRAVIS SCOTT × KANYE WEST</span>
                 <div class="artist">FRSSN</div>
               </div>
@@ -3361,8 +3382,8 @@ html.frssnSinglePreviewHostMode #frssnSingleExternalDebugMount .layoutDebugMouse
   <div class="layoutDebugSelectedReadout" id="layoutDebugSelectedReadout">SELECTED // NONE</div>
 
   <div class="layoutDebugRow">
-    <div class="layoutDebugHead"><span>HEADER HEIGHT</span><b id="dbgHeaderHeightValue">414 px</b></div>
-    <input id="dbgHeaderHeight" type="range" min="300" max="760" step="2" value="414">
+    <div class="layoutDebugHead"><span>HEADER HEIGHT</span><b id="dbgHeaderHeightValue">580 px</b></div>
+    <input id="dbgHeaderHeight" type="range" min="300" max="760" step="2" value="580">
   </div>
   <div class="layoutDebugRow">
     <div class="layoutDebugHead"><span>TILE BLOCK</span><b id="dbgTileScaleValue">110%</b></div>
@@ -3483,7 +3504,7 @@ const LAYOUT_DEBUG_KEY="frssnAndroidSingleLayoutV1";
 const ANDROID_SINGLE_BASELINE_REVISION="2026-10-19-r3-debug-latest-geometry";
 const ANDROID_SINGLE_BASELINE_REVISION_KEY="frssnAndroidSingleBaselineRevision";
 const LAYOUT_DEBUG_DEFAULTS={
-  headerHeight:414,
+  headerHeight:580,
   tileScale:110,
   turntableScale:112,turntableX:-4.6,turntableY:-48.9,
   playerScale:100,playerX:0,playerY:0,
@@ -3642,7 +3663,7 @@ function applyApprovedAndroidBaselineOnce(){
      This revision intentionally replaces old Scale + X/Y + W/H geometry once,
      so an older localStorage snapshot cannot move modules back to the pre-tuned layout. */
   Object.assign(layoutDebugState,{
-    headerHeight:414,
+    headerHeight:580,
     tileScale:110,
 
     turntableScale:112,turntableX:-4.6,turntableY:-48.9,turntableStretchX:100,turntableStretchY:100,
@@ -6418,7 +6439,7 @@ function updateDetailHeader(state){
   renderPurchaseControls(state);
   const m=metaFor(state),title=trackTitleOf(state);
   detailKicker.textContent=`FRSSN // SIGNAL ${m.signal} // DIRECT TRACK LINK`;
-  detailUrl.textContent=`track_android_debug.html?track=${state.id}`;
+  detailUrl.textContent=`${location.pathname.split("/").pop()}?track=${state.id}`;
   factSignal.textContent=m.signal;
   factBpm.textContent=m.bpm;
   factKey.textContent=m.key;
@@ -6464,7 +6485,7 @@ function renderSignalTiles(){
 
     tile.className=`signalTile${isFeatured?" is-featured":""}`;
     tile.dataset.trackId=state.id;
-    tile.href=`track_android_debug.html?track=${encodeURIComponent(state.id)}`;
+    tile.href=`${location.pathname.split("/").pop()}?track=${encodeURIComponent(state.id)}`;
     tile.style.setProperty("--tile-cover",`url("${cover}")`);
 
     if(isFeatured){
@@ -7102,7 +7123,7 @@ async function featureTrack(next,{push=false,replace=false,sourceSleeveRect=null
   if(!next||detailSwitchBusy)return;
 
   if(featuredTrack===next){
-    if(push)history.pushState({track:next.id},"",`track_android_debug.html?track=${encodeURIComponent(next.id)}`);
+    if(push)history.pushState({track:next.id},"",`${location.pathname.split("/").pop()}?track=${encodeURIComponent(next.id)}`);
     return;
   }
 
@@ -7122,8 +7143,8 @@ async function featureTrack(next,{push=false,replace=false,sourceSleeveRect=null
     const previous=featuredTrack;
 
     if(initial||!previous){
-      if(push)history.pushState({track:next.id},"",`track_android_debug.html?track=${encodeURIComponent(next.id)}`);
-      else if(replace)history.replaceState({track:next.id},"",`track_android_debug.html?track=${encodeURIComponent(next.id)}`);
+      if(push)history.pushState({track:next.id},"",`${location.pathname.split("/").pop()}?track=${encodeURIComponent(next.id)}`);
+      else if(replace)history.replaceState({track:next.id},"",`${location.pathname.split("/").pop()}?track=${encodeURIComponent(next.id)}`);
       await initialUnpackAndStart(next);
       return;
     }
@@ -7204,8 +7225,8 @@ async function featureTrack(next,{push=false,replace=false,sourceSleeveRect=null
     applyHeroFrameLocks();
     scheduleFitHeroModuleContents();
 
-    if(push)history.pushState({track:next.id},"",`track_android_debug.html?track=${encodeURIComponent(next.id)}`);
-    else if(replace)history.replaceState({track:next.id},"",`track_android_debug.html?track=${encodeURIComponent(next.id)}`);
+    if(push)history.pushState({track:next.id},"",`${location.pathname.split("/").pop()}?track=${encodeURIComponent(next.id)}`);
+    else if(replace)history.replaceState({track:next.id},"",`${location.pathname.split("/").pop()}?track=${encodeURIComponent(next.id)}`);
 
     /* Rebuild the shelf UNDER the landed moving clone, wait until the real
        images have actually painted, and only then remove the clone. This makes
