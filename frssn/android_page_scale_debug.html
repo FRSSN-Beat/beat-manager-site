@@ -1,0 +1,129 @@
+<!-- =====================================================
+     FRSSN ANDROID // PAGE TRACK SCALE DEBUG V16
+     Paste this block immediately BEFORE </body>
+     in tracks_android_debug.html.
+
+     Why this exists:
+     - The Android reference viewport stays physically locked to 432 × 768.
+     - The visible empty strip on the right comes from the restored V13
+       cardScale (usually 70%), not from the phone viewport itself.
+     - This debug exposes that existing proportional card zoom directly.
+     - Every track card (cover/player/title/status/sections/wave/meta/buy)
+       grows as one coherent module and CSS zoom updates layout footprint,
+       so following cards never overlap.
+===================================================== -->
+<script>
+if(!window.__FRSSN_PREVIEW_HOST__){
+(() => {
+  const root = document.body;
+  const panel = document.getElementById('androidDebugPanel');
+  const body = panel?.querySelector('.androidDebugBody');
+  const title = panel?.querySelector('.androidDebugTitle span');
+  const playerRow = document.getElementById('adPlayerOnlyScale')?.closest('.androidDebugRow');
+  if(!root || !panel || !body) return;
+
+  const STORAGE_KEY = 'frssn_android_page_track_scale_v16';
+  const clamp = (n,min,max) => Math.max(min,Math.min(max,n));
+
+  const cssBase = parseFloat(
+    getComputedStyle(root).getPropertyValue('--ad-card-scale')
+  );
+  const basePercent = Number.isFinite(cssBase) && cssBase > 0
+    ? Math.round(cssBase * 100)
+    : 70;
+
+  let percent = basePercent;
+  try{
+    const saved = Number(localStorage.getItem(STORAGE_KEY));
+    if(Number.isFinite(saved)) percent = clamp(saved,60,125);
+  }catch(_){}
+
+  if(title) title.textContent = 'DEBUG // PAGE + PLAYER';
+
+  const row = document.createElement('div');
+  row.className = 'androidDebugRow';
+  row.innerHTML = `
+    <div class="androidDebugHead">
+      <span>PAGE / TRACK MODULE SCALE</span>
+      <span id="adPageTrackScaleValue">${percent}%</span>
+    </div>
+    <input id="adPageTrackScale" type="range" min="60" max="125" step="1" value="${percent}">
+  `;
+
+  const buttons = document.createElement('div');
+  buttons.className = 'androidDebugButtons';
+  buttons.innerHTML = `
+    <button type="button" data-page-track-scale="70">70%</button>
+    <button type="button" data-page-track-scale="80">80%</button>
+    <button type="button" data-page-track-scale="90">90%</button>
+    <button type="button" data-page-track-scale="100">100%</button>
+    <button type="button" data-page-track-scale="110">110%</button>
+    <button type="button" data-page-track-scale="120">120%</button>
+  `;
+
+  const reset = document.createElement('button');
+  reset.className = 'androidDebugReset';
+  reset.type = 'button';
+  reset.id = 'androidPageTrackScaleReset';
+  reset.textContent = `RESET PAGE // ${basePercent}%`;
+
+  const readout = document.createElement('div');
+  readout.className = 'androidDebugDevice';
+  readout.id = 'androidPageTrackScaleReadout';
+
+  const hint = document.createElement('div');
+  hint.className = 'androidDebugHint';
+  hint.textContent =
+    'Scales every complete beat card proportionally inside the fixed 432 × 768 Android viewport. ' +
+    'Use this to remove the unused right-side space without changing the phone aspect ratio or media-query width.';
+
+  if(playerRow){
+    body.insertBefore(row, playerRow);
+    body.insertBefore(buttons, playerRow);
+    body.insertBefore(reset, playerRow);
+    body.insertBefore(readout, playerRow);
+    body.insertBefore(hint, playerRow);
+  }else{
+    body.append(row, buttons, reset, readout, hint);
+  }
+
+  const slider = row.querySelector('#adPageTrackScale');
+  const value = row.querySelector('#adPageTrackScaleValue');
+
+  function apply(next, persist=true){
+    percent = clamp(Number(next) || basePercent,60,125);
+    root.style.setProperty('--ad-card-scale', String(percent / 100));
+
+    slider.value = String(percent);
+    value.textContent = `${percent}%`;
+
+    const firstCard = document.querySelector('.track.storeCardV2');
+    requestAnimationFrame(() => {
+      const rect = firstCard?.getBoundingClientRect();
+      readout.innerHTML =
+        `ANDROID VIEWPORT // <b>432 × 768 LOCKED</b><br>` +
+        `PAGE / TRACK SCALE // <b>${percent}%</b>` +
+        (rect ? `<br>FIRST CARD // <b>${Math.round(rect.width)} × ${Math.round(rect.height)} px</b>` : '');
+    });
+
+    if(persist){
+      try{ localStorage.setItem(STORAGE_KEY,String(percent)); }catch(_){}
+    }
+  }
+
+  slider.addEventListener('input',() => apply(slider.value,true));
+
+  buttons.querySelectorAll('[data-page-track-scale]').forEach(button => {
+    button.addEventListener('click',() => apply(button.dataset.pageTrackScale,true));
+  });
+
+  reset.addEventListener('click',() => apply(basePercent,true));
+
+  window.addEventListener('resize',() => {
+    requestAnimationFrame(() => apply(percent,false));
+  },{passive:true});
+
+  apply(percent,false);
+})();
+}
+</script>
