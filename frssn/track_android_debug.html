@@ -2,7 +2,7 @@
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=432, viewport-fit=cover">
 <meta name="theme-color" content="#050605">
 <title>FRSSN // Track</title>
 
@@ -15,7 +15,20 @@
 (() => {
   const params = new URLSearchParams(location.search);
   const isChild = params.get('__frssn_single_preview_child') === '1';
-  const coarseMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || '');
+  const coarseMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || '')
+    || window.matchMedia('(pointer:coarse)').matches
+    || (navigator.maxTouchPoints||0)>1;
+
+  /* The Android single layout is authored on an exact 432 CSS-pixel canvas.
+     Some Android browser shells can expose a ~980px layout viewport even on a
+     phone. That made the 432px page render as a tiny strip on the left while the
+     horizontal shelf overflowed across the rest of the screen. Force the logical
+     mobile viewport back to the design width before any layout is measured. */
+  if(coarseMobile && !isChild){
+    const viewport=document.querySelector('meta[name="viewport"]');
+    if(viewport) viewport.setAttribute('content','width=432, viewport-fit=cover');
+  }
+
   const desktopHost = !isChild && !coarseMobile && window.matchMedia('(min-width:901px)').matches;
 
   window.__FRSSN_SINGLE_PREVIEW_CHILD__ = isChild;
@@ -2502,10 +2515,14 @@ body.singleAndroidMode{
   overflow-x:hidden!important;
 }
 body.singleAndroidMode .page{
-  width:100%!important;
-  max-width:432px!important;
+  width:432px!important;
+  max-width:100%!important;
   margin:0 auto!important;
   padding:0!important;
+}
+html,body.singleAndroidMode{
+  -webkit-text-size-adjust:100%;
+  text-size-adjust:100%;
 }
 body.singleAndroidMode .profile{
   width:100%!important;
@@ -2733,7 +2750,13 @@ body.singleAndroidMode .featuredSlot .purchaseOption .tierPrice{font-size:10px!i
 
 /* Shelf under the sticky hero. */
 body.singleAndroidMode .content{
+  width:100%!important;
+  max-width:100%!important;
   padding:14px 8px 28px!important;
+  overflow-x:auto!important;
+  overflow-y:visible!important;
+  overscroll-behavior-x:contain;
+  -webkit-overflow-scrolling:touch;
   background:linear-gradient(180deg,rgba(4,6,4,.94),rgba(4,5,4,.56))!important;
 }
 body.singleAndroidMode .sectionTitle{margin:0 0 9px!important;padding:0 2px!important}
@@ -2741,10 +2764,14 @@ body.singleAndroidMode .sectionTitle h2{font-size:12px!important}
 body.singleAndroidMode .sectionTitle span{font-size:6px!important}
 body.singleAndroidMode .signalTiles{
   --tile-column:126px!important;
+  width:max-content!important;
+  min-width:max-content!important;
+  max-width:none!important;
   grid-template-rows:repeat(3,auto)!important;
   grid-auto-flow:row!important;
   gap:8px!important;
   padding:2px 2px 12px!important;
+  overflow:visible!important;
 }
 body.singleAndroidMode .signalTile{min-height:169px!important;padding:7px!important}
 body.singleAndroidMode .signalTileTitle{font-size:10px!important}
@@ -2774,6 +2801,13 @@ body.singleAndroidMode.layout-debug-active .profileHead{
 body.singleAndroidMode.layout-debug-active .featuredSlot .track{
   height:100%!important;
   min-height:0!important;
+}
+
+/* Real Android guard: keep the document itself exactly one phone wide. */
+@media (pointer:coarse){
+  body.singleAndroidMode{width:100%!important;max-width:100%!important;}
+  body.singleAndroidMode .profile,
+  body.singleAndroidMode .profileHead{max-width:100%!important;}
 }
 
 /* =====================================================
