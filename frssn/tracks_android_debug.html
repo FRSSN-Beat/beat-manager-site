@@ -994,42 +994,32 @@ body.androidDebugMode .tonearmMechanism{
   top:4px!important;
   width:40px!important;
   height:92px!important;
-  /* Android: the tonearm pivot is permanently anchored to the same desktop
-     turntable coordinates. Stowing no longer translates the whole mechanism
-     underneath the vinyl, because that changes its apparent pivot when the
-     complete player is scaled. */
+  /* The tonearm uses the exact desktop coordinates INSIDE the same 178x132
+     vinylUnit. The whole vinylUnit is scaled as one object, so these coordinates
+     automatically scale together with the record and sleeve. */
   transform:translate(0,0) scale(1)!important;
   transform-origin:14px 14px!important;
+  z-index:5!important;
+  opacity:0;
+  visibility:hidden;
+  animation:none!important;
+}
+/* arm-on-top is the real JS state meaning that the reveal has finished and the
+   mechanism is physically deployed. Showing the arm from this state avoids a
+   second, competing coordinate/animation system on Android. */
+body.androidDebugMode .track.arm-on-top .tonearmMechanism{
+  opacity:1!important;
+  visibility:visible!important;
+  transform:translate(0,0) scale(1)!important;
+  animation:none!important;
+}
+/* While closing, JS removes arm-on-top before packing. Keep the mechanism hidden
+   at its true pivot instead of translating it below the record. */
+body.androidDebugMode .track.is-closing .tonearmMechanism{
   opacity:0!important;
   visibility:hidden!important;
-  z-index:5!important;
-}
-body.androidDebugMode .track.is-open .tonearmMechanism{
-  z-index:5!important;
-  visibility:visible!important;
-  animation:mechanismDeployAndroidDebug 1.45s cubic-bezier(.22,.8,.22,1) both!important;
-}
-body.androidDebugMode .track.is-closing .tonearmMechanism{
-  z-index:5!important;
-  visibility:visible!important;
-  animation:mechanismHideAndroidDebug 1.45s cubic-bezier(.22,.8,.22,1) both!important;
-}
-/* Android-specific stow/deploy rule:
-   the mechanism never travels beneath the record. It stays on its true pivot and
-   is simply hidden until the sleeve/record reveal is far enough along. This removes
-   both failure modes seen at large PLAYER SCALE: a pivot drawn over the vinyl and
-   the hidden arm peeking out below the record edge. */
-@keyframes mechanismDeployAndroidDebug{
-  0%,68%{transform:translate(0,0) scale(1);opacity:0;visibility:hidden}
-  69%{transform:translate(0,0) scale(1);opacity:0;visibility:visible}
-  82%{transform:translate(0,0) scale(1);opacity:.82;visibility:visible}
-  100%{transform:translate(0,0) scale(1);opacity:1;visibility:visible}
-}
-@keyframes mechanismHideAndroidDebug{
-  0%{transform:translate(0,0) scale(1);opacity:1;visibility:visible}
-  24%{transform:translate(0,0) scale(1);opacity:.72;visibility:visible}
-  38%{transform:translate(0,0) scale(1);opacity:0;visibility:hidden}
-  100%{transform:translate(0,0) scale(1);opacity:0;visibility:hidden}
+  transform:translate(0,0) scale(1)!important;
+  animation:none!important;
 }
 /* recordReveal is watched by JS by animationName, so preserve its name. */
 @keyframes recordReveal{0%{transform:translate(0,-50%)}36%,55%{transform:translate(26px,-50%)}100%{transform:translate(0,-50%)}}
