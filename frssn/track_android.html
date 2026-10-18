@@ -3499,7 +3499,7 @@ if(IS_ANDROID)document.body.classList.add("is-android");
 /* Current-page routing. Never hard-code the HTML filename: this build can be
    deployed as track.html, track_android.html, or any other filename and every
    track link/history entry remains on that exact page. */
-const TRACK_PAGE_NAME = location.pathname.split("/").pop() || "track.html";
+const TRACK_PAGE_NAME = location.pathname.split("/").pop() || "track_android.html";
 function trackPageHref(id){return `?track=${encodeURIComponent(id)}`}
 function trackPageUrl(id){return new URL(trackPageHref(id),location.href).href}
 
@@ -3521,7 +3521,7 @@ const LAYOUT_DEBUG_KEY="frssnAndroidSingleLayoutV1";
 /* Baseline revision: on first load of this build, replace the complete Android
    Scale + X/Y + W/H state with the approved COPY VALUES snapshot. After this
    one-time migration, later user edits continue to persist normally. */
-const ANDROID_SINGLE_BASELINE_REVISION="2026-10-19-r4-production-580-locked";
+const ANDROID_SINGLE_BASELINE_REVISION="2026-10-19-r5-production-580-clean";
 const ANDROID_SINGLE_BASELINE_REVISION_KEY="frssnAndroidSingleBaselineRevision";
 const LAYOUT_DEBUG_DEFAULTS={
   headerHeight:580,
