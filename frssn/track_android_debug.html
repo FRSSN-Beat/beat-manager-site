@@ -185,6 +185,36 @@
             if(externalDebugToggle)externalDebugToggle.textContent='MOVE DEBUG OUTSIDE';
             return;
           }
+          if(id==='layoutDebugCopy'){
+            let copiedText='';
+            try{copiedText=String(frame.contentWindow?.__FRSSN_GET_LAYOUT_DEBUG_TEXT__?.()||'')}catch(_){}
+            if(copiedText){
+              const fallbackCopy=()=>{
+                const ta=document.createElement('textarea');
+                ta.value=copiedText;
+                ta.setAttribute('readonly','');
+                ta.style.position='fixed';
+                ta.style.left='-9999px';
+                ta.style.top='0';
+                document.body.appendChild(ta);
+                ta.focus();
+                ta.select();
+                let ok=false;
+                try{ok=document.execCommand('copy')}catch(_){}
+                ta.remove();
+                return ok;
+              };
+              const markCopied=()=>{
+                const old=proxy.textContent;
+                proxy.textContent='COPIED';
+                setTimeout(()=>{proxy.textContent=old},900);
+              };
+              if(navigator.clipboard?.writeText){
+                navigator.clipboard.writeText(copiedText).then(markCopied).catch(()=>{if(fallbackCopy())markCopied()});
+              }else if(fallbackCopy())markCopied();
+              return;
+            }
+          }
           let sourceButton=null;
           try{sourceButton=frame.contentDocument?.getElementById(id)}catch(_){return}
           sourceButton?.click();
@@ -4345,8 +4375,8 @@ if(IS_DETAIL_PAGE&&layoutDebugPanel){
     layoutDebugRelock.textContent="LOCKED";
     setTimeout(()=>layoutDebugRelock.textContent=old,900);
   });
-  layoutDebugCopy?.addEventListener("click",async()=>{
-    const text=[
+  function buildLayoutDebugText(){
+    return [
       `HEADER HEIGHT = ${layoutDebugState.headerHeight}px`,
       `TILE BLOCK = ${layoutDebugState.tileScale}%`,
       `TURNTABLE = ${layoutDebugState.turntableScale}% | X ${layoutDebugState.turntableX} | Y ${layoutDebugState.turntableY} | W ${layoutDebugState.turntableStretchX}% | H ${layoutDebugState.turntableStretchY}%`,
@@ -4368,12 +4398,38 @@ if(IS_DETAIL_PAGE&&layoutDebugPanel){
       `TONEARM PARK = ${ARM_PARK_ANGLE.toFixed(1)}°`,
       `TONEARM OUTER LIMIT = ${ARM_START_ANGLE.toFixed(1)}°`
     ].join("\n");
-    try{
-      await navigator.clipboard.writeText(text);
-      const old=layoutDebugCopy.textContent;
-      layoutDebugCopy.textContent="COPIED";
-      setTimeout(()=>layoutDebugCopy.textContent=old,900);
-    }catch(_){}
+  }
+  window.__FRSSN_GET_LAYOUT_DEBUG_TEXT__=buildLayoutDebugText;
+
+  async function copyTextRobust(text){
+    if(navigator.clipboard?.writeText){
+      try{await navigator.clipboard.writeText(text);return true}catch(_){}
+    }
+    const ta=document.createElement("textarea");
+    ta.value=text;
+    ta.setAttribute("readonly","");
+    ta.style.position="fixed";
+    ta.style.left="-9999px";
+    ta.style.top="0";
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    let ok=false;
+    try{ok=document.execCommand("copy")}catch(_){}
+    ta.remove();
+    return ok;
+  }
+
+  layoutDebugCopy?.addEventListener("click",async()=>{
+    const text=buildLayoutDebugText();
+    const ok=await copyTextRobust(text);
+    const old=layoutDebugCopy.textContent;
+    layoutDebugCopy.textContent=ok?"COPIED":"COPY FAILED";
+    if(!ok){
+      window.__FRSSN_LAST_LAYOUT_DEBUG_TEXT__=text;
+      console.log("FRSSN LAYOUT VALUES\n"+text);
+    }
+    setTimeout(()=>layoutDebugCopy.textContent=old,1200);
   });
   layoutDebugPanel.classList.add("is-hidden");
   layoutDebugReopen?.classList.remove("is-visible");
