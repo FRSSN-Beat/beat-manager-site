@@ -747,6 +747,128 @@ body.trackCardDebugMode .trackScaleHandle{display:block}
   .trackDebugReopen{top:44px}
 }
 
+/* =====================================================
+   PLAYER BLOCK DEBUG // vinyl + sleeve as one module
+   The parent shell owns physical layout footprint while
+   .vinylUnit is scaled visually as one coherent object.
+===================================================== */
+.vinylScaleShell{
+  position:relative;
+  width:178px;
+  height:132px;
+  align-self:center;
+  justify-self:start;
+  overflow:visible;
+}
+.vinylScaleShell > .vinylUnit{
+  position:absolute;
+  left:0;
+  top:50%;
+  transform:translateY(-50%) scale(var(--frssn-player-scale,1));
+  transform-origin:left center;
+  will-change:transform;
+}
+body.playerBlockDebugMode .vinylScaleShell::after{
+  content:"";
+  position:absolute;
+  inset:-4px;
+  border:1px dashed rgba(214,255,40,.58);
+  pointer-events:none;
+  z-index:70;
+}
+.playerScaleHandle{
+  display:none;
+  position:absolute;
+  right:-4px;
+  bottom:-4px;
+  width:20px;
+  height:20px;
+  z-index:75;
+  cursor:nwse-resize;
+  touch-action:none;
+  pointer-events:auto;
+  border-right:2px solid var(--accent);
+  border-bottom:2px solid var(--accent);
+  background:
+    linear-gradient(135deg,transparent 42%,rgba(214,255,40,.22) 43% 48%,transparent 49% 62%,rgba(214,255,40,.5) 63% 68%,transparent 69%);
+  filter:drop-shadow(0 0 5px rgba(214,255,40,.28));
+}
+body.playerBlockDebugMode .playerScaleHandle{display:block}
+.playerDebugPanel{
+  position:fixed;
+  right:20px;
+  bottom:254px;
+  z-index:131;
+  width:310px;
+  padding:12px;
+  border:1px solid rgba(214,255,40,.52);
+  background:rgba(3,5,3,.97);
+  box-shadow:0 0 30px rgba(0,0,0,.72);
+  color:var(--accent);
+  font:8px/1.35 monospace;
+  letter-spacing:.07em;
+  user-select:none;
+}
+.playerDebugPanel.hidden{display:none}
+.playerDebugTitle{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:10px;
+  font-weight:700;
+  letter-spacing:.13em;
+}
+.playerDebugTitle span:last-child{color:rgba(255,255,255,.38);font-weight:400}
+.playerDebugRow{margin-top:8px}
+.playerDebugHead{display:flex;justify-content:space-between;gap:12px;margin-bottom:5px}
+.playerDebugHead span:first-child{color:rgba(255,255,255,.48)}
+.playerDebugHead span:last-child{color:#fff}
+.playerDebugPanel input[type="range"]{width:100%;margin:0;accent-color:var(--accent)}
+.playerDebugReadout{
+  margin-top:10px;
+  padding:8px 9px;
+  border:1px solid rgba(214,255,40,.18);
+  background:rgba(214,255,40,.025);
+  color:rgba(255,255,255,.58);
+  line-height:1.6;
+}
+.playerDebugReadout b{color:#fff;font-weight:500}
+.playerDebugButtons{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
+.playerDebugButtons button,.playerDebugFooter button{
+  height:27px;
+  border:1px solid rgba(214,255,40,.48);
+  background:transparent;
+  color:var(--accent);
+  font:7px/1 monospace;
+  letter-spacing:.08em;
+  cursor:pointer;
+}
+.playerDebugButtons button:hover,.playerDebugFooter button:hover{background:var(--accent);color:#050605}
+.playerDebugFooter{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}
+.playerDebugHint{margin-top:9px;color:rgba(255,255,255,.35);line-height:1.55}
+.playerDebugReopen{
+  position:fixed;
+  right:12px;
+  top:76px;
+  z-index:131;
+  display:none;
+  height:26px;
+  padding:0 9px;
+  border:1px solid rgba(214,255,40,.40);
+  background:rgba(3,5,3,.94);
+  color:var(--accent);
+  font:7px/1 monospace;
+  letter-spacing:.08em;
+  cursor:pointer;
+}
+.playerDebugReopen.visible{display:block}
+@media(max-width:760px){
+  .vinylScaleShell{width:100px;height:86px}
+  .playerDebugPanel{right:10px;bottom:246px;width:min(300px,calc(100vw - 20px))}
+  .playerDebugReopen{top:76px}
+}
+
 </style>
 </head>
 
@@ -951,23 +1073,45 @@ body.trackCardDebugMode .trackScaleHandle{display:block}
 <div class="trackDebugPanel" id="trackDebugPanel">
   <div class="trackDebugTitle"><span>DEBUG // TRACK BLOCK</span><span>SYNC ALL CARDS</span></div>
   <div class="trackDebugRow">
-    <div class="trackDebugHead"><span>BLOCK + ELEMENT SCALE</span><span id="trackScaleValue">100%</span></div>
-    <input id="trackScaleSlider" type="range" min="55" max="150" step="1" value="100">
+    <div class="trackDebugHead"><span>BLOCK + ELEMENT SCALE</span><span id="trackScaleValue">81%</span></div>
+    <input id="trackScaleSlider" type="range" min="55" max="150" step="1" value="81">
   </div>
   <div class="trackDebugReadout" id="trackDebugReadout">BLOCK // <b>— × — px</b><br>ALL INNER ELEMENTS SCALE PROPORTIONALLY</div>
   <div class="trackDebugButtons">
     <button type="button" data-track-scale="75">75%</button>
+    <button type="button" data-track-scale="81">81%</button>
     <button type="button" data-track-scale="90">90%</button>
     <button type="button" data-track-scale="100">100%</button>
-    <button type="button" data-track-scale="115">115%</button>
   </div>
   <div class="trackDebugFooter">
-    <button id="trackDebugReset" type="button">RESET 100%</button>
+    <button id="trackDebugReset" type="button">RESET 81%</button>
     <button id="trackDebugOff" type="button">DEBUG OFF</button>
   </div>
   <div class="trackDebugHint">Drag the acid corner of any beat block to resize it proportionally. The border, sleeve, vinyl, waveform, typography, statuses and purchase controls scale as one physical module. Value is saved locally.</div>
 </div>
 <button class="trackDebugReopen" id="trackDebugReopen" type="button">TRACK DEBUG</button>
+
+<!-- PLAYER BLOCK DEBUG // vinyl + sleeve -->
+<div class="playerDebugPanel" id="playerDebugPanel">
+  <div class="playerDebugTitle"><span>DEBUG // PLAYER BLOCK</span><span>VINYL + SLEEVE</span></div>
+  <div class="playerDebugRow">
+    <div class="playerDebugHead"><span>PLAYER BLOCK SCALE</span><span id="playerScaleValue">100%</span></div>
+    <input id="playerScaleSlider" type="range" min="60" max="180" step="1" value="100">
+  </div>
+  <div class="playerDebugReadout" id="playerDebugReadout">PLAYER // <b>— × — px</b><br>VINYL + SLEEVE + TONEARM SCALE AS ONE MODULE</div>
+  <div class="playerDebugButtons">
+    <button type="button" data-player-scale="90">90%</button>
+    <button type="button" data-player-scale="100">100%</button>
+    <button type="button" data-player-scale="115">115%</button>
+    <button type="button" data-player-scale="130">130%</button>
+  </div>
+  <div class="playerDebugFooter">
+    <button id="playerDebugReset" type="button">RESET 100%</button>
+    <button id="playerDebugOff" type="button">DEBUG OFF</button>
+  </div>
+  <div class="playerDebugHint">Scale the physical player inside every track card without changing the track-card scale. Sleeve, vinyl and tonearm stay locked together proportionally. Drag the acid corner on the player block or use the slider.</div>
+</div>
+<button class="playerDebugReopen" id="playerDebugReopen" type="button">PLAYER DEBUG</button>
 
 <!-- VU: OLD PNG NAMES ARE INTENTIONALLY KEPT -->
 <div class="vuModule debug-on" id="vuModule">
@@ -2083,7 +2227,7 @@ codeForm.addEventListener("submit",event=>{
    TRACK CARD DEBUG // proportional whole-block scaling
 ===================================================== */
 (() => {
-  const STORAGE_KEY = "frssn_track_card_debug_v1";
+  const STORAGE_KEY = "frssn_track_card_debug_v2";
   const panel = document.getElementById("trackDebugPanel");
   const reopen = document.getElementById("trackDebugReopen");
   const slider = document.getElementById("trackScaleSlider");
@@ -2095,7 +2239,7 @@ codeForm.addEventListener("submit",event=>{
   if(!panel || !reopen || !slider || !cards.length) return;
 
   const clamp = (n,min,max) => Math.max(min,Math.min(max,n));
-  let scale = 1;
+  let scale = .81;
   let debugEnabled = true;
   let drag = null;
 
@@ -2184,10 +2328,149 @@ codeForm.addEventListener("submit",event=>{
   panel.querySelectorAll("[data-track-scale]").forEach(btn=>{
     btn.addEventListener("click",()=>applyScale(Number(btn.dataset.trackScale)/100));
   });
-  reset.addEventListener("click",()=>applyScale(1));
+  reset.addEventListener("click",()=>applyScale(.81));
   off.addEventListener("click",()=>setDebugMode(false));
   reopen.addEventListener("click",()=>setDebugMode(true));
   window.addEventListener("resize",()=>requestAnimationFrame(updateReadout),{passive:true});
+
+  loadState();
+  applyScale(scale,false);
+  setDebugMode(debugEnabled,false);
+})();
+
+/* =====================================================
+   PLAYER BLOCK DEBUG // proportional vinyl+sleeve scaling
+===================================================== */
+(() => {
+  const STORAGE_KEY = "frssn_track_player_debug_v1";
+  const panel = document.getElementById("playerDebugPanel");
+  const reopen = document.getElementById("playerDebugReopen");
+  const slider = document.getElementById("playerScaleSlider");
+  const value = document.getElementById("playerScaleValue");
+  const readout = document.getElementById("playerDebugReadout");
+  const reset = document.getElementById("playerDebugReset");
+  const off = document.getElementById("playerDebugOff");
+  const cards = [...document.querySelectorAll(".track.storeCardV2")];
+  if(!panel || !reopen || !slider || !cards.length) return;
+
+  const clamp = (n,min,max) => Math.max(min,Math.min(max,n));
+  const shells = [];
+  let scale = 1;
+  let debugEnabled = true;
+  let drag = null;
+
+  function baseGeometry(){
+    return window.matchMedia("(max-width:760px)").matches
+      ? {w:100,h:86}
+      : {w:178,h:132};
+  }
+
+  /* Wrap the existing player without touching any of its physics/audio nodes. */
+  cards.forEach(card => {
+    const player = card.querySelector(":scope > .vinylUnit");
+    if(!player) return;
+    const shell = document.createElement("div");
+    shell.className = "vinylScaleShell";
+    card.insertBefore(shell,player);
+    shell.appendChild(player);
+
+    const handle = document.createElement("div");
+    handle.className = "playerScaleHandle";
+    handle.title = "Drag to proportionally scale vinyl + sleeve + tonearm";
+    handle.setAttribute("aria-hidden","true");
+    shell.appendChild(handle);
+    shells.push({card,shell,player,handle});
+  });
+  if(!shells.length) return;
+
+  function loadState(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return;
+      const state = JSON.parse(raw);
+      if(Number.isFinite(state.scale)) scale = clamp(state.scale,.60,1.80);
+      if(typeof state.debugEnabled === "boolean") debugEnabled = state.debugEnabled;
+    }catch(_){}
+  }
+  function saveState(){
+    try{localStorage.setItem(STORAGE_KEY,JSON.stringify({scale,debugEnabled}))}catch(_){}
+  }
+  function setDebugMode(enabled,persist=true){
+    debugEnabled = !!enabled;
+    document.body.classList.toggle("playerBlockDebugMode",debugEnabled);
+    panel.classList.toggle("hidden",!debugEnabled);
+    reopen.classList.toggle("visible",!debugEnabled);
+    if(persist) saveState();
+  }
+  function applyScale(next,persist=true){
+    scale = clamp(next,.60,1.80);
+    const base = baseGeometry();
+    const w = base.w * scale;
+    const h = base.h * scale;
+
+    shells.forEach(({card,shell,player}) => {
+      shell.style.width = `${w}px`;
+      shell.style.height = `${h}px`;
+      player.style.setProperty("--frssn-player-scale",String(scale));
+      /* The first grid column follows the physical player footprint, so
+         enlarging it never stretches the player or makes it collide with info. */
+      card.style.gridTemplateColumns = `${w}px minmax(0,1fr)`;
+    });
+
+    slider.value = String(Math.round(scale*100));
+    value.textContent = Math.round(scale*100) + "%";
+    requestAnimationFrame(updateReadout);
+    if(persist) saveState();
+  }
+  function updateReadout(){
+    const item = shells[0];
+    if(!item) return;
+    const r = item.shell.getBoundingClientRect();
+    readout.innerHTML = `PLAYER // <b>${Math.round(r.width)} × ${Math.round(r.height)} px</b><br>VINYL + SLEEVE + TONEARM SCALE AS ONE MODULE`;
+  }
+
+  shells.forEach(({shell,handle}) => {
+    handle.addEventListener("pointerdown",e => {
+      if(!debugEnabled) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const r = shell.getBoundingClientRect();
+      drag = {
+        pointerId:e.pointerId,
+        left:r.left,
+        top:r.top,
+        startWidth:Math.max(1,r.width),
+        startHeight:Math.max(1,r.height),
+        startScale:scale
+      };
+      handle.setPointerCapture(e.pointerId);
+    });
+    handle.addEventListener("pointermove",e => {
+      if(!drag || drag.pointerId !== e.pointerId) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const widthRatio = Math.max(.1,(e.clientX-drag.left)/drag.startWidth);
+      const heightRatio = Math.max(.1,(e.clientY-drag.top)/drag.startHeight);
+      applyScale(drag.startScale*Math.min(widthRatio,heightRatio),false);
+    });
+    const finish = e => {
+      if(!drag || drag.pointerId !== e.pointerId) return;
+      if(handle.hasPointerCapture(e.pointerId)) handle.releasePointerCapture(e.pointerId);
+      drag = null;
+      saveState();
+    };
+    handle.addEventListener("pointerup",finish);
+    handle.addEventListener("pointercancel",finish);
+  });
+
+  slider.addEventListener("input",()=>applyScale(Number(slider.value)/100));
+  panel.querySelectorAll("[data-player-scale]").forEach(btn=>{
+    btn.addEventListener("click",()=>applyScale(Number(btn.dataset.playerScale)/100));
+  });
+  reset.addEventListener("click",()=>applyScale(1));
+  off.addEventListener("click",()=>setDebugMode(false));
+  reopen.addEventListener("click",()=>setDebugMode(true));
+  window.addEventListener("resize",()=>applyScale(scale,false),{passive:true});
 
   loadState();
   applyScale(scale,false);
