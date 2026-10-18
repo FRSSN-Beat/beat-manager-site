@@ -994,28 +994,42 @@ body.androidDebugMode .tonearmMechanism{
   top:4px!important;
   width:40px!important;
   height:92px!important;
-  transform:translate(-77px,25px) scale(.94)!important;
+  /* Android: the tonearm pivot is permanently anchored to the same desktop
+     turntable coordinates. Stowing no longer translates the whole mechanism
+     underneath the vinyl, because that changes its apparent pivot when the
+     complete player is scaled. */
+  transform:translate(0,0) scale(1)!important;
   transform-origin:14px 14px!important;
+  opacity:0!important;
+  visibility:hidden!important;
+  z-index:5!important;
 }
 body.androidDebugMode .track.is-open .tonearmMechanism{
+  z-index:5!important;
+  visibility:visible!important;
   animation:mechanismDeployAndroidDebug 1.45s cubic-bezier(.22,.8,.22,1) both!important;
 }
 body.androidDebugMode .track.is-closing .tonearmMechanism{
+  z-index:5!important;
+  visibility:visible!important;
   animation:mechanismHideAndroidDebug 1.45s cubic-bezier(.22,.8,.22,1) both!important;
 }
-/* While the mechanism is physically hidden behind the record/sleeve, keep it fully
-   invisible so no edge can peek out at enlarged Android player scales. */
+/* Android-specific stow/deploy rule:
+   the mechanism never travels beneath the record. It stays on its true pivot and
+   is simply hidden until the sleeve/record reveal is far enough along. This removes
+   both failure modes seen at large PLAYER SCALE: a pivot drawn over the vinyl and
+   the hidden arm peeking out below the record edge. */
 @keyframes mechanismDeployAndroidDebug{
-  0%,57%{transform:translate(-77px,25px) scale(.94);opacity:0}
-  68%{transform:translate(-54px,18px) scale(.955);opacity:0}
-  82%{transform:translate(-24px,8px) scale(.98);opacity:.92}
-  100%{transform:translate(0,0) scale(1);opacity:1}
+  0%,68%{transform:translate(0,0) scale(1);opacity:0;visibility:hidden}
+  69%{transform:translate(0,0) scale(1);opacity:0;visibility:visible}
+  82%{transform:translate(0,0) scale(1);opacity:.82;visibility:visible}
+  100%{transform:translate(0,0) scale(1);opacity:1;visibility:visible}
 }
 @keyframes mechanismHideAndroidDebug{
-  0%{transform:translate(0,0) scale(1);opacity:1}
-  30%{transform:translate(-24px,8px) scale(.98);opacity:.9}
-  46%{transform:translate(-54px,18px) scale(.955);opacity:0}
-  100%{transform:translate(-77px,25px) scale(.94);opacity:0}
+  0%{transform:translate(0,0) scale(1);opacity:1;visibility:visible}
+  24%{transform:translate(0,0) scale(1);opacity:.72;visibility:visible}
+  38%{transform:translate(0,0) scale(1);opacity:0;visibility:hidden}
+  100%{transform:translate(0,0) scale(1);opacity:0;visibility:hidden}
 }
 /* recordReveal is watched by JS by animationName, so preserve its name. */
 @keyframes recordReveal{0%{transform:translate(0,-50%)}36%,55%{transform:translate(26px,-50%)}100%{transform:translate(0,-50%)}}
