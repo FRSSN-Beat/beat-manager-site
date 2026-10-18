@@ -48,6 +48,9 @@
     const fitButton = document.getElementById('frssnSinglePreviewFit');
     const reloadButton = document.getElementById('frssnSinglePreviewReload');
     const openButton = document.getElementById('frssnSinglePreviewOpen');
+    const externalDebugMount = document.getElementById('frssnSingleExternalDebugMount');
+    const externalDebugToggle = document.getElementById('frssnSingleExternalDebugToggle');
+    const externalDebugStatus = document.getElementById('frssnSingleExternalDebugStatus');
     if(!stage || !wrap || !frame) return;
 
     const LOGICAL_W = 432;
@@ -85,6 +88,136 @@
     fitButton?.addEventListener('click',()=>{autoFit=true;fit()});
     reloadButton?.addEventListener('click',()=>{try{frame.contentWindow.location.reload()}catch(_){frame.src=childUrl.href}});
     openButton?.addEventListener('click',()=>window.open(childUrl.href,'_blank','noopener'));
+
+    /* -----------------------------------------------------
+       DESKTOP EXTERNAL LAYOUT DEBUG
+       The Android child is a real 432px iframe, so a fixed panel inside it
+       cannot physically leave those bounds. On desktop we mirror the child's
+       REAL layout-debug controls into the host sidebar. Every proxy input/button
+       forwards to the original control inside the iframe, so there is still one
+       source of truth and the hero can be edited directly with MOUSE ON.
+    ----------------------------------------------------- */
+    let externalDebugActive = true;
+    let proxyPanel = null;
+    let syncTimer = null;
+
+    function childDebugPanel(){
+      try{return frame.contentDocument?.getElementById('layoutDebugPanel')||null}catch(_){return null}
+    }
+    function childDebugReopen(){
+      try{return frame.contentDocument?.getElementById('layoutDebugReopen')||null}catch(_){return null}
+    }
+    function setChildPanelSuppressed(suppressed){
+      const panel=childDebugPanel();
+      const reopen=childDebugReopen();
+      if(panel){
+        if(suppressed) panel.style.setProperty('display','none','important');
+        else panel.style.removeProperty('display');
+      }
+      if(reopen){
+        if(suppressed) reopen.style.setProperty('display','none','important');
+        else reopen.style.removeProperty('display');
+      }
+    }
+    function syncProxyFromChild(){
+      if(!proxyPanel)return;
+      let doc=null;
+      try{doc=frame.contentDocument}catch(_){return}
+      if(!doc)return;
+      proxyPanel.querySelectorAll('[data-frssn-proxy-id]').forEach(proxy=>{
+        const id=proxy.dataset.frssnProxyId;
+        const source=doc.getElementById(id);
+        if(!source)return;
+        if(proxy instanceof HTMLInputElement && source instanceof frame.contentWindow.HTMLInputElement){
+          if(document.activeElement!==proxy) proxy.value=source.value;
+        }else if(proxy instanceof HTMLButtonElement && source instanceof frame.contentWindow.HTMLButtonElement){
+          proxy.className=source.className;
+          if(id==='layoutDebugHide') proxy.textContent='DOCK IN PHONE';
+          else proxy.textContent=source.textContent;
+        }else{
+          proxy.innerHTML=source.innerHTML;
+        }
+      });
+    }
+    function buildExternalDebug(){
+      if(!externalDebugMount)return;
+      const source=childDebugPanel();
+      if(!source){
+        externalDebugMount.innerHTML='<div class="frssnExternalDebugWaiting">WAITING FOR CHILD DEBUG…</div>';
+        return;
+      }
+      const clone=source.cloneNode(true);
+      clone.id='frssnExternalLayoutDebugPanel';
+      clone.classList.remove('is-hidden');
+      clone.classList.add('frssnExternalLayoutDebugPanel');
+      clone.removeAttribute('style');
+
+      clone.querySelectorAll('[id]').forEach(el=>{
+        const originalId=el.id;
+        el.dataset.frssnProxyId=originalId;
+        el.id='ext_'+originalId;
+      });
+
+      externalDebugMount.replaceChildren(clone);
+      proxyPanel=clone;
+
+      clone.querySelectorAll('input[data-frssn-proxy-id]').forEach(proxy=>{
+        proxy.addEventListener('input',()=>{
+          let doc=null,win=null;
+          try{doc=frame.contentDocument;win=frame.contentWindow}catch(_){return}
+          const sourceInput=doc?.getElementById(proxy.dataset.frssnProxyId);
+          if(!sourceInput)return;
+          sourceInput.value=proxy.value;
+          sourceInput.dispatchEvent(new win.Event('input',{bubbles:true}));
+          requestAnimationFrame(syncProxyFromChild);
+        });
+      });
+
+      clone.querySelectorAll('button[data-frssn-proxy-id]').forEach(proxy=>{
+        proxy.addEventListener('click',event=>{
+          event.preventDefault();
+          const id=proxy.dataset.frssnProxyId;
+          if(id==='layoutDebugHide'){
+            externalDebugActive=false;
+            setChildPanelSuppressed(false);
+            externalDebugMount.classList.add('is-docked-in');
+            if(externalDebugStatus)externalDebugStatus.textContent='DEBUG // INSIDE PHONE';
+            if(externalDebugToggle)externalDebugToggle.textContent='MOVE DEBUG OUTSIDE';
+            return;
+          }
+          let sourceButton=null;
+          try{sourceButton=frame.contentDocument?.getElementById(id)}catch(_){return}
+          sourceButton?.click();
+          setTimeout(syncProxyFromChild,0);
+        });
+      });
+
+      externalDebugMount.classList.toggle('is-docked-in',!externalDebugActive);
+      setChildPanelSuppressed(externalDebugActive);
+      if(externalDebugStatus)externalDebugStatus.textContent=externalDebugActive?'DEBUG // OUTSIDE PHONE':'DEBUG // INSIDE PHONE';
+      if(externalDebugToggle)externalDebugToggle.textContent=externalDebugActive?'DOCK DEBUG IN PHONE':'MOVE DEBUG OUTSIDE';
+      syncProxyFromChild();
+    }
+    function startExternalDebugSync(){
+      if(syncTimer)clearInterval(syncTimer);
+      syncTimer=setInterval(syncProxyFromChild,120);
+    }
+    function setExternalDebugMode(enabled){
+      externalDebugActive=!!enabled;
+      if(externalDebugMount)externalDebugMount.classList.toggle('is-docked-in',!externalDebugActive);
+      setChildPanelSuppressed(externalDebugActive);
+      if(externalDebugStatus)externalDebugStatus.textContent=externalDebugActive?'DEBUG // OUTSIDE PHONE':'DEBUG // INSIDE PHONE';
+      if(externalDebugToggle)externalDebugToggle.textContent=externalDebugActive?'DOCK DEBUG IN PHONE':'MOVE DEBUG OUTSIDE';
+      if(externalDebugActive&&!proxyPanel)buildExternalDebug();
+    }
+
+    externalDebugToggle?.addEventListener('click',()=>setExternalDebugMode(!externalDebugActive));
+    frame.addEventListener('load',()=>{
+      proxyPanel=null;
+      buildExternalDebug();
+      startExternalDebugSync();
+    });
+
     window.addEventListener('resize',fit,{passive:true});
     fit();
   },{once:true});
@@ -2843,6 +2976,57 @@ html.frssnSinglePreviewHostMode #frssnSinglePreviewHost{
 .frssnSinglePreviewButtons button:hover{background:#d6ff28;color:#050605}
 .frssnSinglePreviewHint{margin-top:12px;color:rgba(255,255,255,.34);line-height:1.65}
 
+.frssnSingleExternalDebugHeader{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  margin-top:14px;padding-top:12px;border-top:1px solid rgba(214,255,40,.18);
+}
+.frssnSingleExternalDebugHeader b{font-size:8px;letter-spacing:.09em;color:#d6ff28}
+.frssnSingleExternalDebugHeader button{
+  min-height:28px;padding:0 8px;border:1px solid rgba(214,255,40,.48);
+  background:transparent;color:#d6ff28;font:700 7px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;cursor:pointer;
+}
+.frssnSingleExternalDebugHeader button:hover{background:#d6ff28;color:#050605}
+.frssnSingleExternalDebugStatus{margin-top:7px;color:rgba(255,255,255,.42);font-size:7px;letter-spacing:.07em}
+#frssnSingleExternalDebugMount{margin-top:8px}
+#frssnSingleExternalDebugMount.is-docked-in{display:none}
+.frssnExternalDebugWaiting{padding:10px;border:1px solid rgba(214,255,40,.18);color:rgba(255,255,255,.38)}
+html.frssnSinglePreviewHostMode #frssnSingleExternalDebugMount .layoutDebugPanel,
+html.frssnSinglePreviewHostMode #frssnSingleExternalDebugMount .frssnExternalLayoutDebugPanel{
+  display:block!important;
+  position:static!important;
+  inset:auto!important;
+  width:100%!important;
+  max-height:none!important;
+  overflow:visible!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:#d6ff28!important;
+}
+html.frssnSinglePreviewHostMode #frssnSingleExternalDebugMount .layoutDebugTitle{
+  cursor:default!important;
+  padding:8px 0 6px!important;
+  border-top:1px solid rgba(214,255,40,.16);
+}
+html.frssnSinglePreviewHostMode #frssnSingleExternalDebugMount .layoutDebugMouseRow,
+html.frssnSinglePreviewHostMode #frssnSingleExternalDebugMount .layoutDebugSelectedReadout{
+  border-color:rgba(214,255,40,.18)!important;
+  background:rgba(214,255,40,.025)!important;
+}
+html.frssnSinglePreviewHostMode #frssnSingleExternalDebugMount .layoutDebugRow input[type="range"]{
+  width:100%!important;accent-color:#d6ff28!important;
+}
+html.frssnSinglePreviewHostMode #frssnSingleExternalDebugMount .layoutDebugTitle button,
+html.frssnSinglePreviewHostMode #frssnSingleExternalDebugMount .layoutDebugActions button,
+html.frssnSinglePreviewHostMode #frssnSingleExternalDebugMount .layoutDebugMouseToggle{
+  border-color:rgba(214,255,40,.45)!important;background:transparent;color:#d6ff28!important;
+}
+html.frssnSinglePreviewHostMode #frssnSingleExternalDebugMount .layoutDebugMouseToggle.is-on{
+  background:#d6ff28!important;color:#050605!important;
+}
+
 </style>
 </head>
 
@@ -2868,7 +3052,13 @@ html.frssnSinglePreviewHostMode #frssnSinglePreviewHost{
       <button id="frssnSinglePreviewReload" type="button">RELOAD</button>
       <button id="frssnSinglePreviewOpen" type="button">OPEN CHILD</button>
     </div>
-    <div class="frssnSinglePreviewHint">The child iframe is always a real 432×768 CSS viewport. Use the in-phone LAYOUT DEBUG panel to move/scale individual hero modules. Desktop display scaling never changes the mobile media-query width.</div>
+    <div class="frssnSinglePreviewHint">The child iframe is always a real 432×768 CSS viewport. Desktop display scaling never changes the mobile media-query width.</div>
+    <div class="frssnSingleExternalDebugHeader">
+      <b>LAYOUT DEBUG</b>
+      <button id="frssnSingleExternalDebugToggle" type="button">DOCK DEBUG IN PHONE</button>
+    </div>
+    <div class="frssnSingleExternalDebugStatus" id="frssnSingleExternalDebugStatus">DEBUG // OUTSIDE PHONE</div>
+    <div id="frssnSingleExternalDebugMount"><div class="frssnExternalDebugWaiting">WAITING FOR CHILD DEBUG…</div></div>
   </aside>
 </div>
 
