@@ -3417,8 +3417,8 @@ html.frssnSinglePreviewHostMode #frssnSingleExternalDebugMount .layoutDebugMouse
     <input id="dbgReleaseScale" type="range" min="45" max="165" step="1" value="121">
   </div>
   <div class="layoutDebugRow">
-    <div class="layoutDebugHead"><span>TRACK STATUS</span><b id="dbgStatusScaleValue">83%</b></div>
-    <input id="dbgStatusScale" type="range" min="55" max="165" step="1" value="83">
+    <div class="layoutDebugHead"><span>TRACK STATUS</span><b id="dbgStatusScaleValue">92%</b></div>
+    <input id="dbgStatusScale" type="range" min="55" max="165" step="1" value="92">
   </div>
   <div class="layoutDebugRow">
     <div class="layoutDebugHead"><span>PURCHASE ROW</span><b id="dbgBuyScaleValue">110%</b></div>
@@ -3480,7 +3480,7 @@ const LAYOUT_DEBUG_KEY="frssnAndroidSingleLayoutV1";
 /* Baseline revision: on first load of this build, replace the complete Android
    Scale + X/Y + W/H state with the approved COPY VALUES snapshot. After this
    one-time migration, later user edits continue to persist normally. */
-const ANDROID_SINGLE_BASELINE_REVISION="2026-10-18-r2-full-geometry";
+const ANDROID_SINGLE_BASELINE_REVISION="2026-10-19-r3-debug-latest-geometry";
 const ANDROID_SINGLE_BASELINE_REVISION_KEY="frssnAndroidSingleBaselineRevision";
 const LAYOUT_DEBUG_DEFAULTS={
   headerHeight:414,
@@ -3497,7 +3497,7 @@ const LAYOUT_DEBUG_DEFAULTS={
   moodScale:89,moodX:0,moodY:0,
   releaseScale:121,releaseX:0,releaseY:0,
   bpmValueFont:21,keyValueFont:21,
-  statusScale:83,statusX:-20.4,statusY:-36.1,
+  statusScale:92,statusX:-24.1,statusY:-30.6,
   buyScale:110,buyX:0,buyY:0,
   meterScale:45,meterX:0,meterY:0,
   turntableStretchX:100,turntableStretchY:100,
@@ -3657,7 +3657,7 @@ function applyApprovedAndroidBaselineOnce(){
     bpmValueFont:21,keyValueFont:21,
     moodScale:89,moodX:0,moodY:0,moodStretchX:100,moodStretchY:100,
     releaseScale:121,releaseX:0,releaseY:0,releaseStretchX:100,releaseStretchY:100,
-    statusScale:83,statusX:-20.4,statusY:-36.1,statusStretchX:100,statusStretchY:100,
+    statusScale:92,statusX:-24.1,statusY:-30.6,statusStretchX:100,statusStretchY:100,
     buyScale:110,buyX:0,buyY:0,buyStretchX:100,buyStretchY:100,
     meterScale:45,meterX:0,meterY:0,meterStretchX:100,meterStretchY:100
   });
