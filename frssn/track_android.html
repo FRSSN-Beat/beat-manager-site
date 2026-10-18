@@ -3078,6 +3078,12 @@ html.frssnSinglePreviewHostMode #frssnSingleExternalDebugMount .layoutDebugMouse
 .vuPivotGuide,
 .vuCenterGuide{display:none!important;}
 body.singleAndroidMode .profileHead::after{display:none!important;content:none!important;}
+/* Production Android geometry must be identical even when this mobile page is opened
+   directly in a wide desktop browser. Do not let desktop frame-lock/localStorage
+   layers change the approved 432px composition. */
+body.singleAndroidMode .profileHead{height:580px!important;min-height:580px!important;}
+body.singleAndroidMode.hero-frame-lock .profileHead,
+body.singleAndroidMode.layout-debug-active .profileHead{height:580px!important;min-height:580px!important;}
 body.layout-mouse-edit .featuredSlot .vinylUnit,
 body.layout-mouse-edit .featuredSlot .waveBox,
 body.layout-mouse-edit .featuredSlot .iconBtn.js-play,
@@ -3521,7 +3527,7 @@ const LAYOUT_DEBUG_KEY="frssnAndroidSingleLayoutV1";
 /* Baseline revision: on first load of this build, replace the complete Android
    Scale + X/Y + W/H state with the approved COPY VALUES snapshot. After this
    one-time migration, later user edits continue to persist normally. */
-const ANDROID_SINGLE_BASELINE_REVISION="2026-10-19-r5-production-580-clean";
+const ANDROID_SINGLE_BASELINE_REVISION="2026-10-19-r6-production-580-hardlock";
 const ANDROID_SINGLE_BASELINE_REVISION_KEY="frssnAndroidSingleBaselineRevision";
 const LAYOUT_DEBUG_DEFAULTS={
   headerHeight:580,
@@ -3934,6 +3940,7 @@ function saveHeroFrameLocks(){
   try{localStorage.setItem(HERO_FRAME_LOCK_KEY,JSON.stringify(heroFrameLockState))}catch(_){}
 }
 function loadHeroFrameLocks(){
+  if(document.body.classList.contains("singleAndroidMode"))return false;
   try{
     const raw=localStorage.getItem(HERO_FRAME_LOCK_KEY);
     if(!raw)return false;
@@ -3992,6 +3999,7 @@ function clearHeroFrameInlineSizes(){
   document.body.classList.remove("hero-frame-lock");
 }
 function captureHeroFrameLocks({force=false}={}){
+  if(document.body.classList.contains("singleAndroidMode"))return false;
   if(!IS_DETAIL_PAGE||window.innerWidth<901)return false;
   if(!force&&heroFrameLockReady)return true;
   clearHeroFitInlineStyles();
@@ -4017,6 +4025,11 @@ function captureHeroFrameLocks({force=false}={}){
   return true;
 }
 function applyHeroFrameLocks(){
+  if(document.body.classList.contains("singleAndroidMode")){
+    heroFrameLockReady=false;
+    document.body.classList.remove("hero-frame-lock");
+    return;
+  }
   if(!IS_DETAIL_PAGE||window.innerWidth<901)return;
   if(!heroFrameLockReady&&!loadHeroFrameLocks())return;
   heroFrameLockReady=true;
@@ -4218,6 +4231,11 @@ function scheduleFitHeroModuleContents(){
   heroFitRAF=requestAnimationFrame(()=>requestAnimationFrame(fitHeroModuleContents));
 }
 function ensureHeroFrameLocks(){
+  if(document.body.classList.contains("singleAndroidMode")){
+    heroFrameLockReady=false;
+    document.body.classList.remove("hero-frame-lock");
+    return;
+  }
   if(!IS_DETAIL_PAGE||window.innerWidth<901)return;
   if(loadHeroFrameLocks()){
     heroFrameLockReady=true;
@@ -4340,6 +4358,10 @@ if(IS_DETAIL_PAGE&&layoutDebugPanel){
 
   window.addEventListener("resize",()=>{
     scheduleLayoutHandleUpdate();
+    if(document.body.classList.contains("singleAndroidMode")){
+      document.body.classList.remove("hero-frame-lock");
+      return;
+    }
     if(window.innerWidth>=901){applyHeroFrameLocks();scheduleFitHeroModuleContents()}
     else document.body.classList.remove("hero-frame-lock");
   },{passive:true});
