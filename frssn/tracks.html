@@ -869,6 +869,14 @@ body.playerBlockDebugMode .playerScaleHandle{display:block}
   .playerDebugReopen{top:76px}
 }
 
+
+/* FINAL BASELINE // DEBUG UI REMOVED */
+.trackDebugPanel,.trackDebugReopen,.trackScaleHandle,
+.playerDebugPanel,.playerDebugReopen,.playerScaleHandle,
+.vuDebugPanel,.vuDebugReopen,.vuDebugHandle,.vuDebugFrame,.vuPivotGuide,.vuCenterGuide{display:none!important}
+body.trackCardDebugMode .track.storeCardV2{outline:none!important}
+body.playerBlockDebugMode .vinylScaleShell::after{display:none!important}
+
 </style>
 </head>
 
@@ -1114,7 +1122,7 @@ body.playerBlockDebugMode .playerScaleHandle{display:block}
 <button class="playerDebugReopen" id="playerDebugReopen" type="button">PLAYER DEBUG</button>
 
 <!-- VU: OLD PNG NAMES ARE INTENTIONALLY KEPT -->
-<div class="vuModule debug-on" id="vuModule">
+<div class="vuModule" id="vuModule">
   <img class="vuFaceLayer" src="vu-panel-face-module-final.png" alt="">
   <div class="vuNeedlePivot left"><div class="vuLiveNeedle" id="vuNeedleL"></div></div>
   <div class="vuNeedlePivot right"><div class="vuLiveNeedle" id="vuNeedleR"></div></div>
@@ -1128,7 +1136,7 @@ body.playerBlockDebugMode .playerScaleHandle{display:block}
   </div>
 </div>
 
-<div class="vuDebugPanel" id="vuDebugPanel">
+<div class="vuDebugPanel hidden" id="vuDebugPanel">
   <div class="vuDebugTitle"><span>DEBUG // VU MODULE</span><span>0° = VERTICAL</span></div>
 
   <div class="vuDebugRow"><div class="vuDebugHead"><span>HEADER X</span><span id="vuXValue">576 px</span></div><input id="vuXSlider" type="range" min="-300" max="1600" step="1" value="576"></div>
@@ -1649,7 +1657,7 @@ const vuDebugReopen=document.getElementById("vuDebugReopen");
 const VU_DEFAULT_X=576,VU_DEFAULT_Y=17;
 let vuAnchorXRatio=.5,vuAnchorYRatio=.1;
 let vuModuleScale=1.13,vuFrontBrightness=.38,vuNeedleLeftX=72,vuNeedleGap=113.5,vuNeedlePivotY=100.5,vuNeedleLength=47.5,vuNeedleWidth=1.2,vuMinAngle=-53,vuMaxAngle=25.5;
-let vuDebugMode=true,vuManualTest=false,vuDragging=false,vuDragPointerId=null,vuDragOffsetX=0,vuDragOffsetY=0;
+let vuDebugMode=false,vuManualTest=false,vuDragging=false,vuDragPointerId=null,vuDragOffsetX=0,vuDragOffsetY=0;
 const VU_STORAGE_KEY="frssnVuHeaderAnchoredMultiV1";
 
 const vuXSlider=document.getElementById("vuXSlider"),vuYSlider=document.getElementById("vuYSlider"),vuScaleSlider=document.getElementById("vuScaleSlider"),vuFrontBrightnessSlider=document.getElementById("vuFrontBrightnessSlider"),vuPivotXSlider=document.getElementById("vuPivotXSlider"),vuGapSlider=document.getElementById("vuGapSlider"),vuPivotYSlider=document.getElementById("vuPivotYSlider"),vuNeedleLengthSlider=document.getElementById("vuNeedleLengthSlider"),vuNeedleWidthSlider=document.getElementById("vuNeedleWidthSlider"),vuMinAngleSlider=document.getElementById("vuMinAngleSlider"),vuMaxAngleSlider=document.getElementById("vuMaxAngleSlider");
@@ -1747,7 +1755,7 @@ vuResetDebug.addEventListener("click",()=>{
   initializeVuAnchorFromLocal(576,17);vuModuleScale=1.13;vuFrontBrightness=.38;vuNeedleLeftX=72;vuNeedleGap=113.5;vuNeedlePivotY=100.5;vuNeedleLength=47.5;vuNeedleWidth=1.2;vuMinAngle=-53;vuMaxAngle=25.5;applyVuDebug();saveVuState();
 });
 window.addEventListener("resize",applyVuDebug);window.addEventListener("scroll",applyVuPosition,{passive:true});
-loadVuState();applyVuDebug();
+initializeVuAnchorFromLocal(VU_DEFAULT_X,VU_DEFAULT_Y);applyVuDebug();
 
 let vuSplitter=null,vuAnalyserL=null,vuAnalyserR=null,vuDataL=null,vuDataR=null,vuRAF=null,vuNeedleValueL=0,vuNeedleValueR=0,vuPeakL=0,vuPeakR=0;
 const VU_SCRATCH_IDLE_MS=60;
@@ -2240,17 +2248,13 @@ codeForm.addEventListener("submit",event=>{
 
   const clamp = (n,min,max) => Math.max(min,Math.min(max,n));
   let scale = .81;
-  let debugEnabled = true;
+  let debugEnabled = false;
   let drag = null;
 
   function loadState(){
-    try{
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if(!raw) return;
-      const state = JSON.parse(raw);
-      if(Number.isFinite(state.scale)) scale = clamp(state.scale,.55,1.5);
-      if(typeof state.debugEnabled === "boolean") debugEnabled = state.debugEnabled;
-    }catch(_){}
+    /* Baseline locked: track cards are fixed at 81%. */
+    scale = .81;
+    debugEnabled = false;
   }
   function saveState(){
     try{localStorage.setItem(STORAGE_KEY,JSON.stringify({scale,debugEnabled}))}catch(_){}
@@ -2356,7 +2360,7 @@ codeForm.addEventListener("submit",event=>{
   const clamp = (n,min,max) => Math.max(min,Math.min(max,n));
   const shells = [];
   let scale = 1;
-  let debugEnabled = true;
+  let debugEnabled = false;
   let drag = null;
 
   function baseGeometry(){
@@ -2384,13 +2388,9 @@ codeForm.addEventListener("submit",event=>{
   if(!shells.length) return;
 
   function loadState(){
-    try{
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if(!raw) return;
-      const state = JSON.parse(raw);
-      if(Number.isFinite(state.scale)) scale = clamp(state.scale,.60,1.80);
-      if(typeof state.debugEnabled === "boolean") debugEnabled = state.debugEnabled;
-    }catch(_){}
+    /* Baseline locked: player block is fixed at 100%. */
+    scale = 1;
+    debugEnabled = false;
   }
   function saveState(){
     try{localStorage.setItem(STORAGE_KEY,JSON.stringify({scale,debugEnabled}))}catch(_){}
