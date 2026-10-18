@@ -3447,6 +3447,12 @@ const paperOutSfx = document.getElementById("paperOutSfx");
    - selected block gets a bottom-right scale handle
 ===================================================== */
 const LAYOUT_DEBUG_KEY="frssnAndroidSingleLayoutV1";
+/* Baseline revision: on first load of this build, keep the user's saved X/Y/W/H
+   geometry but replace obsolete scale/font/header values with the newly approved
+   Android 432×768 baseline. This prevents an older localStorage snapshot from
+   overriding the values baked into this file. */
+const ANDROID_SINGLE_BASELINE_REVISION="2026-10-18-r1";
+const ANDROID_SINGLE_BASELINE_REVISION_KEY="frssnAndroidSingleBaselineRevision";
 const LAYOUT_DEBUG_DEFAULTS={
   headerHeight:414,
   tileScale:110,
@@ -3596,6 +3602,41 @@ function loadLayoutDebug(){
   }catch(_){}
 }
 function clampLayoutScale(def,value){return Math.max(def.min,Math.min(def.max,value))}
+function applyApprovedAndroidBaselineOnce(){
+  if(!document.body.classList.contains("singleAndroidMode"))return;
+
+  let alreadyCurrent=false;
+  try{alreadyCurrent=localStorage.getItem(ANDROID_SINGLE_BASELINE_REVISION_KEY)===ANDROID_SINGLE_BASELINE_REVISION}catch(_){}
+  if(alreadyCurrent)return;
+
+  /* Only the explicitly approved visible tuning values are replaced here.
+     Direct-edit geometry (X/Y and W/H stretch) is deliberately preserved. */
+  Object.assign(layoutDebugState,{
+    headerHeight:414,
+    tileScale:110,
+    turntableScale:112,
+    waveScale:74,
+    playScale:81,
+    timeScale:84,
+    titleScale:100,
+    typeScale:111,
+    structureScale:72,
+    coreScale:100,
+    bpmValueFont:21,
+    keyValueFont:21,
+    moodScale:89,
+    releaseScale:121,
+    statusScale:55,
+    buyScale:110,
+    meterScale:45
+  });
+
+  try{
+    localStorage.setItem(LAYOUT_DEBUG_KEY,JSON.stringify(layoutDebugState));
+    localStorage.setItem(ANDROID_SINGLE_BASELINE_REVISION_KEY,ANDROID_SINGLE_BASELINE_REVISION);
+  }catch(_){}
+}
+
 function applyLayoutDebug(){
   if(!IS_DETAIL_PAGE)return;
   document.body.classList.add("layout-debug-active");
@@ -4200,6 +4241,7 @@ if(IS_DETAIL_PAGE&&layoutDebugPanel){
   /* Locked production layout: generic mouse-edit stays off. */
   setLayoutMouseEdit(false);
   loadLayoutDebug();
+  applyApprovedAndroidBaselineOnce();
   applyLayoutDebug();
   loadLayoutDebugPanelPosition();
   updateHeroFrameLockStatus();
@@ -4525,6 +4567,8 @@ const SEEK_FULL_GAIN=1.0;
    the opposite side of the tonearm travel.
 ===================================================== */
 const TONEARM_DEBUG_KEY="frssnAndroidSingleTonearmDebugV1";
+const TONEARM_BASELINE_REVISION="2026-10-18-r1";
+const TONEARM_BASELINE_REVISION_KEY="frssnAndroidSingleTonearmBaselineRevision";
 const TONEARM_DEBUG_DEFAULTS={park:-0.5,start:17.5};
 const dbgArmPark=document.getElementById("dbgArmPark");
 const dbgArmStart=document.getElementById("dbgArmStart");
@@ -4561,6 +4605,19 @@ function previewTonearmDebug(){
   }
 }
 loadTonearmDebug();
+/* Old Android browsers may still have the former V1 values in localStorage.
+   Migrate them once to the approved baseline, then allow future user edits to persist. */
+try{
+  if(localStorage.getItem(TONEARM_BASELINE_REVISION_KEY)!==TONEARM_BASELINE_REVISION){
+    ARM_PARK_ANGLE=TONEARM_DEBUG_DEFAULTS.park;
+    ARM_START_ANGLE=TONEARM_DEBUG_DEFAULTS.start;
+    saveTonearmDebug();
+    localStorage.setItem(TONEARM_BASELINE_REVISION_KEY,TONEARM_BASELINE_REVISION);
+  }
+}catch(_){
+  ARM_PARK_ANGLE=TONEARM_DEBUG_DEFAULTS.park;
+  ARM_START_ANGLE=TONEARM_DEBUG_DEFAULTS.start;
+}
 /* Keep the outer/start stop safely before the fixed inner/end stop. */
 if(ARM_START_ANGLE>ARM_END_ANGLE-1)ARM_START_ANGLE=ARM_END_ANGLE-1;
 updateTonearmDebugReadout();
