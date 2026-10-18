@@ -879,18 +879,24 @@ body.playerBlockDebugMode .vinylScaleShell::after{display:none!important}
    Desktop/default tracks.html is intentionally untouched.
 ===================================================== */
 body.androidDebugMode{
-  --ad-viewport-w:360px;
-  --ad-viewport-h:640px;
-  --ad-player-w:100px;
-  --ad-player-h:86px;
-  --ad-card-scale:1;
-  --ad-player-scale:1;
-  --ad-info-scale:1;
+  /* V13 MOBILE COMPOSITION LOCKED AS THE ANDROID REFERENCE BASELINE.
+     Only --ad-player-debug-scale is editable in the v14 player-only debug. */
+  --ad-viewport-w:432px;
+  --ad-viewport-h:768px;
+  --ad-player-w:150px;
+  --ad-player-h:129px;
+  --ad-card-scale:.70;
+  --ad-player-scale:1.50;
+  --ad-player-debug-scale:1;
+  --ad-info-scale:1.25;
+  --ad-info-width:80%;
+  --ad-top-offset:131.2px;
+  --ad-player-clear:24.8px;
   --ad-gap:12px;
-  --ad-padding:12px;
-  --ad-content-x:12px;
-  --ad-wave-h:48px;
-  --ad-section-h:23px;
+  --ad-padding:6px;
+  --ad-content-x:6px;
+  --ad-wave-h:32px;
+  --ad-section-h:18px;
   overflow:hidden;
   min-height:100vh;
   background-color:#020302;
@@ -980,7 +986,7 @@ body.androidDebugMode .vinylScaleShell{
 body.androidDebugMode .vinylScaleShell > .vinylUnit{
   width:178px!important;
   height:132px!important;
-  transform:translateY(-50%) scale(calc(.5618 * var(--ad-player-scale)))!important;
+  transform:translateY(-50%) scale(calc(.5618 * var(--ad-player-scale) * var(--ad-player-debug-scale,1)))!important;
   transform-origin:left center!important;
   --frssn-player-scale:1!important;
 }
@@ -1065,6 +1071,15 @@ body.androidDebugMode .receiver{grid-template-columns:1fr!important;gap:12px;pad
 body.androidDebugMode .codeForm{width:100%}
 body.androidDebugMode .footer{padding:0 14px;gap:10px;font-size:7px}
 body.androidDebugMode .vuModule{display:none!important}
+
+/* V14: all previous debug editors are disabled. Only the isolated player-size
+   control below remains. The player scale never changes the layout footprint. */
+body.androidDebugMode .trackDebugPanel,
+body.androidDebugMode .trackDebugReopen,
+body.androidDebugMode .playerDebugPanel,
+body.androidDebugMode .playerDebugReopen,
+body.androidDebugMode .playerScaleHandle{display:none!important}
+body.androidDebugMode.playerBlockDebugMode .vinylScaleShell::after{display:none!important}
 
 
 /* =====================================================
@@ -2902,158 +2917,75 @@ codeForm.addEventListener("submit",event=>{
 
 </script>
 
-<div class="androidDebugBadge" id="androidDebugBadge">ANDROID 9:16 // LAYOUT SANDBOX</div>
+<div class="androidDebugBadge" id="androidDebugBadge">ANDROID 9:16 // 432 × 768 // V13 LOCKED</div>
 <div class="androidDebugPanel" id="androidDebugPanel">
-  <div class="androidDebugTitle"><span>DEBUG // ANDROID 9:16</span><button type="button" id="androidDebugCollapse">COLLAPSE</button></div>
+  <div class="androidDebugTitle"><span>DEBUG // PLAYER SIZE ONLY</span><button type="button" id="androidDebugCollapse">COLLAPSE</button></div>
   <div class="androidDebugBody">
-    <div class="androidDebugDevice" id="androidDebugReadout">VIEWPORT // <b>360 × 640</b><br>TEST COPY // DESKTOP BASELINE UNTOUCHED</div>
+    <div class="androidDebugDevice" id="androidDebugReadout">REFERENCE LAYOUT // <b>LOCKED</b><br>PLAYER VISUAL SCALE // <b>100%</b></div>
 
-    <div class="androidDebugRow"><div class="androidDebugHead"><span>VIEWPORT WIDTH</span><span id="adViewportValue">360 px</span></div><input id="adViewport" type="range" min="320" max="432" step="1" value="360"></div>
-    <div class="androidDebugRow"><div class="androidDebugHead"><span>TRACK CARD SCALE</span><span id="adCardScaleValue">100%</span></div><input id="adCardScale" type="range" min="70" max="120" step="1" value="100"></div>
-    <div class="androidDebugRow"><div class="androidDebugHead"><span>PLAYER BLOCK SCALE</span><span id="adPlayerScaleValue">100%</span></div><input id="adPlayerScale" type="range" min="70" max="150" step="1" value="100"></div>
-    <div class="androidDebugRow"><div class="androidDebugHead"><span>INFO BLOCK SCALE</span><span id="adInfoScaleValue">100%</span></div><input id="adInfoScale" type="range" min="80" max="125" step="1" value="100"></div>
-    <div class="androidDebugRow"><div class="androidDebugHead"><span>CARD GAP</span><span id="adGapValue">12 px</span></div><input id="adGap" type="range" min="4" max="24" step="1" value="12"></div>
-    <div class="androidDebugRow"><div class="androidDebugHead"><span>CARD PADDING</span><span id="adPaddingValue">12 px</span></div><input id="adPadding" type="range" min="6" max="20" step="1" value="12"></div>
-    <div class="androidDebugRow"><div class="androidDebugHead"><span>CONTENT X</span><span id="adContentXValue">12 px</span></div><input id="adContentX" type="range" min="6" max="24" step="1" value="12"></div>
-    <div class="androidDebugRow"><div class="androidDebugHead"><span>WAVEFORM HEIGHT</span><span id="adWaveValue">48 px</span></div><input id="adWave" type="range" min="32" max="80" step="1" value="48"></div>
-    <div class="androidDebugRow"><div class="androidDebugHead"><span>SECTION HEIGHT</span><span id="adSectionValue">23 px</span></div><input id="adSection" type="range" min="18" max="36" step="1" value="23"></div>
+    <div class="androidDebugRow">
+      <div class="androidDebugHead"><span>VINYL + SLEEVE + TONEARM</span><span id="adPlayerOnlyValue">100%</span></div>
+      <input id="adPlayerOnlyScale" type="range" min="60" max="180" step="1" value="100">
+    </div>
 
     <div class="androidDebugButtons">
-      <button type="button" data-ad-width="360">360×640</button>
-      <button type="button" data-ad-width="375">375×667</button>
-      <button type="button" data-ad-width="405">405×720</button>
+      <button type="button" data-player-only="80">80%</button>
+      <button type="button" data-player-only="90">90%</button>
+      <button type="button" data-player-only="100">100%</button>
+      <button type="button" data-player-only="110">110%</button>
+      <button type="button" data-player-only="125">125%</button>
     </div>
-    <button class="androidDebugReset" id="androidDebugReset" type="button">RESET ANDROID LAYOUT</button>
-    <div class="androidDebugHint">This editor changes only the Android sandbox variables. The normal tracks.html remains the locked desktop/default build. The frame always keeps a 9:16 ratio.</div>
+    <button class="androidDebugReset" id="androidPlayerOnlyReset" type="button">RESET PLAYER // 100%</button>
+    <div class="androidDebugHint">Only the physical player is scaled: sleeve + vinyl + tonearm. Its shell, title/status column, sections, waveform, metadata and purchase row keep the locked V13 geometry and never reflow.</div>
   </div>
 </div>
 
 
 <script>
 /* =====================================================
-   ANDROID 9:16 LAYOUT DEBUG // isolated test controls
+   ANDROID 9:16 // V14 PLAYER-SIZE-ONLY DEBUG
+   V13 composition is frozen. This control changes only a
+   visual transform multiplier and never changes layout.
 ===================================================== */
 (() => {
-  const KEY = 'frssn_android_916_debug_v1';
+  const KEY = 'frssn_android_player_only_v14';
   const root = document.body;
   const panel = document.getElementById('androidDebugPanel');
-  if(!root || !panel) return;
+  const slider = document.getElementById('adPlayerOnlyScale');
+  const value = document.getElementById('adPlayerOnlyValue');
+  const readout = document.getElementById('androidDebugReadout');
+  const collapse = document.getElementById('androidDebugCollapse');
+  const reset = document.getElementById('androidPlayerOnlyReset');
+  if(!root || !panel || !slider || !value || !readout) return;
 
-  const defaults = {
-    width:360,
-    cardScale:100,
-    playerScale:100,
-    infoScale:100,
-    gap:12,
-    padding:12,
-    contentX:12,
-    wave:48,
-    section:23
-  };
-  let state = {...defaults};
+  let percent = 100;
+  try{
+    const saved = Number(localStorage.getItem(KEY));
+    if(Number.isFinite(saved) && saved >= 60 && saved <= 180) percent = saved;
+  }catch(_){ }
 
-  const $ = id => document.getElementById(id);
-  const controls = {
-    width:$('adViewport'),
-    cardScale:$('adCardScale'),
-    playerScale:$('adPlayerScale'),
-    infoScale:$('adInfoScale'),
-    gap:$('adGap'),
-    padding:$('adPadding'),
-    contentX:$('adContentX'),
-    wave:$('adWave'),
-    section:$('adSection')
-  };
-  const labels = {
-    width:$('adViewportValue'),
-    cardScale:$('adCardScaleValue'),
-    playerScale:$('adPlayerScaleValue'),
-    infoScale:$('adInfoScaleValue'),
-    gap:$('adGapValue'),
-    padding:$('adPaddingValue'),
-    contentX:$('adContentXValue'),
-    wave:$('adWaveValue'),
-    section:$('adSectionValue')
-  };
-  const readout = $('androidDebugReadout');
-  const badge = $('androidDebugBadge');
-
-  function load(){
-    try{
-      const raw = localStorage.getItem(KEY);
-      if(raw) state = {...defaults,...JSON.parse(raw)};
-    }catch(_){ }
-  }
-  function save(){
-    try{localStorage.setItem(KEY,JSON.stringify(state))}catch(_){ }
-  }
-  function apply(persist=true){
-    const viewportHeight = Math.round(state.width * 16 / 9);
-    const playerScale = state.playerScale/100;
-    root.style.setProperty('--ad-viewport-w',`${state.width}px`);
-    root.style.setProperty('--ad-viewport-h',`${viewportHeight}px`);
-    root.style.setProperty('--ad-player-w',`${100*playerScale}px`);
-    root.style.setProperty('--ad-player-h',`${86*playerScale}px`);
-    root.style.setProperty('--ad-card-scale',String(state.cardScale/100));
-    root.style.setProperty('--ad-player-scale',String(playerScale));
-    root.style.setProperty('--ad-info-scale',String(state.infoScale/100));
-    const infoScale = Math.max(.01,state.infoScale/100);
-    const playerVisualW = 100*playerScale;
-    const playerVisualH = 86*playerScale;
-    root.style.setProperty('--ad-info-width',`${100/infoScale}%`);
-    root.style.setProperty('--ad-top-offset',`${(playerVisualW+14)/infoScale}px`);
-    /* title + three status rows consume ~118 visual px in this mobile card.
-       Add only the extra clearance needed by an oversized player. */
-    root.style.setProperty('--ad-player-clear',`${Math.max(4,(playerVisualH+20-118)/infoScale)}px`);
-    root.style.setProperty('--ad-gap',`${state.gap}px`);
-    root.style.setProperty('--ad-padding',`${state.padding}px`);
-    root.style.setProperty('--ad-content-x',`${state.contentX}px`);
-    root.style.setProperty('--ad-wave-h',`${state.wave}px`);
-    root.style.setProperty('--ad-section-h',`${state.section}px`);
-
-    Object.entries(controls).forEach(([k,el])=>{ if(el) el.value=state[k]; });
-    labels.width.textContent = `${state.width} px`;
-    labels.cardScale.textContent = `${state.cardScale}%`;
-    labels.playerScale.textContent = `${state.playerScale}%`;
-    labels.infoScale.textContent = `${state.infoScale}%`;
-    labels.gap.textContent = `${state.gap} px`;
-    labels.padding.textContent = `${state.padding} px`;
-    labels.contentX.textContent = `${state.contentX} px`;
-    labels.wave.textContent = `${state.wave} px`;
-    labels.section.textContent = `${state.section} px`;
-    const height = viewportHeight;
-    readout.innerHTML = `VIEWPORT // <b>${state.width} × ${height}</b><br>TRACK ${state.cardScale}% // PLAYER ${state.playerScale}% // INFO ${state.infoScale}%`;
-    badge.textContent = `ANDROID 9:16 // ${state.width} × ${height}`;
-    if(persist) save();
+  function apply(next, persist=true){
+    percent = Math.max(60,Math.min(180,Number(next)||100));
+    root.style.setProperty('--ad-player-debug-scale',String(percent/100));
+    slider.value = String(percent);
+    value.textContent = `${percent}%`;
+    readout.innerHTML = `REFERENCE LAYOUT // <b>LOCKED</b><br>PLAYER VISUAL SCALE // <b>${percent}%</b>`;
+    if(persist){
+      try{localStorage.setItem(KEY,String(percent))}catch(_){ }
+    }
   }
 
-  Object.entries(controls).forEach(([key,el])=>{
-    if(!el) return;
-    el.addEventListener('input',()=>{
-      state[key] = Number(el.value);
-      apply(true);
-    });
+  slider.addEventListener('input',()=>apply(slider.value,true));
+  panel.querySelectorAll('[data-player-only]').forEach(btn=>{
+    btn.addEventListener('click',()=>apply(btn.dataset.playerOnly,true));
   });
-
-  panel.querySelectorAll('[data-ad-width]').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      state.width = Number(btn.dataset.adWidth) || 360;
-      apply(true);
-    });
-  });
-
-  $('androidDebugReset').addEventListener('click',()=>{
-    state = {...defaults};
-    apply(true);
-  });
-
-  $('androidDebugCollapse').addEventListener('click',event=>{
+  reset?.addEventListener('click',()=>apply(100,true));
+  collapse?.addEventListener('click',event=>{
     panel.classList.toggle('is-collapsed');
     event.currentTarget.textContent = panel.classList.contains('is-collapsed') ? 'OPEN' : 'COLLAPSE';
   });
 
-  load();
-  apply(false);
+  apply(percent,false);
 })();
 </script>
 
