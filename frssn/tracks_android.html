@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#050605">
 <title>FRSSN // Tracks</title>
+<script src="frssn-core.js"></script>
 
 <script>
 /* =====================================================
@@ -1573,7 +1574,7 @@ html.frssnPreviewHostMode #frssnPreviewHost{
           <div class="trackInfo">
             <div class="topline">
               <div class="titleAnchor">
-                <h3 class="trackTitle"><a class="trackTitleLink" href="track.html?track=old">OLD</a></h3>
+                <h3 class="trackTitle"><a class="trackTitleLink" href="track_android.html?track=old">OLD</a></h3>
                 <span class="typeCode">TRAVIS SCOTT × KANYE WEST</span>
               </div>
             </div>
@@ -1644,7 +1645,7 @@ html.frssnPreviewHostMode #frssnPreviewHost{
           <div class="trackInfo">
             <div class="topline">
               <div class="titleAnchor">
-                <h3 class="trackTitle"><a class="trackTitleLink" href="track.html?track=track-02">TRACK 02</a></h3>
+                <h3 class="trackTitle"><a class="trackTitleLink" href="track_android.html?track=track-02">TRACK 02</a></h3>
                 <span class="typeCode">TRAVIS SCOTT × DON TOLIVER</span>
               </div>
             </div>
@@ -1798,6 +1799,9 @@ html.frssnPreviewHostMode #frssnPreviewHost{
 
 <script>
 "use strict";
+
+/* SHARED CATALOG // hydrate before player state is created */
+window.FRSSN?.hydrateStore?.(document,{mobile:true});
 if(!window.__FRSSN_PREVIEW_HOST__){
 
 /* =====================================================

@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=432, viewport-fit=cover">
 <meta name="theme-color" content="#050605">
 <title>FRSSN // Track</title>
+<script src="frssn-core.js"></script>
 <meta name="frssn-build" content="single-store-production-2026-10-19">
 <!-- FRSSN single-track store // production build -->
 
@@ -3227,7 +3228,7 @@ body.layout-mouse-edit #heroMeterBlock{outline:none!important;cursor:default!imp
           <div class="trackInfo">
             <div class="topline">
               <div class="titleAnchor">
-                <h3 class="trackTitle"><a class="trackTitleLink" href="?track=old">OLD</a></h3>
+                <h3 class="trackTitle"><a class="trackTitleLink" href="track_android.html?track=old">OLD</a></h3>
                 <span class="typeCode">TRAVIS SCOTT × KANYE WEST</span>
                 <div class="artist">FRSSN</div>
               </div>
@@ -3293,7 +3294,7 @@ body.layout-mouse-edit #heroMeterBlock{outline:none!important;cursor:default!imp
           <div class="trackInfo">
             <div class="topline">
               <div class="titleAnchor">
-                <h3 class="trackTitle"><a class="trackTitleLink" href="?track=track-02">TRACK 02</a></h3>
+                <h3 class="trackTitle"><a class="trackTitleLink" href="track_android.html?track=track-02">TRACK 02</a></h3>
                 <span class="typeCode">TRAVIS SCOTT × DON TOLIVER</span>
                 <div class="artist">FRSSN</div>
               </div>
@@ -3493,6 +3494,9 @@ body.layout-mouse-edit #heroMeterBlock{outline:none!important;cursor:default!imp
 
 <script>
 "use strict";
+
+/* SHARED CATALOG // hydrate real source records before showcase/player boot */
+window.FRSSN?.hydrateSingle?.(document,{mobile:true});
 if(!window.__FRSSN_SINGLE_PREVIEW_HOST__){
 
 /* =====================================================
@@ -4478,7 +4482,7 @@ if(IS_DETAIL_PAGE&&layoutDebugPanel){
    Temporary visual fill for the storefront. The two real assets are reused
    alternately, but every slot has its own title / URL identity.
 ===================================================== */
-const SHOWCASE_TRACK_NAMES = [
+const SHOWCASE_TRACK_NAMES = window.FRSSN?.showcaseNames || [
   "OLD",
   "TRACK 02",
   "STATIC",
@@ -6276,6 +6280,8 @@ function trackLabelOf(state){
   return img?.src||img?.getAttribute("src")||trackCoverOf(state);
 }
 function metaFor(state){
+  const sharedMeta=window.FRSSN?.metaFor?.(state.id,state.index);
+  if(sharedMeta)return sharedMeta;
   if(DETAIL_META[state.id])return DETAIL_META[state.id];
   const i=state.index||0;
   return {
@@ -6427,6 +6433,12 @@ function renderPurchaseControls(state){
     const tier=(button.dataset.licenseTier||"").toLowerCase();
     const price=button.querySelector(".tierPrice");
     if(price&&tier in map)price.textContent=map[tier];
+    const checkout=m.checkout?.[tier]||"";
+    if(checkout){
+      button.href=checkout;button.target="_blank";button.rel="noopener noreferrer";button.removeAttribute("data-placeholder-checkout");
+    }else if(tier){
+      button.href="#";button.removeAttribute("target");button.removeAttribute("rel");button.dataset.placeholderCheckout="1";
+    }
   });
 }
 
@@ -6436,7 +6448,7 @@ function updateDetailHeader(state){
   renderPurchaseControls(state);
   const m=metaFor(state),title=trackTitleOf(state);
   detailKicker.textContent=`FRSSN // SIGNAL ${m.signal} // DIRECT TRACK LINK`;
-  detailUrl.textContent=`${TRACK_PAGE_NAME}${trackPageHref(state.id)}`;
+  detailUrl.textContent=window.FRSSN?.canonicalTrackHref?.(state.id)||`${TRACK_PAGE_NAME}${trackPageHref(state.id)}`;
   factSignal.textContent=m.signal;
   factBpm.textContent=m.bpm;
   factKey.textContent=m.key;
@@ -7297,7 +7309,7 @@ heroSleeveDock.addEventListener("keydown",async event=>{
 
 copyTrackLink.addEventListener("click",async()=>{
   if(!featuredTrack)return;
-  const url=trackPageUrl(featuredTrack.id);
+  const url=window.FRSSN?.canonicalTrackUrl?.(featuredTrack.id)||trackPageUrl(featuredTrack.id);
 
   try{
     await navigator.clipboard.writeText(url);

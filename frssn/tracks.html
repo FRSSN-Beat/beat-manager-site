@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#050605">
 <title>FRSSN // Tracks</title>
+<script src="frssn-core.js"></script>
 
 <style>
 :root{
@@ -1154,6 +1155,9 @@ body.playerBlockDebugMode .vinylScaleShell::after{display:none!important}
 
 <script>
 "use strict";
+
+/* SHARED CATALOG // hydrate before player state is created */
+window.FRSSN?.hydrateStore?.(document,{mobile:false});
 
 /* =====================================================
    PLATFORM
