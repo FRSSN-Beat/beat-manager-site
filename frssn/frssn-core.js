@@ -1,137 +1,19 @@
 /* =========================================================
-   FRSSN CORE // ROUTING + SHARED CATALOG
-   One source of truth for desktop and Android storefronts.
+   FRSSN CORE // ROUTING + JSON DB ENGINE
+   Data source: frssn-db.json
+   Desktop / Android HTML contains UI only.
    Build: 2026-10-19
 ========================================================= */
 (() => {
   "use strict";
 
-  const STRUCTURE_A = [
-    {name:"INTRO",start:0.00,end:0.11},
-    {name:"HOOK",start:0.11,end:0.27},
-    {name:"VERSE",start:0.27,end:0.52},
-    {name:"HOOK",start:0.52,end:0.68},
-    {name:"VERSE",start:0.68,end:0.91},
-    {name:"OUTRO",start:0.91,end:1.00}
-  ];
-  const STRUCTURE_B = [
-    {name:"INTRO",start:0.00,end:0.09},
-    {name:"VERSE",start:0.09,end:0.33},
-    {name:"HOOK",start:0.33,end:0.50},
-    {name:"VERSE",start:0.50,end:0.74},
-    {name:"BRIDGE",start:0.74,end:0.84},
-    {name:"HOOK",start:0.84,end:1.00}
-  ];
+  const CORE_SCRIPT_URL = (() => {
+    try { return new URL(document.currentScript?.src || "frssn-core.js", location.href); }
+    catch (_) { return new URL("frssn-core.js", location.href); }
+  })();
 
-  const DEFAULT_STATUS = [
-    {icon:"dot",label:"FIRST LICENSE",value:"AVAILABLE"},
-    {icon:"shield",label:"ORIGINAL SOURCE",value:""},
-    {icon:"crown",label:"EXCLUSIVE",value:"AVAILABLE"}
-  ];
-
-  const tracks = [
-    {
-      id:"old",
-      signal:"001",
-      title:"OLD",
-      artist:"FRSSN",
-      typeCode:"TRAVIS SCOTT × KANYE WEST",
-      audio:"old.mp3",
-      storeCover:"old-cover.png",
-      singleCover:"old-cover-sold.png",
-      label:"old-label.png",
-      bpm:"142",
-      key:"F# MIN",
-      moods:["DARK","CINEMATIC","ATMOSPHERIC"],
-      sections:STRUCTURE_A,
-      release:"16 OCT 2026",
-      license:"MP3",
-      status:"AVAILABLE",
-      file:"CLEAN",
-      commercialStatus:DEFAULT_STATUS,
-      prices:{mp3:"$40",wav:"$80",stems:"$150"},
-      checkout:{mp3:"https://traktrain.com/cart-single-track/1679177",wav:"",stems:""}
-    },
-    {
-      id:"track-02",
-      signal:"002",
-      title:"TRACK 02",
-      artist:"FRSSN",
-      typeCode:"TRAVIS SCOTT × DON TOLIVER",
-      audio:"track-02.mp3",
-      storeCover:"track-02-cover.png",
-      singleCover:"track-02-cover.png",
-      label:"track-02-cover.png",
-      bpm:"136",
-      key:"D MIN",
-      moods:["NOCTURNAL","TENSE","SPACIOUS"],
-      sections:STRUCTURE_B,
-      release:"16 OCT 2026",
-      license:"MP3",
-      status:"AVAILABLE",
-      file:"CLEAN",
-      commercialStatus:DEFAULT_STATUS,
-      prices:{mp3:"$40",wav:"$80",stems:"$150"},
-      checkout:{mp3:"",wav:"",stems:""}
-    }
-  ];
-
-  const showcaseNames = [
-    "OLD","TRACK 02","STATIC","VEIL","ECHO","NOCTURNE","NULL",
-    "AFTERIMAGE","GHOSTLINE","BLACKOUT","ORBIT","PHASE","DUST","SUBLEVEL",
-    "MIRROR","CONTACT","VOID","RECEIVER","COLD SIGNAL","NIGHT NODE","MEMORY",
-    "TRACE","DEAD AIR","HORIZON","VECTOR","SILENT ROOM","FREQUENCY","LAST LIGHT"
-  ];
-
-  const mockTypeCodes = [
-    "TRAVIS SCOTT × DON TOLIVER",
-    "KANYE WEST × TRAVIS SCOTT",
-    "FUTURE × METRO BOOMIN",
-    "PLAYBOI CARTI × TRAVIS SCOTT",
-    "DON TOLIVER × TRAVIS SCOTT",
-    "THE WEEKND × TRAVIS SCOTT",
-    "LIL WAYNE × DRAKE"
-  ];
-  const mockBpm = [142,136,148,132,140,128,145];
-  const mockKey = ["F# MIN","D MIN","C MIN","A MIN","G MIN","E MIN","C# MIN"];
-  const mockMoods = [
-    ["DARK","CINEMATIC","ATMOSPHERIC"],
-    ["NOCTURNAL","TENSE","SPACIOUS"],
-    ["COLD","MYSTERIOUS","HEAVY"],
-    ["FLOATING","DARK","EMOTIONAL"],
-    ["RAW","HYPNOTIC","MINIMAL"]
-  ];
-
-  const byId = new Map(tracks.map(track => [track.id, track]));
-  const clone = value => {
-    if (value == null) return value;
-    return JSON.parse(JSON.stringify(value));
-  };
-
-  function getTrack(id){
-    const track = byId.get(String(id || ""));
-    return track ? clone(track) : null;
-  }
-
-  function metaFor(id,index=0){
-    const real = getTrack(id);
-    if(real) return real;
-    const i = Number.isFinite(Number(index)) ? Number(index) : 0;
-    return {
-      signal:String(i+1).padStart(3,"0"),
-      typeCode:mockTypeCodes[i%mockTypeCodes.length],
-      bpm:String(mockBpm[i%mockBpm.length]),
-      key:mockKey[i%mockKey.length],
-      moods:clone(mockMoods[i%mockMoods.length]),
-      sections:clone(i%2 ? STRUCTURE_B : STRUCTURE_A),
-      release:"16 OCT 2026",
-      license:"MP3",
-      status:"AVAILABLE",
-      file:"CLEAN",
-      commercialStatus:clone(DEFAULT_STATUS),
-      prices:{mp3:"$40",wav:"$80",stems:"$150"},
-      checkout:{mp3:"",wav:"",stems:""}
-    };
+  function clone(value){
+    return value == null ? value : JSON.parse(JSON.stringify(value));
   }
 
   function currentFile(){
@@ -155,7 +37,6 @@
     }
     const ua = navigator.userAgent || "";
     if(/Android|iPhone|iPod|Mobile/i.test(ua)) return true;
-    /* iPadOS may report itself as Macintosh. */
     if(/Macintosh/i.test(ua) && (navigator.maxTouchPoints || 0) > 1) return true;
     return false;
   }
@@ -169,7 +50,6 @@
 
   function routeCurrentPage(){
     const params = new URLSearchParams(location.search);
-    /* Never interfere with the internal 432×768 preview iframe. */
     if(params.get("__frssn_preview_child") === "1" || params.get("__frssn_single_preview_child") === "1") return false;
 
     const pair = PAGE_PAIRS[currentFile()];
@@ -181,6 +61,102 @@
     url.pathname = url.pathname.replace(/[^/]+$/, target);
     location.replace(url.href);
     return true;
+  }
+
+  /* Route before fetching the DB / starting heavy player code. */
+  if(routeCurrentPage()) return;
+
+  const state = {
+    db:null,
+    defaults:{},
+    defaultStatus:[
+      {icon:"dot",label:"FIRST LICENSE",value:"AVAILABLE"},
+      {icon:"shield",label:"ORIGINAL SOURCE",value:""},
+      {icon:"crown",label:"EXCLUSIVE",value:"AVAILABLE"}
+    ],
+    defaultStructure:[],
+    tracks:[],
+    byId:new Map()
+  };
+
+  function databaseUrl(){
+    return new URL("frssn-db.json", CORE_SCRIPT_URL).href;
+  }
+
+  async function loadDatabase(){
+    const response = await fetch(databaseUrl(), {cache:"no-store", credentials:"same-origin"});
+    if(!response.ok) throw new Error(`frssn-db.json HTTP ${response.status}`);
+    const db = await response.json();
+    if(!db || !Array.isArray(db.tracks)) throw new Error("frssn-db.json: tracks[] is missing");
+    return db;
+  }
+
+  function normalizedTrack(raw,index){
+    const defaults = state.defaults || {};
+    const base = {
+      id:`track-${String(index+1).padStart(2,"0")}`,
+      signal:String(index+1).padStart(3,"0"),
+      title:`TRACK ${String(index+1).padStart(2,"0")}`,
+      artist:defaults.artist || "FRSSN",
+      typeCode:"",
+      audio:"",
+      storeCover:"",
+      singleCover:"",
+      label:"",
+      bpm:"—",
+      key:"—",
+      moods:[],
+      sections:clone(state.defaultStructure),
+      release:defaults.release || "",
+      license:defaults.license || "MP3",
+      status:defaults.status || "AVAILABLE",
+      file:defaults.file || "CLEAN",
+      commercialStatus:clone(state.defaultStatus),
+      prices:clone(defaults.prices || {mp3:"$40",wav:"$80",stems:"$150"}),
+      checkout:clone(defaults.checkout || {mp3:"",wav:"",stems:""}),
+      showcase:false,
+      sourceTrackId:null
+    };
+    const track = Object.assign(base, clone(raw || {}));
+    track.prices = Object.assign({}, clone(defaults.prices || {}), clone(raw?.prices || {}));
+    track.checkout = Object.assign({}, clone(defaults.checkout || {}), clone(raw?.checkout || {}));
+    track.commercialStatus = clone(raw?.commercialStatus || state.defaultStatus);
+    track.sections = clone(raw?.sections || state.defaultStructure);
+    track.moods = clone(raw?.moods || []);
+    if(!track.singleCover) track.singleCover = track.storeCover;
+    if(!track.label) track.label = track.singleCover || track.storeCover;
+    if(!track.sourceTrackId) track.sourceTrackId = track.id;
+    return track;
+  }
+
+  function applyDatabase(db){
+    state.db = clone(db);
+    state.defaults = clone(db.defaults || {});
+    state.defaultStatus = clone(db.defaults?.commercialStatus || state.defaultStatus);
+    state.defaultStructure = clone(db.structurePresets?.A || []);
+    state.tracks = db.tracks.map(normalizedTrack);
+    state.byId = new Map(state.tracks.map(track => [track.id,track]));
+
+    api.version = db.version || "2026-10-19-json-db";
+    api.schemaVersion = db.schemaVersion || 1;
+    api.db = clone(db);
+    api.defaultTrackId = db.defaultTrackId || state.tracks[0]?.id || "old";
+    api.tracks = clone(state.tracks);
+    api.items = clone(state.tracks);
+    api.showcaseNames = state.tracks.map(track => track.title);
+    api.structures = clone(db.structurePresets || {});
+  }
+
+  function getTrack(id){
+    const track = state.byId.get(String(id || ""));
+    return track ? clone(track) : null;
+  }
+
+  function metaFor(id,index=0){
+    const real = getTrack(id);
+    if(real) return real;
+    const i = Number.isFinite(Number(index)) ? Number(index) : 0;
+    return normalizedTrack({id:String(id || `track-${i+1}`)},i);
   }
 
   function trackHref(id,{mobile=isMobileDevice(),canonical=false}={}){
@@ -203,7 +179,7 @@
   }
 
   function statusRailHtml(items){
-    return (items || DEFAULT_STATUS).map(item => {
+    return (items || state.defaultStatus).map(item => {
       const icon = item.icon === "dot"
         ? '<span class="statusChipIcon dot"></span>'
         : `<span class="statusChipIcon">${iconSvg(item.icon)}</span>`;
@@ -213,7 +189,7 @@
   }
 
   function structureHtml(sections){
-    return (sections || STRUCTURE_A).map((section,index) => {
+    return (sections || state.defaultStructure).map((section,index) => {
       const width = Math.max(.02, Number(section.end)-Number(section.start));
       const cls = index === 0 ? "structureSegment is-current" : "structureSegment";
       return `<button class="${cls}" type="button" data-section-start="${Number(section.start)}" style="flex:0 0 ${Math.round(width*10000)/100}%">${section.name}</button>`;
@@ -245,15 +221,12 @@
     card.dataset.audio = track.audio;
 
     const titleLink = card.querySelector(".trackTitleLink");
-    if(titleLink){
-      titleLink.textContent = track.title;
-      titleLink.href = trackHref(track.id,{mobile});
-    }
+    if(titleLink){ titleLink.textContent = track.title; titleLink.href = trackHref(track.id,{mobile}); }
     const typeCode = card.querySelector(".typeCode");
     if(typeCode) typeCode.textContent = track.typeCode;
 
     const label = card.querySelector(".recordLabel img");
-    if(label){ label.src = track.storeCover || track.label; label.alt = track.title; }
+    if(label){ label.src = track.label || track.storeCover; label.alt = track.title; }
     const cover = card.querySelector(".sleeve .cover");
     if(cover){ cover.src = track.storeCover; cover.alt = `${track.title} cover`; }
 
@@ -263,8 +236,7 @@
     const structure = card.querySelector(".trackStructure");
     if(structure) structure.innerHTML = structureHtml(track.sections);
 
-    const properties = [...card.querySelectorAll(".coreProperty")];
-    properties.forEach(prop => {
+    [...card.querySelectorAll(".coreProperty")].forEach(prop => {
       const labelText = prop.querySelector(".coreLabel")?.textContent?.trim().toUpperCase();
       const value = prop.querySelector(".coreValue");
       if(!value) return;
@@ -283,26 +255,22 @@
 
   function hydrateStore(doc=document,{mobile=isMobileDevice()}={}){
     const list = doc.querySelector(".trackList");
-    if(!list) return;
+    if(!list || !state.tracks.length) return;
     let cards = [...list.querySelectorAll(":scope > .track")];
     if(!cards.length) return;
 
     const template = cards[cards.length-1];
-    tracks.forEach(track => {
+    state.tracks.forEach(track => {
       let card = list.querySelector(`:scope > .track[data-track-id="${CSS.escape(track.id)}"]`);
-      if(!card){
-        card = template.cloneNode(true);
-        list.appendChild(card);
-      }
+      if(!card){ card = template.cloneNode(true); list.appendChild(card); }
       patchStoreCard(card,track,mobile);
     });
 
-    /* The shared catalog is authoritative for the real store list. */
     [...list.querySelectorAll(":scope > .track")].forEach(card => {
-      if(!byId.has(card.dataset.trackId)) card.remove();
+      if(!state.byId.has(card.dataset.trackId)) card.remove();
     });
 
-    const count = tracks.length;
+    const count = state.tracks.length;
     const micro = doc.getElementById("microstatus");
     if(micro) micro.textContent = `Connection stable // ${String(count).padStart(2,"0")} signals detected`;
     const sectionCount = doc.querySelector(".sectionTitle span");
@@ -315,10 +283,7 @@
     card.dataset.audio = track.audio;
 
     const titleLink = card.querySelector(".trackTitleLink");
-    if(titleLink){
-      titleLink.textContent = track.title;
-      titleLink.href = trackHref(track.id,{mobile});
-    }
+    if(titleLink){ titleLink.textContent = track.title; titleLink.href = trackHref(track.id,{mobile}); }
     const typeCode = card.querySelector(".typeCode");
     if(typeCode) typeCode.textContent = track.typeCode;
     const artist = card.querySelector(".artist");
@@ -340,21 +305,18 @@
 
   function hydrateSingle(doc=document,{mobile=isMobileDevice()}={}){
     const list = doc.querySelector(".detailSourceTrackList");
-    if(!list) return;
+    if(!list || !state.tracks.length) return;
     let cards = [...list.querySelectorAll(":scope > .track")];
     if(!cards.length) return;
     const template = cards[cards.length-1];
 
-    tracks.forEach(track => {
+    state.tracks.forEach(track => {
       let card = list.querySelector(`:scope > .track[data-track-id="${CSS.escape(track.id)}"]`);
-      if(!card){
-        card = template.cloneNode(true);
-        list.appendChild(card);
-      }
+      if(!card){ card = template.cloneNode(true); list.appendChild(card); }
       patchSingleCard(card,track,mobile);
     });
     [...list.querySelectorAll(":scope > .track")].forEach(card => {
-      if(!byId.has(card.dataset.trackId)) card.remove();
+      if(!state.byId.has(card.dataset.trackId)) card.remove();
     });
   }
 
@@ -366,14 +328,14 @@
   }
 
   const api = {
-    version:"2026-10-19-sync-1",
-    tracks:clone(tracks),
-    showcaseNames:showcaseNames.slice(),
-    mockTypeCodes:mockTypeCodes.slice(),
-    mockBpm:mockBpm.slice(),
-    mockKey:mockKey.slice(),
-    mockMoods:clone(mockMoods),
-    structures:{A:clone(STRUCTURE_A),B:clone(STRUCTURE_B)},
+    version:"loading",
+    schemaVersion:1,
+    db:null,
+    defaultTrackId:"old",
+    tracks:[],
+    items:[],
+    showcaseNames:[],
+    structures:{},
     isMobileDevice,
     getTrack,
     metaFor,
@@ -384,13 +346,25 @@
     storeHref,
     hydrateStore,
     hydrateSingle,
-    patchIndexLinks
+    patchIndexLinks,
+    ready:null
   };
 
   window.FRSSN = api;
 
-  /* Route before heavy player initialization. */
-  if(routeCurrentPage()) return;
+  api.ready = loadDatabase()
+    .then(db => {
+      applyDatabase(db);
+      window.dispatchEvent(new CustomEvent("frssn:db-ready",{detail:{version:api.version,count:state.tracks.length}}));
+      return api;
+    })
+    .catch(error => {
+      console.error("FRSSN DB LOAD FAILED", error);
+      api.version = "db-load-failed";
+      /* Keep the two static fallback cards functional if JSON is unavailable. */
+      return api;
+    });
+
   if(document.readyState === "loading") document.addEventListener("DOMContentLoaded",()=>patchIndexLinks(document),{once:true});
   else patchIndexLinks(document);
 })();

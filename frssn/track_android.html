@@ -3145,7 +3145,7 @@ body.layout-mouse-edit #heroMeterBlock{outline:none!important;cursor:default!imp
       <div class="identity">
         <h1>FRSSN</h1>
         <div class="handle">Individual signal page // direct track link</div>
-        <div class="microstatus" id="microstatus">Connection stable // 24 signals detected</div>
+        <div class="microstatus" id="microstatus">Connection stable // 28 signals detected</div>
       </div>
       <a class="back" href="tracks.html">← Back // Store</a>
 
@@ -3493,6 +3493,7 @@ body.layout-mouse-edit #heroMeterBlock{outline:none!important;cursor:default!imp
 <div class="layoutAxisHandle layoutHeightHandle" id="layoutHeightHandle" aria-hidden="true"></div>
 
 <script>
+(window.FRSSN?.ready || Promise.resolve(window.FRSSN)).then(()=>{
 "use strict";
 
 /* SHARED CATALOG // hydrate real source records before showcase/player boot */
@@ -7335,6 +7336,7 @@ window.addEventListener("popstate",async()=>{
 })();
 
 }
+}).catch(error=>console.error("FRSSN APP INIT FAILED",error));
 </script>
 </body>
 </html>

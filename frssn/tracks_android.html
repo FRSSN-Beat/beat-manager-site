@@ -1534,7 +1534,7 @@ html.frssnPreviewHostMode #frssnPreviewHost{
       <div class="identity">
         <h1>FRSSN</h1>
         <div class="handle">Signal transmission archive</div>
-        <div class="microstatus" id="microstatus">Connection stable // 02 signals detected</div>
+        <div class="microstatus" id="microstatus">Connection stable // 28 signals detected</div>
       </div>
       <a class="back" href="index.html">← Back // Link</a>
     </section>
@@ -1548,7 +1548,7 @@ html.frssnPreviewHostMode #frssnPreviewHost{
     <section class="content" id="tracks">
       <div class="sectionTitle">
         <h2>Tracks</h2>
-        <span>02 SIGNALS // DIRECT LICENSE CHANNEL</span>
+        <span>28 SIGNALS // DIRECT LICENSE CHANNEL</span>
       </div>
 
       <div class="trackList">
@@ -1798,6 +1798,7 @@ html.frssnPreviewHostMode #frssnPreviewHost{
 <button class="vuDebugReopen" id="vuDebugReopen" type="button">VU DEBUG</button>
 
 <script>
+(window.FRSSN?.ready || Promise.resolve(window.FRSSN)).then(()=>{
 "use strict";
 
 /* SHARED CATALOG // hydrate before player state is created */
@@ -2042,33 +2043,52 @@ function fallbackWave(state){
   const fallback=Array.from({length:WAVE_BARS},(_,i)=>16+((i*37+state.index*19)%68));
   renderBars(state.wave,fallback);
 }
-async function loadTrackData(state){
-  try{
-    const response=await fetch(freshAssetUrl(state.audioUrl),{cache:"no-store"});
-    if(!response.ok)throw new Error(`Audio fetch failed: ${state.audioUrl}`);
+const decodedAudioAssetCache=new Map();
+async function getDecodedAudioAsset(audioUrl){
+  if(decodedAudioAssetCache.has(audioUrl))return decodedAudioAssetCache.get(audioUrl);
+
+  const promise=(async()=>{
+    const response=await fetch(freshAssetUrl(audioUrl),{cache:"no-store"});
+    if(!response.ok)throw new Error(`Audio fetch failed: ${audioUrl}`);
     const arrayBuffer=await response.arrayBuffer();
     const ctx=getAudioContext();
-    state.decoded=await ctx.decodeAudioData(arrayBuffer.slice(0));
-    state.duration=state.decoded.duration;
-    state.total.textContent=fmt(state.duration);
+    const decoded=await ctx.decodeAudioData(arrayBuffer.slice(0));
 
     const channels=[];
-    for(let c=0;c<state.decoded.numberOfChannels;c++)channels.push(state.decoded.getChannelData(c));
-    const blockSize=Math.max(1,Math.floor(state.decoded.length/WAVE_BARS));
+    for(let c=0;c<decoded.numberOfChannels;c++)channels.push(decoded.getChannelData(c));
+    const blockSize=Math.max(1,Math.floor(decoded.length/WAVE_BARS));
     const peaks=[];
     for(let i=0;i<WAVE_BARS;i++){
       const start=i*blockSize;
-      const end=Math.min(state.decoded.length,start+blockSize);
+      const end=Math.min(decoded.length,start+blockSize);
       let peak=0;
       const stride=Math.max(1,Math.floor((end-start)/900));
       for(let c=0;c<channels.length;c++){
-        for(let s=start;s<end;s+=stride)peak=Math.max(peak,Math.abs(channels[c][s]));
+        for(let sample=start;sample<end;sample+=stride)peak=Math.max(peak,Math.abs(channels[c][sample]));
       }
       peaks.push(peak);
     }
     const maxPeak=Math.max(...peaks)||1;
     const heights=peaks.map(p=>p/maxPeak*100);
-    renderBars(state.wave,heights);
+    return {decoded,duration:decoded.duration,heights};
+  })();
+
+  decodedAudioAssetCache.set(audioUrl,promise);
+  try{
+    return await promise;
+  }catch(error){
+    decodedAudioAssetCache.delete(audioUrl);
+    throw error;
+  }
+}
+
+async function loadTrackData(state){
+  try{
+    const asset=await getDecodedAudioAsset(state.audioUrl);
+    state.decoded=asset.decoded;
+    state.duration=asset.duration;
+    state.total.textContent=fmt(state.duration);
+    renderBars(state.wave,asset.heights);
   }catch(error){
     console.warn(error);
     state.loadError=true;
@@ -2669,7 +2689,7 @@ async function stopAndPackActive(){
   await packTrack(state,{reset:true});
   if(activeTrack===state){activeTrack=null;engineLoadedTrack=null;enginePositionSec=0;engineSpeed=0;engineMode="paused";engineActive=false}
   vuPeakL=vuPeakR=vuNeedleValueL=vuNeedleValueR=0;
-  microstatus.textContent="Connection stable // 02 signals detected";
+  microstatus.textContent=`Connection stable // ${String(tracks.length).padStart(2,"0")} signals detected`;
 }
 
 /* =====================================================
@@ -2915,7 +2935,7 @@ codeForm.addEventListener("submit",event=>{
 
   tracks.forEach(fallbackWave);
   await Promise.all(tracks.map(loadTrackData));
-  try{await initWorklet();microstatus.textContent=IS_ANDROID?"ENGINE READY // ANDROID PERFORMANCE MODE":"Connection stable // 02 signals detected"}
+  try{await initWorklet();microstatus.textContent=IS_ANDROID?"ENGINE READY // ANDROID PERFORMANCE MODE":`Connection stable // ${String(tracks.length).padStart(2,"0")} signals detected`}
   catch(error){console.warn(error);microstatus.textContent="ENGINE ERROR // AUDIOWORKLET INIT FAILED"}
   startVisualLoop();
 })();
@@ -3175,6 +3195,7 @@ codeForm.addEventListener("submit",event=>{
 
 
 }
+}).catch(error=>console.error("FRSSN APP INIT FAILED",error));
 </script>
 
 <div class="androidDebugBadge" id="androidDebugBadge">ANDROID 9:16 // 432 × 768 // V13 LOCKED</div>

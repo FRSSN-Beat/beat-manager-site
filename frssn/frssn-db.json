@@ -1,0 +1,2432 @@
+{
+  "schemaVersion": 1,
+  "version": "2026-10-19-json-db-1",
+  "updatedAt": "2026-10-19",
+  "defaultTrackId": "old",
+  "defaults": {
+    "artist": "FRSSN",
+    "release": "16 OCT 2026",
+    "license": "MP3",
+    "status": "AVAILABLE",
+    "file": "CLEAN",
+    "prices": {
+      "mp3": "$40",
+      "wav": "$80",
+      "stems": "$150"
+    },
+    "checkout": {
+      "mp3": "",
+      "wav": "",
+      "stems": ""
+    },
+    "commercialStatus": [
+      {
+        "icon": "dot",
+        "label": "FIRST LICENSE",
+        "value": "AVAILABLE"
+      },
+      {
+        "icon": "shield",
+        "label": "ORIGINAL SOURCE",
+        "value": ""
+      },
+      {
+        "icon": "crown",
+        "label": "EXCLUSIVE",
+        "value": "AVAILABLE"
+      }
+    ]
+  },
+  "structurePresets": {
+    "A": [
+      {
+        "name": "INTRO",
+        "start": 0.0,
+        "end": 0.11
+      },
+      {
+        "name": "HOOK",
+        "start": 0.11,
+        "end": 0.27
+      },
+      {
+        "name": "VERSE",
+        "start": 0.27,
+        "end": 0.52
+      },
+      {
+        "name": "HOOK",
+        "start": 0.52,
+        "end": 0.68
+      },
+      {
+        "name": "VERSE",
+        "start": 0.68,
+        "end": 0.91
+      },
+      {
+        "name": "OUTRO",
+        "start": 0.91,
+        "end": 1.0
+      }
+    ],
+    "B": [
+      {
+        "name": "INTRO",
+        "start": 0.0,
+        "end": 0.09
+      },
+      {
+        "name": "VERSE",
+        "start": 0.09,
+        "end": 0.33
+      },
+      {
+        "name": "HOOK",
+        "start": 0.33,
+        "end": 0.5
+      },
+      {
+        "name": "VERSE",
+        "start": 0.5,
+        "end": 0.74
+      },
+      {
+        "name": "BRIDGE",
+        "start": 0.74,
+        "end": 0.84
+      },
+      {
+        "name": "HOOK",
+        "start": 0.84,
+        "end": 1.0
+      }
+    ]
+  },
+  "tracks": [
+    {
+      "id": "old",
+      "signal": "001",
+      "title": "OLD",
+      "artist": "FRSSN",
+      "typeCode": "TRAVIS SCOTT × KANYE WEST",
+      "audio": "old.mp3",
+      "storeCover": "old-cover.png",
+      "singleCover": "old-cover-sold.png",
+      "label": "old-label.png",
+      "bpm": "142",
+      "key": "F# MIN",
+      "moods": [
+        "DARK",
+        "CINEMATIC",
+        "ATMOSPHERIC"
+      ],
+      "sections": [
+        {
+          "name": "INTRO",
+          "start": 0,
+          "end": 0.11
+        },
+        {
+          "name": "HOOK",
+          "start": 0.11,
+          "end": 0.27
+        },
+        {
+          "name": "VERSE",
+          "start": 0.27,
+          "end": 0.52
+        },
+        {
+          "name": "HOOK",
+          "start": 0.52,
+          "end": 0.68
+        },
+        {
+          "name": "VERSE",
+          "start": 0.68,
+          "end": 0.91
+        },
+        {
+          "name": "OUTRO",
+          "start": 0.91,
+          "end": 1
+        }
+      ],
+      "release": "16 OCT 2026",
+      "license": "MP3",
+      "status": "AVAILABLE",
+      "file": "CLEAN",
+      "commercialStatus": [
+        {
+          "icon": "dot",
+          "label": "FIRST LICENSE",
+          "value": "AVAILABLE"
+        },
+        {
+          "icon": "shield",
+          "label": "ORIGINAL SOURCE",
+          "value": ""
+        },
+        {
+          "icon": "crown",
+          "label": "EXCLUSIVE",
+          "value": "AVAILABLE"
+        }
+      ],
+      "prices": {
+        "mp3": "$40",
+        "wav": "$80",
+        "stems": "$150"
+      },
+      "checkout": {
+        "mp3": "https://traktrain.com/cart-single-track/1679177",
+        "wav": "",
+        "stems": ""
+      },
+      "showcase": false,
+      "sourceTrackId": "old"
+    },
+    {
+      "id": "track-02",
+      "signal": "002",
+      "title": "TRACK 02",
+      "artist": "FRSSN",
+      "typeCode": "TRAVIS SCOTT × DON TOLIVER",
+      "audio": "track-02.mp3",
+      "storeCover": "track-02-cover.png",
+      "singleCover": "track-02-cover.png",
+      "label": "track-02-cover.png",
+      "bpm": "136",
+      "key": "D MIN",
+      "moods": [
+        "NOCTURNAL",
+        "TENSE",
+        "SPACIOUS"
+      ],
+      "sections": [
+        {
+          "name": "INTRO",
+          "start": 0,
+          "end": 0.09
+        },
+        {
+          "name": "VERSE",
+          "start": 0.09,
+          "end": 0.33
+        },
+        {
+          "name": "HOOK",
+          "start": 0.33,
+          "end": 0.5
+        },
+        {
+          "name": "VERSE",
+          "start": 0.5,
+          "end": 0.74
+        },
+        {
+          "name": "BRIDGE",
+          "start": 0.74,
+          "end": 0.84
+        },
+        {
+          "name": "HOOK",
+          "start": 0.84,
+          "end": 1
+        }
+      ],
+      "release": "16 OCT 2026",
+      "license": "MP3",
+      "status": "AVAILABLE",
+      "file": "CLEAN",
+      "commercialStatus": [
+        {
+          "icon": "dot",
+          "label": "FIRST LICENSE",
+          "value": "AVAILABLE"
+        },
+        {
+          "icon": "shield",
+          "label": "ORIGINAL SOURCE",
+          "value": ""
+        },
+        {
+          "icon": "crown",
+          "label": "EXCLUSIVE",
+          "value": "AVAILABLE"
+        }
+      ],
+      "prices": {
+        "mp3": "$40",
+        "wav": "$80",
+        "stems": "$150"
+      },
+      "checkout": {
+        "mp3": "",
+        "wav": "",
+        "stems": ""
+      },
+      "showcase": false,
+      "sourceTrackId": "track-02"
+    },
+    {
+      "id": "showcase-03",
+      "signal": "003",
+      "title": "STATIC",
+      "artist": "FRSSN",
+      "typeCode": "FUTURE × METRO BOOMIN",
+      "audio": "old.mp3",
+      "storeCover": "old-cover.png",
+      "singleCover": "old-cover.png",
+      "label": "old-cover.png",
+      "bpm": "148",
+      "key": "C MIN",
+      "moods": [
+        "COLD",
+        "MYSTERIOUS",
+        "HEAVY"
+      ],
+      "sections": [
+        {
+          "name": "INTRO",
+          "start": 0,
+          "end": 0.11
+        },
+        {
+          "name": "HOOK",
+          "start": 0.11,
+          "end": 0.27
+        },
+        {
+          "name": "VERSE",
+          "start": 0.27,
+          "end": 0.52
+        },
+        {
+          "name": "HOOK",
+          "start": 0.52,
+          "end": 0.68
+        },
+        {
+          "name": "VERSE",
+          "start": 0.68,
+          "end": 0.91
+        },
+        {
+          "name": "OUTRO",
+          "start": 0.91,
+          "end": 1
+        }
+      ],
+      "release": "16 OCT 2026",
+      "license": "MP3",
+      "status": "AVAILABLE",
+      "file": "CLEAN",
+      "commercialStatus": [
+        {
+          "icon": "dot",
+          "label": "FIRST LICENSE",
+          "value": "AVAILABLE"
+        },
+        {
+          "icon": "shield",
+          "label": "ORIGINAL SOURCE",
+          "value": ""
+        },
+        {
+          "icon": "crown",
+          "label": "EXCLUSIVE",
+          "value": "AVAILABLE"
+        }
+      ],
+      "prices": {
+        "mp3": "$40",
+        "wav": "$80",
+        "stems": "$150"
+      },
+      "checkout": {
+        "mp3": "",
+        "wav": "",
+        "stems": ""
+      },
+      "showcase": true,
+      "sourceTrackId": "old"
+    },
+    {
+      "id": "showcase-04",
+      "signal": "004",
+      "title": "VEIL",
+      "artist": "FRSSN",
+      "typeCode": "PLAYBOI CARTI × TRAVIS SCOTT",
+      "audio": "track-02.mp3",
+      "storeCover": "track-02-cover.png",
+      "singleCover": "track-02-cover.png",
+      "label": "track-02-cover.png",
+      "bpm": "132",
+      "key": "A MIN",
+      "moods": [
+        "FLOATING",
+        "DARK",
+        "EMOTIONAL"
+      ],
+      "sections": [
+        {
+          "name": "INTRO",
+          "start": 0,
+          "end": 0.09
+        },
+        {
+          "name": "VERSE",
+          "start": 0.09,
+          "end": 0.33
+        },
+        {
+          "name": "HOOK",
+          "start": 0.33,
+          "end": 0.5
+        },
+        {
+          "name": "VERSE",
+          "start": 0.5,
+          "end": 0.74
+        },
+        {
+          "name": "BRIDGE",
+          "start": 0.74,
+          "end": 0.84
+        },
+        {
+          "name": "HOOK",
+          "start": 0.84,
+          "end": 1
+        }
+      ],
+      "release": "16 OCT 2026",
+      "license": "MP3",
+      "status": "AVAILABLE",
+      "file": "CLEAN",
+      "commercialStatus": [
+        {
+          "icon": "dot",
+          "label": "FIRST LICENSE",
+          "value": "AVAILABLE"
+        },
+        {
+          "icon": "shield",
+          "label": "ORIGINAL SOURCE",
+          "value": ""
+        },
+        {
+          "icon": "crown",
+          "label": "EXCLUSIVE",
+          "value": "AVAILABLE"
+        }
+      ],
+      "prices": {
+        "mp3": "$40",
+        "wav": "$80",
+        "stems": "$150"
+      },
+      "checkout": {
+        "mp3": "",
+        "wav": "",
+        "stems": ""
+      },
+      "showcase": true,
+      "sourceTrackId": "track-02"
+    },
+    {
+      "id": "showcase-05",
+      "signal": "005",
+      "title": "ECHO",
+      "artist": "FRSSN",
+      "typeCode": "DON TOLIVER × TRAVIS SCOTT",
+      "audio": "old.mp3",
+      "storeCover": "old-cover.png",
+      "singleCover": "old-cover.png",
+      "label": "old-cover.png",
+      "bpm": "140",
+      "key": "G MIN",
+      "moods": [
+        "RAW",
+        "HYPNOTIC",
+        "MINIMAL"
+      ],
+      "sections": [
+        {
+          "name": "INTRO",
+          "start": 0,
+          "end": 0.11
+        },
+        {
+          "name": "HOOK",
+          "start": 0.11,
+          "end": 0.27
+        },
+        {
+          "name": "VERSE",
+          "start": 0.27,
+          "end": 0.52
+        },
+        {
+          "name": "HOOK",
+          "start": 0.52,
+          "end": 0.68
+        },
+        {
+          "name": "VERSE",
+          "start": 0.68,
+          "end": 0.91
+        },
+        {
+          "name": "OUTRO",
+          "start": 0.91,
+          "end": 1
+        }
+      ],
+      "release": "16 OCT 2026",
+      "license": "MP3",
+      "status": "AVAILABLE",
+      "file": "CLEAN",
+      "commercialStatus": [
+        {
+          "icon": "dot",
+          "label": "FIRST LICENSE",
+          "value": "AVAILABLE"
+        },
+        {
+          "icon": "shield",
+          "label": "ORIGINAL SOURCE",
+          "value": ""
+        },
+        {
+          "icon": "crown",
+          "label": "EXCLUSIVE",
+          "value": "AVAILABLE"
+        }
+      ],
+      "prices": {
+        "mp3": "$40",
+        "wav": "$80",
+        "stems": "$150"
+      },
+      "checkout": {
+        "mp3": "",
+        "wav": "",
+        "stems": ""
+      },
+      "showcase": true,
+      "sourceTrackId": "old"
+    },
+    {
+      "id": "showcase-06",
+      "signal": "006",
+      "title": "NOCTURNE",
+      "artist": "FRSSN",
+      "typeCode": "THE WEEKND × TRAVIS SCOTT",
+      "audio": "track-02.mp3",
+      "storeCover": "track-02-cover.png",
+      "singleCover": "track-02-cover.png",
+      "label": "track-02-cover.png",
+      "bpm": "128",
+      "key": "E MIN",
+      "moods": [
+        "DARK",
+        "CINEMATIC",
+        "ATMOSPHERIC"
+      ],
+      "sections": [
+        {
+          "name": "INTRO",
+          "start": 0,
+          "end": 0.09
+        },
+        {
+          "name": "VERSE",
+          "start": 0.09,
+          "end": 0.33
+        },
+        {
+          "name": "HOOK",
+          "start": 0.33,
+          "end": 0.5
+        },
+        {
+          "name": "VERSE",
+          "start": 0.5,
+          "end": 0.74
+        },
+        {
+          "name": "BRIDGE",
+          "start": 0.74,
+          "end": 0.84
+        },
+        {
+          "name": "HOOK",
+          "start": 0.84,
+          "end": 1
+        }
+      ],
+      "release": "16 OCT 2026",
+      "license": "MP3",
+      "status": "AVAILABLE",
+      "file": "CLEAN",
+      "commercialStatus": [
+        {
+          "icon": "dot",
+          "label": "FIRST LICENSE",
+          "value": "AVAILABLE"
+        },
+        {
+          "icon": "shield",
+          "label": "ORIGINAL SOURCE",
+          "value": ""
+        },
+        {
+          "icon": "crown",
+          "label": "EXCLUSIVE",
+          "value": "AVAILABLE"
+        }
+      ],
+      "prices": {
+        "mp3": "$40",
+        "wav": "$80",
+        "stems": "$150"
+      },
+      "checkout": {
+        "mp3": "",
+        "wav": "",
+        "stems": ""
+      },
+      "showcase": true,
+      "sourceTrackId": "track-02"
+    },
+    {
+      "id": "showcase-07",
+      "signal": "007",
+      "title": "NULL",
+      "artist": "FRSSN",
+      "typeCode": "LIL WAYNE × DRAKE",
+      "audio": "old.mp3",
+      "storeCover": "old-cover.png",
+      "singleCover": "old-cover.png",
+      "label": "old-cover.png",
+      "bpm": "145",
+      "key": "C# MIN",
+      "moods": [
+        "NOCTURNAL",
+        "TENSE",
+        "SPACIOUS"
+      ],
+      "sections": [
+        {
+          "name": "INTRO",
+          "start": 0,
+          "end": 0.11
+        },
+        {
+          "name": "HOOK",
+          "start": 0.11,
+          "end": 0.27
+        },
+        {
+          "name": "VERSE",
+          "start": 0.27,
+          "end": 0.52
+        },
+        {
+          "name": "HOOK",
+          "start": 0.52,
+          "end": 0.68
+        },
+        {
+          "name": "VERSE",
+          "start": 0.68,
+          "end": 0.91
+        },
+        {
+          "name": "OUTRO",
+          "start": 0.91,
+          "end": 1
+        }
+      ],
+      "release": "16 OCT 2026",
+      "license": "MP3",
+      "status": "AVAILABLE",
+      "file": "CLEAN",
+      "commercialStatus": [
+        {
+          "icon": "dot",
+          "label": "FIRST LICENSE",
+          "value": "AVAILABLE"
+        },
+        {
+          "icon": "shield",
+          "label": "ORIGINAL SOURCE",
+          "value": ""
+        },
+        {
+          "icon": "crown",
+          "label": "EXCLUSIVE",
+          "value": "AVAILABLE"
+        }
+      ],
+      "prices": {
+        "mp3": "$40",
+        "wav": "$80",
+        "stems": "$150"
+      },
+      "checkout": {
+        "mp3": "",
+        "wav": "",
+        "stems": ""
+      },
+      "showcase": true,
+      "sourceTrackId": "old"
+    },
+    {
+      "id": "showcase-08",
+      "signal": "008",
+      "title": "AFTERIMAGE",
+      "artist": "FRSSN",
+      "typeCode": "TRAVIS SCOTT × DON TOLIVER",
+      "audio": "track-02.mp3",
+      "storeCover": "track-02-cover.png",
+      "singleCover": "track-02-cover.png",
+      "label": "track-02-cover.png",
+      "bpm": "142",
+      "key": "F# MIN",
+      "moods": [
+        "COLD",
+        "MYSTERIOUS",
+        "HEAVY"
+      ],
+      "sections": [
+        {
+          "name": "INTRO",
+          "start": 0,
+          "end": 0.09
+        },
+        {
+          "name": "VERSE",
+          "start": 0.09,
+          "end": 0.33
+        },
+        {
+          "name": "HOOK",
+          "start": 0.33,
+          "end": 0.5
+        },
+        {
+          "name": "VERSE",
+          "start": 0.5,
+          "end": 0.74
+        },
+        {
+          "name": "BRIDGE",
+          "start": 0.74,
+          "end": 0.84
+        },
+        {
+          "name": "HOOK",
+          "start": 0.84,
+          "end": 1
+        }
+      ],
+      "release": "16 OCT 2026",
+      "license": "MP3",
+      "status": "AVAILABLE",
+      "file": "CLEAN",
+      "commercialStatus": [
+        {
+          "icon": "dot",
+          "label": "FIRST LICENSE",
+          "value": "AVAILABLE"
+        },
+        {
+          "icon": "shield",
+          "label": "ORIGINAL SOURCE",
+          "value": ""
+        },
+        {
+          "icon": "crown",
+          "label": "EXCLUSIVE",
+          "value": "AVAILABLE"
+        }
+      ],
+      "prices": {
+        "mp3": "$40",
+        "wav": "$80",
+        "stems": "$150"
+      },
+      "checkout": {
+        "mp3": "",
+        "wav": "",
+        "stems": ""
+      },
+      "showcase": true,
+      "sourceTrackId": "track-02"
+    },
+    {
+      "id": "showcase-09",
+      "signal": "009",
+      "title": "GHOSTLINE",
+      "artist": "FRSSN",
+      "typeCode": "KANYE WEST × TRAVIS SCOTT",
+      "audio": "old.mp3",
+      "storeCover": "old-cover.png",
+      "singleCover": "old-cover.png",
+      "label": "old-cover.png",
+      "bpm": "136",
+      "key": "D MIN",
+      "moods": [
+        "FLOATING",
+        "DARK",
+        "EMOTIONAL"
+      ],
+      "sections": [
+        {
+          "name": "INTRO",
+          "start": 0,
+          "end": 0.11
+        },
+        {
+          "name": "HOOK",
+          "start": 0.11,
+          "end": 0.27
+        },
+        {
+          "name": "VERSE",
+          "start": 0.27,
+          "end": 0.52
+        },
+        {
+          "name": "HOOK",
+          "start": 0.52,
+          "end": 0.68
+        },
+        {
+          "name": "VERSE",
+          "start": 0.68,
+          "end": 0.91
+        },
+        {
+          "name": "OUTRO",
+          "start": 0.91,
+          "end": 1
+        }
+      ],
+      "release": "16 OCT 2026",
+      "license": "MP3",
+      "status": "AVAILABLE",
+      "file": "CLEAN",
+      "commercialStatus": [
+        {
+          "icon": "dot",
+          "label": "FIRST LICENSE",
+          "value": "AVAILABLE"
+        },
+        {
+          "icon": "shield",
+          "label": "ORIGINAL SOURCE",
+          "value": ""
+        },
+        {
+          "icon": "crown",
+          "label": "EXCLUSIVE",
+          "value": "AVAILABLE"
+        }
+      ],
+      "prices": {
+        "mp3": "$40",
+        "wav": "$80",
+        "stems": "$150"
+      },
+      "checkout": {
+        "mp3": "",
+        "wav": "",
+        "stems": ""
+      },
+      "showcase": true,
+      "sourceTrackId": "old"
+    },
+    {
+      "id": "showcase-10",
+      "signal": "010",
+      "title": "BLACKOUT",
+      "artist": "FRSSN",
+      "typeCode": "FUTURE × METRO BOOMIN",
+      "audio": "track-02.mp3",
+      "storeCover": "track-02-cover.png",
+      "singleCover": "track-02-cover.png",
+      "label": "track-02-cover.png",
+      "bpm": "148",
+      "key": "C MIN",
+      "moods": [
+        "RAW",
+        "HYPNOTIC",
+        "MINIMAL"
+      ],
+      "sections": [
+        {
+          "name": "INTRO",
+          "start": 0,
+          "end": 0.09
+        },
+        {
+          "name": "VERSE",
+          "start": 0.09,
+          "end": 0.33
+        },
+        {
+          "name": "HOOK",
+          "start": 0.33,
+          "end": 0.5
+        },
+        {
+          "name": "VERSE",
+          "start": 0.5,
+          "end": 0.74
+        },
+        {
+          "name": "BRIDGE",
+          "start": 0.74,
+          "end": 0.84
+        },
+        {
+          "name": "HOOK",
+          "start": 0.84,
+          "end": 1
+        }
+      ],
+      "release": "16 OCT 2026",
+      "license": "MP3",
+      "status": "AVAILABLE",
+      "file": "CLEAN",
+      "commercialStatus": [
+        {
+          "icon": "dot",
+          "label": "FIRST LICENSE",
+          "value": "AVAILABLE"
+        },
+        {
+          "icon": "shield",
+          "label": "ORIGINAL SOURCE",
+          "value": ""
+        },
+        {
+          "icon": "crown",
+          "label": "EXCLUSIVE",
+          "value": "AVAILABLE"
+        }
+      ],
+      "prices": {
+        "mp3": "$40",
+        "wav": "$80",
+        "stems": "$150"
+      },
+      "checkout": {
+        "mp3": "",
+        "wav": "",
+        "stems": ""
+      },
+      "showcase": true,
+      "sourceTrackId": "track-02"
+    },
+    {
+      "id": "showcase-11",
+      "signal": "011",
+      "title": "ORBIT",
+      "artist": "FRSSN",
+      "typeCode": "PLAYBOI CARTI × TRAVIS SCOTT",
+      "audio": "old.mp3",
+      "storeCover": "old-cover.png",
+      "singleCover": "old-cover.png",
+      "label": "old-cover.png",
+      "bpm": "132",
+      "key": "A MIN",
+      "moods": [
+        "DARK",
+        "CINEMATIC",
+        "ATMOSPHERIC"
+      ],
+      "sections": [
+        {
+          "name": "INTRO",
+          "start": 0,
+          "end": 0.11
+        },
+        {
+          "name": "HOOK",
+          "start": 0.11,
+          "end": 0.27
+        },
+        {
+          "name": "VERSE",
+          "start": 0.27,
+          "end": 0.52
+        },
+        {
+          "name": "HOOK",
+          "start": 0.52,
+          "end": 0.68
+        },
+        {
+          "name": "VERSE",
+          "start": 0.68,
+          "end": 0.91
+        },
+        {
+          "name": "OUTRO",
+          "start": 0.91,
+          "end": 1
+        }
+      ],
+      "release": "16 OCT 2026",
+      "license": "MP3",
+      "status": "AVAILABLE",
+      "file": "CLEAN",
+      "commercialStatus": [
+        {
+          "icon": "dot",
+          "label": "FIRST LICENSE",
+          "value": "AVAILABLE"
+        },
+        {
+          "icon": "shield",
+          "label": "ORIGINAL SOURCE",
+          "value": ""
+        },
+        {
+          "icon": "crown",
+          "label": "EXCLUSIVE",
+          "value": "AVAILABLE"
+        }
+      ],
+      "prices": {
+        "mp3": "$40",
+        "wav": "$80",
+        "stems": "$150"
+      },
+      "checkout": {
+        "mp3": "",
+        "wav": "",
+        "stems": ""
+      },
+      "showcase": true,
+      "sourceTrackId": "old"
+    },
+    {
+      "id": "showcase-12",
+      "signal": "012",
+      "title": "PHASE",
+      "artist": "FRSSN",
+      "typeCode": "DON TOLIVER × TRAVIS SCOTT",
+      "audio": "track-02.mp3",
+      "storeCover": "track-02-cover.png",
+      "singleCover": "track-02-cover.png",
+      "label": "track-02-cover.png",
+      "bpm": "140",
+      "key": "G MIN",
+      "moods": [
+        "NOCTURNAL",
+        "TENSE",
+        "SPACIOUS"
+      ],
+      "sections": [
+        {
+          "name": "INTRO",
+          "start": 0,
+          "end": 0.09
+        },
+        {
+          "name": "VERSE",
+          "start": 0.09,
+          "end": 0.33
+        },
+        {
+          "name": "HOOK",
+          "start": 0.33,
+          "end": 0.5
+        },
+        {
+          "name": "VERSE",
+          "start": 0.5,
+          "end": 0.74
+        },
+        {
+          "name": "BRIDGE",
+          "start": 0.74,
+          "end": 0.84
+        },
+        {
+          "name": "HOOK",
+          "start": 0.84,
+          "end": 1
+        }
+      ],
+      "release": "16 OCT 2026",
+      "license": "MP3",
+      "status": "AVAILABLE",
+      "file": "CLEAN",
+      "commercialStatus": [
+        {
+          "icon": "dot",
+          "label": "FIRST LICENSE",
+          "value": "AVAILABLE"
+        },
+        {
+          "icon": "shield",
+          "label": "ORIGINAL SOURCE",
+          "value": ""
+        },
+        {
+          "icon": "crown",
+          "label": "EXCLUSIVE",
+          "value": "AVAILABLE"
+        }
+      ],
+      "prices": {
+        "mp3": "$40",
+        "wav": "$80",
+        "stems": "$150"
+      },
+      "checkout": {
+        "mp3": "",
+        "wav": "",
+        "stems": ""
+      },
+      "showcase": true,
+      "sourceTrackId": "track-02"
+    },
+    {
+      "id": "showcase-13",
+      "signal": "013",
+      "title": "DUST",
+      "artist": "FRSSN",
+      "typeCode": "THE WEEKND × TRAVIS SCOTT",
+      "audio": "old.mp3",
+      "storeCover": "old-cover.png",
+      "singleCover": "old-cover.png",
+      "label": "old-cover.png",
+      "bpm": "128",
+      "key": "E MIN",
+      "moods": [
+        "COLD",
+        "MYSTERIOUS",
+        "HEAVY"
+      ],
+      "sections": [
+        {
+          "name": "INTRO",
+          "start": 0,
+          "end": 0.11
+        },
+        {
+          "name": "HOOK",
+          "start": 0.11,
+          "end": 0.27
+        },
+        {
+          "name": "VERSE",
+          "start": 0.27,
+          "end": 0.52
+        },
+        {
+          "name": "HOOK",
+          "start": 0.52,
+          "end": 0.68
+        },
+        {
+          "name": "VERSE",
+          "start": 0.68,
+          "end": 0.91
+        },
+        {
+          "name": "OUTRO",
+          "start": 0.91,
+          "end": 1
+        }
+      ],
+      "release": "16 OCT 2026",
+      "license": "MP3",
+      "status": "AVAILABLE",
+      "file": "CLEAN",
+      "commercialStatus": [
+        {
+          "icon": "dot",
+          "label": "FIRST LICENSE",
+          "value": "AVAILABLE"
+        },
+        {
+          "icon": "shield",
+          "label": "ORIGINAL SOURCE",
+          "value": ""
+        },
+        {
+          "icon": "crown",
+          "label": "EXCLUSIVE",
+          "value": "AVAILABLE"
+        }
+      ],
+      "prices": {
+        "mp3": "$40",
+        "wav": "$80",
+        "stems": "$150"
+      },
+      "checkout": {
+        "mp3": "",
+        "wav": "",
+        "stems": ""
+      },
+      "showcase": true,
+      "sourceTrackId": "old"
+    },
+    {
+      "id": "showcase-14",
+      "signal": "014",
+      "title": "SUBLEVEL",
+      "artist": "FRSSN",
+      "typeCode": "LIL WAYNE × DRAKE",
+      "audio": "track-02.mp3",
+      "storeCover": "track-02-cover.png",
+      "singleCover": "track-02-cover.png",
+      "label": "track-02-cover.png",
+      "bpm": "145",
+      "key": "C# MIN",
+      "moods": [
+        "FLOATING",
+        "DARK",
+        "EMOTIONAL"
+      ],
+      "sections": [
+        {
+          "name": "INTRO",
+          "start": 0,
+          "end": 0.09
+        },
+        {
+          "name": "VERSE",
+          "start": 0.09,
+          "end": 0.33
+        },
+        {
+          "name": "HOOK",
+          "start": 0.33,
+          "end": 0.5
+        },
+        {
+          "name": "VERSE",
+          "start": 0.5,
+          "end": 0.74
+        },
+        {
+          "name": "BRIDGE",
+          "start": 0.74,
+          "end": 0.84
+        },
+        {
+          "name": "HOOK",
+          "start": 0.84,
+          "end": 1
+        }
+      ],
+      "release": "16 OCT 2026",
+      "license": "MP3",
+      "status": "AVAILABLE",
+      "file": "CLEAN",
+      "commercialStatus": [
+        {
+          "icon": "dot",
+          "label": "FIRST LICENSE",
+          "value": "AVAILABLE"
+        },
+        {
+          "icon": "shield",
+          "label": "ORIGINAL SOURCE",
+          "value": ""
+        },
+        {
+          "icon": "crown",
+          "label": "EXCLUSIVE",
+          "value": "AVAILABLE"
+        }
+      ],
+      "prices": {
+        "mp3": "$40",
+        "wav": "$80",
+        "stems": "$150"
+      },
+      "checkout": {
+        "mp3": "",
+        "wav": "",
+        "stems": ""
+      },
+      "showcase": true,
+      "sourceTrackId": "track-02"
+    },
+    {
+      "id": "showcase-15",
+      "signal": "015",
+      "title": "MIRROR",
+      "artist": "FRSSN",
+      "typeCode": "TRAVIS SCOTT × DON TOLIVER",
+      "audio": "old.mp3",
+      "storeCover": "old-cover.png",
+      "singleCover": "old-cover.png",
+      "label": "old-cover.png",
+      "bpm": "142",
+      "key": "F# MIN",
+      "moods": [
+        "RAW",
+        "HYPNOTIC",
+        "MINIMAL"
+      ],
+      "sections": [
+        {
+          "name": "INTRO",
+          "start": 0,
+          "end": 0.11
+        },
+        {
+          "name": "HOOK",
+          "start": 0.11,
+          "end": 0.27
+        },
+        {
+          "name": "VERSE",
+          "start": 0.27,
+          "end": 0.52
+        },
+        {
+          "name": "HOOK",
+          "start": 0.52,
+          "end": 0.68
+        },
+        {
+          "name": "VERSE",
+          "start": 0.68,
+          "end": 0.91
+        },
+        {
+          "name": "OUTRO",
+          "start": 0.91,
+          "end": 1
+        }
+      ],
+      "release": "16 OCT 2026",
+      "license": "MP3",
+      "status": "AVAILABLE",
+      "file": "CLEAN",
+      "commercialStatus": [
+        {
+          "icon": "dot",
+          "label": "FIRST LICENSE",
+          "value": "AVAILABLE"
+        },
+        {
+          "icon": "shield",
+          "label": "ORIGINAL SOURCE",
+          "value": ""
+        },
+        {
+          "icon": "crown",
+          "label": "EXCLUSIVE",
+          "value": "AVAILABLE"
+        }
+      ],
+      "prices": {
+        "mp3": "$40",
+        "wav": "$80",
+        "stems": "$150"
+      },
+      "checkout": {
+        "mp3": "",
+        "wav": "",
+        "stems": ""
+      },
+      "showcase": true,
+      "sourceTrackId": "old"
+    },
+    {
+      "id": "showcase-16",
+      "signal": "016",
+      "title": "CONTACT",
+      "artist": "FRSSN",
+      "typeCode": "KANYE WEST × TRAVIS SCOTT",
+      "audio": "track-02.mp3",
+      "storeCover": "track-02-cover.png",
+      "singleCover": "track-02-cover.png",
+      "label": "track-02-cover.png",
+      "bpm": "136",
+      "key": "D MIN",
+      "moods": [
+        "DARK",
+        "CINEMATIC",
+        "ATMOSPHERIC"
+      ],
+      "sections": [
+        {
+          "name": "INTRO",
+          "start": 0,
+          "end": 0.09
+        },
+        {
+          "name": "VERSE",
+          "start": 0.09,
+          "end": 0.33
+        },
+        {
+          "name": "HOOK",
+          "start": 0.33,
+          "end": 0.5
+        },
+        {
+          "name": "VERSE",
+          "start": 0.5,
+          "end": 0.74
+        },
+        {
+          "name": "BRIDGE",
+          "start": 0.74,
+          "end": 0.84
+        },
+        {
+          "name": "HOOK",
+          "start": 0.84,
+          "end": 1
+        }
+      ],
+      "release": "16 OCT 2026",
+      "license": "MP3",
+      "status": "AVAILABLE",
+      "file": "CLEAN",
+      "commercialStatus": [
+        {
+          "icon": "dot",
+          "label": "FIRST LICENSE",
+          "value": "AVAILABLE"
+        },
+        {
+          "icon": "shield",
+          "label": "ORIGINAL SOURCE",
+          "value": ""
+        },
+        {
+          "icon": "crown",
+          "label": "EXCLUSIVE",
+          "value": "AVAILABLE"
+        }
+      ],
+      "prices": {
+        "mp3": "$40",
+        "wav": "$80",
+        "stems": "$150"
+      },
+      "checkout": {
+        "mp3": "",
+        "wav": "",
+        "stems": ""
+      },
+      "showcase": true,
+      "sourceTrackId": "track-02"
+    },
+    {
+      "id": "showcase-17",
+      "signal": "017",
+      "title": "VOID",
+      "artist": "FRSSN",
+      "typeCode": "FUTURE × METRO BOOMIN",
+      "audio": "old.mp3",
+      "storeCover": "old-cover.png",
+      "singleCover": "old-cover.png",
+      "label": "old-cover.png",
+      "bpm": "148",
+      "key": "C MIN",
+      "moods": [
+        "NOCTURNAL",
+        "TENSE",
+        "SPACIOUS"
+      ],
+      "sections": [
+        {
+          "name": "INTRO",
+          "start": 0,
+          "end": 0.11
+        },
+        {
+          "name": "HOOK",
+          "start": 0.11,
+          "end": 0.27
+        },
+        {
+          "name": "VERSE",
+          "start": 0.27,
+          "end": 0.52
+        },
+        {
+          "name": "HOOK",
+          "start": 0.52,
+          "end": 0.68
+        },
+        {
+          "name": "VERSE",
+          "start": 0.68,
+          "end": 0.91
+        },
+        {
+          "name": "OUTRO",
+          "start": 0.91,
+          "end": 1
+        }
+      ],
+      "release": "16 OCT 2026",
+      "license": "MP3",
+      "status": "AVAILABLE",
+      "file": "CLEAN",
+      "commercialStatus": [
+        {
+          "icon": "dot",
+          "label": "FIRST LICENSE",
+          "value": "AVAILABLE"
+        },
+        {
+          "icon": "shield",
+          "label": "ORIGINAL SOURCE",
+          "value": ""
+        },
+        {
+          "icon": "crown",
+          "label": "EXCLUSIVE",
+          "value": "AVAILABLE"
+        }
+      ],
+      "prices": {
+        "mp3": "$40",
+        "wav": "$80",
+        "stems": "$150"
+      },
+      "checkout": {
+        "mp3": "",
+        "wav": "",
+        "stems": ""
+      },
+      "showcase": true,
+      "sourceTrackId": "old"
+    },
+    {
+      "id": "showcase-18",
+      "signal": "018",
+      "title": "RECEIVER",
+      "artist": "FRSSN",
+      "typeCode": "PLAYBOI CARTI × TRAVIS SCOTT",
+      "audio": "track-02.mp3",
+      "storeCover": "track-02-cover.png",
+      "singleCover": "track-02-cover.png",
+      "label": "track-02-cover.png",
+      "bpm": "132",
+      "key": "A MIN",
+      "moods": [
+        "COLD",
+        "MYSTERIOUS",
+        "HEAVY"
+      ],
+      "sections": [
+        {
+          "name": "INTRO",
+          "start": 0,
+          "end": 0.09
+        },
+        {
+          "name": "VERSE",
+          "start": 0.09,
+          "end": 0.33
+        },
+        {
+          "name": "HOOK",
+          "start": 0.33,
+          "end": 0.5
+        },
+        {
+          "name": "VERSE",
+          "start": 0.5,
+          "end": 0.74
+        },
+        {
+          "name": "BRIDGE",
+          "start": 0.74,
+          "end": 0.84
+        },
+        {
+          "name": "HOOK",
+          "start": 0.84,
+          "end": 1
+        }
+      ],
+      "release": "16 OCT 2026",
+      "license": "MP3",
+      "status": "AVAILABLE",
+      "file": "CLEAN",
+      "commercialStatus": [
+        {
+          "icon": "dot",
+          "label": "FIRST LICENSE",
+          "value": "AVAILABLE"
+        },
+        {
+          "icon": "shield",
+          "label": "ORIGINAL SOURCE",
+          "value": ""
+        },
+        {
+          "icon": "crown",
+          "label": "EXCLUSIVE",
+          "value": "AVAILABLE"
+        }
+      ],
+      "prices": {
+        "mp3": "$40",
+        "wav": "$80",
+        "stems": "$150"
+      },
+      "checkout": {
+        "mp3": "",
+        "wav": "",
+        "stems": ""
+      },
+      "showcase": true,
+      "sourceTrackId": "track-02"
+    },
+    {
+      "id": "showcase-19",
+      "signal": "019",
+      "title": "COLD SIGNAL",
+      "artist": "FRSSN",
+      "typeCode": "DON TOLIVER × TRAVIS SCOTT",
+      "audio": "old.mp3",
+      "storeCover": "old-cover.png",
+      "singleCover": "old-cover.png",
+      "label": "old-cover.png",
+      "bpm": "140",
+      "key": "G MIN",
+      "moods": [
+        "FLOATING",
+        "DARK",
+        "EMOTIONAL"
+      ],
+      "sections": [
+        {
+          "name": "INTRO",
+          "start": 0,
+          "end": 0.11
+        },
+        {
+          "name": "HOOK",
+          "start": 0.11,
+          "end": 0.27
+        },
+        {
+          "name": "VERSE",
+          "start": 0.27,
+          "end": 0.52
+        },
+        {
+          "name": "HOOK",
+          "start": 0.52,
+          "end": 0.68
+        },
+        {
+          "name": "VERSE",
+          "start": 0.68,
+          "end": 0.91
+        },
+        {
+          "name": "OUTRO",
+          "start": 0.91,
+          "end": 1
+        }
+      ],
+      "release": "16 OCT 2026",
+      "license": "MP3",
+      "status": "AVAILABLE",
+      "file": "CLEAN",
+      "commercialStatus": [
+        {
+          "icon": "dot",
+          "label": "FIRST LICENSE",
+          "value": "AVAILABLE"
+        },
+        {
+          "icon": "shield",
+          "label": "ORIGINAL SOURCE",
+          "value": ""
+        },
+        {
+          "icon": "crown",
+          "label": "EXCLUSIVE",
+          "value": "AVAILABLE"
+        }
+      ],
+      "prices": {
+        "mp3": "$40",
+        "wav": "$80",
+        "stems": "$150"
+      },
+      "checkout": {
+        "mp3": "",
+        "wav": "",
+        "stems": ""
+      },
+      "showcase": true,
+      "sourceTrackId": "old"
+    },
+    {
+      "id": "showcase-20",
+      "signal": "020",
+      "title": "NIGHT NODE",
+      "artist": "FRSSN",
+      "typeCode": "THE WEEKND × TRAVIS SCOTT",
+      "audio": "track-02.mp3",
+      "storeCover": "track-02-cover.png",
+      "singleCover": "track-02-cover.png",
+      "label": "track-02-cover.png",
+      "bpm": "128",
+      "key": "E MIN",
+      "moods": [
+        "RAW",
+        "HYPNOTIC",
+        "MINIMAL"
+      ],
+      "sections": [
+        {
+          "name": "INTRO",
+          "start": 0,
+          "end": 0.09
+        },
+        {
+          "name": "VERSE",
+          "start": 0.09,
+          "end": 0.33
+        },
+        {
+          "name": "HOOK",
+          "start": 0.33,
+          "end": 0.5
+        },
+        {
+          "name": "VERSE",
+          "start": 0.5,
+          "end": 0.74
+        },
+        {
+          "name": "BRIDGE",
+          "start": 0.74,
+          "end": 0.84
+        },
+        {
+          "name": "HOOK",
+          "start": 0.84,
+          "end": 1
+        }
+      ],
+      "release": "16 OCT 2026",
+      "license": "MP3",
+      "status": "AVAILABLE",
+      "file": "CLEAN",
+      "commercialStatus": [
+        {
+          "icon": "dot",
+          "label": "FIRST LICENSE",
+          "value": "AVAILABLE"
+        },
+        {
+          "icon": "shield",
+          "label": "ORIGINAL SOURCE",
+          "value": ""
+        },
+        {
+          "icon": "crown",
+          "label": "EXCLUSIVE",
+          "value": "AVAILABLE"
+        }
+      ],
+      "prices": {
+        "mp3": "$40",
+        "wav": "$80",
+        "stems": "$150"
+      },
+      "checkout": {
+        "mp3": "",
+        "wav": "",
+        "stems": ""
+      },
+      "showcase": true,
+      "sourceTrackId": "track-02"
+    },
+    {
+      "id": "showcase-21",
+      "signal": "021",
+      "title": "MEMORY",
+      "artist": "FRSSN",
+      "typeCode": "LIL WAYNE × DRAKE",
+      "audio": "old.mp3",
+      "storeCover": "old-cover.png",
+      "singleCover": "old-cover.png",
+      "label": "old-cover.png",
+      "bpm": "145",
+      "key": "C# MIN",
+      "moods": [
+        "DARK",
+        "CINEMATIC",
+        "ATMOSPHERIC"
+      ],
+      "sections": [
+        {
+          "name": "INTRO",
+          "start": 0,
+          "end": 0.11
+        },
+        {
+          "name": "HOOK",
+          "start": 0.11,
+          "end": 0.27
+        },
+        {
+          "name": "VERSE",
+          "start": 0.27,
+          "end": 0.52
+        },
+        {
+          "name": "HOOK",
+          "start": 0.52,
+          "end": 0.68
+        },
+        {
+          "name": "VERSE",
+          "start": 0.68,
+          "end": 0.91
+        },
+        {
+          "name": "OUTRO",
+          "start": 0.91,
+          "end": 1
+        }
+      ],
+      "release": "16 OCT 2026",
+      "license": "MP3",
+      "status": "AVAILABLE",
+      "file": "CLEAN",
+      "commercialStatus": [
+        {
+          "icon": "dot",
+          "label": "FIRST LICENSE",
+          "value": "AVAILABLE"
+        },
+        {
+          "icon": "shield",
+          "label": "ORIGINAL SOURCE",
+          "value": ""
+        },
+        {
+          "icon": "crown",
+          "label": "EXCLUSIVE",
+          "value": "AVAILABLE"
+        }
+      ],
+      "prices": {
+        "mp3": "$40",
+        "wav": "$80",
+        "stems": "$150"
+      },
+      "checkout": {
+        "mp3": "",
+        "wav": "",
+        "stems": ""
+      },
+      "showcase": true,
+      "sourceTrackId": "old"
+    },
+    {
+      "id": "showcase-22",
+      "signal": "022",
+      "title": "TRACE",
+      "artist": "FRSSN",
+      "typeCode": "TRAVIS SCOTT × DON TOLIVER",
+      "audio": "track-02.mp3",
+      "storeCover": "track-02-cover.png",
+      "singleCover": "track-02-cover.png",
+      "label": "track-02-cover.png",
+      "bpm": "142",
+      "key": "F# MIN",
+      "moods": [
+        "NOCTURNAL",
+        "TENSE",
+        "SPACIOUS"
+      ],
+      "sections": [
+        {
+          "name": "INTRO",
+          "start": 0,
+          "end": 0.09
+        },
+        {
+          "name": "VERSE",
+          "start": 0.09,
+          "end": 0.33
+        },
+        {
+          "name": "HOOK",
+          "start": 0.33,
+          "end": 0.5
+        },
+        {
+          "name": "VERSE",
+          "start": 0.5,
+          "end": 0.74
+        },
+        {
+          "name": "BRIDGE",
+          "start": 0.74,
+          "end": 0.84
+        },
+        {
+          "name": "HOOK",
+          "start": 0.84,
+          "end": 1
+        }
+      ],
+      "release": "16 OCT 2026",
+      "license": "MP3",
+      "status": "AVAILABLE",
+      "file": "CLEAN",
+      "commercialStatus": [
+        {
+          "icon": "dot",
+          "label": "FIRST LICENSE",
+          "value": "AVAILABLE"
+        },
+        {
+          "icon": "shield",
+          "label": "ORIGINAL SOURCE",
+          "value": ""
+        },
+        {
+          "icon": "crown",
+          "label": "EXCLUSIVE",
+          "value": "AVAILABLE"
+        }
+      ],
+      "prices": {
+        "mp3": "$40",
+        "wav": "$80",
+        "stems": "$150"
+      },
+      "checkout": {
+        "mp3": "",
+        "wav": "",
+        "stems": ""
+      },
+      "showcase": true,
+      "sourceTrackId": "track-02"
+    },
+    {
+      "id": "showcase-23",
+      "signal": "023",
+      "title": "DEAD AIR",
+      "artist": "FRSSN",
+      "typeCode": "KANYE WEST × TRAVIS SCOTT",
+      "audio": "old.mp3",
+      "storeCover": "old-cover.png",
+      "singleCover": "old-cover.png",
+      "label": "old-cover.png",
+      "bpm": "136",
+      "key": "D MIN",
+      "moods": [
+        "COLD",
+        "MYSTERIOUS",
+        "HEAVY"
+      ],
+      "sections": [
+        {
+          "name": "INTRO",
+          "start": 0,
+          "end": 0.11
+        },
+        {
+          "name": "HOOK",
+          "start": 0.11,
+          "end": 0.27
+        },
+        {
+          "name": "VERSE",
+          "start": 0.27,
+          "end": 0.52
+        },
+        {
+          "name": "HOOK",
+          "start": 0.52,
+          "end": 0.68
+        },
+        {
+          "name": "VERSE",
+          "start": 0.68,
+          "end": 0.91
+        },
+        {
+          "name": "OUTRO",
+          "start": 0.91,
+          "end": 1
+        }
+      ],
+      "release": "16 OCT 2026",
+      "license": "MP3",
+      "status": "AVAILABLE",
+      "file": "CLEAN",
+      "commercialStatus": [
+        {
+          "icon": "dot",
+          "label": "FIRST LICENSE",
+          "value": "AVAILABLE"
+        },
+        {
+          "icon": "shield",
+          "label": "ORIGINAL SOURCE",
+          "value": ""
+        },
+        {
+          "icon": "crown",
+          "label": "EXCLUSIVE",
+          "value": "AVAILABLE"
+        }
+      ],
+      "prices": {
+        "mp3": "$40",
+        "wav": "$80",
+        "stems": "$150"
+      },
+      "checkout": {
+        "mp3": "",
+        "wav": "",
+        "stems": ""
+      },
+      "showcase": true,
+      "sourceTrackId": "old"
+    },
+    {
+      "id": "showcase-24",
+      "signal": "024",
+      "title": "HORIZON",
+      "artist": "FRSSN",
+      "typeCode": "FUTURE × METRO BOOMIN",
+      "audio": "track-02.mp3",
+      "storeCover": "track-02-cover.png",
+      "singleCover": "track-02-cover.png",
+      "label": "track-02-cover.png",
+      "bpm": "148",
+      "key": "C MIN",
+      "moods": [
+        "FLOATING",
+        "DARK",
+        "EMOTIONAL"
+      ],
+      "sections": [
+        {
+          "name": "INTRO",
+          "start": 0,
+          "end": 0.09
+        },
+        {
+          "name": "VERSE",
+          "start": 0.09,
+          "end": 0.33
+        },
+        {
+          "name": "HOOK",
+          "start": 0.33,
+          "end": 0.5
+        },
+        {
+          "name": "VERSE",
+          "start": 0.5,
+          "end": 0.74
+        },
+        {
+          "name": "BRIDGE",
+          "start": 0.74,
+          "end": 0.84
+        },
+        {
+          "name": "HOOK",
+          "start": 0.84,
+          "end": 1
+        }
+      ],
+      "release": "16 OCT 2026",
+      "license": "MP3",
+      "status": "AVAILABLE",
+      "file": "CLEAN",
+      "commercialStatus": [
+        {
+          "icon": "dot",
+          "label": "FIRST LICENSE",
+          "value": "AVAILABLE"
+        },
+        {
+          "icon": "shield",
+          "label": "ORIGINAL SOURCE",
+          "value": ""
+        },
+        {
+          "icon": "crown",
+          "label": "EXCLUSIVE",
+          "value": "AVAILABLE"
+        }
+      ],
+      "prices": {
+        "mp3": "$40",
+        "wav": "$80",
+        "stems": "$150"
+      },
+      "checkout": {
+        "mp3": "",
+        "wav": "",
+        "stems": ""
+      },
+      "showcase": true,
+      "sourceTrackId": "track-02"
+    },
+    {
+      "id": "showcase-25",
+      "signal": "025",
+      "title": "VECTOR",
+      "artist": "FRSSN",
+      "typeCode": "PLAYBOI CARTI × TRAVIS SCOTT",
+      "audio": "old.mp3",
+      "storeCover": "old-cover.png",
+      "singleCover": "old-cover.png",
+      "label": "old-cover.png",
+      "bpm": "132",
+      "key": "A MIN",
+      "moods": [
+        "RAW",
+        "HYPNOTIC",
+        "MINIMAL"
+      ],
+      "sections": [
+        {
+          "name": "INTRO",
+          "start": 0,
+          "end": 0.11
+        },
+        {
+          "name": "HOOK",
+          "start": 0.11,
+          "end": 0.27
+        },
+        {
+          "name": "VERSE",
+          "start": 0.27,
+          "end": 0.52
+        },
+        {
+          "name": "HOOK",
+          "start": 0.52,
+          "end": 0.68
+        },
+        {
+          "name": "VERSE",
+          "start": 0.68,
+          "end": 0.91
+        },
+        {
+          "name": "OUTRO",
+          "start": 0.91,
+          "end": 1
+        }
+      ],
+      "release": "16 OCT 2026",
+      "license": "MP3",
+      "status": "AVAILABLE",
+      "file": "CLEAN",
+      "commercialStatus": [
+        {
+          "icon": "dot",
+          "label": "FIRST LICENSE",
+          "value": "AVAILABLE"
+        },
+        {
+          "icon": "shield",
+          "label": "ORIGINAL SOURCE",
+          "value": ""
+        },
+        {
+          "icon": "crown",
+          "label": "EXCLUSIVE",
+          "value": "AVAILABLE"
+        }
+      ],
+      "prices": {
+        "mp3": "$40",
+        "wav": "$80",
+        "stems": "$150"
+      },
+      "checkout": {
+        "mp3": "",
+        "wav": "",
+        "stems": ""
+      },
+      "showcase": true,
+      "sourceTrackId": "old"
+    },
+    {
+      "id": "showcase-26",
+      "signal": "026",
+      "title": "SILENT ROOM",
+      "artist": "FRSSN",
+      "typeCode": "DON TOLIVER × TRAVIS SCOTT",
+      "audio": "track-02.mp3",
+      "storeCover": "track-02-cover.png",
+      "singleCover": "track-02-cover.png",
+      "label": "track-02-cover.png",
+      "bpm": "140",
+      "key": "G MIN",
+      "moods": [
+        "DARK",
+        "CINEMATIC",
+        "ATMOSPHERIC"
+      ],
+      "sections": [
+        {
+          "name": "INTRO",
+          "start": 0,
+          "end": 0.09
+        },
+        {
+          "name": "VERSE",
+          "start": 0.09,
+          "end": 0.33
+        },
+        {
+          "name": "HOOK",
+          "start": 0.33,
+          "end": 0.5
+        },
+        {
+          "name": "VERSE",
+          "start": 0.5,
+          "end": 0.74
+        },
+        {
+          "name": "BRIDGE",
+          "start": 0.74,
+          "end": 0.84
+        },
+        {
+          "name": "HOOK",
+          "start": 0.84,
+          "end": 1
+        }
+      ],
+      "release": "16 OCT 2026",
+      "license": "MP3",
+      "status": "AVAILABLE",
+      "file": "CLEAN",
+      "commercialStatus": [
+        {
+          "icon": "dot",
+          "label": "FIRST LICENSE",
+          "value": "AVAILABLE"
+        },
+        {
+          "icon": "shield",
+          "label": "ORIGINAL SOURCE",
+          "value": ""
+        },
+        {
+          "icon": "crown",
+          "label": "EXCLUSIVE",
+          "value": "AVAILABLE"
+        }
+      ],
+      "prices": {
+        "mp3": "$40",
+        "wav": "$80",
+        "stems": "$150"
+      },
+      "checkout": {
+        "mp3": "",
+        "wav": "",
+        "stems": ""
+      },
+      "showcase": true,
+      "sourceTrackId": "track-02"
+    },
+    {
+      "id": "showcase-27",
+      "signal": "027",
+      "title": "FREQUENCY",
+      "artist": "FRSSN",
+      "typeCode": "THE WEEKND × TRAVIS SCOTT",
+      "audio": "old.mp3",
+      "storeCover": "old-cover.png",
+      "singleCover": "old-cover.png",
+      "label": "old-cover.png",
+      "bpm": "128",
+      "key": "E MIN",
+      "moods": [
+        "NOCTURNAL",
+        "TENSE",
+        "SPACIOUS"
+      ],
+      "sections": [
+        {
+          "name": "INTRO",
+          "start": 0,
+          "end": 0.11
+        },
+        {
+          "name": "HOOK",
+          "start": 0.11,
+          "end": 0.27
+        },
+        {
+          "name": "VERSE",
+          "start": 0.27,
+          "end": 0.52
+        },
+        {
+          "name": "HOOK",
+          "start": 0.52,
+          "end": 0.68
+        },
+        {
+          "name": "VERSE",
+          "start": 0.68,
+          "end": 0.91
+        },
+        {
+          "name": "OUTRO",
+          "start": 0.91,
+          "end": 1
+        }
+      ],
+      "release": "16 OCT 2026",
+      "license": "MP3",
+      "status": "AVAILABLE",
+      "file": "CLEAN",
+      "commercialStatus": [
+        {
+          "icon": "dot",
+          "label": "FIRST LICENSE",
+          "value": "AVAILABLE"
+        },
+        {
+          "icon": "shield",
+          "label": "ORIGINAL SOURCE",
+          "value": ""
+        },
+        {
+          "icon": "crown",
+          "label": "EXCLUSIVE",
+          "value": "AVAILABLE"
+        }
+      ],
+      "prices": {
+        "mp3": "$40",
+        "wav": "$80",
+        "stems": "$150"
+      },
+      "checkout": {
+        "mp3": "",
+        "wav": "",
+        "stems": ""
+      },
+      "showcase": true,
+      "sourceTrackId": "old"
+    },
+    {
+      "id": "showcase-28",
+      "signal": "028",
+      "title": "LAST LIGHT",
+      "artist": "FRSSN",
+      "typeCode": "LIL WAYNE × DRAKE",
+      "audio": "track-02.mp3",
+      "storeCover": "track-02-cover.png",
+      "singleCover": "track-02-cover.png",
+      "label": "track-02-cover.png",
+      "bpm": "145",
+      "key": "C# MIN",
+      "moods": [
+        "COLD",
+        "MYSTERIOUS",
+        "HEAVY"
+      ],
+      "sections": [
+        {
+          "name": "INTRO",
+          "start": 0,
+          "end": 0.09
+        },
+        {
+          "name": "VERSE",
+          "start": 0.09,
+          "end": 0.33
+        },
+        {
+          "name": "HOOK",
+          "start": 0.33,
+          "end": 0.5
+        },
+        {
+          "name": "VERSE",
+          "start": 0.5,
+          "end": 0.74
+        },
+        {
+          "name": "BRIDGE",
+          "start": 0.74,
+          "end": 0.84
+        },
+        {
+          "name": "HOOK",
+          "start": 0.84,
+          "end": 1
+        }
+      ],
+      "release": "16 OCT 2026",
+      "license": "MP3",
+      "status": "AVAILABLE",
+      "file": "CLEAN",
+      "commercialStatus": [
+        {
+          "icon": "dot",
+          "label": "FIRST LICENSE",
+          "value": "AVAILABLE"
+        },
+        {
+          "icon": "shield",
+          "label": "ORIGINAL SOURCE",
+          "value": ""
+        },
+        {
+          "icon": "crown",
+          "label": "EXCLUSIVE",
+          "value": "AVAILABLE"
+        }
+      ],
+      "prices": {
+        "mp3": "$40",
+        "wav": "$80",
+        "stems": "$150"
+      },
+      "checkout": {
+        "mp3": "",
+        "wav": "",
+        "stems": ""
+      },
+      "showcase": true,
+      "sourceTrackId": "track-02"
+    }
+  ]
+}
