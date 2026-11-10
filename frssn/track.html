@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#050605">
 <title>FRSSN // Track</title>
+<meta name="frssn-production-baseline" content="desktop-2026-11-10-final">
 <script src="frssn-core.js"></script>
 <script>
 /* =====================================================
@@ -2472,6 +2473,34 @@ body.layout-mouse-edit .layout-debug-selected{
 }
 
 </style>
+
+<style id="frssnProductionNoDebug">
+/* FRSSN PRODUCTION // approved geometry stays active, all debug controls are disabled. */
+.layoutDebugPanel,
+.layoutDebugReopen,
+.layoutScaleHandle,
+.layoutAxisHandle,
+.vuDebugPanel,
+.vuDebugReopen,
+.vuDebugHandle,
+.vuDebugFrame,
+.vuPivotGuide,
+.vuCenterGuide{display:none!important;}
+body.layout-mouse-edit .featuredSlot .vinylUnit,
+body.layout-mouse-edit .featuredSlot .waveBox,
+body.layout-mouse-edit .featuredSlot .iconBtn.js-play,
+body.layout-mouse-edit .featuredSlot .time,
+body.layout-mouse-edit .featuredSlot .trackTitle,
+body.layout-mouse-edit .featuredSlot .typeCode,
+body.layout-mouse-edit .featuredSlot .trackStructure,
+body.layout-mouse-edit .featuredSlot .beatCoreBlock,
+body.layout-mouse-edit .featuredSlot .moodBlock,
+body.layout-mouse-edit .featuredSlot .releaseBlock,
+body.layout-mouse-edit .featuredSlot .badge,
+body.layout-mouse-edit .featuredSlot .buyCol,
+body.layout-mouse-edit #heroMeterBlock,
+.layout-debug-selected{outline:none!important;box-shadow:none!important;cursor:default!important;}
+</style>
 </head>
 
 <body class="detailPage">
@@ -2695,7 +2724,7 @@ body.layout-mouse-edit .layout-debug-selected{
 <audio id="paperOutSfx" preload="auto" src="Paper out.mp3"></audio>
 
 <!-- VU: OLD PNG NAMES ARE INTENTIONALLY KEPT -->
-<div class="vuModule debug-on" id="vuModule">
+<div class="vuModule" id="vuModule">
   <img class="vuFaceLayer" src="vu-panel-face-module-final.png" alt="">
   <div class="vuNeedlePivot left"><div class="vuLiveNeedle" id="vuNeedleL"></div></div>
   <div class="vuNeedlePivot right"><div class="vuLiveNeedle" id="vuNeedleR"></div></div>
@@ -2946,23 +2975,23 @@ if(microstatus&&PUBLIC_TRACKS.length){
 ===================================================== */
 const LAYOUT_DEBUG_KEY="frssnLayoutDebugV2_2026_11_10";
 const LAYOUT_DEBUG_DEFAULTS={
-  /* Desktop baseline // approved 2026-11-10.
-     RESET and a clean browser start from this exact composition. */
+  /* Desktop production baseline // approved 2026-11-10 final.
+     Fixed composition; debug UI is disabled in this production build. */
   headerHeight:398,
   tileScale:112,
   turntableScale:94,turntableX:-55,turntableY:1,
   playerScale:84,playerX:-246.9,playerY:78.5, /* frozen wave-row baseline */
-  waveScale:86,waveX:11,waveY:-36,
+  waveScale:86,waveX:8.8,waveY:17.3,
   playScale:101,playX:7,playY:18,
   timeScale:141,timeX:-36,timeY:-22,
-  titleScale:180,titleX:-78.2,titleY:-43.6,
-  typeScale:170,typeX:-82.6,typeY:-40.4,
-  structureScale:75,structureX:-188.4,structureY:52.1,
+  titleScale:180,titleX:-79.3,titleY:-26.9,
+  typeScale:170,typeX:-82.6,typeY:-22.7,
+  structureScale:75,structureX:-191.7,structureY:101.1,
   coreScale:88,coreX:-799.1,coreY:77.9,
   moodScale:84,moodX:-823.5,moodY:80.9,
   releaseScale:140,releaseX:-944.1,releaseY:-171,
   bpmValueFont:21,keyValueFont:21,
-  statusScale:79,statusX:-200.9,statusY:84.4,
+  statusScale:79,statusX:-200.9,statusY:117.7,
   buyScale:90,buyX:-265.7,buyY:175.6,
   meterScale:100,meterX:0,meterY:0,
   turntableStretchX:100,turntableStretchY:100,
@@ -3698,14 +3727,13 @@ function endLayoutPanelDrag(event){
 }
 
 if(IS_DETAIL_PAGE&&layoutDebugPanel){
-  /* DEBUG BUILD: layout editor starts active. */
-  setLayoutMouseEdit(true);
-  loadLayoutDebug();
+  /* PRODUCTION BUILD: fixed approved desktop baseline, debug UI disabled. */
+  layoutDebugState={...LAYOUT_DEBUG_DEFAULTS};
   applyLayoutDebug();
-  loadLayoutDebugPanelPosition();
   updateHeroFrameLockStatus();
-  /* Keep direct mouse editing enabled for this debug build. */
-  setLayoutMouseEdit(true);
+  setLayoutMouseEdit(false);
+  layoutDebugPanel.classList.add("is-hidden");
+  layoutDebugReopen?.classList.remove("is-visible");
 
   Object.entries(debugInputs).forEach(([key,input])=>{
     input?.addEventListener("input",()=>{
