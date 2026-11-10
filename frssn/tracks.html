@@ -463,7 +463,7 @@ button,input{font:inherit}
 }
 .storeCardV2 .commercialStatusRail{
   display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
+  grid-template-columns:repeat(4,minmax(0,1fr));
   gap:6px;
 }
 .storeCardV2 .statusChip{
@@ -489,6 +489,15 @@ button,input{font:inherit}
 }
 .storeCardV2 .statusChipIcon.dot{
   width:9px;height:9px;flex-basis:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px rgba(214,255,40,.66);
+}
+.storeCardV2 .statusChipIcon.ai{
+  width:15px;
+  flex-basis:15px;
+  height:15px;
+  border:1px solid currentColor;
+  font:900 6px/13px Arial,Helvetica,sans-serif;
+  text-align:center;
+  letter-spacing:0;
 }
 .storeCardV2 .statusChipIcon svg{width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .storeCardV2 .trackStructure{
@@ -620,7 +629,7 @@ button,input{font:inherit}
   .storeCardV2 .topline{display:block}
   .storeCardV2 .trackTitle{font-size:19px}
   .storeCardV2 .typeCode{font-size:10px;margin-top:5px}
-  .storeCardV2 .commercialStatusRail{grid-template-columns:1fr;gap:4px}
+  .storeCardV2 .commercialStatusRail{grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
   .storeCardV2 .statusChip{justify-content:flex-start;height:24px;padding:0 7px;font-size:8px}
   .storeCardV2 .trackStructure{height:23px}
   .storeCardV2 .structureSegment{font-size:7.5px;padding:0 2px}
@@ -937,8 +946,9 @@ body.playerBlockDebugMode .vinylScaleShell::after{display:none!important}
 
             <div class="commercialStatusRail" aria-label="Track commercial status">
               <span class="statusChip"><span class="statusChipIcon dot"></span><span>FIRST LICENSE</span><span class="statusValue">// AVAILABLE</span></span>
-              <span class="statusChip"><span class="statusChipIcon"><svg viewBox="0 0 24 24"><path d="M12 3 19 6v5c0 4.6-2.8 8.1-7 10-4.2-1.9-7-5.4-7-10V6l7-3Z"/><path d="m9.2 12 1.8 1.8 3.9-4"/></svg></span><span>ORIGINAL SOURCE</span></span>
               <span class="statusChip"><span class="statusChipIcon"><svg viewBox="0 0 24 24"><path d="m4 8 4 4 4-6 4 6 4-4-2 9H6L4 8Z"/><path d="M6 20h12"/></svg></span><span>EXCLUSIVE</span><span class="statusValue">// AVAILABLE</span></span>
+              <span class="statusChip"><span class="statusChipIcon"><svg viewBox="0 0 24 24"><path d="M12 3 19 6v5c0 4.6-2.8 8.1-7 10-4.2-1.9-7-5.4-7-10V6l7-3Z"/><path d="m9.2 12 1.8 1.8 3.9-4"/></svg></span><span>NO STOCK / © LOOPS</span></span>
+              <span class="statusChip"><span class="statusChipIcon ai" aria-hidden="true">AI</span><span>NO AI GEN</span></span>
             </div>
 
             <div class="trackStructure" aria-label="Track sections">
@@ -1008,8 +1018,9 @@ body.playerBlockDebugMode .vinylScaleShell::after{display:none!important}
 
             <div class="commercialStatusRail" aria-label="Track commercial status">
               <span class="statusChip"><span class="statusChipIcon dot"></span><span>FIRST LICENSE</span><span class="statusValue">// AVAILABLE</span></span>
-              <span class="statusChip"><span class="statusChipIcon"><svg viewBox="0 0 24 24"><path d="M12 3 19 6v5c0 4.6-2.8 8.1-7 10-4.2-1.9-7-5.4-7-10V6l7-3Z"/><path d="m9.2 12 1.8 1.8 3.9-4"/></svg></span><span>ORIGINAL SOURCE</span></span>
               <span class="statusChip"><span class="statusChipIcon"><svg viewBox="0 0 24 24"><path d="m4 8 4 4 4-6 4 6 4-4-2 9H6L4 8Z"/><path d="M6 20h12"/></svg></span><span>EXCLUSIVE</span><span class="statusValue">// AVAILABLE</span></span>
+              <span class="statusChip"><span class="statusChipIcon"><svg viewBox="0 0 24 24"><path d="M12 3 19 6v5c0 4.6-2.8 8.1-7 10-4.2-1.9-7-5.4-7-10V6l7-3Z"/><path d="m9.2 12 1.8 1.8 3.9-4"/></svg></span><span>NO STOCK / © LOOPS</span></span>
+              <span class="statusChip"><span class="statusChipIcon ai" aria-hidden="true">AI</span><span>NO AI GEN</span></span>
             </div>
 
             <div class="trackStructure" aria-label="Track sections">
@@ -1205,6 +1216,111 @@ const tracks = [...document.querySelectorAll(".track")].map((el,index)=>({
   currentTonearmAngle:-8,
   hasPlaybackEverStarted:false
 }));
+
+/* =====================================================
+   STORE STATUS RAIL // PUBLIC DB CONTRACT
+   0 licenses  -> FIRST LICENSE // AVAILABLE
+   1+ licenses -> LICENSES // N
+   plus EXCLUSIVE, NO STOCK / © LOOPS, NO AI GEN
+===================================================== */
+function storeStatusMeta(state){
+  const shared=window.FRSSN?.metaFor?.(state.id,state.index);
+  if(shared)return shared;
+
+  const pools=[
+    window.FRSSN?.tracks,
+    window.FRSSN?.db?.tracks,
+    window.FRSSN_DB?.tracks
+  ];
+  for(const pool of pools){
+    if(Array.isArray(pool)){
+      const found=pool.find(item=>String(item?.id??"")===String(state.id));
+      if(found)return found;
+    }
+  }
+  return {};
+}
+function statusBool(value,fallback=false){
+  if(typeof value==="boolean")return value;
+  if(typeof value==="number")return value!==0;
+  if(typeof value==="string"){
+    const s=value.trim().toLowerCase();
+    if(["1","true","yes","on","available","enabled"].includes(s))return true;
+    if(["0","false","no","off","disabled","sold"].includes(s))return false;
+  }
+  return fallback;
+}
+function statusLicenseCount(meta){
+  const candidates=[meta?.licenseCount,meta?.licensesIssued,meta?.licenses];
+  for(const value of candidates){
+    const n=Number(value);
+    if(Number.isFinite(n)&&n>=0)return Math.floor(n);
+  }
+  const items=Array.isArray(meta?.commercialStatus)?meta.commercialStatus:[];
+  const item=items.find(x=>/licenses?/i.test(String(x?.label||"")));
+  if(item){
+    const m=String(item.value??item.label??"").match(/\d+/);
+    if(m)return Number(m[0]);
+  }
+  return 0;
+}
+function statusExclusive(meta){
+  if(meta?.exclusiveStatus!=null)return String(meta.exclusiveStatus).trim().toUpperCase()||"AVAILABLE";
+  if(meta?.exclusive!=null){
+    if(typeof meta.exclusive==="boolean")return meta.exclusive?"AVAILABLE":"SOLD";
+    return String(meta.exclusive).trim().toUpperCase()||"AVAILABLE";
+  }
+  const items=Array.isArray(meta?.commercialStatus)?meta.commercialStatus:[];
+  const item=items.find(x=>/exclusive/i.test(String(x?.label||"")));
+  return String(item?.value||"AVAILABLE").trim().toUpperCase();
+}
+function storeStatusIcon(kind){
+  if(kind==="dot")return '<span class="statusChipIcon dot" aria-hidden="true"></span>';
+  if(kind==="crown")return '<span class="statusChipIcon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m4 8 4 4 4-6 4 6 4-4-2 9H6L4 8Z"/><path d="M6 20h12"/></svg></span>';
+  if(kind==="shield")return '<span class="statusChipIcon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 19 6v5c0 4.6-2.8 8.1-7 10-4.2-1.9-7-5.4-7-10V6l7-3Z"/><path d="m9.2 12 1.8 1.8 3.9-4"/></svg></span>';
+  if(kind==="ai")return '<span class="statusChipIcon ai" aria-hidden="true">AI</span>';
+  return "";
+}
+function renderStoreStatusRail(state){
+  const rail=state?.el?.querySelector(".commercialStatusRail");
+  if(!rail)return;
+
+  const meta=storeStatusMeta(state);
+  const count=statusLicenseCount(meta);
+  const exclusive=statusExclusive(meta);
+  const content=meta?.contentStatus||{};
+
+  /* Missing flags keep the approved FRSSN fallback visible.
+     An explicit false from BeatManager hides only that origin chip. */
+  const noStock=statusBool(
+    content.noStockCopyrightLoops ??
+    meta?.noStockCopyrightLoops ??
+    meta?.noStockLoops,
+    true
+  );
+  const noAi=statusBool(
+    content.noAiGen ??
+    meta?.noAiGen ??
+    meta?.noAIGen,
+    true
+  );
+
+  const licenseChip=count===0
+    ? `${storeStatusIcon("dot")}<span>FIRST LICENSE</span><span class="statusValue">// AVAILABLE</span>`
+    : `${storeStatusIcon("dot")}<span>LICENSES</span><span class="statusValue">// ${count}</span>`;
+
+  const chips=[
+    `<span class="statusChip">${licenseChip}</span>`,
+    `<span class="statusChip">${storeStatusIcon("crown")}<span>EXCLUSIVE</span><span class="statusValue">// ${exclusive}</span></span>`
+  ];
+
+  if(noStock)chips.push(`<span class="statusChip">${storeStatusIcon("shield")}<span>NO STOCK / © LOOPS</span></span>`);
+  if(noAi)chips.push(`<span class="statusChip">${storeStatusIcon("ai")}<span>NO AI GEN</span></span>`);
+
+  rail.innerHTML=chips.join("");
+}
+tracks.forEach(renderStoreStatusRail);
+
 
 /* =====================================================
    PAPER SFX
