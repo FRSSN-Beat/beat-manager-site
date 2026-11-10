@@ -3728,6 +3728,7 @@ function endLayoutPanelDrag(event){
 
 if(IS_DETAIL_PAGE&&layoutDebugPanel){
   /* PRODUCTION BUILD: fixed approved desktop baseline, debug UI disabled. */
+  document.body.classList.remove("layout-mouse-edit");
   layoutDebugState={...LAYOUT_DEBUG_DEFAULTS};
   applyLayoutDebug();
   updateHeroFrameLockStatus();
@@ -3862,10 +3863,12 @@ if(IS_DETAIL_PAGE&&layoutDebugPanel){
       setTimeout(()=>layoutDebugCopy.textContent=old,900);
     }catch(_){}
   });
-  /* DEBUG BUILD: show the panel immediately and enable direct editing. */
-  layoutDebugPanel.classList.remove("is-hidden");
+  /* PRODUCTION BUILD: keep the approved geometry engine active,
+     but never enable direct mouse layout editing. Normal Play / Seek /
+     Scratch / Checkout pointer interactions own the page. */
+  layoutDebugPanel.classList.add("is-hidden");
   layoutDebugReopen?.classList.remove("is-visible");
-  setLayoutMouseEdit(true);
+  setLayoutMouseEdit(false);
 }else{
   layoutDebugPanel?.classList.add("is-hidden");
 }
