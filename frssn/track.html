@@ -5684,9 +5684,17 @@ function mergeTrackMeta(base,overlay){
 function metaFor(state){
   const sharedMeta=window.FRSSN?.metaFor?.(state.id,state.index)||null;
   const publicTrack=publicTrackFor(state);
-  if(publicTrack)return mergeTrackMeta(sharedMeta,publicTrack);
-  if(sharedMeta)return sharedMeta;
-  if(DETAIL_META[state.id])return DETAIL_META[state.id];
+  const fallbackMeta=DETAIL_META[state.id]||null;
+
+  /* META PRIORITY
+     1) local DETAIL_META = safe visual/demo fallback
+     2) frssn-core.js      = shared catalog layer
+     3) frssn-db.json      = authoritative public BeatManager export
+     Merge instead of early-return so contentStatus is never silently lost. */
+  const baseMeta=mergeTrackMeta(fallbackMeta,sharedMeta);
+  if(publicTrack)return mergeTrackMeta(baseMeta,publicTrack);
+  if(baseMeta)return baseMeta;
+
   const i=state.index||0;
   return {
     signal:String(i+1).padStart(3,"0"),
