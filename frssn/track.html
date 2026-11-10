@@ -2500,6 +2500,12 @@ body.layout-mouse-edit .featuredSlot .badge,
 body.layout-mouse-edit .featuredSlot .buyCol,
 body.layout-mouse-edit #heroMeterBlock,
 .layout-debug-selected{outline:none!important;box-shadow:none!important;cursor:default!important;}
+.layoutDebugPanel,
+.layoutDebugReopen,
+.layoutScaleHandle,
+.layoutAxisHandle{
+  pointer-events:none!important;
+}
 </style>
 </head>
 
@@ -3727,148 +3733,40 @@ function endLayoutPanelDrag(event){
 }
 
 if(IS_DETAIL_PAGE&&layoutDebugPanel){
-  /* PRODUCTION BUILD: fixed approved desktop baseline, debug UI disabled. */
+  /* =====================================================
+     PRODUCTION LAYOUT BOOT
+     Keep only the approved geometry application.
+     NO debug pointer/capture/drag/resize listeners are registered.
+  ===================================================== */
   document.body.classList.remove("layout-mouse-edit");
+  document.querySelectorAll(".layout-debug-selected").forEach(el=>el.classList.remove("layout-debug-selected"));
+
+  layoutMouseEdit=false;
+  layoutSelectedDef=null;
+  layoutSelectedEl=null;
+  layoutDrag=null;
+  layoutScaleDrag=null;
+  layoutAxisDrag=null;
+
   layoutDebugState={...LAYOUT_DEBUG_DEFAULTS};
   applyLayoutDebug();
   updateHeroFrameLockStatus();
-  setLayoutMouseEdit(false);
+
   layoutDebugPanel.classList.add("is-hidden");
   layoutDebugReopen?.classList.remove("is-visible");
+  layoutScaleHandle?.classList.remove("is-visible");
+  layoutWidthHandle?.classList.remove("is-visible");
+  layoutHeightHandle?.classList.remove("is-visible");
 
-  Object.entries(debugInputs).forEach(([key,input])=>{
-    input?.addEventListener("input",()=>{
-      layoutDebugState[key]=Number(input.value);
-      applyLayoutDebug();
-      saveLayoutDebug();
-    });
-  });
-
-  layoutDebugMouseToggle?.addEventListener("click",()=>setLayoutMouseEdit(!layoutMouseEdit));
-  layoutDebugTitleBar?.addEventListener("pointerdown",beginLayoutPanelDrag);
-  layoutDebugTitleBar?.addEventListener("pointermove",moveLayoutPanelDrag,{passive:false});
-  layoutDebugTitleBar?.addEventListener("pointerup",endLayoutPanelDrag);
-  layoutDebugTitleBar?.addEventListener("pointercancel",endLayoutPanelDrag);
-
-  /* Capture phase is intentional: while MOUSE ON is active the layout editor
-     owns these pointer gestures instead of Play/Seek/Scratch/Checkout. */
-  document.addEventListener("pointerdown",event=>{
-    if(!layoutMouseEdit||event.button!==0)return;
-    if(event.target===layoutScaleHandle||layoutScaleHandle?.contains(event.target)||
-       event.target===layoutWidthHandle||layoutWidthHandle?.contains(event.target)||
-       event.target===layoutHeightHandle||layoutHeightHandle?.contains(event.target))return;
-    if(event.target instanceof Element&&event.target.closest(".layoutDebugPanel,.layoutDebugReopen"))return;
-    const hit=findLayoutTargetFromEventTarget(event.target);
-    if(!hit)return;
-    event.preventDefault();
-    event.stopPropagation();
-    event.stopImmediatePropagation();
-    beginLayoutMove(event,hit.def,hit.el);
-  },true);
-  document.addEventListener("pointermove",event=>{if(layoutDrag){event.preventDefault();moveSelectedLayout(event)}},{capture:true,passive:false});
-  document.addEventListener("pointerup",endLayoutMove,true);
-  document.addEventListener("pointercancel",endLayoutMove,true);
-
-  layoutScaleHandle?.addEventListener("pointerdown",beginLayoutScale);
-  layoutScaleHandle?.addEventListener("pointermove",scaleSelectedLayout,{passive:false});
-  layoutScaleHandle?.addEventListener("pointerup",endLayoutScale);
-  layoutScaleHandle?.addEventListener("pointercancel",endLayoutScale);
-
-  layoutWidthHandle?.addEventListener("pointerdown",event=>beginLayoutAxisResize(event,"x"));
-  layoutWidthHandle?.addEventListener("pointermove",resizeSelectedLayoutAxis,{passive:false});
-  layoutWidthHandle?.addEventListener("pointerup",endLayoutAxisResize);
-  layoutWidthHandle?.addEventListener("pointercancel",endLayoutAxisResize);
-  layoutHeightHandle?.addEventListener("pointerdown",event=>beginLayoutAxisResize(event,"y"));
-  layoutHeightHandle?.addEventListener("pointermove",resizeSelectedLayoutAxis,{passive:false});
-  layoutHeightHandle?.addEventListener("pointerup",endLayoutAxisResize);
-  layoutHeightHandle?.addEventListener("pointercancel",endLayoutAxisResize);
-
+  /* Keep only non-interactive production maintenance. */
   window.addEventListener("resize",()=>{
-    scheduleLayoutHandleUpdate();
-    if(window.innerWidth>=901){applyHeroFrameLocks();scheduleFitHeroModuleContents()}
-    else document.body.classList.remove("hero-frame-lock");
+    if(window.innerWidth>=901){
+      applyHeroFrameLocks();
+      scheduleFitHeroModuleContents();
+    }else{
+      document.body.classList.remove("hero-frame-lock");
+    }
   },{passive:true});
-  window.addEventListener("scroll",scheduleLayoutHandleUpdate,{passive:true});
-
-  /* DOM inside featuredSlot changes when another record is selected. Reconnect
-     the selection outline/handle to the equivalent block in the new track. */
-  const layoutHeroObserver=new MutationObserver(()=>{
-    if(!layoutSelectedDef)return;
-    document.querySelectorAll(".layout-debug-selected").forEach(node=>node.classList.remove("layout-debug-selected"));
-    layoutSelectedEl=document.querySelector(layoutSelectedDef.selector);
-    layoutSelectedEl?.classList.add("layout-debug-selected");
-    scheduleLayoutHandleUpdate();
-  });
-  const featuredForLayout=document.getElementById("featuredSlot");
-  if(featuredForLayout)layoutHeroObserver.observe(featuredForLayout,{childList:true,subtree:true});
-
-  layoutDebugHide?.addEventListener("click",()=>{
-    layoutDebugPanel.classList.add("is-hidden");
-    layoutDebugReopen?.classList.add("is-visible");
-    setLayoutMouseEdit(false);
-  });
-  layoutDebugReopen?.addEventListener("click",()=>{
-    layoutDebugPanel.classList.remove("is-hidden");
-    layoutDebugReopen.classList.remove("is-visible");
-  });
-  layoutDebugReset?.addEventListener("click",()=>{
-    layoutDebugState={...LAYOUT_DEBUG_DEFAULTS};
-    applyLayoutDebug();
-    saveLayoutDebug();
-    setTimeout(()=>captureHeroFrameLocks({force:true}),60);
-  });
-  layoutDebugRelock?.addEventListener("click",()=>{
-    /* RELock means: whatever rectangles are visible now become the new zero point. */
-    HERO_FRAME_LOCK_TARGETS.forEach(d=>{
-      const def=frameDebugDef(d.debugId);
-      if(!def)return;
-      layoutDebugState[def.sx]=100;
-      layoutDebugState[def.sy]=100;
-    });
-    saveLayoutDebug();
-    heroFrameLockReady=false;
-    try{localStorage.removeItem(HERO_FRAME_LOCK_KEY);localStorage.removeItem(HERO_GEOMETRY_NORMALIZED_KEY)}catch(_){}
-    captureHeroFrameLocks({force:true});
-    const old=layoutDebugRelock.textContent;
-    layoutDebugRelock.textContent="LOCKED";
-    setTimeout(()=>layoutDebugRelock.textContent=old,900);
-  });
-  layoutDebugCopy?.addEventListener("click",async()=>{
-    const text=[
-      `HEADER HEIGHT = ${layoutDebugState.headerHeight}px`,
-      `TILE BLOCK = ${layoutDebugState.tileScale}%`,
-      `TURNTABLE = ${layoutDebugState.turntableScale}% | X ${layoutDebugState.turntableX} | Y ${layoutDebugState.turntableY} | W ${layoutDebugState.turntableStretchX}% | H ${layoutDebugState.turntableStretchY}%`,
-      `PLAYER BASELINE = ${layoutDebugState.playerScale}% | X ${layoutDebugState.playerX} | Y ${layoutDebugState.playerY}`,
-      `WAVEFORM = ${layoutDebugState.waveScale}% | X ${layoutDebugState.waveX} | Y ${layoutDebugState.waveY} | W ${layoutDebugState.waveStretchX}% | H ${layoutDebugState.waveStretchY}%`,
-      `PLAY BUTTON = ${layoutDebugState.playScale}% | X ${layoutDebugState.playX} | Y ${layoutDebugState.playY} | W ${layoutDebugState.playStretchX}% | H ${layoutDebugState.playStretchY}%`,
-      `TIMECODE = ${layoutDebugState.timeScale}% | X ${layoutDebugState.timeX} | Y ${layoutDebugState.timeY} | W ${layoutDebugState.timeStretchX}% | H ${layoutDebugState.timeStretchY}%`,
-      `TRACK TITLE = ${layoutDebugState.titleScale}% | X ${layoutDebugState.titleX} | Y ${layoutDebugState.titleY} | W ${layoutDebugState.titleStretchX}% | H ${layoutDebugState.titleStretchY}%`,
-      `TYPE CODE = ${layoutDebugState.typeScale}% | X ${layoutDebugState.typeX} | Y ${layoutDebugState.typeY} | W ${layoutDebugState.typeStretchX}% | H ${layoutDebugState.typeStretchY}%`,
-      `SECTIONS = ${layoutDebugState.structureScale}% | X ${layoutDebugState.structureX} | Y ${layoutDebugState.structureY} | W ${layoutDebugState.structureStretchX}% | H ${layoutDebugState.structureStretchY}%`,
-      `BPM + KEY = ${layoutDebugState.coreScale}% | X ${layoutDebugState.coreX} | Y ${layoutDebugState.coreY} | W ${layoutDebugState.coreStretchX}% | H ${layoutDebugState.coreStretchY}%`,
-      `BPM VALUE FONT = ${layoutDebugState.bpmValueFont}px`,
-      `KEY VALUE FONT = ${layoutDebugState.keyValueFont}px`,
-      `MOOD = ${layoutDebugState.moodScale}% | X ${layoutDebugState.moodX} | Y ${layoutDebugState.moodY} | W ${layoutDebugState.moodStretchX}% | H ${layoutDebugState.moodStretchY}%`,
-      `RELEASE DATE = ${layoutDebugState.releaseScale}% | X ${layoutDebugState.releaseX} | Y ${layoutDebugState.releaseY} | W ${layoutDebugState.releaseStretchX}% | H ${layoutDebugState.releaseStretchY}%`,
-      `TRACK STATUS = ${layoutDebugState.statusScale}% | X ${layoutDebugState.statusX} | Y ${layoutDebugState.statusY} | W ${layoutDebugState.statusStretchX}% | H ${layoutDebugState.statusStretchY}%`,
-      `PURCHASE ROW = ${layoutDebugState.buyScale}% | X ${layoutDebugState.buyX} | Y ${layoutDebugState.buyY} | W ${layoutDebugState.buyStretchX}% | H ${layoutDebugState.buyStretchY}%`,
-      `METER BLOCK = ${layoutDebugState.meterScale}% | X ${layoutDebugState.meterX} | Y ${layoutDebugState.meterY} | W ${layoutDebugState.meterStretchX}% | H ${layoutDebugState.meterStretchY}%`,
-      `TONEARM PARK = ${ARM_PARK_ANGLE.toFixed(1)}°`,
-      `TONEARM OUTER LIMIT = ${ARM_START_ANGLE.toFixed(1)}°`
-    ].join("\n");
-    try{
-      await navigator.clipboard.writeText(text);
-      const old=layoutDebugCopy.textContent;
-      layoutDebugCopy.textContent="COPIED";
-      setTimeout(()=>layoutDebugCopy.textContent=old,900);
-    }catch(_){}
-  });
-  /* PRODUCTION BUILD: keep the approved geometry engine active,
-     but never enable direct mouse layout editing. Normal Play / Seek /
-     Scratch / Checkout pointer interactions own the page. */
-  layoutDebugPanel.classList.add("is-hidden");
-  layoutDebugReopen?.classList.remove("is-visible");
-  setLayoutMouseEdit(false);
 }else{
   layoutDebugPanel?.classList.add("is-hidden");
 }
