@@ -2290,6 +2290,25 @@ body.layout-mouse-edit .layout-debug-selected{
   display:none;
 }
 
+/* FOUR STATUS RAIL // commercial + content origin in one horizontal line. */
+.detailPage .featuredSlot .badge.commercialStatus,
+.detailPage.hero-frame-lock .featuredSlot .badge.commercialStatus{
+  width:max-content!important;
+  max-width:none!important;
+  overflow:visible!important;
+  justify-content:flex-start!important;
+}
+.detailPage .featuredSlot .commercialStatusRail{
+  flex-wrap:nowrap!important;
+  width:max-content!important;
+  max-width:none!important;
+}
+.detailPage .featuredSlot .statusChip{
+  flex:0 0 auto!important;
+  padding-left:10px;
+  padding-right:10px;
+}
+
 .detailPage .featuredSlot .statusChip .statusValue{
   color:rgba(236,241,229,.86);
   font-size:.82em;
@@ -5827,30 +5846,37 @@ function renderCommercialStatus(state){
   const content=normalizedContentStatus(m);
   const raw=Array.isArray(m.commercialStatus)?m.commercialStatus:[];
 
-  /* commercialStatus may still contain origin badges from BeatManager.
-     We rebuild the split from machine-readable contentStatus so the visual
-     design can evolve without changing the public DB contract. */
-  const business=raw.filter(item=>{
-    const label=String(item?.label||"").trim().toUpperCase();
-    return label!=="NO STOCK / © LOOPS"&&label!=="NO AI GEN"&&label!=="ORIGINAL SOURCE";
-  });
+  /* PUBLIC STATUS CONTRACT
+     0 licenses  -> FIRST LICENSE // AVAILABLE
+     1+ licenses -> LICENSES // N
+     EXCLUSIVE remains an independent status.
+     Content-origin claims sit beside them in the SAME rail. */
+  const rawLicenses=raw.find(item=>String(item?.label||"").trim().toUpperCase()==="LICENSES");
+  const rawFirst=raw.find(item=>String(item?.label||"").trim().toUpperCase()==="FIRST LICENSE");
+  const rawExclusive=raw.find(item=>String(item?.label||"").trim().toUpperCase()==="EXCLUSIVE");
 
-  if(!business.some(item=>String(item?.label||"").toUpperCase()==="LICENSES")){
-    business.unshift({icon:"dot",label:"LICENSES",value:String(m.licenseCount??0)});
+  const parsedCount=Number(m.licenseCount ?? rawLicenses?.value ?? 0);
+  const licenseCount=Number.isFinite(parsedCount)?Math.max(0,Math.floor(parsedCount)):0;
+  const firstLicenseStatus=String(m.firstLicenseStatus||rawFirst?.value||"AVAILABLE").trim().toUpperCase()||"AVAILABLE";
+  const exclusiveStatus=String(m.exclusiveStatus||rawExclusive?.value||"AVAILABLE").trim().toUpperCase()||"AVAILABLE";
+
+  const items=[
+    licenseCount===0
+      ? {icon:"dot",label:"FIRST LICENSE",value:firstLicenseStatus}
+      : {icon:"dot",label:"LICENSES",value:String(licenseCount)},
+    {icon:"crown",label:"EXCLUSIVE",value:exclusiveStatus}
+  ];
+
+  if(content.noStockCopyrightLoops){
+    items.push({icon:"shield",label:"NO STOCK / © LOOPS",value:"",origin:"stock"});
   }
-  if(!business.some(item=>String(item?.label||"").toUpperCase()==="EXCLUSIVE")){
-    business.push({icon:"crown",label:"EXCLUSIVE",value:String(m.exclusiveStatus||"AVAILABLE")});
+  if(content.noAiGen){
+    items.push({icon:"shield",label:"NO AI GEN",value:"",origin:"ai"});
   }
 
-  const origin=[];
-  if(content.noStockCopyrightLoops)origin.push({icon:"shield",label:"NO STOCK / © LOOPS",value:"",origin:"stock"});
-  if(content.noAiGen)origin.push({icon:"shield",label:"NO AI GEN",value:"",origin:"ai"});
-
-  const items=[...business,...origin];
-  rail.dataset.contentOrigin=origin.length?"verified":"unset";
-  rail.setAttribute("aria-label",origin.length
-    ? `Track commercial status. Content origin: ${origin.map(item=>item.label).join(", ")}`
-    : "Track commercial status");
+  rail.dataset.contentOrigin=(content.noStockCopyrightLoops||content.noAiGen)?"verified":"unset";
+  rail.dataset.licenseCount=String(licenseCount);
+  rail.setAttribute("aria-label",items.map(item=>item.value?`${item.label} ${item.value}`:item.label).join(". "));
 
   rail.innerHTML=items.map(item=>{
     const icon=item.icon==="dot"
