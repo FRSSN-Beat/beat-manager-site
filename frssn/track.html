@@ -6,6 +6,34 @@
 <meta name="theme-color" content="#050605">
 <title>FRSSN // Track</title>
 <script src="frssn-core.js"></script>
+<script>
+/* =====================================================
+   FRSSN PUBLIC DB // GITHUB-PAGES LIVE SOURCE
+   frssn-db.json is the production contract exported by BeatManager.
+   Direct no-store fetch keeps the single page current even if an older
+   frssn-core.js build is still cached by the browser.
+===================================================== */
+window.FRSSN_PUBLIC_DB_READY=(async()=>{
+  try{
+    const url=new URL("frssn-db.json",location.href);
+    url.searchParams.set("_frssn",Date.now().toString(36));
+    const response=await fetch(url,{cache:"no-store"});
+    if(!response.ok)throw new Error(`frssn-db.json HTTP ${response.status}`);
+    const db=await response.json();
+    if(!db||!Array.isArray(db.tracks))throw new Error("frssn-db.json has no tracks[]");
+    window.FRSSN_PUBLIC_DB=db;
+    window.FRSSN_PUBLIC_TRACKS=new Map(
+      db.tracks.filter(track=>track&&track.id).map(track=>[String(track.id),track])
+    );
+    return db;
+  }catch(error){
+    console.warn("FRSSN public DB fallback:",error);
+    window.FRSSN_PUBLIC_DB=null;
+    window.FRSSN_PUBLIC_TRACKS=new Map();
+    return null;
+  }
+})();
+</script>
 
 <style>
 :root{
@@ -2251,6 +2279,17 @@ body.layout-mouse-edit .layout-debug-selected{
   white-space:nowrap;
   overflow:hidden;
 }
+.detailPage .featuredSlot .statusChip.is-origin{
+  border-color:rgba(214,255,40,.78);
+  background:rgba(214,255,40,.055);
+}
+.detailPage .featuredSlot .statusChip.is-origin-ai{
+  box-shadow:inset 0 0 0 1px rgba(214,255,40,.075),0 0 14px rgba(214,255,40,.045);
+}
+.detailPage .featuredSlot .commercialStatusRail[data-content-origin="unset"] .statusChip.is-origin{
+  display:none;
+}
+
 .detailPage .featuredSlot .statusChip .statusValue{
   color:rgba(236,241,229,.86);
   font-size:.82em;
@@ -2780,11 +2819,90 @@ body.layout-mouse-edit .layout-debug-selected{
 <div class="layoutAxisHandle layoutHeightHandle" id="layoutHeightHandle" aria-hidden="true"></div>
 
 <script>
-(window.FRSSN?.ready || Promise.resolve(window.FRSSN)).then(()=>{
+Promise.all([
+  window.FRSSN?.ready || Promise.resolve(window.FRSSN),
+  window.FRSSN_PUBLIC_DB_READY || Promise.resolve(null)
+]).then(()=>{
 "use strict";
 
-/* SHARED CATALOG // hydrate real source records before showcase/player boot */
+/* SHARED CATALOG // keep frssn-core.js compatibility, then make the generated
+   frssn-db.json authoritative for the desktop single page. */
 window.FRSSN?.hydrateSingle?.(document,{mobile:false});
+
+const PUBLIC_DB=window.FRSSN_PUBLIC_DB||null;
+const PUBLIC_TRACKS=Array.isArray(PUBLIC_DB?.tracks)
+  ? PUBLIC_DB.tracks.filter(track=>track&&track.id)
+  : [];
+const PUBLIC_TRACK_MAP=new Map(PUBLIC_TRACKS.map(track=>[String(track.id),track]));
+
+function publicAsset(...values){
+  for(const value of values){
+    if(typeof value==="string"&&value.trim())return value.trim();
+  }
+  return "";
+}
+function publicTrackHref(id){
+  return window.FRSSN?.canonicalTrackHref?.(id)||`track.html?track=${encodeURIComponent(id)}`;
+}
+function hydratePublicSingleSource(doc){
+  const list=doc.querySelector(".detailSourceTrackList");
+  if(!list||!PUBLIC_TRACKS.length)return false;
+
+  const existing=[...list.querySelectorAll(":scope > .track")];
+  if(!existing.length)return false;
+
+  const byId=new Map(existing.map(node=>[String(node.dataset.trackId||""),node]));
+  const template=existing[0];
+  const nodes=[];
+
+  PUBLIC_TRACKS.forEach((track,index)=>{
+    const id=String(track.id);
+    const node=byId.get(id)||template.cloneNode(true);
+
+    const storeCover=publicAsset(track.storeCover,track.singleCover,track.label);
+    const singleCover=publicAsset(track.singleCover,track.storeCover,track.label);
+    const label=publicAsset(track.label,track.singleCover,track.storeCover);
+
+    node.dataset.trackId=id;
+    node.dataset.audio=publicAsset(track.audio);
+    node.dataset.storeCover=storeCover;
+    node.dataset.singleCover=singleCover;
+    node.dataset.label=label;
+
+    const title=String(track.title||id);
+    const artist=String(track.artist||"FRSSN");
+
+    const titleLink=node.querySelector(".trackTitleLink");
+    if(titleLink){
+      titleLink.textContent=title;
+      titleLink.href=publicTrackHref(id);
+    }
+    const artistEl=node.querySelector(".artist");
+    if(artistEl)artistEl.textContent=artist;
+    const typeCode=node.querySelector(".typeCode");
+    if(typeCode)typeCode.textContent=track.typeCode||"";
+
+    const sleeve=node.querySelector(".sleeve .cover");
+    if(sleeve&&singleCover){
+      sleeve.src=singleCover;
+      sleeve.alt=`${title} cover`;
+    }
+    const labelImg=node.querySelector(".recordLabel img");
+    if(labelImg&&label){
+      labelImg.src=label;
+      labelImg.alt=title;
+    }
+
+    const metaSignal=node.querySelector(".meta span");
+    if(metaSignal)metaSignal.textContent=`Signal // ${track.signal||String(index+1).padStart(3,"0")}`;
+
+    nodes.push(node);
+  });
+
+  list.replaceChildren(...nodes);
+  return true;
+}
+hydratePublicSingleSource(document);
 
 /* =====================================================
    PLATFORM
@@ -2800,6 +2918,9 @@ const profileHead = document.getElementById("profileHead");
 const microstatus = document.getElementById("microstatus");
 const paperInSfx = document.getElementById("paperInSfx");
 const paperOutSfx = document.getElementById("paperOutSfx");
+if(microstatus&&PUBLIC_TRACKS.length){
+  microstatus.textContent=`Connection stable // ${PUBLIC_TRACKS.length} signal${PUBLIC_TRACKS.length===1?"":"s"} detected`;
+}
 
 /* =====================================================
    LAYOUT DEBUG CONTROLLER
@@ -3709,7 +3830,9 @@ if(IS_DETAIL_PAGE&&layoutDebugPanel){
    Temporary visual fill for the storefront. The two real assets are reused
    alternately, but every slot has its own title / URL identity.
 ===================================================== */
-const SHOWCASE_TRACK_NAMES = window.FRSSN?.showcaseNames || [
+const SHOWCASE_TRACK_NAMES = PUBLIC_TRACKS.length
+  ? PUBLIC_TRACKS.map(track=>String(track.title||track.id))
+  : (window.FRSSN?.showcaseNames || [
   "OLD",
   "TRACK 02",
   "STATIC",
@@ -3738,7 +3861,7 @@ const SHOWCASE_TRACK_NAMES = window.FRSSN?.showcaseNames || [
   "SILENT ROOM",
   "FREQUENCY",
   "LAST LIGHT"
-];
+]);
 
 if(IS_DETAIL_PAGE){
   const showcaseSourceList = document.querySelector(".detailSourceTrackList");
@@ -5497,18 +5620,50 @@ let detailSwitchBusy=false;
 let autoplayPending=false;
 let autoplayUnlockInstalled=false;
 
-function trackTitleOf(state){return state.el.querySelector(".trackTitleLink")?.textContent?.trim()||state.el.querySelector(".trackTitle")?.childNodes?.[0]?.textContent?.trim()||state.id}
-function trackArtistOf(state){return state.el.querySelector(".artist")?.textContent?.trim()||"FRSSN"}
+function publicTrackFor(state){
+  return PUBLIC_TRACK_MAP.get(String(state?.id||""))||null;
+}
+function trackTitleOf(state){
+  const publicTrack=publicTrackFor(state);
+  return String(publicTrack?.title||state.el.querySelector(".trackTitleLink")?.textContent?.trim()||state.el.querySelector(".trackTitle")?.childNodes?.[0]?.textContent?.trim()||state.id);
+}
+function trackArtistOf(state){
+  const publicTrack=publicTrackFor(state);
+  return String(publicTrack?.artist||state.el.querySelector(".artist")?.textContent?.trim()||"FRSSN");
+}
 function trackCoverOf(state){
+  const publicTrack=publicTrackFor(state);
+  const direct=publicAsset(publicTrack?.singleCover,state?.el?.dataset?.singleCover);
+  if(direct)return direct;
   const img=state.el.querySelector(".sleeve img");
   return img?.src||img?.getAttribute("src")||"";
 }
+function trackStoreCoverOf(state){
+  const publicTrack=publicTrackFor(state);
+  return publicAsset(publicTrack?.storeCover,state?.el?.dataset?.storeCover,trackCoverOf(state));
+}
 function trackLabelOf(state){
+  const publicTrack=publicTrackFor(state);
+  const direct=publicAsset(publicTrack?.label,state?.el?.dataset?.label);
+  if(direct)return direct;
   const img=state.el.querySelector(".recordLabel img");
   return img?.src||img?.getAttribute("src")||trackCoverOf(state);
 }
+function mergeTrackMeta(base,overlay){
+  if(!base)return overlay||null;
+  if(!overlay)return base;
+  return {
+    ...base,
+    ...overlay,
+    prices:{...(base.prices||{}),...(overlay.prices||{})},
+    checkout:{...(base.checkout||{}),...(overlay.checkout||{})},
+    contentStatus:{...(base.contentStatus||{}),...(overlay.contentStatus||{})}
+  };
+}
 function metaFor(state){
-  const sharedMeta=window.FRSSN?.metaFor?.(state.id,state.index);
+  const sharedMeta=window.FRSSN?.metaFor?.(state.id,state.index)||null;
+  const publicTrack=publicTrackFor(state);
+  if(publicTrack)return mergeTrackMeta(sharedMeta,publicTrack);
   if(sharedMeta)return sharedMeta;
   if(DETAIL_META[state.id])return DETAIL_META[state.id];
   const i=state.index||0;
@@ -5521,9 +5676,11 @@ function metaFor(state){
     sections:(i%2?STRUCTURE_B:STRUCTURE_A),
     release:"16 OCT 2026",
     license:"MP3",status:"AVAILABLE",file:"CLEAN",
+    licenseCount:0,
+    exclusiveStatus:"AVAILABLE",
+    contentStatus:{noStockCopyrightLoops:false,noAiGen:false},
     commercialStatus:[
-      {icon:"dot",label:"FIRST LICENSE",value:"AVAILABLE"},
-      {icon:"shield",label:"ORIGINAL SOURCE",value:""},
+      {icon:"dot",label:"LICENSES",value:"0"},
       {icon:"crown",label:"EXCLUSIVE",value:"AVAILABLE"}
     ],
     prices:{mp3:"$40",wav:"$80",stems:"$150"}
@@ -5633,22 +5790,78 @@ function commercialStatusIconSvg(icon){
   if(icon==="crown")return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 8 4 4 4-6 4 6 4-4-2 9H6L4 8Z"/><path d="M6 20h12"/></svg>';
   return '';
 }
+function normalizedContentStatus(meta){
+  const explicit=meta?.contentStatus&&typeof meta.contentStatus==="object"
+    ? meta.contentStatus
+    : null;
+
+  if(explicit){
+    return {
+      noStockCopyrightLoops:!!explicit.noStockCopyrightLoops,
+      noAiGen:!!explicit.noAiGen
+    };
+  }
+
+  /* Backward compatibility for an older public DB that only had badges. */
+  const labels=(Array.isArray(meta?.commercialStatus)?meta.commercialStatus:[])
+    .map(item=>String(item?.label||"").trim().toUpperCase());
+
+  return {
+    noStockCopyrightLoops:labels.includes("NO STOCK / © LOOPS")||labels.includes("ORIGINAL SOURCE"),
+    noAiGen:labels.includes("NO AI GEN")
+  };
+}
+function escapeStatusText(value){
+  return String(value??"")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;");
+}
 function renderCommercialStatus(state){
   const badge=state?.el?.querySelector(".commercialStatus");
   const rail=badge?.querySelector(".commercialStatusRail");
   if(!rail)return;
+
   const m=metaFor(state);
-  const items=(m.commercialStatus&&m.commercialStatus.length)?m.commercialStatus:[
-    {icon:"dot",label:"FIRST LICENSE",value:"AVAILABLE"},
-    {icon:"shield",label:"ORIGINAL SOURCE",value:""},
-    {icon:"crown",label:"EXCLUSIVE",value:"AVAILABLE"}
-  ];
+  const content=normalizedContentStatus(m);
+  const raw=Array.isArray(m.commercialStatus)?m.commercialStatus:[];
+
+  /* commercialStatus may still contain origin badges from BeatManager.
+     We rebuild the split from machine-readable contentStatus so the visual
+     design can evolve without changing the public DB contract. */
+  const business=raw.filter(item=>{
+    const label=String(item?.label||"").trim().toUpperCase();
+    return label!=="NO STOCK / © LOOPS"&&label!=="NO AI GEN"&&label!=="ORIGINAL SOURCE";
+  });
+
+  if(!business.some(item=>String(item?.label||"").toUpperCase()==="LICENSES")){
+    business.unshift({icon:"dot",label:"LICENSES",value:String(m.licenseCount??0)});
+  }
+  if(!business.some(item=>String(item?.label||"").toUpperCase()==="EXCLUSIVE")){
+    business.push({icon:"crown",label:"EXCLUSIVE",value:String(m.exclusiveStatus||"AVAILABLE")});
+  }
+
+  const origin=[];
+  if(content.noStockCopyrightLoops)origin.push({icon:"shield",label:"NO STOCK / © LOOPS",value:"",origin:"stock"});
+  if(content.noAiGen)origin.push({icon:"shield",label:"NO AI GEN",value:"",origin:"ai"});
+
+  const items=[...business,...origin];
+  rail.dataset.contentOrigin=origin.length?"verified":"unset";
+  rail.setAttribute("aria-label",origin.length
+    ? `Track commercial status. Content origin: ${origin.map(item=>item.label).join(", ")}`
+    : "Track commercial status");
+
   rail.innerHTML=items.map(item=>{
     const icon=item.icon==="dot"
       ? '<span class="statusChipIcon dot" aria-hidden="true"></span>'
       : `<span class="statusChipIcon" aria-hidden="true">${commercialStatusIconSvg(item.icon)}</span>`;
-    const value=item.value?` <span class="statusValue">// ${item.value}</span>`:"";
-    return `<span class="statusChip">${icon}<span>${item.label}</span>${value}</span>`;
+    const value=item.value!==undefined&&item.value!==null&&String(item.value)!==""
+      ? ` <span class="statusValue">// ${escapeStatusText(item.value)}</span>`
+      : "";
+    const originClass=item.origin?` is-origin is-origin-${item.origin}`:"";
+    const title=item.origin?' title="CONTENT ORIGIN"':"";
+    return `<span class="statusChip${originClass}"${title}>${icon}<span>${escapeStatusText(item.label)}</span>${value}</span>`;
   }).join("");
 }
 function renderPurchaseControls(state){
@@ -5709,7 +5922,7 @@ function renderSignalTiles(){
   signalTiles.style.gridTemplateRows=`repeat(${showcaseRows}, auto)`;
 
   tracks.forEach(state=>{
-    const m=metaFor(state),title=trackTitleOf(state),cover=trackCoverOf(state);
+    const m=metaFor(state),title=trackTitleOf(state),cover=trackStoreCoverOf(state);
     const tile=document.createElement("a");
     const isFeatured=state===featuredTrack;
 
