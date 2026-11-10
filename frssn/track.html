@@ -1911,12 +1911,9 @@ body.is-android .bar{min-width:1.05px;max-width:4px}
   letter-spacing:.07em;
 }
 .layoutDebugPanel.is-hidden{display:none}
-/* GENERAL LAYOUT DEBUG IS TEMPORARILY RETIRED.
-   The tuned geometry engine remains active so existing localStorage X/Y/W/H and
-   the locked defaults still drive the final layout, but the panel/reopen button
-   stay out of the production UI until a module needs targeted debugging. */
-.layoutDebugPanel,
-.layoutDebugReopen{display:none!important}
+/* GENERAL LAYOUT DEBUG // ACTIVE
+   Debug UI is intentionally enabled while tuning the single-track layout.
+   Existing localStorage X/Y/W/H values and locked module geometry are preserved. */
 
 .layoutDebugTitle{
   display:flex;
@@ -3701,14 +3698,14 @@ function endLayoutPanelDrag(event){
 }
 
 if(IS_DETAIL_PAGE&&layoutDebugPanel){
-  /* Locked production layout: generic mouse-edit stays off. */
-  setLayoutMouseEdit(false);
+  /* DEBUG BUILD: layout editor starts active. */
+  setLayoutMouseEdit(true);
   loadLayoutDebug();
   applyLayoutDebug();
   loadLayoutDebugPanelPosition();
   updateHeroFrameLockStatus();
-  /* Current geometry is treated as the fixed baseline. Turn MOUSE ON only for a deliberate edit. */
-  setLayoutMouseEdit(false);
+  /* Keep direct mouse editing enabled for this debug build. */
+  setLayoutMouseEdit(true);
 
   Object.entries(debugInputs).forEach(([key,input])=>{
     input?.addEventListener("input",()=>{
@@ -3778,7 +3775,7 @@ if(IS_DETAIL_PAGE&&layoutDebugPanel){
 
   layoutDebugHide?.addEventListener("click",()=>{
     layoutDebugPanel.classList.add("is-hidden");
-    layoutDebugReopen?.classList.remove("is-visible");
+    layoutDebugReopen?.classList.add("is-visible");
     setLayoutMouseEdit(false);
   });
   layoutDebugReopen?.addEventListener("click",()=>{
@@ -3837,9 +3834,10 @@ if(IS_DETAIL_PAGE&&layoutDebugPanel){
       setTimeout(()=>layoutDebugCopy.textContent=old,900);
     }catch(_){}
   });
-  layoutDebugPanel.classList.add("is-hidden");
+  /* DEBUG BUILD: show the panel immediately and enable direct editing. */
+  layoutDebugPanel.classList.remove("is-hidden");
   layoutDebugReopen?.classList.remove("is-visible");
-  setLayoutMouseEdit(false);
+  setLayoutMouseEdit(true);
 }else{
   layoutDebugPanel?.classList.add("is-hidden");
 }
