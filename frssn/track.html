@@ -2944,40 +2944,40 @@ if(microstatus&&PUBLIC_TRACKS.length){
    - MOUSE ON lets us drag blocks directly in the hero
    - selected block gets a bottom-right scale handle
 ===================================================== */
-const LAYOUT_DEBUG_KEY="frssnLayoutDebugV1";
+const LAYOUT_DEBUG_KEY="frssnLayoutDebugV2_2026_11_10";
 const LAYOUT_DEBUG_DEFAULTS={
-  /* Locked baseline from the current tuned layout. Existing localStorage values
-     still win, so the user's exact mouse-positioned geometry is preserved. */
+  /* Desktop baseline // approved 2026-11-10.
+     RESET and a clean browser start from this exact composition. */
   headerHeight:398,
   tileScale:112,
-  turntableScale:94,turntableX:0,turntableY:0,
-  playerScale:84,playerX:0,playerY:0, /* frozen legacy wave-row baseline */
-  waveScale:86,waveX:0,waveY:0,
-  playScale:101,playX:0,playY:0,
-  timeScale:141,timeX:0,timeY:0,
-  titleScale:180,titleX:0,titleY:0,
-  typeScale:170,typeX:0,typeY:0,
-  structureScale:75,structureX:0,structureY:0,
-  coreScale:88,coreX:0,coreY:0,
-  moodScale:84,moodX:0,moodY:0,
-  releaseScale:140,releaseX:0,releaseY:0,
+  turntableScale:94,turntableX:-55,turntableY:1,
+  playerScale:84,playerX:-246.9,playerY:78.5, /* frozen wave-row baseline */
+  waveScale:86,waveX:11,waveY:-36,
+  playScale:101,playX:7,playY:18,
+  timeScale:141,timeX:-36,timeY:-22,
+  titleScale:180,titleX:-78.2,titleY:-43.6,
+  typeScale:170,typeX:-82.6,typeY:-40.4,
+  structureScale:75,structureX:-188.4,structureY:52.1,
+  coreScale:88,coreX:-799.1,coreY:77.9,
+  moodScale:84,moodX:-823.5,moodY:80.9,
+  releaseScale:140,releaseX:-944.1,releaseY:-171,
   bpmValueFont:21,keyValueFont:21,
-  statusScale:79,statusX:0,statusY:0,
-  buyScale:90,buyX:0,buyY:0,
+  statusScale:79,statusX:-200.9,statusY:84.4,
+  buyScale:90,buyX:-265.7,buyY:175.6,
   meterScale:100,meterX:0,meterY:0,
   turntableStretchX:100,turntableStretchY:100,
   playerStretchX:100,playerStretchY:100,
-  waveStretchX:100,waveStretchY:100,
+  waveStretchX:108,waveStretchY:116,
   playStretchX:100,playStretchY:100,
   timeStretchX:100,timeStretchY:100,
-  titleStretchX:100,titleStretchY:100,
-  typeStretchX:100,typeStretchY:100,
+  titleStretchX:93,titleStretchY:76,
+  typeStretchX:131,typeStretchY:154,
   structureStretchX:100,structureStretchY:100,
-  coreStretchX:100,coreStretchY:100,
-  moodStretchX:100,moodStretchY:100,
-  releaseStretchX:100,releaseStretchY:100,
-  statusStretchX:100,statusStretchY:100,
-  buyStretchX:100,buyStretchY:100,
+  coreStretchX:68,coreStretchY:100,
+  moodStretchX:70,moodStretchY:101,
+  releaseStretchX:155,releaseStretchY:54,
+  statusStretchX:229,statusStretchY:100,
+  buyStretchX:140,buyStretchY:100,
   meterStretchX:100,meterStretchY:100
 };
 let layoutDebugState={...LAYOUT_DEBUG_DEFAULTS};
