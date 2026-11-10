@@ -2472,34 +2472,6 @@ body.layout-mouse-edit .layout-debug-selected{
 }
 
 </style>
-
-<style id="frssnProductionNoDebug">
-/* FRSSN PRODUCTION // approved geometry stays active, all debug controls are disabled. */
-.layoutDebugPanel,
-.layoutDebugReopen,
-.layoutScaleHandle,
-.layoutAxisHandle,
-.vuDebugPanel,
-.vuDebugReopen,
-.vuDebugHandle,
-.vuDebugFrame,
-.vuPivotGuide,
-.vuCenterGuide{display:none!important;}
-body.layout-mouse-edit .featuredSlot .vinylUnit,
-body.layout-mouse-edit .featuredSlot .waveBox,
-body.layout-mouse-edit .featuredSlot .iconBtn.js-play,
-body.layout-mouse-edit .featuredSlot .time,
-body.layout-mouse-edit .featuredSlot .trackTitle,
-body.layout-mouse-edit .featuredSlot .typeCode,
-body.layout-mouse-edit .featuredSlot .trackStructure,
-body.layout-mouse-edit .featuredSlot .beatCoreBlock,
-body.layout-mouse-edit .featuredSlot .moodBlock,
-body.layout-mouse-edit .featuredSlot .releaseBlock,
-body.layout-mouse-edit .featuredSlot .badge,
-body.layout-mouse-edit .featuredSlot .buyCol,
-body.layout-mouse-edit #heroMeterBlock,
-.layout-debug-selected{outline:none!important;box-shadow:none!important;cursor:default!important;}
-</style>
 </head>
 
 <body class="detailPage">
@@ -2723,7 +2695,7 @@ body.layout-mouse-edit #heroMeterBlock,
 <audio id="paperOutSfx" preload="auto" src="Paper out.mp3"></audio>
 
 <!-- VU: OLD PNG NAMES ARE INTENTIONALLY KEPT -->
-<div class="vuModule" id="vuModule">
+<div class="vuModule debug-on" id="vuModule">
   <img class="vuFaceLayer" src="vu-panel-face-module-final.png" alt="">
   <div class="vuNeedlePivot left"><div class="vuLiveNeedle" id="vuNeedleL"></div></div>
   <div class="vuNeedlePivot right"><div class="vuLiveNeedle" id="vuNeedleR"></div></div>
@@ -3726,13 +3698,14 @@ function endLayoutPanelDrag(event){
 }
 
 if(IS_DETAIL_PAGE&&layoutDebugPanel){
-  /* PRODUCTION BUILD: fixed approved desktop baseline, debug UI disabled. */
-  layoutDebugState={...LAYOUT_DEBUG_DEFAULTS};
+  /* DEBUG BUILD: layout editor starts active. */
+  setLayoutMouseEdit(true);
+  loadLayoutDebug();
   applyLayoutDebug();
+  loadLayoutDebugPanelPosition();
   updateHeroFrameLockStatus();
-  setLayoutMouseEdit(false);
-  layoutDebugPanel.classList.add("is-hidden");
-  layoutDebugReopen?.classList.remove("is-visible");
+  /* Keep direct mouse editing enabled for this debug build. */
+  setLayoutMouseEdit(true);
 
   Object.entries(debugInputs).forEach(([key,input])=>{
     input?.addEventListener("input",()=>{
