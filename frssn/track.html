@@ -2513,7 +2513,7 @@ body.layout-mouse-edit #heroMeterBlock,
   pointer-events:none!important;
 }
 </style>
-<meta name="frssn-license-request-build" content="manual-license-v1-desktop">
+<meta name="frssn-license-request-build" content="manual-license-v1-desktop-fix2">
 
 <style id="frssnLicenseRequestStyles">
 /* =====================================================
@@ -2691,6 +2691,17 @@ body.layout-mouse-edit #heroMeterBlock,
   text-transform:uppercase;
 }
 body.frssn-license-modal-open{overflow:hidden!important}
+.detailPage .featuredSlot .buyCol{
+  position:relative!important;
+  z-index:80!important;
+  pointer-events:auto!important;
+}
+.detailPage .featuredSlot .purchaseCartStandalone,
+.detailPage .featuredSlot .purchaseOption{
+  position:relative!important;
+  z-index:81!important;
+  pointer-events:auto!important;
+}
 .detailPage .featuredSlot .purchaseCartStandalone{
   cursor:pointer!important;
 }
@@ -7096,22 +7107,40 @@ window.addEventListener("popstate",async()=>{
     }
   });
 
+  /* Desktop hero contains several transformed interactive layers.
+     Capture the request controls BEFORE any player/debug layer can consume
+     or stop the bubbling click. MP3 is intentionally not intercepted. */
   document.addEventListener("click",event=>{
-    const cart=event.target.closest?.(".featuredSlot .purchaseCartStandalone");
+    const target=event.target instanceof Element ? event.target : event.target?.parentElement;
+    if(!target)return;
+
+    const cart=target.closest(".featuredSlot .purchaseCartStandalone");
     if(cart){
       event.preventDefault();
+      event.stopPropagation();
       openRequest("wav");
       return;
     }
 
-    const option=event.target.closest?.(".featuredSlot .purchaseOption[data-license-tier]");
+    const option=target.closest(".featuredSlot .purchaseOption[data-license-tier]");
     if(!option)return;
+
     const tier=String(option.dataset.licenseTier||"").toLowerCase();
     if(tier!=="wav"&&tier!=="stems")return;
 
     event.preventDefault();
+    event.stopPropagation();
     openRequest(tier);
-  });
+  },true);
+  document.addEventListener("pointerdown",event=>{
+    const target=event.target instanceof Element ? event.target : event.target?.parentElement;
+    if(!target)return;
+    const requestControl=target.closest(
+      ".featuredSlot .purchaseCartStandalone, .featuredSlot .purchaseOption[data-license-tier=\"wav\"], .featuredSlot .purchaseOption[data-license-tier=\"stems\"]"
+    );
+    if(!requestControl)return;
+    event.stopPropagation();
+  },true);
 
   function makeCartFocusable(){
     document.querySelectorAll(".featuredSlot .purchaseCartStandalone").forEach(cart=>{
