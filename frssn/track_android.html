@@ -10,12 +10,12 @@
 /* PUBLIC DB // authoritative provenance/status layer for Android single. */
 window.FRSSN_PUBLIC_DB_READY=(async()=>{
   try{
-    const url=new URL("frssn-db.json",location.href);
+    const url=new URL("store/frssn-db.json",location.href);
     url.searchParams.set("_frssn",Date.now().toString(36));
     const response=await fetch(url,{cache:"no-store"});
-    if(!response.ok)throw new Error(`frssn-db.json HTTP ${response.status}`);
+    if(!response.ok)throw new Error(`store/frssn-db.json HTTP ${response.status}`);
     const db=await response.json();
-    if(!db||!Array.isArray(db.tracks))throw new Error("frssn-db.json has no tracks[]");
+    if(!db||!Array.isArray(db.tracks))throw new Error("store/frssn-db.json has no tracks[]");
     window.FRSSN_PUBLIC_DB=db;
     window.FRSSN_PUBLIC_TRACKS=new Map(
       db.tracks.filter(track=>track&&track.id).map(track=>[String(track.id),track])
@@ -6453,7 +6453,7 @@ function metaFor(state){
      generic approved fallback
        → local DETAIL_META
        → frssn-core shared fields (NOT provenance)
-       → frssn-db.json authoritative public fields + provenance */
+       → store/frssn-db.json authoritative public fields + provenance */
   return publicTrack ? mergeTrackMeta(sharedMerged,publicTrack) : sharedMerged;
 }
 function ensureTrackEssentials(state){

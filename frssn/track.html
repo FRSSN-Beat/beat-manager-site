@@ -10,18 +10,18 @@
 <script>
 /* =====================================================
    FRSSN PUBLIC DB // GITHUB-PAGES LIVE SOURCE
-   frssn-db.json is the production contract exported by BeatManager.
+   store/frssn-db.json is the production contract exported by BeatManager.
    Direct no-store fetch keeps the single page current even if an older
    frssn-core.js build is still cached by the browser.
 ===================================================== */
 window.FRSSN_PUBLIC_DB_READY=(async()=>{
   try{
-    const url=new URL("frssn-db.json",location.href);
+    const url=new URL("store/frssn-db.json",location.href);
     url.searchParams.set("_frssn",Date.now().toString(36));
     const response=await fetch(url,{cache:"no-store"});
-    if(!response.ok)throw new Error(`frssn-db.json HTTP ${response.status}`);
+    if(!response.ok)throw new Error(`store/frssn-db.json HTTP ${response.status}`);
     const db=await response.json();
-    if(!db||!Array.isArray(db.tracks))throw new Error("frssn-db.json has no tracks[]");
+    if(!db||!Array.isArray(db.tracks))throw new Error("store/frssn-db.json has no tracks[]");
     window.FRSSN_PUBLIC_DB=db;
     window.FRSSN_PUBLIC_TRACKS=new Map(
       db.tracks.filter(track=>track&&track.id).map(track=>[String(track.id),track])
@@ -2877,7 +2877,7 @@ Promise.all([
 "use strict";
 
 /* SHARED CATALOG // keep frssn-core.js compatibility, then make the generated
-   frssn-db.json authoritative for the desktop single page. */
+   store/frssn-db.json authoritative for the desktop single page. */
 window.FRSSN?.hydrateSingle?.(document,{mobile:false});
 
 const PUBLIC_DB=window.FRSSN_PUBLIC_DB||null;
@@ -5616,7 +5616,7 @@ function metaFor(state){
   /* META PRIORITY
      1) local DETAIL_META = safe visual/demo fallback
      2) frssn-core.js      = shared catalog layer
-     3) frssn-db.json      = authoritative public BeatManager export
+     3) store/frssn-db.json = authoritative public BeatManager export
      Merge instead of early-return so contentStatus is never silently lost. */
   const baseMeta=mergeTrackMeta(fallbackMeta,sharedMeta);
   if(publicTrack)return mergeTrackMeta(baseMeta,publicTrack);

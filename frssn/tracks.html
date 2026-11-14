@@ -6,6 +6,32 @@
 <meta name="theme-color" content="#050605">
 <title>FRSSN // Tracks</title>
 <script src="frssn-core.js"></script>
+<script>
+/* =====================================================
+   FRSSN PRODUCTION STORE DB
+   BeatManager uploads the public package to /store/.
+===================================================== */
+window.FRSSN_PUBLIC_DB_READY=(async()=>{
+  try{
+    const url=new URL("store/frssn-db.json",location.href);
+    url.searchParams.set("_frssn",Date.now().toString(36));
+    const response=await fetch(url,{cache:"no-store"});
+    if(!response.ok)throw new Error(`store/frssn-db.json HTTP ${response.status}`);
+    const db=await response.json();
+    if(!db||!Array.isArray(db.tracks))throw new Error("store/frssn-db.json has no tracks[]");
+    window.FRSSN_PUBLIC_DB=db;
+    window.FRSSN_PUBLIC_TRACKS=new Map(
+      db.tracks.filter(track=>track&&track.id&&track.visible!==false).map(track=>[String(track.id),track])
+    );
+    return db;
+  }catch(error){
+    console.warn("FRSSN production store DB fallback:",error);
+    window.FRSSN_PUBLIC_DB=null;
+    window.FRSSN_PUBLIC_TRACKS=new Map();
+    return null;
+  }
+})();
+</script>
 
 <style>
 :root{
@@ -1165,11 +1191,129 @@ body.playerBlockDebugMode .vinylScaleShell::after{display:none!important}
 <button class="vuDebugReopen" id="vuDebugReopen" type="button">VU DEBUG</button>
 
 <script>
-(window.FRSSN?.ready || Promise.resolve(window.FRSSN)).then(()=>{
+Promise.all([
+  window.FRSSN?.ready || Promise.resolve(window.FRSSN),
+  window.FRSSN_PUBLIC_DB_READY || Promise.resolve(null)
+]).then(()=>{
 "use strict";
 
 /* SHARED CATALOG // hydrate before player state is created */
 window.FRSSN?.hydrateStore?.(document,{mobile:false});
+
+
+const PUBLIC_DB=window.FRSSN_PUBLIC_DB||null;
+const PUBLIC_TRACKS=Array.isArray(PUBLIC_DB?.tracks)
+  ? PUBLIC_DB.tracks.filter(track=>track&&track.id&&track.visible!==false)
+  : [];
+const PUBLIC_TRACK_MAP=new Map(PUBLIC_TRACKS.map(track=>[String(track.id),track]));
+
+function publicStoreAsset(...values){
+  for(const value of values){
+    if(typeof value==="string"&&value.trim())return value.trim();
+  }
+  return "";
+}
+function publicStoreSectionGeometry(sections){
+  const list=Array.isArray(sections)?sections:[];
+  return list.map((section,index)=>{
+    const start=Number(section?.start);
+    const end=Number(section?.end);
+    const safeStart=Number.isFinite(start)?Math.max(0,Math.min(1,start)):0;
+    const safeEnd=Number.isFinite(end)?Math.max(safeStart,Math.min(1,end)):(index+1<list.length?Number(list[index+1]?.start)||safeStart:1);
+    return {...section,start:safeStart,end:safeEnd};
+  }).filter(section=>section.end>section.start);
+}
+function hydratePublicStoreSource(doc,{mobile=false}={}){
+  const list=doc.querySelector(".trackList");
+  if(!list||!PUBLIC_TRACKS.length)return false;
+  const existing=[...list.querySelectorAll(":scope > .track")];
+  if(!existing.length)return false;
+  const byId=new Map(existing.map(node=>[String(node.dataset.trackId||""),node]));
+  const template=existing[0];
+  const nodes=[];
+
+  PUBLIC_TRACKS.forEach((track,index)=>{
+    const id=String(track.id);
+    const node=(byId.get(id)||template.cloneNode(true));
+    const audio=publicStoreAsset(track.audio);
+    const cover=publicStoreAsset(track.storeCover,track.singleCover,track.label);
+    const label=publicStoreAsset(track.label,cover);
+    node.dataset.trackId=id;
+    node.dataset.audio=audio;
+
+    const title=String(track.title||id);
+    const artist=String(track.artist||"FRSSN");
+    const titleLink=node.querySelector(".trackTitleLink");
+    if(titleLink){
+      titleLink.textContent=title;
+      titleLink.href=`${mobile?"track_android.html":"track.html"}?track=${encodeURIComponent(id)}`;
+    }
+    const typeCode=node.querySelector(".typeCode");
+    if(typeCode){
+      typeCode.textContent=track.typeCode||"";
+      typeCode.title=track.typeCode||"";
+    }
+    const sleeve=node.querySelector(".sleeve .cover");
+    if(sleeve&&cover){sleeve.src=cover;sleeve.alt=`${title} cover`;}
+    const labelImg=node.querySelector(".recordLabel img");
+    if(labelImg&&label){labelImg.src=label;labelImg.alt=title;}
+
+    const properties=[...node.querySelectorAll(".coreProperty")];
+    for(const property of properties){
+      const key=property.querySelector(".coreLabel")?.textContent?.trim()?.toUpperCase();
+      const value=property.querySelector(".coreValue");
+      if(!value)continue;
+      if(key==="BPM")value.textContent=track.bpm||"—";
+      if(key==="KEY")value.textContent=track.key||"—";
+    }
+
+    const moodBlock=node.querySelector(".moodBlock");
+    if(moodBlock){
+      const moods=Array.isArray(track.moods)?track.moods.slice(0,3):[];
+      moodBlock.innerHTML=moods.map(mood=>`<span class="moodTag">${String(mood)}</span>`).join("");
+    }
+
+    const structure=node.querySelector(".trackStructure");
+    if(structure){
+      const sections=publicStoreSectionGeometry(track.sections);
+      if(sections.length){
+        structure.innerHTML=sections.map((section,sectionIndex)=>{
+          const width=Math.max(0,(section.end-section.start)*100);
+          return `<button class="structureSegment${sectionIndex===0?" is-current":""}" type="button" data-section-start="${section.start}" style="flex:0 0 ${width.toFixed(4)}%">${String(section.name||"SECTION")}</button>`;
+        }).join("");
+      }
+    }
+
+    const prices=track.prices||{};
+    const checkout=track.checkout||{};
+    node.querySelectorAll(".purchaseOption").forEach(button=>{
+      const labelText=button.querySelector("span")?.textContent?.trim()?.toLowerCase()||"";
+      const tier=labelText.includes("stems")?"stems":labelText.includes("wav")?"wav":"mp3";
+      const price=button.querySelector(".tierPrice");
+      if(price&&prices[tier])price.textContent=prices[tier];
+      const href=String(checkout[tier]||"").trim();
+      if(href){
+        button.href=href;button.target="_blank";button.rel="noopener noreferrer";button.removeAttribute("data-placeholder-checkout");
+      }else{
+        button.href="#";button.removeAttribute("target");button.removeAttribute("rel");button.dataset.placeholderCheckout="1";
+      }
+    });
+
+    node.dataset.publicSignal=String(track.signal||String(index+1).padStart(3,"0"));
+    node.dataset.publicArtist=artist;
+    nodes.push(node);
+  });
+
+  list.replaceChildren(...nodes);
+  const count=PUBLIC_TRACKS.length;
+  const micro=doc.getElementById("microstatus");
+  if(micro)micro.textContent=`Connection stable // ${String(count).padStart(2,"0")} signals detected`;
+  const sectionCount=doc.querySelector(".sectionTitle span");
+  if(sectionCount)sectionCount.textContent=`${String(count).padStart(2,"0")} SIGNAL${count===1?"":"S"} // DIRECT LICENSE CHANNEL`;
+  return true;
+}
+
+hydratePublicStoreSource(document,{mobile:false});
 
 /* =====================================================
    PLATFORM
@@ -1224,6 +1368,8 @@ const tracks = [...document.querySelectorAll(".track")].map((el,index)=>({
    plus EXCLUSIVE, NO STOCK / © LOOPS, NO AI GEN
 ===================================================== */
 function storeStatusMeta(state){
+  const publicMeta=PUBLIC_TRACK_MAP.get(String(state?.id||""));
+  if(publicMeta)return publicMeta;
   const shared=window.FRSSN?.metaFor?.(state.id,state.index);
   if(shared)return shared;
 
