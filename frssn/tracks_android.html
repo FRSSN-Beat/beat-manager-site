@@ -7,9 +7,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="frssn-store-build" content="2026-11-14-store-r2">
+<meta name="frssn-store-build" content="2026-11-14-store-only-r3">
 <title>FRSSN // Tracks</title>
-<script src="frssn-core.js"></script>
 <script>
 /* =====================================================
    FRSSN PRODUCTION STORE DB
@@ -1871,20 +1870,21 @@ html.frssnPreviewHostMode #frssnPreviewHost{
 <button class="vuDebugReopen" id="vuDebugReopen" type="button">VU DEBUG</button>
 
 <script>
-Promise.all([
-  window.FRSSN?.ready || Promise.resolve(window.FRSSN),
+Promise.resolve(
   window.FRSSN_PUBLIC_DB_READY || Promise.resolve(null)
-]).then(()=>{
+).then(()=>{
 "use strict";
 
 /* PRODUCTION CATALOG // /store/frssn-db.json is the ONLY data source.
-   frssn-core.js remains loaded for routing/helpers, but must never hydrate
-   legacy catalog data over the production store. */
+   Legacy catalog hydration is disabled in this production Android store. */
 const PUBLIC_DB=window.FRSSN_PUBLIC_DB||null;
 const PUBLIC_TRACKS=Array.isArray(PUBLIC_DB?.tracks)
   ? PUBLIC_DB.tracks.filter(track=>track&&track.id&&track.visible!==false)
   : [];
 const PUBLIC_TRACK_MAP=new Map(PUBLIC_TRACKS.map(track=>[String(track.id),track]));
+document.documentElement.dataset.frssnStoreBuild="2026-11-14-store-only-r3";
+document.documentElement.dataset.frssnStoreSource="store/frssn-db.json";
+console.info("FRSSN ANDROID STORE // R3 // store/frssn-db.json // tracks:",PUBLIC_TRACKS.length);
 
 if(!PUBLIC_DB){
   const list=document.querySelector(".trackList");
@@ -2059,22 +2059,8 @@ const tracks = [...document.querySelectorAll(".track")].map((el,index)=>({
    + EXCLUSIVE + provenance chips
 ===================================================== */
 function storeStatusMeta(state){
-  const publicMeta=PUBLIC_TRACK_MAP.get(String(state?.id||""));
-  if(publicMeta)return publicMeta;
-  const shared=window.FRSSN?.metaFor?.(state.id,state.index);
-  if(shared)return shared;
-
-  const pools=[
-    window.FRSSN?.tracks,
-    window.FRSSN?.db?.tracks,
-    window.FRSSN_DB?.tracks
-  ];
-  for(const pool of pools){
-    if(!Array.isArray(pool))continue;
-    const found=pool.find(item=>String(item?.id??"")===String(state.id));
-    if(found)return found;
-  }
-  return {};
+  /* Production Android store has exactly one metadata source. */
+  return PUBLIC_TRACK_MAP.get(String(state?.id||"")) || {};
 }
 function storeStatusBool(value,fallback=false){
   if(typeof value==="boolean")return value;
