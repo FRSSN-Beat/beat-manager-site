@@ -3408,6 +3408,126 @@ body.frssn-license-modal-open{overflow:hidden!important}
 }
 </style>
 
+<style>
+/* =====================================================
+   FRSSN // LICENSE TERMS QUICK VIEW V1
+===================================================== */
+.frssnLicenseTerms{
+  margin:12px 0 4px;
+  padding:12px;
+  border:1px solid rgba(214,255,40,.34);
+  background:
+    linear-gradient(180deg,rgba(214,255,40,.025),transparent 52%),
+    rgba(4,6,4,.72);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.018);
+}
+.frssnLicenseTermsHead{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:10px;
+  color:#f3f4ef;
+  font:900 10px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  letter-spacing:.11em;
+  text-transform:uppercase;
+}
+.frssnLicenseTermsMark{
+  color:#d6ff28;
+  font-size:13px;
+  letter-spacing:-.08em;
+}
+.frssnLicenseTermsLine{
+  height:1px;
+  flex:1 1 auto;
+  background:linear-gradient(90deg,rgba(214,255,40,.55),rgba(214,255,40,.05));
+}
+.frssnLicenseTermsGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+}
+.frssnLicenseTermsCard{
+  min-width:0;
+  border:1px solid rgba(214,255,40,.28);
+  background:rgba(3,5,3,.72);
+}
+.frssnLicenseTermsTitle{
+  position:relative;
+  padding:8px 10px 7px;
+  border-bottom:1px solid rgba(214,255,40,.40);
+  color:#f7f8f2;
+  font:900 12px/1 Arial,Helvetica,sans-serif;
+  text-transform:uppercase;
+  overflow:hidden;
+}
+.frssnLicenseTermsTitle::after{
+  content:"";
+  position:absolute;
+  right:-12px;
+  top:-1px;
+  width:34px;
+  height:calc(100% + 2px);
+  border-left:1px solid rgba(214,255,40,.42);
+  transform:skewX(-38deg);
+  background:#070907;
+}
+.frssnLicenseTermsList{
+  list-style:none;
+  margin:0;
+  padding:9px 10px 10px;
+}
+.frssnLicenseTermsList li{
+  position:relative;
+  padding-left:15px;
+  margin:0 0 6px;
+  color:rgba(243,244,239,.78);
+  font:700 9px/1.35 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+.frssnLicenseTermsList li:last-child{margin-bottom:0}
+.frssnLicenseTermsList li::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:.43em;
+  width:5px;
+  height:5px;
+  background:#d6ff28;
+  box-shadow:0 0 7px rgba(214,255,40,.18);
+}
+.frssnLicenseTermsNote{
+  margin-top:9px;
+  color:rgba(243,244,239,.33);
+  font:700 7px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+@media(max-width:520px){
+  .frssnLicenseTerms{
+    padding:10px;
+    margin-top:10px;
+  }
+  .frssnLicenseTermsHead{
+    font-size:8px;
+    gap:7px;
+  }
+  .frssnLicenseTermsGrid{
+    grid-template-columns:1fr;
+    gap:7px;
+  }
+  .frssnLicenseTermsTitle{
+    font-size:11px;
+    padding:7px 9px 6px;
+  }
+  .frssnLicenseTermsList{
+    padding:8px 9px 9px;
+  }
+  .frssnLicenseTermsList li{
+    font-size:8px;
+    margin-bottom:5px;
+  }
+}
+</style>
+<meta name="frssn-license-terms-build" content="android-terms-v1">
 </head>
 
 <body class="detailPage singleAndroidMode">
@@ -7762,6 +7882,42 @@ window.addEventListener("popstate",async()=>{
         <span>STEMS</span><span id="frssnStemsRequestPrice">REQUEST</span>
       </button>
     </div>
+
+
+    <section class="frssnLicenseTerms" aria-label="License terms quick view">
+      <div class="frssnLicenseTermsHead">
+        <span class="frssnLicenseTermsMark">///</span>
+        <span>License terms // quick view</span>
+        <span class="frssnLicenseTermsLine" aria-hidden="true"></span>
+      </div>
+
+      <div class="frssnLicenseTermsGrid">
+        <article class="frssnLicenseTermsCard">
+          <div class="frssnLicenseTermsTitle">WAV</div>
+          <ul class="frssnLicenseTermsList">
+            <li>Untagged WAV</li>
+            <li>1 commercial release</li>
+            <li>Up to 200,000 streams</li>
+            <li>Non-exclusive</li>
+          </ul>
+        </article>
+
+        <article class="frssnLicenseTermsCard">
+          <div class="frssnLicenseTermsTitle">STEMS</div>
+          <ul class="frssnLicenseTermsList">
+            <li>Untagged WAV + stems</li>
+            <li>1 commercial release</li>
+            <li>Up to 500,000 streams</li>
+            <li>Non-exclusive</li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="frssnLicenseTermsNote">
+        Quick view only // final license terms are confirmed before payment
+      </div>
+    </section>
+
 
     <form id="frssnLicenseRequestForm">
       <input type="hidden" name="track_id" id="frssnRequestTrackIdField">
