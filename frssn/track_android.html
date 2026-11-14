@@ -6,6 +6,29 @@
 <meta name="theme-color" content="#050605">
 <title>FRSSN // Track</title>
 <script src="frssn-core.js"></script>
+<script>
+/* PUBLIC DB // authoritative provenance/status layer for Android single. */
+window.FRSSN_PUBLIC_DB_READY=(async()=>{
+  try{
+    const url=new URL("frssn-db.json",location.href);
+    url.searchParams.set("_frssn",Date.now().toString(36));
+    const response=await fetch(url,{cache:"no-store"});
+    if(!response.ok)throw new Error(`frssn-db.json HTTP ${response.status}`);
+    const db=await response.json();
+    if(!db||!Array.isArray(db.tracks))throw new Error("frssn-db.json has no tracks[]");
+    window.FRSSN_PUBLIC_DB=db;
+    window.FRSSN_PUBLIC_TRACKS=new Map(
+      db.tracks.filter(track=>track&&track.id).map(track=>[String(track.id),track])
+    );
+    return db;
+  }catch(error){
+    console.warn("FRSSN Android public DB fallback:",error);
+    window.FRSSN_PUBLIC_DB=null;
+    window.FRSSN_PUBLIC_TRACKS=new Map();
+    return null;
+  }
+})();
+</script>
 <meta name="frssn-build" content="single-store-production-2026-10-19">
 <!-- FRSSN single-track store // production build -->
 
@@ -3175,6 +3198,75 @@ body.singleAndroidMode.layout-debug-active .featuredSlot .badge.commercialStatus
 }
 </style>
 
+
+<style id="frssnAndroidStatusRailDebug">
+/* =====================================================
+   TARGETED DEBUG // SINGLE ANDROID STATUS BLOCK ONLY
+   Base position is the approved production value:
+   103% | X -99.5 | Y -5.0
+===================================================== */
+.statusRailDebugPanel{
+  position:fixed;
+  right:7px;
+  bottom:7px;
+  z-index:5000;
+  width:244px;
+  padding:10px;
+  border:1px solid rgba(214,255,40,.64);
+  background:rgba(2,4,2,.975);
+  box-shadow:0 16px 38px rgba(0,0,0,.78);
+  color:#d6ff28;
+  font:700 8px/1.35 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  letter-spacing:.055em;
+}
+.statusRailDebugTitle{
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:7px;
+}
+.statusRailDebugTitle b{color:#fff}
+.statusRailDebugRow{margin-top:7px}
+.statusRailDebugHead{display:flex;justify-content:space-between;gap:8px;color:rgba(255,255,255,.50)}
+.statusRailDebugHead b{color:#fff}
+.statusRailDebugPanel input[type="range"]{width:100%;margin:4px 0 0;accent-color:#d6ff28}
+.statusRailDebugReadout{
+  margin-top:8px;
+  padding:6px 7px;
+  border:1px solid rgba(214,255,40,.18);
+  background:rgba(214,255,40,.025);
+  color:rgba(255,255,255,.56);
+  line-height:1.5;
+}
+.statusRailDebugActions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+.statusRailDebugActions button{
+  height:25px;
+  border:1px solid rgba(214,255,40,.48);
+  background:transparent;
+  color:#d6ff28;
+  font:700 7px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+.statusRailDebugActions button:active{background:#d6ff28;color:#050605}
+
+/* Debug values are DELTAS around the frozen production baseline. */
+body.singleAndroidMode.layout-debug-active .featuredSlot .badge.commercialStatus{
+  translate:
+    calc(var(--dbg-status-x) + var(--sad-status-debug-x) + var(--sad-status-live-x,0px))
+    calc(var(--dbg-status-y) + var(--sad-status-debug-y) + var(--sad-status-live-y,0px))!important;
+  scale:calc(var(--sad-status-debug-scale) * var(--sad-status-live-scale,1))!important;
+  transform-origin:left top!important;
+}
+body.statusRailDebugMode .featuredSlot .badge.commercialStatus{
+  outline:1px dashed rgba(214,255,40,.90)!important;
+  outline-offset:2px!important;
+  cursor:move!important;
+  touch-action:none!important;
+}
+@media(max-width:520px){
+  .statusRailDebugPanel{width:232px;right:5px;bottom:5px;padding:8px}
+}
+</style>
+
 </head>
 
 <body class="detailPage singleAndroidMode">
@@ -3569,11 +3661,20 @@ body.singleAndroidMode.layout-debug-active .featuredSlot .badge.commercialStatus
 <div class="layoutAxisHandle layoutHeightHandle" id="layoutHeightHandle" aria-hidden="true"></div>
 
 <script>
-(window.FRSSN?.ready || Promise.resolve(window.FRSSN)).then(()=>{
+Promise.all([
+  window.FRSSN?.ready || Promise.resolve(window.FRSSN),
+  window.FRSSN_PUBLIC_DB_READY || Promise.resolve(null)
+]).then(()=>{
 "use strict";
 
 /* SHARED CATALOG // hydrate real source records before showcase/player boot */
 window.FRSSN?.hydrateSingle?.(document,{mobile:true});
+
+const PUBLIC_DB=window.FRSSN_PUBLIC_DB||null;
+const PUBLIC_TRACKS=Array.isArray(PUBLIC_DB?.tracks)
+  ? PUBLIC_DB.tracks.filter(track=>track&&track.id)
+  : [];
+const PUBLIC_TRACK_MAP=new Map(PUBLIC_TRACKS.map(track=>[String(track.id),track]));
 if(!window.__FRSSN_SINGLE_PREVIEW_HOST__){
 
 /* =====================================================
@@ -6363,16 +6464,23 @@ function mergeTrackMeta(base,overlay){
     contentStatus:{...(base.contentStatus||{}),...(overlay.contentStatus||{})}
   };
 }
-function metaFor(state){
-  const sharedMeta=window.FRSSN?.metaFor?.(state.id,state.index)||null;
-  const fallbackMeta=DETAIL_META[state.id]||null;
+function mergeSharedTrackMeta(base,shared){
+  if(!base)return shared||null;
+  if(!shared)return base;
 
-  /* Android single uses the same metadata layering as desktop:
-     local DETAIL_META keeps approved provenance defaults,
-     shared frssn-core metadata may override only fields it actually provides. */
-  const merged=mergeTrackMeta(fallbackMeta,sharedMeta);
-  if(merged)return merged;
-
+  /* frssn-core may still expose legacy/default provenance booleans.
+     Shared catalog is allowed to provide titles, BPM, prices, etc.,
+     but PUBLIC frssn-db.json is the authority for provenance flags. */
+  const {contentStatus:_legacyContentStatus,...sharedRest}=shared;
+  return {
+    ...base,
+    ...sharedRest,
+    prices:{...(base.prices||{}),...(shared.prices||{})},
+    checkout:{...(base.checkout||{}),...(shared.checkout||{})},
+    contentStatus:{...(base.contentStatus||{})}
+  };
+}
+function genericTrackFallback(state){
   const i=state.index||0;
   return {
     signal:String(i+1).padStart(3,"0"),
@@ -6384,12 +6492,28 @@ function metaFor(state){
     release:"16 OCT 2026",
     license:"MP3",status:"AVAILABLE",file:"CLEAN",
     licenseCount:0,
+    firstLicenseStatus:"AVAILABLE",
     exclusiveStatus:"AVAILABLE",
+    /* Approved provenance baseline for every current FRSSN track.
+       Only an explicit public DB false may remove either chip. */
     contentStatus:{noStockCopyrightLoops:true,noAiGen:true},
     prices:{mp3:"$40",wav:"$80",stems:"$150"}
   };
 }
+function metaFor(state){
+  const generic=genericTrackFallback(state);
+  const local=mergeTrackMeta(generic,DETAIL_META[state.id]||null);
+  const sharedMeta=window.FRSSN?.metaFor?.(state.id,state.index)||null;
+  const sharedMerged=mergeSharedTrackMeta(local,sharedMeta);
+  const publicTrack=PUBLIC_TRACK_MAP.get(String(state?.id||""))||null;
 
+  /* DATA PRIORITY
+     generic approved fallback
+       → local DETAIL_META
+       → frssn-core shared fields (NOT provenance)
+       → frssn-db.json authoritative public fields + provenance */
+  return publicTrack ? mergeTrackMeta(sharedMerged,publicTrack) : sharedMerged;
+}
 function ensureTrackEssentials(state){
   const info=state.el.querySelector(".trackInfo");
   const waveRow=state.el.querySelector(".waveRow");
@@ -6500,10 +6624,8 @@ function normalizedAndroidContentStatus(meta){
 
   if(explicit){
     return {
-      /* Missing legacy/public fields inherit the approved FRSSN provenance fallback.
-         Only an explicit false disables the corresponding chip. */
-      noStockCopyrightLoops:explicit.noStockCopyrightLoops === false ? false : true,
-      noAiGen:explicit.noAiGen === false ? false : true
+      noStockCopyrightLoops:explicit.noStockCopyrightLoops !== false,
+      noAiGen:explicit.noAiGen !== false
     };
   }
 
@@ -7471,6 +7593,187 @@ window.addEventListener("popstate",async()=>{
 }).catch(error=>console.error("FRSSN APP INIT FAILED",error));
 </script>
 
+
+
+<div class="statusRailDebugPanel" id="statusRailDebugPanel">
+  <div class="statusRailDebugTitle"><span>DEBUG // STATUS BLOCK</span><b id="statusRailDebugSummary">103% | X -99.5 | Y -5.0</b></div>
+
+  <div class="statusRailDebugRow">
+    <div class="statusRailDebugHead"><span>X DELTA</span><b id="statusRailDebugXValue">0.0 px</b></div>
+    <input id="statusRailDebugX" type="range" min="-180" max="180" step="0.5" value="0">
+  </div>
+
+  <div class="statusRailDebugRow">
+    <div class="statusRailDebugHead"><span>Y DELTA</span><b id="statusRailDebugYValue">0.0 px</b></div>
+    <input id="statusRailDebugY" type="range" min="-140" max="140" step="0.5" value="0">
+  </div>
+
+  <div class="statusRailDebugRow">
+    <div class="statusRailDebugHead"><span>SCALE</span><b id="statusRailDebugScaleValue">103%</b></div>
+    <input id="statusRailDebugScale" type="range" min="45" max="140" step="1" value="103">
+  </div>
+
+  <div class="statusRailDebugReadout" id="statusRailDebugReadout">WAITING FOR STATUS RAIL…</div>
+  <div class="statusRailDebugActions">
+    <button id="statusRailDebugReset" type="button">RESET 103%</button>
+    <button id="statusRailDebugCopy" type="button">COPY VALUES</button>
+  </div>
+</div>
+
+<script>
+(() => {
+  const KEY="frssn_track_android_status_block_debug_v2";
+  const BASE={x:-99.5,y:-5,scale:103};
+  const body=document.body;
+  const xInput=document.getElementById("statusRailDebugX");
+  const yInput=document.getElementById("statusRailDebugY");
+  const sInput=document.getElementById("statusRailDebugScale");
+  const xValue=document.getElementById("statusRailDebugXValue");
+  const yValue=document.getElementById("statusRailDebugYValue");
+  const sValue=document.getElementById("statusRailDebugScaleValue");
+  const summary=document.getElementById("statusRailDebugSummary");
+  const readout=document.getElementById("statusRailDebugReadout");
+  const reset=document.getElementById("statusRailDebugReset");
+  const copy=document.getElementById("statusRailDebugCopy");
+  if(!body||!xInput||!yInput||!sInput)return;
+
+  body.classList.add("statusRailDebugMode");
+
+  let state={dx:0,dy:0,scale:BASE.scale};
+  try{
+    const raw=localStorage.getItem(KEY);
+    if(raw){
+      const saved=JSON.parse(raw);
+      if(Number.isFinite(Number(saved.dx)))state.dx=Number(saved.dx);
+      if(Number.isFinite(Number(saved.dy)))state.dy=Number(saved.dy);
+      if(Number.isFinite(Number(saved.scale)))state.scale=Number(saved.scale);
+    }
+  }catch(_){}
+
+  function clamp(){
+    state.dx=Math.max(-180,Math.min(180,state.dx));
+    state.dy=Math.max(-140,Math.min(140,state.dy));
+    state.scale=Math.max(45,Math.min(140,state.scale));
+  }
+
+  function statusBlock(){return document.querySelector(".featuredSlot .badge.commercialStatus")}
+  function statusRail(){return document.querySelector(".featuredSlot .commercialStatusRail")}
+
+  function finalValues(){
+    return {
+      x:BASE.x+state.dx,
+      y:BASE.y+state.dy,
+      scale:state.scale
+    };
+  }
+
+  function updateReadout(){
+    const rail=statusRail();
+    if(!rail){readout.textContent="WAITING FOR STATUS RAIL…";return}
+    const rr=rail.getBoundingClientRect();
+    const viewport=Math.min(432,document.documentElement.clientWidth||432);
+    const overflowRight=Math.max(0,rr.right-viewport);
+    const overflowLeft=Math.max(0,-rr.left);
+    const chips=rail.querySelectorAll(".statusChip").length;
+    readout.innerHTML=
+      `CHIPS // <b>${chips}</b><br>`+
+      `RAIL // <b>${Math.round(rr.width)} px</b><br>`+
+      `LEFT / RIGHT // <b>${Math.round(rr.left)} / ${Math.round(rr.right)}</b><br>`+
+      `OVERFLOW L/R // <b>${overflowLeft.toFixed(1)} / ${overflowRight.toFixed(1)} px</b>`;
+  }
+
+  function apply(persist=true){
+    clamp();
+    const f=finalValues();
+    document.documentElement.style.setProperty("--sad-status-live-x",`${state.dx}px`);
+    document.documentElement.style.setProperty("--sad-status-live-y",`${state.dy}px`);
+    document.documentElement.style.setProperty("--sad-status-live-scale",String(state.scale/BASE.scale));
+
+    xInput.value=String(state.dx);
+    yInput.value=String(state.dy);
+    sInput.value=String(state.scale);
+
+    xValue.textContent=`${state.dx.toFixed(1)} px`;
+    yValue.textContent=`${state.dy.toFixed(1)} px`;
+    sValue.textContent=`${Math.round(state.scale)}%`;
+    summary.textContent=`${Math.round(f.scale)}% | X ${f.x.toFixed(1)} | Y ${f.y.toFixed(1)}`;
+
+    requestAnimationFrame(updateReadout);
+    if(persist){
+      try{localStorage.setItem(KEY,JSON.stringify(state))}catch(_){}
+    }
+  }
+
+  xInput.addEventListener("input",()=>{state.dx=Number(xInput.value)||0;apply(true)});
+  yInput.addEventListener("input",()=>{state.dy=Number(yInput.value)||0;apply(true)});
+  sInput.addEventListener("input",()=>{state.scale=Number(sInput.value)||BASE.scale;apply(true)});
+
+  reset?.addEventListener("click",()=>{
+    state={dx:0,dy:0,scale:BASE.scale};
+    apply(true);
+  });
+
+  copy?.addEventListener("click",()=>{
+    const f=finalValues();
+    const value=`STATUS BLOCK = ${Math.round(f.scale)}% | X ${f.x.toFixed(1)} | Y ${f.y.toFixed(1)}`;
+    const old=copy.textContent;
+    if(navigator.clipboard?.writeText){
+      navigator.clipboard.writeText(value).then(()=>{
+        copy.textContent="COPIED";
+        setTimeout(()=>copy.textContent=old,850);
+      }).catch(()=>{});
+    }
+  });
+
+  /* Direct drag moves the entire status rail only. */
+  let drag=null;
+  function bindDrag(){
+    const block=statusBlock();
+    if(!block||block.dataset.statusDebugDragBound==="1")return;
+    block.dataset.statusDebugDragBound="1";
+
+    block.addEventListener("pointerdown",event=>{
+      if(event.button!==undefined&&event.button!==0)return;
+      event.preventDefault();
+      drag={
+        pointerId:event.pointerId,
+        startX:event.clientX,
+        startY:event.clientY,
+        dx:state.dx,
+        dy:state.dy
+      };
+      try{block.setPointerCapture(event.pointerId)}catch(_){}
+    });
+
+    block.addEventListener("pointermove",event=>{
+      if(!drag||event.pointerId!==drag.pointerId)return;
+      event.preventDefault();
+      state.dx=Math.round((drag.dx+event.clientX-drag.startX)*2)/2;
+      state.dy=Math.round((drag.dy+event.clientY-drag.startY)*2)/2;
+      apply(false);
+    });
+
+    const finish=event=>{
+      if(!drag||event.pointerId!==drag.pointerId)return;
+      try{block.releasePointerCapture(event.pointerId)}catch(_){}
+      drag=null;
+      apply(true);
+    };
+    block.addEventListener("pointerup",finish);
+    block.addEventListener("pointercancel",finish);
+  }
+
+  const observer=new MutationObserver(()=>{
+    bindDrag();
+    requestAnimationFrame(updateReadout);
+  });
+  observer.observe(document.body,{childList:true,subtree:true});
+
+  window.addEventListener("resize",()=>requestAnimationFrame(updateReadout),{passive:true});
+  bindDrag();
+  apply(false);
+})();
+</script>
 
 </body>
 </html>
