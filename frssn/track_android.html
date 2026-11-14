@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="frssn-store-build" content="2026-11-14-store-r2">
+<meta name="frssn-store-build" content="2026-11-14-single-store-r3">
 <title>FRSSN // Track</title>
 <script src="frssn-core.js"></script>
 <script>
@@ -3615,7 +3615,7 @@ Promise.all([
 ]).then(()=>{
 "use strict";
 
-/* SHARED CATALOG // hydrate real source records before showcase/player boot */
+/* PRODUCTION CATALOG // store/frssn-db.json is authoritative */
 const PUBLIC_DB=window.FRSSN_PUBLIC_DB||null;
 if(!PUBLIC_DB){
   /* Production pages never display the legacy catalog as current store data. */
@@ -4609,95 +4609,99 @@ if(IS_DETAIL_PAGE&&layoutDebugPanel){
 }
 
 /* =====================================================
-   SHOWCASE MOCK CATALOG // 4 ROWS × 7 COLUMNS
-   Temporary visual fill for the storefront. The two real assets are reused
-   alternately, but every slot has its own title / URL identity.
+   PRODUCTION SINGLE SOURCE // store/frssn-db.json ONLY
+
+   The hidden .detailSourceTrackList is the physical template pool used by the
+   vinyl/player controller. Rebuild it BEFORE TRACK OBJECTS are created so the
+   URL ?track=<id> can resolve every real release from the public store DB.
 ===================================================== */
-const SHOWCASE_TRACK_NAMES = window.FRSSN?.showcaseNames || [
-  "OLD",
-  "TRACK 02",
-  "STATIC",
-  "VEIL",
-  "ECHO",
-  "NOCTURNE",
-  "NULL",
-  "AFTERIMAGE",
-  "GHOSTLINE",
-  "BLACKOUT",
-  "ORBIT",
-  "PHASE",
-  "DUST",
-  "SUBLEVEL",
-  "MIRROR",
-  "CONTACT",
-  "VOID",
-  "RECEIVER",
-  "COLD SIGNAL",
-  "NIGHT NODE",
-  "MEMORY",
-  "TRACE",
-  "DEAD AIR",
-  "HORIZON",
-  "VECTOR",
-  "SILENT ROOM",
-  "FREQUENCY",
-  "LAST LIGHT"
-];
+function publicSingleAsset(...values){
+  for(const value of values){
+    if(typeof value==="string" && value.trim()) return value.trim();
+  }
+  return "";
+}
 
 if(IS_DETAIL_PAGE){
-  const showcaseSourceList = document.querySelector(".detailSourceTrackList");
-  const showcaseBaseTracks = showcaseSourceList
-    ? [...showcaseSourceList.querySelectorAll(":scope > .track")]
+  const sourceList=document.querySelector(".detailSourceTrackList");
+  const existing=sourceList
+    ? [...sourceList.querySelectorAll(":scope > .track")]
     : [];
 
-  if(showcaseSourceList && showcaseBaseTracks.length >= 2){
-    SHOWCASE_TRACK_NAMES.forEach((title,index)=>{
-      const signal = String(index+1).padStart(3,"0");
-
-      if(index < showcaseBaseTracks.length){
-        const existing = showcaseBaseTracks[index];
-        const titleLink = existing.querySelector(".trackTitleLink");
-        if(titleLink){
-          titleLink.textContent = title;
-          titleLink.href = trackPageHref(existing.dataset.trackId);
-        }
-        const metaSignal = existing.querySelector(".meta span");
-        if(metaSignal) metaSignal.textContent = `Signal // ${signal}`;
-        return;
-      }
-
-      const source = showcaseBaseTracks[index % 2];
-      const clone = source.cloneNode(true);
-      const id = `showcase-${String(index+1).padStart(2,"0")}`;
-
-      clone.dataset.trackId = id;
-      clone.dataset.audio = source.dataset.audio;
-
-      const titleLink = clone.querySelector(".trackTitleLink");
-      if(titleLink){
-        titleLink.textContent = title;
-        titleLink.href = trackPageHref(id);
-      }
-
-      const recordLabel = clone.querySelector(".recordLabel img");
-      const cover = clone.querySelector(".sleeve .cover");
-
-      /* OLD itself uses a dedicated SOLD sleeve image, but all temporary
-         showcase clones that reuse OLD assets must stay on the clean artwork. */
-      if(source.dataset.trackId === "old"){
-        if(recordLabel) recordLabel.src = "old-cover.png";
-        if(cover) cover.src = "old-cover.png";
-      }
-
-      if(recordLabel) recordLabel.alt = title;
-      if(cover) cover.alt = `${title} cover`;
-
-      const metaSignal = clone.querySelector(".meta span");
-      if(metaSignal) metaSignal.textContent = `Signal // ${signal}`;
-
-      showcaseSourceList.appendChild(clone);
-    });
+  if(!sourceList || !existing.length){
+    throw new Error("FRSSN single template source is missing");
   }
+
+  if(!PUBLIC_TRACKS.length){
+    throw new Error("FRSSN production DB contains no tracks");
+  }
+
+  const byId=new Map(existing.map(node=>[String(node.dataset.trackId||""),node]));
+  const template=existing[0];
+
+  const productionNodes=PUBLIC_TRACKS.map((track,index)=>{
+    const id=String(track.id);
+    const node=byId.get(id) || template.cloneNode(true);
+
+    const cover=publicSingleAsset(
+      track.singleCover,
+      track.storeCover,
+      track.label
+    );
+    const label=publicSingleAsset(
+      track.label,
+      track.singleCover,
+      track.storeCover
+    );
+
+    node.dataset.trackId=id;
+    node.dataset.audio=publicSingleAsset(track.audio);
+    node.dataset.storeCover=publicSingleAsset(track.storeCover,cover);
+    node.dataset.singleCover=cover;
+    node.dataset.label=label;
+
+    const title=String(track.title||id);
+    const artist=String(track.artist||"FRSSN");
+
+    const titleLink=node.querySelector(".trackTitleLink");
+    if(titleLink){
+      titleLink.textContent=title;
+      titleLink.href=trackPageHref(id);
+    }
+
+    const artistEl=node.querySelector(".artist");
+    if(artistEl)artistEl.textContent=artist;
+
+    const typeCode=node.querySelector(".typeCode");
+    if(typeCode)typeCode.textContent=track.typeCode||"";
+
+    const sleeve=node.querySelector(".sleeve .cover");
+    if(sleeve && cover){
+      sleeve.src=cover;
+      sleeve.alt=`${title} cover`;
+    }
+
+    const recordLabel=node.querySelector(".recordLabel img");
+    if(recordLabel && label){
+      recordLabel.src=label;
+      recordLabel.alt=title;
+    }
+
+    const metaSignal=node.querySelector(".meta span");
+    if(metaSignal){
+      metaSignal.textContent=`Signal // ${track.signal||String(index+1).padStart(3,"0")}`;
+    }
+
+    return node;
+  });
+
+  sourceList.replaceChildren(...productionNodes);
+  document.documentElement.dataset.frssnSingleSource="store/frssn-db.json";
+  document.documentElement.dataset.frssnSingleTrackCount=String(productionNodes.length);
+  console.info(
+    "FRSSN ANDROID SINGLE // R3 // production tracks:",
+    productionNodes.length
+  );
 }
 
 /* =====================================================
@@ -6454,18 +6458,13 @@ function genericTrackFallback(state){
   };
 }
 function metaFor(state){
-  const generic=genericTrackFallback(state);
-  const local=mergeTrackMeta(generic,DETAIL_META[state.id]||null);
-  const sharedMeta=window.FRSSN?.metaFor?.(state.id,state.index)||null;
-  const sharedMerged=mergeSharedTrackMeta(local,sharedMeta);
   const publicTrack=PUBLIC_TRACK_MAP.get(String(state?.id||""))||null;
+  if(publicTrack)return mergeTrackMeta(genericTrackFallback(state),publicTrack);
 
-  /* DATA PRIORITY
-     generic approved fallback
-       → local DETAIL_META
-       → frssn-core shared fields (NOT provenance)
-       → store/frssn-db.json authoritative public fields + provenance */
-  return publicTrack ? mergeTrackMeta(sharedMerged,publicTrack) : sharedMerged;
+  /* A state not present in the production DB is invalid on the live single page.
+     Keep the fallback only as a defensive renderer guard; navigation never
+     creates such a state because TRACK OBJECTS are built from PUBLIC_TRACKS. */
+  return genericTrackFallback(state);
 }
 function ensureTrackEssentials(state){
   const info=state.el.querySelector(".trackInfo");
