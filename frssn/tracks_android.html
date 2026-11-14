@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#050605">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="frssn-store-build" content="2026-11-14-store-r2">
 <title>FRSSN // Tracks</title>
 <script src="frssn-core.js"></script>
 <script>
@@ -11,6 +15,7 @@
    FRSSN PRODUCTION STORE DB
    BeatManager uploads the public package to /store/.
 ===================================================== */
+window.FRSSN_PUBLIC_DB_ERROR=null;
 window.FRSSN_PUBLIC_DB_READY=(async()=>{
   try{
     const url=new URL("store/frssn-db.json",location.href);
@@ -25,7 +30,8 @@ window.FRSSN_PUBLIC_DB_READY=(async()=>{
     );
     return db;
   }catch(error){
-    console.warn("FRSSN production store DB fallback:",error);
+    console.error("FRSSN production store DB failed:",error);
+    window.FRSSN_PUBLIC_DB_ERROR=error;
     window.FRSSN_PUBLIC_DB=null;
     window.FRSSN_PUBLIC_TRACKS=new Map();
     return null;
@@ -1871,15 +1877,24 @@ Promise.all([
 ]).then(()=>{
 "use strict";
 
-/* SHARED CATALOG // hydrate before player state is created */
-window.FRSSN?.hydrateStore?.(document,{mobile:true});
-
-
+/* PRODUCTION CATALOG // /store/frssn-db.json is the ONLY data source.
+   frssn-core.js remains loaded for routing/helpers, but must never hydrate
+   legacy catalog data over the production store. */
 const PUBLIC_DB=window.FRSSN_PUBLIC_DB||null;
 const PUBLIC_TRACKS=Array.isArray(PUBLIC_DB?.tracks)
   ? PUBLIC_DB.tracks.filter(track=>track&&track.id&&track.visible!==false)
   : [];
 const PUBLIC_TRACK_MAP=new Map(PUBLIC_TRACKS.map(track=>[String(track.id),track]));
+
+if(!PUBLIC_DB){
+  const list=document.querySelector(".trackList");
+  if(list)list.replaceChildren();
+  const micro=document.getElementById("microstatus");
+  if(micro)micro.textContent="STORE DATA OFFLINE // production DB unavailable";
+  const sectionCount=document.querySelector(".sectionTitle span");
+  if(sectionCount)sectionCount.textContent="STORE DATA OFFLINE";
+  throw (window.FRSSN_PUBLIC_DB_ERROR||new Error("store/frssn-db.json unavailable"));
+}
 
 function publicStoreAsset(...values){
   for(const value of values){
