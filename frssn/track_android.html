@@ -6536,8 +6536,10 @@ function normalizedAndroidContentStatus(meta){
 
   if(explicit){
     return {
-      noStockCopyrightLoops:!!explicit.noStockCopyrightLoops,
-      noAiGen:!!explicit.noAiGen
+      /* Missing legacy/public fields inherit the approved FRSSN provenance fallback.
+         Only an explicit false disables the corresponding chip. */
+      noStockCopyrightLoops:explicit.noStockCopyrightLoops === false ? false : true,
+      noAiGen:explicit.noAiGen === false ? false : true
     };
   }
 
