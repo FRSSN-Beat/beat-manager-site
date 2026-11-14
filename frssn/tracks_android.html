@@ -1565,8 +1565,8 @@ html.frssnPreviewHostMode #frssnPreviewHost{
 
 <style id="frssnLicenseRequestStyles">
 /* =====================================================
-   FRSSN // MANUAL LICENSE REQUEST V3
-   LARGER TEXT / EASIER READABILITY
+   FRSSN // MANUAL LICENSE REQUEST V4
+   XL TEXT / MAX READABILITY
 ===================================================== */
 .frssnLicenseModal{
   position:fixed;
@@ -1581,11 +1581,11 @@ html.frssnPreviewHostMode #frssnPreviewHost{
 }
 .frssnLicenseModal.is-open{display:grid}
 .frssnLicensePanel{
-  width:min(500px,calc(100vw - 28px));
-  max-height:calc(100svh - 28px);
+  width:min(540px,calc(100vw - 28px));
+  max-height:calc(100svh - 24px);
   overflow:auto;
   position:relative;
-  padding:22px;
+  padding:24px;
   border:1px solid rgba(214,255,40,.62);
   background:
     linear-gradient(180deg,rgba(214,255,40,.035),transparent 34%),
@@ -1596,51 +1596,51 @@ html.frssnPreviewHostMode #frssnPreviewHost{
 }
 .frssnLicenseClose{
   position:absolute;
-  top:10px;
-  right:10px;
-  width:34px;
-  height:34px;
+  top:11px;
+  right:11px;
+  width:38px;
+  height:38px;
   border:1px solid rgba(214,255,40,.32);
   background:transparent;
   color:#d6ff28;
-  font:700 22px/1 Arial,sans-serif;
+  font:700 25px/1 Arial,sans-serif;
   cursor:pointer;
 }
 .frssnLicenseEyebrow{
-  padding-right:42px;
+  padding-right:48px;
   color:#d6ff28;
-  font:800 10px/1.25 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  letter-spacing:.15em;
+  font:900 11px/1.25 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  letter-spacing:.14em;
   text-transform:uppercase;
 }
 .frssnLicenseTitle{
-  margin:8px 0 6px;
+  margin:9px 0 7px;
   color:#f7f8f2;
-  font:900 30px/1 Arial,Helvetica,sans-serif;
-  letter-spacing:-.02em;
+  font:900 36px/1 Arial,Helvetica,sans-serif;
+  letter-spacing:-.025em;
   text-transform:uppercase;
 }
 .frssnLicenseIntro{
-  margin:0 0 16px;
-  color:rgba(243,244,239,.62);
-  font:700 12px/1.45 Arial,Helvetica,sans-serif;
-  letter-spacing:.025em;
+  margin:0 0 18px;
+  color:rgba(243,244,239,.66);
+  font:800 13px/1.48 Arial,Helvetica,sans-serif;
+  letter-spacing:.018em;
   text-transform:uppercase;
 }
 .frssnLicenseTrack{
   display:grid;
   grid-template-columns:auto minmax(0,1fr);
-  gap:8px 12px;
+  gap:9px 13px;
   align-items:center;
-  padding:12px 13px;
-  margin-bottom:14px;
+  padding:14px 15px;
+  margin-bottom:15px;
   border:1px solid rgba(214,255,40,.18);
   background:rgba(214,255,40,.025);
 }
 .frssnLicenseTrack span{
-  color:rgba(243,244,239,.48);
-  font:800 9px/1.1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  letter-spacing:.11em;
+  color:rgba(243,244,239,.52);
+  font:900 10px/1.15 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  letter-spacing:.10em;
 }
 .frssnLicenseTrack b{
   min-width:0;
@@ -1648,26 +1648,26 @@ html.frssnPreviewHostMode #frssnPreviewHost{
   text-overflow:ellipsis;
   white-space:nowrap;
   color:#f3f4ef;
-  font:900 13px/1.25 Arial,Helvetica,sans-serif;
+  font:900 15px/1.25 Arial,Helvetica,sans-serif;
 }
 .frssnLicenseChoices{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:10px;
-  margin-bottom:14px;
+  gap:11px;
+  margin-bottom:15px;
 }
 .frssnLicenseChoice{
-  min-height:52px;
-  padding:0 14px;
+  min-height:58px;
+  padding:0 16px;
   border:1px solid rgba(214,255,40,.52);
   background:#060806;
   color:#f7f8f2;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:10px;
+  gap:12px;
   cursor:pointer;
-  font:900 14px/1 Arial,Helvetica,sans-serif;
+  font:900 17px/1 Arial,Helvetica,sans-serif;
 }
 .frssnLicenseChoice span:last-child{color:#d6ff28}
 .frssnLicenseChoice.is-active{
@@ -1677,13 +1677,13 @@ html.frssnPreviewHostMode #frssnPreviewHost{
 }
 .frssnLicenseChoice.is-active span:last-child{color:#050605}
 
-.frssnRequestField{display:block;margin-top:12px}
+.frssnRequestField{display:block;margin-top:13px}
 .frssnRequestField > span{
   display:block;
-  margin:0 0 6px;
-  color:rgba(243,244,239,.54);
-  font:800 9px/1.1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  letter-spacing:.11em;
+  margin:0 0 7px;
+  color:rgba(243,244,239,.58);
+  font:900 10px/1.1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  letter-spacing:.10em;
   text-transform:uppercase;
 }
 .frssnRequestField input,
@@ -1694,8 +1694,8 @@ html.frssnPreviewHostMode #frssnPreviewHost{
   background:#050705;
   color:#f3f4ef;
   border-radius:0;
-  padding:12px 12px;
-  font:700 14px/1.4 Arial,Helvetica,sans-serif;
+  padding:13px 14px;
+  font:700 16px/1.42 Arial,Helvetica,sans-serif;
   box-sizing:border-box;
 }
 .frssnRequestField input:focus,
@@ -1704,39 +1704,39 @@ html.frssnPreviewHostMode #frssnPreviewHost{
   box-shadow:0 0 0 1px rgba(214,255,40,.08);
 }
 .frssnRequestField textarea{
-  min-height:110px;
+  min-height:122px;
   resize:vertical;
 }
 .frssnRequestSubmit{
   width:100%;
-  min-height:48px;
-  margin-top:14px;
+  min-height:54px;
+  margin-top:16px;
   border:1px solid #d6ff28;
   background:#d6ff28;
   color:#050605;
   cursor:pointer;
-  font:900 13px/1 Arial,Helvetica,sans-serif;
-  letter-spacing:.06em;
+  font:900 15px/1 Arial,Helvetica,sans-serif;
+  letter-spacing:.055em;
   text-transform:uppercase;
 }
 .frssnRequestSubmit:disabled{opacity:.42;cursor:wait}
 .frssnRequestStatus{
-  min-height:16px;
-  margin-top:9px;
-  color:rgba(243,244,239,.58);
-  font:700 9px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  letter-spacing:.055em;
+  min-height:18px;
+  margin-top:10px;
+  color:rgba(243,244,239,.62);
+  font:800 10px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  letter-spacing:.05em;
   text-transform:uppercase;
 }
 .frssnRequestStatus.is-success{color:#d6ff28}
 .frssnRequestStatus.is-error{color:#ff8b8b}
 .frssnRequestFoot{
-  margin-top:12px;
-  padding-top:10px;
+  margin-top:14px;
+  padding-top:11px;
   border-top:1px solid rgba(255,255,255,.07);
-  color:rgba(243,244,239,.38);
-  font:700 8px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  letter-spacing:.08em;
+  color:rgba(243,244,239,.42);
+  font:800 9px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  letter-spacing:.07em;
   text-transform:uppercase;
 }
 body.frssn-license-modal-open{overflow:hidden!important}
@@ -1759,38 +1759,46 @@ body.frssn-license-modal-open{overflow:hidden!important}
 .track .purchaseCartStandalone{cursor:pointer!important}
 
 @media(max-width:520px){
-  .frssnLicenseModal{padding:8px}
+  .frssnLicenseModal{padding:5px}
   .frssnLicensePanel{
-    width:calc(100vw - 14px);
-    max-height:calc(100svh - 14px);
-    padding:18px;
+    width:calc(100vw - 8px);
+    max-height:calc(100svh - 8px);
+    padding:16px;
   }
-  .frssnLicenseTitle{font-size:26px}
-  .frssnLicenseEyebrow{font-size:9px}
-  .frssnLicenseIntro{font-size:11px}
-  .frssnLicenseTrack span{font-size:8px}
-  .frssnLicenseTrack b{font-size:12px}
+  .frssnLicenseClose{width:34px;height:34px;font-size:22px}
+  .frssnLicenseEyebrow{font-size:10px;padding-right:40px}
+  .frssnLicenseTitle{font-size:30px}
+  .frssnLicenseIntro{font-size:12px;line-height:1.42}
+  .frssnLicenseTrack{padding:12px 12px;gap:8px 10px}
+  .frssnLicenseTrack span{font-size:9px}
+  .frssnLicenseTrack b{font-size:14px}
   .frssnLicenseChoice{
-    min-height:48px;
-    padding:0 10px;
-    font-size:13px;
+    min-height:54px;
+    padding:0 12px;
+    font-size:15px;
   }
-  .frssnRequestField > span{font-size:8px}
+  .frssnRequestField > span{font-size:9px}
   .frssnRequestField input,
-  .frssnRequestField textarea{font-size:13px;padding:11px 11px}
-  .frssnRequestSubmit{font-size:12px;min-height:46px}
+  .frssnRequestField textarea{
+    font-size:15px;
+    padding:12px 12px;
+  }
+  .frssnRequestField textarea{min-height:104px}
+  .frssnRequestSubmit{font-size:14px;min-height:50px}
+  .frssnRequestStatus{font-size:9px}
+  .frssnRequestFoot{font-size:8px}
 }
 </style>
 
 <meta name="frssn-license-request-build" content="tracks-android-manual-license-v1">
 <style id="frssnLicenseTermsStyles">
 /* =====================================================
-   FRSSN // LICENSE TERMS QUICK VIEW V3
-   LARGER TEXT / EASY READ
+   FRSSN // LICENSE TERMS QUICK VIEW V4
+   XL TEXT / MAX READABILITY
 ===================================================== */
 .frssnLicenseTerms{
-  margin:14px 0 6px;
-  padding:12px;
+  margin:15px 0 7px;
+  padding:13px;
   border:1px solid rgba(214,255,40,.34);
   background:
     linear-gradient(180deg,rgba(214,255,40,.025),transparent 52%),
@@ -1800,16 +1808,16 @@ body.frssn-license-modal-open{overflow:hidden!important}
 .frssnLicenseTermsHead{
   display:flex;
   align-items:center;
-  gap:9px;
-  margin-bottom:10px;
+  gap:10px;
+  margin-bottom:11px;
   color:#f3f4ef;
-  font:900 10px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  letter-spacing:.11em;
+  font:900 12px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  letter-spacing:.10em;
   text-transform:uppercase;
 }
 .frssnLicenseTermsMark{
   color:#d6ff28;
-  font-size:14px;
+  font-size:16px;
   letter-spacing:-.08em;
 }
 .frssnLicenseTermsLine{
@@ -1820,7 +1828,7 @@ body.frssn-license-modal-open{overflow:hidden!important}
 .frssnLicenseTermsGrid{
   display:grid;
   grid-template-columns:minmax(0,1fr) minmax(0,1fr);
-  gap:10px;
+  gap:11px;
 }
 .frssnLicenseTermsCard{
   min-width:0;
@@ -1829,10 +1837,10 @@ body.frssn-license-modal-open{overflow:hidden!important}
 }
 .frssnLicenseTermsTitle{
   position:relative;
-  padding:8px 10px 7px;
+  padding:9px 11px 8px;
   border-bottom:1px solid rgba(214,255,40,.40);
   color:#f7f8f2;
-  font:900 13px/1 Arial,Helvetica,sans-serif;
+  font:900 15px/1 Arial,Helvetica,sans-serif;
   text-transform:uppercase;
   overflow:hidden;
 }
@@ -1850,72 +1858,74 @@ body.frssn-license-modal-open{overflow:hidden!important}
 .frssnLicenseTermsList{
   list-style:none;
   margin:0;
-  padding:10px 10px 11px;
+  padding:11px 11px 12px;
 }
 .frssnLicenseTermsList li{
   position:relative;
-  padding-left:14px;
-  margin:0 0 6px;
-  color:rgba(243,244,239,.82);
-  font:700 9.5px/1.35 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  padding-left:15px;
+  margin:0 0 7px;
+  color:rgba(243,244,239,.86);
+  font:700 11.5px/1.38 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
 }
 .frssnLicenseTermsList li:last-child{margin-bottom:0}
 .frssnLicenseTermsList li::before{
   content:"";
   position:absolute;
   left:0;
-  top:.43em;
-  width:5px;
-  height:5px;
+  top:.45em;
+  width:6px;
+  height:6px;
   background:#d6ff28;
   box-shadow:0 0 7px rgba(214,255,40,.18);
 }
 .frssnLicenseTermsNote{
-  margin-top:9px;
-  color:rgba(243,244,239,.36);
-  font:700 7.5px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  letter-spacing:.055em;
+  margin-top:10px;
+  color:rgba(243,244,239,.42);
+  font:800 8.5px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  letter-spacing:.05em;
   text-transform:uppercase;
 }
 
 @media(max-width:520px){
   .frssnLicenseTerms{
     padding:10px;
-    margin-top:11px;
+    margin-top:12px;
   }
   .frssnLicenseTermsHead{
-    font-size:8.5px;
-    gap:6px;
-    margin-bottom:8px;
+    font-size:10px;
+    gap:7px;
+    margin-bottom:9px;
   }
+  .frssnLicenseTermsMark{font-size:14px}
   .frssnLicenseTermsGrid{
     grid-template-columns:minmax(0,1fr) minmax(0,1fr);
     gap:8px;
   }
   .frssnLicenseTermsTitle{
-    font-size:11px;
-    padding:7px 8px 6px;
+    font-size:12.5px;
+    padding:8px 8px 7px;
   }
   .frssnLicenseTermsList{
-    padding:8px 8px 9px;
+    padding:9px 8px 10px;
   }
   .frssnLicenseTermsList li{
     padding-left:12px;
-    font-size:8.2px;
-    line-height:1.32;
-    margin-bottom:5px;
+    font-size:10px;
+    line-height:1.34;
+    margin-bottom:6px;
   }
   .frssnLicenseTermsList li::before{
-    width:4px;
-    height:4px;
+    width:5px;
+    height:5px;
   }
   .frssnLicenseTermsNote{
-    font-size:6.6px;
+    font-size:7.3px;
+    line-height:1.45;
     margin-top:8px;
   }
 }
 </style>
-<meta name="frssn-license-window-build" content="uniform-v3-larger-text">
+<meta name="frssn-license-window-build" content="uniform-v4-xl-text">
 </head>
 
 <body class="androidDebugMode">
