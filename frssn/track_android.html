@@ -260,6 +260,9 @@
 
 <style>
 :root{
+  --sad-status-debug-x:-99.5px;
+  --sad-status-debug-y:-5px;
+  --sad-status-debug-scale:1.03;
   --bg:#050605;
   --panel:rgba(11,13,11,.94);
   --accent:#d6ff28;
@@ -3162,69 +3165,13 @@ body.layout-mouse-edit .featuredSlot .buyCol,
 body.layout-mouse-edit #heroMeterBlock{outline:none!important;cursor:default!important;}
 </style>
 
-<style id="frssnAndroidStatusRailDebug">
-/* =====================================================
-   TARGETED DEBUG // SINGLE ANDROID
-   The complete commercial-status block is one module.
-   Existing approved internal chip layout remains untouched.
-===================================================== */
+<style id="frssnAndroidStatusRailProduction">
 body.singleAndroidMode.layout-debug-active .featuredSlot .badge.commercialStatus{
   translate:
-    calc(var(--dbg-status-x) + var(--sad-status-debug-x,0px))
-    calc(var(--dbg-status-y) + var(--sad-status-debug-y,0px))!important;
-  scale:var(--sad-status-debug-scale,1)!important;
+    calc(var(--dbg-status-x) + var(--sad-status-debug-x))
+    calc(var(--dbg-status-y) + var(--sad-status-debug-y))!important;
+  scale:var(--sad-status-debug-scale)!important;
   transform-origin:left top!important;
-}
-.statusRailDebugPanel{
-  position:fixed;
-  right:7px;
-  bottom:7px;
-  z-index:5000;
-  width:244px;
-  padding:10px;
-  border:1px solid rgba(214,255,40,.64);
-  background:rgba(2,4,2,.975);
-  box-shadow:0 16px 38px rgba(0,0,0,.78);
-  color:#d6ff28;
-  font:700 8px/1.35 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  letter-spacing:.055em;
-}
-.statusRailDebugTitle{
-  display:flex;
-  justify-content:space-between;
-  gap:8px;
-  margin-bottom:7px;
-}
-.statusRailDebugTitle b{color:#fff}
-.statusRailDebugRow{margin-top:7px}
-.statusRailDebugHead{display:flex;justify-content:space-between;gap:8px;color:rgba(255,255,255,.50)}
-.statusRailDebugHead b{color:#fff}
-.statusRailDebugPanel input[type="range"]{width:100%;margin:4px 0 0;accent-color:#d6ff28}
-.statusRailDebugReadout{
-  margin-top:8px;
-  padding:6px 7px;
-  border:1px solid rgba(214,255,40,.18);
-  background:rgba(214,255,40,.025);
-  color:rgba(255,255,255,.56);
-  line-height:1.5;
-}
-.statusRailDebugActions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
-.statusRailDebugActions button{
-  height:25px;
-  border:1px solid rgba(214,255,40,.48);
-  background:transparent;
-  color:#d6ff28;
-  font:700 7px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-}
-.statusRailDebugActions button:active{background:#d6ff28;color:#050605}
-body.statusRailDebugMode .featuredSlot .badge.commercialStatus{
-  outline:1px dashed rgba(214,255,40,.90)!important;
-  outline-offset:2px!important;
-  cursor:move!important;
-  touch-action:none!important;
-}
-@media(max-width:520px){
-  .statusRailDebugPanel{width:232px;right:5px;bottom:5px;padding:8px}
 }
 </style>
 
@@ -7524,168 +7471,6 @@ window.addEventListener("popstate",async()=>{
 }).catch(error=>console.error("FRSSN APP INIT FAILED",error));
 </script>
 
-<div class="statusRailDebugPanel" id="statusRailDebugPanel">
-  <div class="statusRailDebugTitle"><span>DEBUG // STATUS BLOCK</span><b id="statusRailDebugSummary">X 0 / Y 0 / 100%</b></div>
-
-  <div class="statusRailDebugRow">
-    <div class="statusRailDebugHead"><span>X</span><b id="statusRailDebugXValue">0.0 px</b></div>
-    <input id="statusRailDebugX" type="range" min="-220" max="160" step="0.5" value="0">
-  </div>
-
-  <div class="statusRailDebugRow">
-    <div class="statusRailDebugHead"><span>Y</span><b id="statusRailDebugYValue">0.0 px</b></div>
-    <input id="statusRailDebugY" type="range" min="-140" max="160" step="0.5" value="0">
-  </div>
-
-  <div class="statusRailDebugRow">
-    <div class="statusRailDebugHead"><span>SCALE</span><b id="statusRailDebugScaleValue">100%</b></div>
-    <input id="statusRailDebugScale" type="range" min="45" max="130" step="1" value="100">
-  </div>
-
-  <div class="statusRailDebugReadout" id="statusRailDebugReadout">WAITING FOR STATUS RAIL…</div>
-  <div class="statusRailDebugActions">
-    <button id="statusRailDebugReset" type="button">RESET</button>
-    <button id="statusRailDebugCopy" type="button">COPY VALUES</button>
-  </div>
-</div>
-
-<script>
-(() => {
-  const KEY="frssn_track_android_status_block_debug_v1";
-  const body=document.body;
-  const panel=document.getElementById("statusRailDebugPanel");
-  const xInput=document.getElementById("statusRailDebugX");
-  const yInput=document.getElementById("statusRailDebugY");
-  const sInput=document.getElementById("statusRailDebugScale");
-  const xValue=document.getElementById("statusRailDebugXValue");
-  const yValue=document.getElementById("statusRailDebugYValue");
-  const sValue=document.getElementById("statusRailDebugScaleValue");
-  const summary=document.getElementById("statusRailDebugSummary");
-  const readout=document.getElementById("statusRailDebugReadout");
-  const reset=document.getElementById("statusRailDebugReset");
-  const copy=document.getElementById("statusRailDebugCopy");
-  if(!body||!panel||!xInput||!yInput||!sInput)return;
-
-  body.classList.add("statusRailDebugMode");
-
-  let state={x:0,y:0,scale:100};
-  try{
-    const raw=localStorage.getItem(KEY);
-    if(raw){
-      const saved=JSON.parse(raw);
-      if(Number.isFinite(Number(saved.x)))state.x=Number(saved.x);
-      if(Number.isFinite(Number(saved.y)))state.y=Number(saved.y);
-      if(Number.isFinite(Number(saved.scale)))state.scale=Number(saved.scale);
-    }
-  }catch(_){}
-
-  function clamp(){
-    state.x=Math.max(-220,Math.min(160,state.x));
-    state.y=Math.max(-140,Math.min(160,state.y));
-    state.scale=Math.max(45,Math.min(130,state.scale));
-  }
-
-  function statusBlock(){
-    return document.querySelector(".featuredSlot .badge.commercialStatus");
-  }
-  function statusRail(){
-    return document.querySelector(".featuredSlot .commercialStatusRail");
-  }
-
-  function updateReadout(){
-    const block=statusBlock();
-    const rail=statusRail();
-    if(!block||!rail){
-      readout.textContent="WAITING FOR STATUS RAIL…";
-      return;
-    }
-    const rr=rail.getBoundingClientRect();
-    const viewport=Math.min(432,document.documentElement.clientWidth||432);
-    const overflowRight=Math.max(0,rr.right-viewport);
-    const overflowLeft=Math.max(0,-rr.left);
-    const chips=rail.querySelectorAll(".statusChip").length;
-    readout.innerHTML=
-      `CHIPS // <b>${chips}</b><br>`+
-      `RAIL // <b>${Math.round(rr.width)} px</b><br>`+
-      `LEFT / RIGHT // <b>${Math.round(rr.left)} / ${Math.round(rr.right)}</b><br>`+
-      `OVERFLOW L/R // <b>${overflowLeft.toFixed(1)} / ${overflowRight.toFixed(1)} px</b>`;
-  }
-
-  function apply(persist=true){
-    clamp();
-    document.documentElement.style.setProperty("--sad-status-debug-x",`${state.x}px`);
-    document.documentElement.style.setProperty("--sad-status-debug-y",`${state.y}px`);
-    document.documentElement.style.setProperty("--sad-status-debug-scale",String(state.scale/100));
-
-    xInput.value=String(state.x);
-    yInput.value=String(state.y);
-    sInput.value=String(state.scale);
-    xValue.textContent=`${state.x.toFixed(1)} px`;
-    yValue.textContent=`${state.y.toFixed(1)} px`;
-    sValue.textContent=`${Math.round(state.scale)}%`;
-    summary.textContent=`X ${state.x.toFixed(1)} / Y ${state.y.toFixed(1)} / ${Math.round(state.scale)}%`;
-
-    requestAnimationFrame(updateReadout);
-    if(persist){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(_){}}
-  }
-
-  xInput.addEventListener("input",()=>{state.x=Number(xInput.value)||0;apply(true)});
-  yInput.addEventListener("input",()=>{state.y=Number(yInput.value)||0;apply(true)});
-  sInput.addEventListener("input",()=>{state.scale=Number(sInput.value)||100;apply(true)});
-  reset?.addEventListener("click",()=>{state={x:0,y:0,scale:100};apply(true)});
-
-  copy?.addEventListener("click",()=>{
-    const text=`STATUS BLOCK = ${Math.round(state.scale)}% | X ${state.x.toFixed(1)} | Y ${state.y.toFixed(1)}`;
-    const old=copy.textContent;
-    const done=()=>{copy.textContent="COPIED";setTimeout(()=>copy.textContent=old,850)};
-    if(navigator.clipboard?.writeText){
-      navigator.clipboard.writeText(text).then(done).catch(()=>{});
-    }
-  });
-
-  /* Direct drag moves the WHOLE status module only. */
-  let drag=null;
-  const bindDrag=()=>{
-    const block=statusBlock();
-    if(!block||block.dataset.statusDebugDragBound==="1")return;
-    block.dataset.statusDebugDragBound="1";
-    block.addEventListener("pointerdown",event=>{
-      if(event.button!==undefined&&event.button!==0)return;
-      event.preventDefault();
-      drag={
-        pointerId:event.pointerId,
-        startX:event.clientX,
-        startY:event.clientY,
-        x:state.x,
-        y:state.y
-      };
-      try{block.setPointerCapture(event.pointerId)}catch(_){}
-    });
-    block.addEventListener("pointermove",event=>{
-      if(!drag||event.pointerId!==drag.pointerId)return;
-      event.preventDefault();
-      state.x=Math.round((drag.x+event.clientX-drag.startX)*2)/2;
-      state.y=Math.round((drag.y+event.clientY-drag.startY)*2)/2;
-      apply(false);
-    });
-    const finish=event=>{
-      if(!drag||event.pointerId!==drag.pointerId)return;
-      try{block.releasePointerCapture(event.pointerId)}catch(_){}
-      drag=null;
-      apply(true);
-    };
-    block.addEventListener("pointerup",finish);
-    block.addEventListener("pointercancel",finish);
-  };
-
-  const observer=new MutationObserver(()=>{bindDrag();requestAnimationFrame(updateReadout)});
-  observer.observe(document.body,{childList:true,subtree:true});
-
-  window.addEventListener("resize",()=>requestAnimationFrame(updateReadout),{passive:true});
-  bindDrag();
-  apply(false);
-})();
-</script>
 
 </body>
 </html>
