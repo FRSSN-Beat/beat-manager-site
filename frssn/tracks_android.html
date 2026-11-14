@@ -1207,7 +1207,7 @@ body.androidDebugMode .track.storeCardV2{
 body.androidDebugMode .track.storeCardV2 > .vinylScaleShell{
   position:absolute!important;
   left:var(--ad-padding)!important;
-  top:calc(var(--ad-padding) + 18px)!important;
+  top:calc(var(--ad-padding) + 18px + var(--ad-player-y-debug,0px))!important;
   width:var(--ad-player-w)!important;
   height:var(--ad-player-h)!important;
   z-index:8!important;
@@ -1529,6 +1529,66 @@ html.frssnPreviewHostMode #frssnPreviewHost{
 }
 
 </style>
+
+<style id="frssnAndroidPlayerYDebug">
+/* =====================================================
+   TARGETED DEBUG // TRACKS ANDROID
+   ONLY the complete player package moves vertically.
+   No scale / X / card / interface controls are exposed.
+===================================================== */
+.playerYDebugPanel{
+  position:fixed;
+  right:8px;
+  top:8px;
+  z-index:200000;
+  width:212px;
+  padding:10px;
+  border:1px solid rgba(214,255,40,.64);
+  background:rgba(2,4,2,.97);
+  box-shadow:0 14px 34px rgba(0,0,0,.72);
+  color:#d6ff28;
+  font:700 8px/1.35 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  letter-spacing:.06em;
+}
+.playerYDebugTitle{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:8px;
+}
+.playerYDebugTitle b{color:#fff}
+.playerYDebugPanel input[type="range"]{
+  width:100%;
+  margin:5px 0 0;
+  accent-color:#d6ff28;
+}
+.playerYDebugReadout{
+  margin-top:8px;
+  padding:6px 7px;
+  border:1px solid rgba(214,255,40,.18);
+  background:rgba(214,255,40,.025);
+  color:rgba(255,255,255,.58);
+}
+.playerYDebugPanel button{
+  width:100%;
+  height:25px;
+  margin-top:8px;
+  border:1px solid rgba(214,255,40,.48);
+  background:transparent;
+  color:#d6ff28;
+  font:700 7px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+.playerYDebugPanel button:active{background:#d6ff28;color:#050605}
+body.playerYDebugMode .track.storeCardV2 > .vinylScaleShell{
+  outline:1px dashed rgba(214,255,40,.78);
+  outline-offset:2px;
+}
+@media(max-width:520px){
+  .playerYDebugPanel{right:6px;top:6px;width:198px;padding:8px}
+}
+</style>
+
 </head>
 
 <body class="androidDebugMode">
@@ -3637,6 +3697,50 @@ try{
 })();
 
 }
+</script>
+
+
+<div class="playerYDebugPanel" id="playerYDebugPanel">
+  <div class="playerYDebugTitle"><span>DEBUG // PLAYER Y</span><b id="playerYDebugValue">0.0 px</b></div>
+  <input id="playerYDebugSlider" type="range" min="-140" max="220" step="0.5" value="0">
+  <div class="playerYDebugReadout" id="playerYDebugReadout">VINYL + SLEEVE + TONEARM // Y ONLY</div>
+  <button id="playerYDebugReset" type="button">RESET Y // 0</button>
+</div>
+<script>
+(() => {
+  const KEY="frssn_tracks_android_player_y_debug_v1";
+  const root=document.body;
+  const slider=document.getElementById("playerYDebugSlider");
+  const value=document.getElementById("playerYDebugValue");
+  const readout=document.getElementById("playerYDebugReadout");
+  const reset=document.getElementById("playerYDebugReset");
+  if(!root||!slider||!value||!readout)return;
+
+  root.classList.add("playerYDebugMode");
+  let y=0;
+  try{
+    const saved=Number(localStorage.getItem(KEY));
+    if(Number.isFinite(saved))y=Math.max(-140,Math.min(220,saved));
+  }catch(_){}
+
+  function apply(next,persist=true){
+    y=Math.round((Number(next)||0)*2)/2;
+    document.documentElement.style.setProperty("--ad-player-y-debug",`${y}px`);
+    slider.value=String(y);
+    value.textContent=`${y.toFixed(1)} px`;
+    const first=document.querySelector(".track.storeCardV2 > .vinylScaleShell");
+    if(first){
+      const r=first.getBoundingClientRect();
+      readout.innerHTML=`VINYL + SLEEVE + TONEARM // <b>Y ${y.toFixed(1)} px</b><br>TOP // <b>${Math.round(r.top)} px</b>`;
+    }
+    if(persist){try{localStorage.setItem(KEY,String(y))}catch(_){}}
+  }
+
+  slider.addEventListener("input",()=>apply(slider.value,true));
+  reset?.addEventListener("click",()=>apply(0,true));
+  window.addEventListener("resize",()=>apply(y,false),{passive:true});
+  apply(y,false);
+})();
 </script>
 
 </body>
