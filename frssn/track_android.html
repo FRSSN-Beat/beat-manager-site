@@ -2534,6 +2534,68 @@ body.layout-mouse-edit .layout-debug-selected{
   stroke-linecap:round;
   stroke-linejoin:round;
 }
+.detailPage .featuredSlot .statusChipIconAi{
+  width:14px;
+  height:14px;
+  flex:0 0 14px;
+  border:1px solid currentColor;
+  font:900 6px/12px Arial,Helvetica,sans-serif;
+  text-align:center;
+  letter-spacing:0;
+}
+
+/* ANDROID STATUS RAIL // 4 approved FRSSN blocks in one row */
+body.singleAndroidMode .featuredSlot .badge.commercialStatus{
+  width:max-content!important;
+  max-width:none!important;
+  min-width:0!important;
+  height:auto!important;
+  min-height:0!important;
+  overflow:visible!important;
+  justify-content:flex-start!important;
+}
+body.singleAndroidMode .featuredSlot .commercialStatusRail{
+  display:flex!important;
+  flex-wrap:nowrap!important;
+  align-items:center!important;
+  width:max-content!important;
+  max-width:none!important;
+  height:26px!important;
+  gap:4px!important;
+  overflow:visible!important;
+}
+body.singleAndroidMode .featuredSlot .statusChip{
+  flex:0 0 auto!important;
+  height:26px!important;
+  padding:0 5px!important;
+  gap:3px!important;
+  font-size:7px!important;
+  letter-spacing:.01em!important;
+}
+body.singleAndroidMode .featuredSlot .statusChip .statusValue{
+  font-size:.78em!important;
+}
+body.singleAndroidMode .featuredSlot .statusChipIcon{
+  width:10px!important;
+  height:10px!important;
+  flex-basis:10px!important;
+}
+body.singleAndroidMode .featuredSlot .statusChipIcon.dot::before{
+  width:5px!important;
+  height:5px!important;
+}
+body.singleAndroidMode .featuredSlot .statusChipIcon svg{
+  width:10px!important;
+  height:10px!important;
+}
+body.singleAndroidMode .featuredSlot .statusChipIconAi{
+  width:11px!important;
+  height:11px!important;
+  flex-basis:11px!important;
+  font-size:5px!important;
+  line-height:9px!important;
+}
+
 
 /* Purchase row keeps the status-chip language without a surrounding payment frame. */
 .detailPage .featuredSlot .buyCol{
@@ -6216,11 +6278,9 @@ const DETAIL_META={
     sections:STRUCTURE_A,
     release:"16 OCT 2026",
     license:"MP3",status:"AVAILABLE",file:"CLEAN",
-    commercialStatus:[
-      {icon:"dot",label:"FIRST LICENSE",value:"AVAILABLE"},
-      {icon:"shield",label:"ORIGINAL SOURCE",value:""},
-      {icon:"crown",label:"EXCLUSIVE",value:"AVAILABLE"}
-    ],
+    licenseCount:0,
+    exclusiveStatus:"AVAILABLE",
+    contentStatus:{noStockCopyrightLoops:true,noAiGen:true},
     prices:{mp3:"$40",wav:"$80",stems:"$150"}
   },
   "track-02":{
@@ -6229,11 +6289,9 @@ const DETAIL_META={
     sections:STRUCTURE_B,
     release:"16 OCT 2026",
     license:"MP3",status:"AVAILABLE",file:"CLEAN",
-    commercialStatus:[
-      {icon:"dot",label:"FIRST LICENSE",value:"AVAILABLE"},
-      {icon:"shield",label:"ORIGINAL SOURCE",value:""},
-      {icon:"crown",label:"EXCLUSIVE",value:"AVAILABLE"}
-    ],
+    licenseCount:0,
+    exclusiveStatus:"AVAILABLE",
+    contentStatus:{noStockCopyrightLoops:true,noAiGen:true},
     prices:{mp3:"$40",wav:"$80",stems:"$150"}
   }
 };
@@ -6294,11 +6352,9 @@ function metaFor(state){
     sections:(i%2?STRUCTURE_B:STRUCTURE_A),
     release:"16 OCT 2026",
     license:"MP3",status:"AVAILABLE",file:"CLEAN",
-    commercialStatus:[
-      {icon:"dot",label:"FIRST LICENSE",value:"AVAILABLE"},
-      {icon:"shield",label:"ORIGINAL SOURCE",value:""},
-      {icon:"crown",label:"EXCLUSIVE",value:"AVAILABLE"}
-    ],
+    licenseCount:0,
+    exclusiveStatus:"AVAILABLE",
+    contentStatus:{noStockCopyrightLoops:true,noAiGen:true},
     prices:{mp3:"$40",wav:"$80",stems:"$150"}
   };
 }
@@ -6404,25 +6460,68 @@ function updateStructureHighlight(state,time){
 function commercialStatusIconSvg(icon){
   if(icon==="shield")return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 19 6v5c0 4.6-2.8 8.1-7 10-4.2-1.9-7-5.4-7-10V6l7-3Z"/><path d="m9.2 12 1.8 1.8 3.9-4"/></svg>';
   if(icon==="crown")return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 8 4 4 4-6 4 6 4-4-2 9H6L4 8Z"/><path d="M6 20h12"/></svg>';
-  return '';
+  return "";
+}
+function normalizedAndroidContentStatus(meta){
+  const explicit=meta?.contentStatus&&typeof meta.contentStatus==="object"
+    ? meta.contentStatus
+    : null;
+
+  if(explicit){
+    return {
+      noStockCopyrightLoops:!!explicit.noStockCopyrightLoops,
+      noAiGen:!!explicit.noAiGen
+    };
+  }
+
+  const labels=(Array.isArray(meta?.commercialStatus)?meta.commercialStatus:[])
+    .map(item=>String(item?.label||"").trim().toUpperCase());
+
+  return {
+    noStockCopyrightLoops:labels.includes("NO STOCK / © LOOPS")||labels.includes("ORIGINAL SOURCE"),
+    noAiGen:labels.includes("NO AI GEN")
+  };
 }
 function renderCommercialStatus(state){
   const badge=state?.el?.querySelector(".commercialStatus");
   const rail=badge?.querySelector(".commercialStatusRail");
   if(!rail)return;
+
   const m=metaFor(state);
-  const items=(m.commercialStatus&&m.commercialStatus.length)?m.commercialStatus:[
-    {icon:"dot",label:"FIRST LICENSE",value:"AVAILABLE"},
-    {icon:"shield",label:"ORIGINAL SOURCE",value:""},
-    {icon:"crown",label:"EXCLUSIVE",value:"AVAILABLE"}
+  const content=normalizedAndroidContentStatus(m);
+  const raw=Array.isArray(m.commercialStatus)?m.commercialStatus:[];
+
+  const rawLicenses=raw.find(item=>String(item?.label||"").trim().toUpperCase()==="LICENSES");
+  const rawFirst=raw.find(item=>String(item?.label||"").trim().toUpperCase()==="FIRST LICENSE");
+  const rawExclusive=raw.find(item=>String(item?.label||"").trim().toUpperCase()==="EXCLUSIVE");
+
+  const parsedCount=Number(m.licenseCount ?? rawLicenses?.value ?? 0);
+  const licenseCount=Number.isFinite(parsedCount)?Math.max(0,Math.floor(parsedCount)):0;
+  const firstLicenseStatus=String(m.firstLicenseStatus||rawFirst?.value||"AVAILABLE").trim().toUpperCase()||"AVAILABLE";
+  const exclusiveStatus=String(m.exclusiveStatus||rawExclusive?.value||"AVAILABLE").trim().toUpperCase()||"AVAILABLE";
+
+  const dot='<span class="statusChipIcon dot" aria-hidden="true"></span>';
+  const crown=`<span class="statusChipIcon" aria-hidden="true">${commercialStatusIconSvg("crown")}</span>`;
+  const shield=`<span class="statusChipIcon" aria-hidden="true">${commercialStatusIconSvg("shield")}</span>`;
+  const ai='<span class="statusChipIcon statusChipIconAi" aria-hidden="true">AI</span>';
+
+  const items=[
+    licenseCount===0
+      ? `<span class="statusChip">${dot}<span>FIRST LICENSE</span><span class="statusValue">// ${firstLicenseStatus}</span></span>`
+      : `<span class="statusChip">${dot}<span>LICENSES</span><span class="statusValue">// ${licenseCount}</span></span>`,
+    `<span class="statusChip">${crown}<span>EXCLUSIVE</span><span class="statusValue">// ${exclusiveStatus}</span></span>`
   ];
-  rail.innerHTML=items.map(item=>{
-    const icon=item.icon==="dot"
-      ? '<span class="statusChipIcon dot" aria-hidden="true"></span>'
-      : `<span class="statusChipIcon" aria-hidden="true">${commercialStatusIconSvg(item.icon)}</span>`;
-    const value=item.value?` <span class="statusValue">// ${item.value}</span>`:"";
-    return `<span class="statusChip">${icon}<span>${item.label}</span>${value}</span>`;
-  }).join("");
+
+  if(content.noStockCopyrightLoops){
+    items.push(`<span class="statusChip is-origin">${shield}<span>NO STOCK / © LOOPS</span></span>`);
+  }
+  if(content.noAiGen){
+    items.push(`<span class="statusChip is-origin is-origin-ai">${ai}<span>NO AI GEN</span></span>`);
+  }
+
+  rail.dataset.contentOrigin=(content.noStockCopyrightLoops||content.noAiGen)?"verified":"unset";
+  rail.dataset.licenseCount=String(licenseCount);
+  rail.innerHTML=items.join("");
 }
 function renderPurchaseControls(state){
   const buy=state?.el?.querySelector(".buyCol");
