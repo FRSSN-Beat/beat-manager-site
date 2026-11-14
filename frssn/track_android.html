@@ -6405,10 +6405,27 @@ function trackLabelOf(state){
   const img=state.el.querySelector(".recordLabel img");
   return img?.src||img?.getAttribute("src")||trackCoverOf(state);
 }
+function mergeTrackMeta(base,overlay){
+  if(!base)return overlay||null;
+  if(!overlay)return base;
+  return {
+    ...base,
+    ...overlay,
+    prices:{...(base.prices||{}),...(overlay.prices||{})},
+    checkout:{...(base.checkout||{}),...(overlay.checkout||{})},
+    contentStatus:{...(base.contentStatus||{}),...(overlay.contentStatus||{})}
+  };
+}
 function metaFor(state){
-  const sharedMeta=window.FRSSN?.metaFor?.(state.id,state.index);
-  if(sharedMeta)return sharedMeta;
-  if(DETAIL_META[state.id])return DETAIL_META[state.id];
+  const sharedMeta=window.FRSSN?.metaFor?.(state.id,state.index)||null;
+  const fallbackMeta=DETAIL_META[state.id]||null;
+
+  /* Android single uses the same metadata layering as desktop:
+     local DETAIL_META keeps approved provenance defaults,
+     shared frssn-core metadata may override only fields it actually provides. */
+  const merged=mergeTrackMeta(fallbackMeta,sharedMeta);
+  if(merged)return merged;
+
   const i=state.index||0;
   return {
     signal:String(i+1).padStart(3,"0"),
