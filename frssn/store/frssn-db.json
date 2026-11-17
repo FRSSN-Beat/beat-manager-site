@@ -1,5 +1,5 @@
 {
-    "defaultTrackId": "cld",
+    "defaultTrackId": "smart-chord",
     "defaults": {
         "artist": "FRSSN",
         "checkout": {
@@ -55,7 +55,7 @@
     "tracks": [
         {
             "artist": "FRSSN",
-            "audio": "store/media/cld/audio.mp3",
+            "audio": "store/media/smart-chord/audio.mp3",
             "bpm": "140",
             "checkout": {
                 "mp3": "https://traktrain.com/cart-single-track/1702896",
@@ -91,9 +91,9 @@
             "exclusiveStatus": "AVAILABLE",
             "file": "CLEAN",
             "firstLicenseStatus": "AVAILABLE",
-            "id": "cld",
+            "id": "smart-chord",
             "key": "G MIN",
-            "label": "store/media/cld/cover.jpg",
+            "label": "store/media/smart-chord/cover.jpg",
             "license": "MP3",
             "licenseCount": 0,
             "moods": [
@@ -108,7 +108,7 @@
                 "wav": "$80"
             },
             "release": "17 NOV 2026",
-            "revision": "20261117143925",
+            "revision": "20261117154535",
             "sections": [
                 {
                     "end": 0.12295293856207964,
@@ -185,15 +185,15 @@
             ],
             "showcase": false,
             "signal": "001",
-            "singleCover": "store/media/cld/cover.jpg",
+            "singleCover": "store/media/smart-chord/cover.jpg",
             "sourceTrackId": "smart-chord",
             "status": "AVAILABLE",
-            "storeCover": "store/media/cld/cover.jpg",
+            "storeCover": "store/media/smart-chord/cover.jpg",
             "title": "UNDERTOW",
             "typeCode": "Cinematic Cloud Beat",
             "visible": true
         }
     ],
     "updatedAt": "2026-11-17",
-    "version": "2026-11-17-143925"
+    "version": "2026-11-17-154535"
 }
