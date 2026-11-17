@@ -1,0 +1,199 @@
+{
+    "defaultTrackId": "cld",
+    "defaults": {
+        "artist": "FRSSN",
+        "checkout": {
+            "mp3": "",
+            "stems": "",
+            "wav": ""
+        },
+        "file": "CLEAN",
+        "license": "MP3",
+        "prices": {
+            "mp3": "$40",
+            "stems": "$150",
+            "wav": "$80"
+        },
+        "release": "17 NOV 2026",
+        "status": "AVAILABLE"
+    },
+    "schemaVersion": 1,
+    "structurePresets": {
+        "A": [
+            {
+                "end": 0.11,
+                "name": "INTRO",
+                "start": 0
+            },
+            {
+                "end": 0.27,
+                "name": "HOOK",
+                "start": 0.11
+            },
+            {
+                "end": 0.52,
+                "name": "VERSE",
+                "start": 0.27
+            },
+            {
+                "end": 0.68,
+                "name": "HOOK",
+                "start": 0.52
+            },
+            {
+                "end": 0.91,
+                "name": "VERSE",
+                "start": 0.68
+            },
+            {
+                "end": 1,
+                "name": "OUTRO",
+                "start": 0.91
+            }
+        ]
+    },
+    "tracks": [
+        {
+            "artist": "FRSSN",
+            "audio": "store/media/cld/audio.mp3",
+            "bpm": "140",
+            "checkout": {
+                "mp3": "https://traktrain.com/cart-single-track/1702896",
+                "stems": "",
+                "wav": ""
+            },
+            "commercialStatus": [
+                {
+                    "icon": "dot",
+                    "label": "FIRST LICENSE",
+                    "value": "AVAILABLE"
+                },
+                {
+                    "icon": "crown",
+                    "label": "EXCLUSIVE",
+                    "value": "AVAILABLE"
+                },
+                {
+                    "icon": "shield",
+                    "label": "NO STOCK / © LOOPS",
+                    "value": ""
+                },
+                {
+                    "icon": "shield",
+                    "label": "NO AI GEN",
+                    "value": ""
+                }
+            ],
+            "contentStatus": {
+                "noAiGen": true,
+                "noStockCopyrightLoops": true
+            },
+            "exclusiveStatus": "AVAILABLE",
+            "file": "CLEAN",
+            "firstLicenseStatus": "AVAILABLE",
+            "id": "cld",
+            "key": "G MIN",
+            "label": "store/media/cld/cover.jpg",
+            "license": "MP3",
+            "licenseCount": 0,
+            "moods": [
+                "CINEMATIC",
+                "ATMOSPHERE",
+                "VIBE"
+            ],
+            "placement": "main",
+            "prices": {
+                "mp3": "$40",
+                "stems": "$150",
+                "wav": "$80"
+            },
+            "release": "17 NOV 2026",
+            "revision": "20261117154944",
+            "sections": [
+                {
+                    "end": 0.12295293856207964,
+                    "endMs": 27111,
+                    "endTimecode": "00:27",
+                    "name": "INTRO",
+                    "start": 0,
+                    "startMs": 0,
+                    "timecode": "00:00"
+                },
+                {
+                    "end": 0.2487857087787246,
+                    "endMs": 54857,
+                    "endTimecode": "00:54",
+                    "name": "VERSE-A",
+                    "start": 0.12295293856207964,
+                    "startMs": 27111,
+                    "timecode": "00:27"
+                },
+                {
+                    "end": 0.3734121243180241,
+                    "endMs": 82337,
+                    "endTimecode": "01:22",
+                    "name": "VERSE-B",
+                    "start": 0.2487857087787246,
+                    "startMs": 54857,
+                    "timecode": "00:54"
+                },
+                {
+                    "end": 0.49650565308686206,
+                    "endMs": 109479,
+                    "endTimecode": "01:49",
+                    "name": "HOOK",
+                    "start": 0.3734121243180241,
+                    "startMs": 82337,
+                    "timecode": "01:22"
+                },
+                {
+                    "end": 0.6254812946997492,
+                    "endMs": 137918,
+                    "endTimecode": "02:17",
+                    "name": "VERSE-2",
+                    "start": 0.49650565308686206,
+                    "startMs": 109479,
+                    "timecode": "01:49"
+                },
+                {
+                    "end": 0.7460487349148975,
+                    "endMs": 164503,
+                    "endTimecode": "02:44",
+                    "name": "PRE-HOOK",
+                    "start": 0.6254812946997492,
+                    "startMs": 137918,
+                    "timecode": "02:17"
+                },
+                {
+                    "end": 0.8711059914103919,
+                    "endMs": 192078,
+                    "endTimecode": "03:12",
+                    "name": "HOOK",
+                    "start": 0.7460487349148975,
+                    "startMs": 164503,
+                    "timecode": "02:44"
+                },
+                {
+                    "end": 1,
+                    "endMs": 220499,
+                    "endTimecode": "03:40",
+                    "name": "OUTRO",
+                    "start": 0.8711059914103919,
+                    "startMs": 192078,
+                    "timecode": "03:12"
+                }
+            ],
+            "showcase": false,
+            "signal": "001",
+            "singleCover": "store/media/cld/cover.jpg",
+            "sourceTrackId": "smart-chord",
+            "status": "AVAILABLE",
+            "storeCover": "store/media/cld/cover.jpg",
+            "title": "UNDERTOW",
+            "typeCode": "Cinematic Cloud Beat",
+            "visible": true
+        }
+    ],
+    "updatedAt": "2026-11-17",
+    "version": "2026-11-17-154944"
+}
