@@ -1,5 +1,5 @@
 {
-    "defaultTrackId": "smart-chord",
+    "defaultTrackId": "file",
     "defaults": {
         "artist": "FRSSN",
         "checkout": {
@@ -14,7 +14,7 @@
             "stems": "$150",
             "wav": "$80"
         },
-        "release": "14 NOV 2026",
+        "release": "17 NOV 2026",
         "status": "AVAILABLE"
     },
     "schemaVersion": 1,
@@ -55,7 +55,7 @@
     "tracks": [
         {
             "artist": "FRSSN",
-            "audio": "store/media/smart-chord/audio.mp3",
+            "audio": "store/media/file/audio.mp3",
             "bpm": "140",
             "checkout": {
                 "mp3": "https://traktrain.com/profile/#/tracks",
@@ -91,15 +91,15 @@
             "exclusiveStatus": "AVAILABLE",
             "file": "CLEAN",
             "firstLicenseStatus": "AVAILABLE",
-            "id": "smart-chord",
-            "key": "G MINOR",
-            "label": "store/media/smart-chord/cover.jpg",
+            "id": "file",
+            "key": "G MIN",
+            "label": "store/media/file/cover.jpg",
             "license": "MP3",
             "licenseCount": 0,
             "moods": [
-                "VIBE",
-                "MELODYC",
-                "ATMOSPHERE"
+                "CINEMATIC",
+                "ATMOSPHERE",
+                "VIBE"
             ],
             "placement": "main",
             "prices": {
@@ -107,12 +107,12 @@
                 "stems": "$150",
                 "wav": "$80"
             },
-            "release": "14 NOV 2026",
-            "revision": "20261114132114",
+            "release": "17 NOV 2026",
+            "revision": "20261117134517",
             "sections": [
                 {
-                    "end": 0.12391892933754801,
-                    "endMs": 27324,
+                    "end": 0.12295293856207964,
+                    "endMs": 27111,
                     "endTimecode": "00:27",
                     "name": "INTRO",
                     "start": 0,
@@ -120,12 +120,12 @@
                     "timecode": "00:00"
                 },
                 {
-                    "end": 0.24783785867509603,
-                    "endMs": 54648,
+                    "end": 0.2487857087787246,
+                    "endMs": 54857,
                     "endTimecode": "00:54",
                     "name": "VERSE-A",
-                    "start": 0.12391892933754801,
-                    "startMs": 27324,
+                    "start": 0.12295293856207964,
+                    "startMs": 27111,
                     "timecode": "00:27"
                 },
                 {
@@ -133,8 +133,8 @@
                     "endMs": 82337,
                     "endTimecode": "01:22",
                     "name": "VERSE-B",
-                    "start": 0.24783785867509603,
-                    "startMs": 54648,
+                    "start": 0.2487857087787246,
+                    "startMs": 54857,
                     "timecode": "00:54"
                 },
                 {
@@ -185,15 +185,15 @@
             ],
             "showcase": false,
             "signal": "001",
-            "singleCover": "store/media/smart-chord/cover.jpg",
+            "singleCover": "store/media/file/cover.jpg",
             "sourceTrackId": "smart-chord",
             "status": "AVAILABLE",
-            "storeCover": "store/media/smart-chord/cover.jpg",
-            "title": "Smart Chord",
-            "typeCode": "",
+            "storeCover": "store/media/file/cover.jpg",
+            "title": "UNDERTOW",
+            "typeCode": "Cinematic Cloud Beat",
             "visible": true
         }
     ],
-    "updatedAt": "2026-11-14",
-    "version": "2026-11-14-132114"
+    "updatedAt": "2026-11-17",
+    "version": "2026-11-17-134517"
 }
