@@ -1926,6 +1926,7 @@ body.frssn-license-modal-open{overflow:hidden!important}
 }
 </style>
 <meta name="frssn-license-window-build" content="uniform-v5-stream-limits">
+<meta name="frssn-final-routing" content="production-id-only-v1">
 </head>
 
 <body class="androidDebugMode">
@@ -2265,6 +2266,9 @@ function publicStoreAsset(...values){
   }
   return "";
 }
+function productionTrackHref(id){
+  return `track_android.html?track=${encodeURIComponent(String(id||""))}`;
+}
 function publicStoreSectionGeometry(sections){
   const list=Array.isArray(sections)?sections:[];
   return list.map((section,index)=>{
@@ -2298,7 +2302,7 @@ function hydratePublicStoreSource(doc,{mobile=false}={}){
     const titleLink=node.querySelector(".trackTitleLink");
     if(titleLink){
       titleLink.textContent=title;
-      titleLink.href=`${mobile?"track_android.html":"track.html"}?track=${encodeURIComponent(id)}`;
+      titleLink.href=productionTrackHref(id);
     }
     const typeCode=node.querySelector(".typeCode");
     if(typeCode){

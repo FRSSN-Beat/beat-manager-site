@@ -2878,6 +2878,8 @@ body.frssn-license-modal-open{overflow:hidden!important}
 </style>
 <meta name="frssn-license-terms-build" content="easy-read-v5-stream-limits">
 <meta name="frssn-license-window-build" content="uniform-v5-stream-limits">
+<meta name="frssn-single-media-guard" content="v5.1-render-even-if-audio-missing">
+<meta name="frssn-final-routing" content="production-id-only-v1">
 </head>
 
 <body class="detailPage">
@@ -3258,9 +3260,23 @@ if(!PUBLIC_DB){
   throw (window.FRSSN_PUBLIC_DB_ERROR||new Error("store/frssn-db.json unavailable"));
 }
 const PUBLIC_TRACKS=Array.isArray(PUBLIC_DB?.tracks)
-  ? PUBLIC_DB.tracks.filter(track=>track&&track.id)
+  ? PUBLIC_DB.tracks.filter(track=>track&&track.id&&track.visible!==false)
   : [];
 const PUBLIC_TRACK_MAP=new Map(PUBLIC_TRACKS.map(track=>[String(track.id),track]));
+if(!PUBLIC_TRACKS.length){
+  throw new Error("FRSSN production DB contains no visible tracks");
+}
+
+const REQUESTED_TRACK_ID=new URLSearchParams(location.search).get("track")||"";
+const INITIAL_TRACK_ID=PUBLIC_TRACK_MAP.has(REQUESTED_TRACK_ID)
+  ? REQUESTED_TRACK_ID
+  : String(PUBLIC_TRACKS[0].id);
+if(REQUESTED_TRACK_ID!==INITIAL_TRACK_ID){
+  const canonicalUrl=new URL(location.href);
+  canonicalUrl.searchParams.set("track",INITIAL_TRACK_ID);
+  history.replaceState({track:INITIAL_TRACK_ID},"",canonicalUrl);
+}
+
 
 function publicAsset(...values){
   for(const value of values){
@@ -6228,7 +6244,7 @@ function updateDetailHeader(state){
   renderPurchaseControls(state);
   const m=metaFor(state),title=trackTitleOf(state);
   detailKicker.textContent=`FRSSN // SIGNAL ${m.signal} // DIRECT TRACK LINK`;
-  detailUrl.textContent=window.FRSSN?.canonicalTrackHref?.(state.id)||`track.html?track=${state.id}`;
+  detailUrl.textContent=publicTrackHref(state.id);
   factSignal.textContent=m.signal;
   factBpm.textContent=m.bpm;
   factKey.textContent=m.key;
@@ -6917,6 +6933,36 @@ async function featureTrack(next,{push=false,replace=false,sourceSleeveRect=null
     await playerBootPromise;
 
     if(next.loadError||!next.decoded){
+      /* Production resilience:
+         Missing/404 audio must never make the whole single page disappear.
+         Mount the track UI normally, keep playback disabled, and show a clear
+         diagnostic in the header. This also makes metadata/checkout/request
+         controls usable while media is being fixed on GitHub. */
+      const previous=featuredTrack;
+      if(previous&&previous!==next){
+        releaseHeroToSource(previous);
+      }
+
+      featuredTrack=next;
+      activeTrack=next;
+      featuredSlot.appendChild(next.el);
+      mountHeroInstant(next,{hideRecord:false});
+      next.heroRecordPacked=false;
+      next.vinylOpened=true;
+      next.el.classList.remove("hero-record-hidden","hero-record-packed");
+      setHeroSleeve(next,{visible:true});
+      updateDetailHeader(next);
+      renderSignalTiles();
+      ensureHeroFrameLocks?.();
+      applyHeroFrameLocks?.();
+      scheduleFitHeroModuleContents?.();
+
+      if(push)history.pushState({track:next.id},"",`track.html?track=${encodeURIComponent(next.id)}`);
+      else if(replace)history.replaceState({track:next.id},"",`track.html?track=${encodeURIComponent(next.id)}`);
+
+      setPlayIcon(next,false);
+      next.playButton?.setAttribute("disabled","");
+      next.playButton?.setAttribute("aria-label","Audio unavailable");
       microstatus.textContent=`MISSING AUDIO // ${next.audioUrl}`;
       sourceTile?.classList.remove("is-launching","is-preparing-transfer","is-package-departing");
       return;
@@ -7082,7 +7128,7 @@ heroSleeveDock.addEventListener("keydown",async event=>{
 
 copyTrackLink.addEventListener("click",async()=>{
   if(!featuredTrack)return;
-  const url=window.FRSSN?.canonicalTrackUrl?.(featuredTrack.id)||new URL(`track.html?track=${encodeURIComponent(featuredTrack.id)}`,location.href).href;
+  const url=new URL(publicTrackHref(featuredTrack.id),location.href).href;
 
   try{
     await navigator.clipboard.writeText(url);
@@ -7095,14 +7141,21 @@ copyTrackLink.addEventListener("click",async()=>{
 });
 
 window.addEventListener("popstate",async()=>{
-  const slug=new URLSearchParams(location.search).get("track")||"old";
+  const requested=new URLSearchParams(location.search).get("track")||"";
+  const slug=PUBLIC_TRACK_MAP.has(requested)?requested:String(PUBLIC_TRACKS[0].id);
+  if(requested!==slug){
+    const canonicalUrl=new URL(location.href);
+    canonicalUrl.searchParams.set("track",slug);
+    history.replaceState({track:slug},"",canonicalUrl);
+  }
   const next=tracks.find(t=>t.id===slug)||tracks[0];
   await featureTrack(next,{push:false,replace:false});
 });
 
 (async()=>{
   await playerBootPromise;
-  const slug=new URLSearchParams(location.search).get("track")||"old";
+  const requested=new URLSearchParams(location.search).get("track")||"";
+  const slug=PUBLIC_TRACK_MAP.has(requested)?requested:String(PUBLIC_TRACKS[0].id);
   const initial=tracks.find(t=>t.id===slug)||tracks[0];
   await featureTrack(initial,{replace:true,initial:true});
 })();
