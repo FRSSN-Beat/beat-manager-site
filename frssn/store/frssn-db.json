@@ -58,7 +58,7 @@
             "audio": "store/media/file/audio.mp3",
             "bpm": "140",
             "checkout": {
-                "mp3": "https://traktrain.com/profile/#/tracks",
+                "mp3": "https://traktrain.com/cart-single-track/1702896",
                 "stems": "",
                 "wav": ""
             },
@@ -108,7 +108,7 @@
                 "wav": "$80"
             },
             "release": "17 NOV 2026",
-            "revision": "20261117134517",
+            "revision": "20261117141823",
             "sections": [
                 {
                     "end": 0.12295293856207964,
@@ -195,5 +195,5 @@
         }
     ],
     "updatedAt": "2026-11-17",
-    "version": "2026-11-17-134517"
+    "version": "2026-11-17-141823"
 }
